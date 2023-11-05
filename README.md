@@ -26,7 +26,7 @@ creation of web pages.
 - https://github.com/xoofx/markdig (BSD-2-Clause license)
 
 # Establish 
-see https://github.com/ReneSchwarzer/WebExpress.Doc/blob/main/doc/installation_guide.md and https://github.com/ReneSchwarzer/WebExpress.Doc/blob/main/doc/development_guide.md
+see [development guide](https://github.com/ReneSchwarzer/WebExpress.Doc/blob/main/doc/development_guide.md)
 
 # Tags
-#Raspberry #Raspbian #IoT #NETCore #WebExpress
+#NETCore #WebExpress #Controls #Templates
