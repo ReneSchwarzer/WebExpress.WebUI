@@ -3,8 +3,8 @@
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
 		<Title>WebExpress.UI</Title>
-		<Version>0.0.1.0</Version>
-		<AssemblyVersion>0.0.1.0</AssemblyVersion>
+		<Version>0.0.2.0</Version>
+		<AssemblyVersion>0.0.2.0</AssemblyVersion>
 		<TargetFramework>net7.0</TargetFramework>
 		<RuntimeIdentifiers>any</RuntimeIdentifiers>
 		<RepositoryUrl>https://github.com/ReneSchwarzer/WebExpress.WebUI</RepositoryUrl>
@@ -14,7 +14,7 @@
 		<EnableDynamicLoading>true</EnableDynamicLoading>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Description>Provide user interface elements to the WebExpress web server.</Description>
-		<PackageVersion>0.0.1-alpha</PackageVersion>
+		<PackageVersion>0.0.2-alpha</PackageVersion>
 		<PackageProjectUrl>https://github.com/ReneSchwarzer/WebExpress</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -43,18 +43,18 @@
 		<None Remove="Assets\css\solid.css" />
 		<None Remove="Assets\css\summernote-bs4.css" />
 		<None Remove="Assets\css\summernote-bs5.min.css" />
-		<None Remove="Assets\css\webexpress.ui.css" />
-		<None Remove="Assets\css\webexpress.ui.expand.css" />
-		<None Remove="Assets\css\webexpress.ui.form.css" />
-		<None Remove="Assets\css\webexpress.ui.modalformular.css" />
-		<None Remove="Assets\css\webexpress.ui.modalpage.css" />
-		<None Remove="Assets\css\webexpress.ui.more.css" />
-		<None Remove="Assets\css\webexpress.ui.move.css" />
-		<None Remove="Assets\css\webexpress.ui.pagination.css" />
-		<None Remove="Assets\css\webexpress.ui.search.css" />
-		<None Remove="Assets\css\webexpress.ui.selection.css" />
-		<None Remove="Assets\css\webexpress.ui.table.css" />
-		<None Remove="Assets\css\webexpress.ui.toolpanel.css" />
+		<None Remove="Assets\css\webexpress.webui.css" />
+		<None Remove="Assets\css\webexpress.webui.expand.css" />
+		<None Remove="Assets\css\webexpress.webui.form.css" />
+		<None Remove="Assets\css\webexpress.webui.modalformular.css" />
+		<None Remove="Assets\css\webexpress.webui.modalpage.css" />
+		<None Remove="Assets\css\webexpress.webui.more.css" />
+		<None Remove="Assets\css\webexpress.webui.move.css" />
+		<None Remove="Assets\css\webexpress.webui.pagination.css" />
+		<None Remove="Assets\css\webexpress.webui.search.css" />
+		<None Remove="Assets\css\webexpress.webui.selection.css" />
+		<None Remove="Assets\css\webexpress.webui.table.css" />
+		<None Remove="Assets\css\webexpress.webui.toolpanel.css" />
 		<None Remove="Assets\fonts\fa-solid-900.eot" />
 		<None Remove="Assets\fonts\fa-solid-900.ttf" />
 		<None Remove="Assets\fonts\fa-solid-900.woff" />
@@ -174,17 +174,17 @@
 		<None Remove="Assets\js\split.min.js" />
 		<None Remove="Assets\js\summernote-bs5.min.js" />
 		<None Remove="Assets\js\summernote-de-DE.js" />
-		<None Remove="Assets\js\webexpress.ui.expand.js" />
-		<None Remove="Assets\js\webexpress.ui.js" />
-		<None Remove="Assets\js\webexpress.ui.modalformular.js" />
-		<None Remove="Assets\js\webexpress.ui.modalpage.js" />
-		<None Remove="Assets\js\webexpress.ui.more.js" />
-		<None Remove="Assets\js\webexpress.ui.move.js" />
-		<None Remove="Assets\js\webexpress.ui.pagination.js" />
-		<None Remove="Assets\js\webexpress.ui.search.js" />
-		<None Remove="Assets\js\webexpress.ui.selection.js" />
 		<None Remove="Assets\js\webexpress.ui.selection.move.js" />
-		<None Remove="Assets\js\webexpress.ui.table.js" />
+		<None Remove="Assets\js\webexpress.webui.expand.js" />
+		<None Remove="Assets\js\webexpress.webui.js" />
+		<None Remove="Assets\js\webexpress.webui.modalformular.js" />
+		<None Remove="Assets\js\webexpress.webui.modalpage.js" />
+		<None Remove="Assets\js\webexpress.webui.more.js" />
+		<None Remove="Assets\js\webexpress.webui.move.js" />
+		<None Remove="Assets\js\webexpress.webui.pagination.js" />
+		<None Remove="Assets\js\webexpress.webui.search.js" />
+		<None Remove="Assets\js\webexpress.webui.selection.js" />
+		<None Remove="Assets\js\webexpress.webui.table.js" />
 		<None Remove="Internationalization\de" />
 		<None Remove="Internationalization\en" />
 	</ItemGroup>
@@ -200,21 +200,21 @@
 		</EmbeddedResource>
 		<EmbeddedResource Include="Assets\css\bootstrap.min.css.map" />
 		<EmbeddedResource Include="Assets\css\Chart.min.css" />
-		<EmbeddedResource Include="Assets\css\webexpress.ui.toolpanel.css" />
-		<EmbeddedResource Include="Assets\css\webexpress.ui.expand.css" />
-		<EmbeddedResource Include="Assets\css\webexpress.ui.modalformular.css" />
-		<EmbeddedResource Include="Assets\css\webexpress.ui.modalpage.css" />
-		<EmbeddedResource Include="Assets\css\webexpress.ui.more.css" />
-		<EmbeddedResource Include="Assets\css\webexpress.ui.move.css" />
-		<EmbeddedResource Include="Assets\css\webexpress.ui.pagination.css" />
-		<EmbeddedResource Include="Assets\css\webexpress.ui.search.css" />
-		<EmbeddedResource Include="Assets\css\webexpress.ui.selection.css">
+		<EmbeddedResource Include="Assets\css\webexpress.webui.toolpanel.css" />
+		<EmbeddedResource Include="Assets\css\webexpress.webui.expand.css" />
+		<EmbeddedResource Include="Assets\css\webexpress.webui.modalformular.css" />
+		<EmbeddedResource Include="Assets\css\webexpress.webui.modalpage.css" />
+		<EmbeddedResource Include="Assets\css\webexpress.webui.more.css" />
+		<EmbeddedResource Include="Assets\css\webexpress.webui.move.css" />
+		<EmbeddedResource Include="Assets\css\webexpress.webui.pagination.css" />
+		<EmbeddedResource Include="Assets\css\webexpress.webui.search.css" />
+		<EmbeddedResource Include="Assets\css\webexpress.webui.selection.css">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Assets\css\webexpress.ui.css">
+		<EmbeddedResource Include="Assets\css\webexpress.webui.css">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Assets\css\webexpress.ui.form.css">
+		<EmbeddedResource Include="Assets\css\webexpress.webui.form.css">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</EmbeddedResource>
 		<EmbeddedResource Include="Assets\css\fontawesome.min.css" />
@@ -222,7 +222,7 @@
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</EmbeddedResource>
 		<EmbeddedResource Include="Assets\css\summernote-bs5.min.css" />
-		<EmbeddedResource Include="Assets\css\webexpress.ui.table.css" />
+		<EmbeddedResource Include="Assets\css\webexpress.webui.table.css" />
 		<EmbeddedResource Include="Assets\fonts\fa-solid-900.eot" />
 		<EmbeddedResource Include="Assets\fonts\fa-solid-900.ttf" />
 		<EmbeddedResource Include="Assets\fonts\fa-solid-900.woff" />
@@ -358,16 +358,16 @@
 		<EmbeddedResource Include="Assets\js\lang\summernote-de-DE.min.js">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</EmbeddedResource>
-		<EmbeddedResource Include="Assets\js\webexpress.ui.modalformular.js" />
-		<EmbeddedResource Include="Assets\js\webexpress.ui.modalpage.js" />
-		<EmbeddedResource Include="Assets\js\webexpress.ui.move.js" />
-		<EmbeddedResource Include="Assets\js\webexpress.ui.selection.js" />
-		<EmbeddedResource Include="Assets\js\webexpress.ui.more.js" />
-		<EmbeddedResource Include="Assets\js\webexpress.ui.search.js" />
-		<EmbeddedResource Include="Assets\js\webexpress.ui.expand.js" />
-		<EmbeddedResource Include="Assets\js\webexpress.ui.pagination.js" />
-		<EmbeddedResource Include="Assets\js\webexpress.ui.table.js" />
-		<EmbeddedResource Include="Assets\js\webexpress.ui.js" />
+		<EmbeddedResource Include="Assets\js\webexpress.webui.modalformular.js" />
+		<EmbeddedResource Include="Assets\js\webexpress.webui.modalpage.js" />
+		<EmbeddedResource Include="Assets\js\webexpress.webui.move.js" />
+		<EmbeddedResource Include="Assets\js\webexpress.webui.selection.js" />
+		<EmbeddedResource Include="Assets\js\webexpress.webui.more.js" />
+		<EmbeddedResource Include="Assets\js\webexpress.webui.search.js" />
+		<EmbeddedResource Include="Assets\js\webexpress.webui.expand.js" />
+		<EmbeddedResource Include="Assets\js\webexpress.webui.pagination.js" />
+		<EmbeddedResource Include="Assets\js\webexpress.webui.table.js" />
+		<EmbeddedResource Include="Assets\js\webexpress.webui.js" />
 		<EmbeddedResource Include="Internationalization\de" />
 		<EmbeddedResource Include="Internationalization\en" />
 	</ItemGroup>
@@ -385,7 +385,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Markdig" Version="0.33.0" />
-		<PackageReference Include="WebExpress" Version="0.0.1-alpha" />
+		<PackageReference Include="WebExpress" Version="0.0.2-alpha" />
 	</ItemGroup>
 
 </Project>

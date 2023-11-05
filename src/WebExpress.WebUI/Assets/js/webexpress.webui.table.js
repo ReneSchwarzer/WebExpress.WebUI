@@ -1,7 +1,7 @@
 /**
  * Tabelle
  */
-webexpress.ui.tableCtrl = class extends webexpress.ui.events {
+webexpress.webui.tableCtrl = class extends webexpress.webui.events {
     _table = $("<table class='table table-hover mb-2'/>");
     _col = $("<colgroup/>");
     _head = $("<thead/>");
@@ -102,7 +102,7 @@ webexpress.ui.tableCtrl = class extends webexpress.ui.events {
                     }
                 });
                 let cell = $("<td style='text-align:right;'/>");
-                let more = new webexpress.ui.moreCtrl(optionItems, this._optionSetting);
+                let more = new webexpress.webui.moreCtrl(optionItems, this._optionSetting);
 
                 cell.append(more.getCtrl);
                 th.append(cell);
@@ -159,7 +159,7 @@ webexpress.ui.tableCtrl = class extends webexpress.ui.events {
         this._head.children().remove();
         this._head.append(head_row);
 
-        this.trigger('webexpress.ui.change.columns');
+        this.trigger('webexpress.webui.change.columns');
     }
 
     /**

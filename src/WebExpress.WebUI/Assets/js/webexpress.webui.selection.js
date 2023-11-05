@@ -1,10 +1,10 @@
 /**
  * Ein Auswahlfeld
  * Folgende Events werden ausgelöst:
- * - webexpress.ui.change.filter mit Parameter filter
- * - webexpress.ui.change.value mit Parameter value
+ * - webexpress.webui.change.filter mit Parameter filter
+ * - webexpress.webui.change.value mit Parameter value
  */
-webexpress.ui.selectionCtrl = class extends webexpress.ui.events {
+webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
     _container = $("<span class='selection form-control' />");
     _selection = $("<ul/>");
     _hidden = $("<input type='hidden'/>");
@@ -64,7 +64,7 @@ webexpress.ui.selectionCtrl = class extends webexpress.ui.events {
         this._filter.keyup(function (e) {
             let filter = this._filter.val();
             e.stopPropagation();
-            this.trigger('webexpress.ui.change.filter', filter !== undefined || filter != null ? filter : "");
+            this.trigger('webexpress.webui.change.filter', filter !== undefined || filter != null ? filter : "");
             this.update();
             if (this._dropdownmenu.is(":hidden")) {
                 dropdown.dropdown('toggle');
@@ -232,7 +232,7 @@ webexpress.ui.selectionCtrl = class extends webexpress.ui.events {
             this.update();
             this._hidden.val(this._values.map(element => element).join(';'));
 
-            this.trigger('webexpress.ui.change.value', values);
+            this.trigger('webexpress.webui.change.value', values);
         }
     }
 

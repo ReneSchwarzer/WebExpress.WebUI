@@ -1,9 +1,9 @@
 /**
  * Ein Feld, inden Suchbefehle eingegeben werden können.
  * Folgende Events werden ausgelöst:
- * - webexpress.ui.change.filter mit Parameter filter
+ * - webexpress.webui.change.filter mit Parameter filter
  */
-webexpress.ui.searchCtrl = class extends webexpress.ui.events {
+webexpress.webui.searchCtrl = class extends webexpress.webui.events {
     _container = $("<span class='search form-control'>");
 
     /**
@@ -29,13 +29,13 @@ webexpress.ui.searchCtrl = class extends webexpress.ui.events {
         this._container.attr("id", id ?? "");
         
         searchinput.keyup(function () { 
-            this.trigger('webexpress.ui.change.filter', searchinput.val());
+            this.trigger('webexpress.webui.change.filter', searchinput.val());
             
         }.bind(this));
         
         searchappend.click(function () {
             searchinput.val('');
-            this.trigger('webexpress.ui.change.filter', '');
+            this.trigger('webexpress.webui.change.filter', '');
         }.bind(this));
 
         this._container.addClass(css);

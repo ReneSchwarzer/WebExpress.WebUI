@@ -137,13 +137,13 @@ namespace WebExpress.WebUI.WebControl
             builder.AppendLine($"let options = {optionsJson};");
             builder.AppendLine($"let settings = {settingsJson};");
             builder.AppendLine($"let container = $('#{id}');");
-            builder.AppendLine($"let obj = new webexpress.ui.selectionCtrl(settings);");
+            builder.AppendLine($"let obj = new webexpress.webui.selectionCtrl(settings);");
             builder.AppendLine($"obj.options = options;");
             builder.AppendLine($"obj.value = [{string.Join(",", Values.Select(x => $"'{x}'"))}];");
 
             if (OnChange != null)
             {
-                builder.AppendLine($"obj.on('webexpress.ui.change.value', {OnChange});");
+                builder.AppendLine($"obj.on('webexpress.webui.change.value', {OnChange});");
             }
 
             builder.AppendLine($"container.replaceWith(obj.getCtrl);");

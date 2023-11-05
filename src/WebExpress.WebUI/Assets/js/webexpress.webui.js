@@ -1,7 +1,7 @@
 var webexpress = webexpress || {}
 webexpress.ui = {}
 
-webexpress.ui.events = class {
+webexpress.webui.events = class {
     _listeners = new Map();
     
     /**

@@ -1,9 +1,9 @@
 /**
  * Ein Container zum verstecken von Inhalten
  * Folgende Events werden ausgelöst:
- * - webexpress.ui.change.visibility 
+ * - webexpress.webui.change.visibility 
  */
-webexpress.ui.expandCtrl = class extends webexpress.ui.events {
+webexpress.webui.expandCtrl = class extends webexpress.webui.events {
     _container = $("<span class='expand'>");
     _content = $("<div/>");
     _expandicon = $("<a class='expand-angle' href='#'/>");
@@ -62,7 +62,7 @@ webexpress.ui.expandCtrl = class extends webexpress.ui.events {
      */
     set expand(value) {
         if (this._expand != value) {
-            this.trigger('webexpress.ui.change.visibility', value);
+            this.trigger('webexpress.webui.change.visibility', value);
             this._expand = value;
         }
         

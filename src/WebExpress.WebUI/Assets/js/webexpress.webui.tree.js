@@ -1,9 +1,9 @@
 /**
  * Baum
  * Folgende Events werden ausgelöst:
- * - webexpress.ui.change.visibility 
+ * - webexpress.webui.change.visibility 
  */
-webexpress.ui.treeCtrl = class extends webexpress.ui.events {
+webexpress.webui.treeCtrl = class extends webexpress.webui.events {
     _container = $("<ul class='tree'/>");
     _nodes = [];
 
@@ -51,7 +51,7 @@ webexpress.ui.treeCtrl = class extends webexpress.ui.events {
                 li.append(ul);
                 
                 expand.click(function () {
-                    this.trigger('webexpress.ui.change.visibility', li, node);      
+                    this.trigger('webexpress.webui.change.visibility', li, node);      
                     if (!node.expand) {
                         indicator.addClass("tree-expand");
                         this.update(ul, children);

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using WebExpress.Internationalization;
-using WebExpress.WebUI.WebAttribute;
-using WebExpress.WebUI.WebControl;
 using WebExpress.WebApplication;
 using WebExpress.WebAttribute;
 using WebExpress.WebComponent;
@@ -11,6 +9,8 @@ using WebExpress.WebCondition;
 using WebExpress.WebModule;
 using WebExpress.WebPage;
 using WebExpress.WebPlugin;
+using WebExpress.WebUI.WebAttribute;
+using WebExpress.WebUI.WebControl;
 
 namespace WebExpress.WebUI.WebFragment
 {
@@ -75,7 +75,7 @@ namespace WebExpress.WebUI.WebFragment
 
             HttpServerContext.Log.Debug
             (
-                InternationalizationManager.I18N("webexpress.ui:fragmentmanager.initialization")
+                InternationalizationManager.I18N("webexpress.webui:fragmentmanager.initialization")
             );
         }
 
@@ -164,7 +164,7 @@ namespace WebExpress.WebUI.WebFragment
                 {
                     HttpServerContext.Log.Warning(InternationalizationManager.I18N
                     (
-                        "webexpress.ui:fragmentmanager.moduleless",
+                        "webexpress.webui:fragmentmanager.moduleless",
                         fragment.Name,
                         pluginContext.PluginId
                     ));
@@ -177,7 +177,7 @@ namespace WebExpress.WebUI.WebFragment
                 {
                     HttpServerContext.Log.Warning(InternationalizationManager.I18N
                     (
-                        "webexpress.ui:fragmentmanager.error.section"
+                        "webexpress.webui:fragmentmanager.error.section"
                     ));
 
                     continue;
@@ -221,7 +221,7 @@ namespace WebExpress.WebUI.WebFragment
 
                     HttpServerContext.Log.Debug(InternationalizationManager.I18N
                     (
-                        "webexpress.ui:fragmentmanager.register",
+                        "webexpress.webui:fragmentmanager.register",
                         fragment.Name,
                         section,
                         moduleId
@@ -426,7 +426,7 @@ namespace WebExpress.WebUI.WebFragment
             output.Add
             (
                 string.Empty.PadRight(deep) +
-                InternationalizationManager.I18N("webexpress.ui:fragmentmanager.titel")
+                InternationalizationManager.I18N("webexpress.webui:fragmentmanager.titel")
             );
 
             foreach (var fragmentItem in GetFragmentItems(pluginContext))
@@ -436,7 +436,7 @@ namespace WebExpress.WebUI.WebFragment
                     string.Empty.PadRight(deep + 2) +
                     InternationalizationManager.I18N
                     (
-                        "webexpress.ui:fragmentmanager.fragment",
+                        "webexpress.webui:fragmentmanager.fragment",
                         fragmentItem.FragmentClass.Name
                     )
                 );

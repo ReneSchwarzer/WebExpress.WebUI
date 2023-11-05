@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using WebExpress.WebHtml;
 using WebExpress.WebComponent;
+using WebExpress.WebHtml;
 using WebExpress.WebUri;
 using static WebExpress.Internationalization.InternationalizationManager;
 
@@ -193,19 +193,19 @@ namespace WebExpress.WebUI.WebControl
 
             if (Required && string.IsNullOrWhiteSpace(base.Value))
             {
-                ValidationResults.Add(new ValidationResult(TypesInputValidity.Error, "webexpress.ui:form.inputtextbox.validation.required"));
+                ValidationResults.Add(new ValidationResult(TypesInputValidity.Error, "webexpress.webui:form.inputtextbox.validation.required"));
 
                 return;
             }
 
             if (!string.IsNullOrWhiteSpace(MinLength?.ToString()) && Convert.ToInt32(MinLength) > base.Value.Length)
             {
-                ValidationResults.Add(new ValidationResult(TypesInputValidity.Error, string.Format(I18N(context.Culture, "webexpress.ui:form.inputtextbox.validation.min"), MinLength)));
+                ValidationResults.Add(new ValidationResult(TypesInputValidity.Error, string.Format(I18N(context.Culture, "webexpress.webui:form.inputtextbox.validation.min"), MinLength)));
             }
 
             if (!string.IsNullOrWhiteSpace(MaxLength?.ToString()) && Convert.ToInt32(MaxLength) < base.Value.Length)
             {
-                ValidationResults.Add(new ValidationResult(TypesInputValidity.Error, string.Format(I18N(context.Culture, "webexpress.ui:form.inputtextbox.validation.max"), MaxLength)));
+                ValidationResults.Add(new ValidationResult(TypesInputValidity.Error, string.Format(I18N(context.Culture, "webexpress.webui:form.inputtextbox.validation.max"), MaxLength)));
             }
         }
     }

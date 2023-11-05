@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using WebExpress.Internationalization;
-using WebExpress.WebUI.WebAttribute;
-using WebExpress.WebUI.WebControl;
-using WebExpress.WebUI.WebSettingPage;
 using WebExpress.WebApplication;
 using WebExpress.WebAttribute;
 using WebExpress.WebComponent;
 using WebExpress.WebModule;
 using WebExpress.WebPlugin;
 using WebExpress.WebResource;
+using WebExpress.WebUI.WebAttribute;
+using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebSettingPage;
 
 namespace WebExpress.WebUI.SettingPage
 {
@@ -267,7 +267,7 @@ namespace WebExpress.WebUI.SettingPage
             output.Add
             (
                 string.Empty.PadRight(deep) +
-                InternationalizationManager.I18N("webexpress.ui:settingpagemanager.titel")
+                InternationalizationManager.I18N("webexpress.webui:settingpagemanager.titel")
             );
 
             //foreach (var fragmentItem in GetFragmentItems(pluginContext))
@@ -277,7 +277,7 @@ namespace WebExpress.WebUI.SettingPage
             //        string.Empty.PadRight(deep + 2) +
             //        InternationalizationManager.I18N
             //        (
-            //            "webexpress.ui:settingpagemanager.settingpage",
+            //            "webexpress.webui:settingpagemanager.settingpage",
             //            fragmentItem.FragmentClass.Name
             //        )
             //    );

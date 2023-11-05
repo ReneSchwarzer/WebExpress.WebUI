@@ -147,7 +147,7 @@ namespace WebExpress.WebUI.WebControl
 
             var footer = default(HtmlElementTextContentDiv);
 
-            var footerButton = new HtmlElementFieldButton(new HtmlText(I18N(context.Culture, "webexpress.ui:modal.close.label")))
+            var footerButton = new HtmlElementFieldButton(new HtmlText(I18N(context.Culture, "webexpress.webui:modal.close.label")))
             {
                 Type = "button",
                 Class = Css.Concatenate("btn", new PropertyColorButton(TypeColorButton.Primary).ToStyle())

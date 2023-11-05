@@ -1,7 +1,7 @@
 /**
  * Ein Dropdown, welches erweiterte Funktionen (Links) anbietet
  */
-webexpress.ui.moreCtrl = class {
+webexpress.webui.moreCtrl = class {
     _container = $("<div class='dropdown'/>");
 
     /**

@@ -1,9 +1,9 @@
 /**
  * Ein modulares Fenster/ Dialog
  * Folgende Events werden ausgelöst:
- * - webexpress.ui.close
+ * - webexpress.webui.close
  */
-webexpress.ui.modalPageCtrl = class extends webexpress.ui.events {
+webexpress.webui.modalPageCtrl = class extends webexpress.webui.events {
     _uri = null;
     _container = $("<div class='modal modalpage fade' data-bs-backdrop='static' data-bs-keyboard='false' tabindex='-1' aria-hidden='true'></div>");
     

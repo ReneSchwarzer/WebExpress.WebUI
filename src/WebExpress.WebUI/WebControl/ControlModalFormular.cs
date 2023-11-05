@@ -142,7 +142,7 @@ namespace WebExpress.WebUI.WebControl
 
             var cancelFooterButton = new ControlButtonLink()
             {
-                Text = I18N(context.Culture, "webexpress.ui:modal.close.label")
+                Text = I18N(context.Culture, "webexpress.webui:modal.close.label")
             }.Render(context) as HtmlElement;
 
             cancelFooterButton.AddUserAttribute("data-bs-dismiss", "modal");

@@ -1,9 +1,9 @@
 /**
  * Seitennavigationssteuerelement
  * Folgende Events werden ausgelöst:
- * - webexpress.ui.change.page mit Parameter page
+ * - webexpress.webui.change.page mit Parameter page
  */
-webexpress.ui.paginationCtrl = class extends webexpress.ui.events {
+webexpress.webui.paginationCtrl = class extends webexpress.webui.events {
     _container = $("<ul class='pagination'/>");
     _currentpage = 0;
     _pagecount = 0;
@@ -36,12 +36,12 @@ webexpress.ui.paginationCtrl = class extends webexpress.ui.events {
         let predecessor = $("<li class='page-item'><a class='page-link' href='#'><span class='fas fa-angle-left'/></a></li>");
         let successor = $("<li class='page-item'><a class='page-link' href='#'><span class='fas fa-angle-right'/></a></li>");
         function onclick(page) { 
-            this.trigger('webexpress.ui.change.page', page);
+            this.trigger('webexpress.webui.change.page', page);
         };
 
         this._container.addClass(this._css);
-        predecessor.click(function () { this.trigger('webexpress.ui.change.page', Math.max(currentpage - 1, 0)); }.bind(this));
-        successor.click(function () { this.trigger('webexpress.ui.change.page', Math.min(currentpage + 1, pagecount - 1)); }.bind(this));
+        predecessor.click(function () { this.trigger('webexpress.webui.change.page', Math.max(currentpage - 1, 0)); }.bind(this));
+        successor.click(function () { this.trigger('webexpress.webui.change.page', Math.min(currentpage + 1, pagecount - 1)); }.bind(this));
 
         this._container.children().remove();
 
@@ -54,7 +54,7 @@ webexpress.ui.paginationCtrl = class extends webexpress.ui.events {
         if (pagecount < 10) {
             for (let i = 0; i < pagecount; i++) {
                 let page = $("<li class='page-item'><a class='page-link' href='#'>" + (i + 1) + "</a></li>");
-                page.click(function () { this.trigger('webexpress.ui.change.page', i); }.bind(this));
+                page.click(function () { this.trigger('webexpress.webui.change.page', i); }.bind(this));
 
                 if (i == currentpage) {
                     page.toggleClass("active");
@@ -66,7 +66,7 @@ webexpress.ui.paginationCtrl = class extends webexpress.ui.events {
             if (currentpage <= 3) {
                 for (let i = 0; i < 7; i++) {
                     let page = $("<li class='page-item'><a class='page-link' href='#'>" + (i + 1) + "</a></li>");
-                    page.click(function () { this.trigger('webexpress.ui.change.page', i); }.bind(this));
+                    page.click(function () { this.trigger('webexpress.webui.change.page', i); }.bind(this));
 
                     if (i == currentpage) {
                         page.toggleClass("active");
@@ -79,12 +79,12 @@ webexpress.ui.paginationCtrl = class extends webexpress.ui.events {
                 this._container.append(placeholder);
 
                 let lastpage = $("<li class='page-item'><a class='page-link' href='#'>" + pagecount + "</a></li>");
-                lastpage.click(function () { this.trigger('webexpress.ui.change.page', pagecount - 1); }.bind(this));
+                lastpage.click(function () { this.trigger('webexpress.webui.change.page', pagecount - 1); }.bind(this));
                 this._container.append(lastpage);
 
             } else if (pagecount - currentpage < 6) {
                 let firstpage = $("<li class='page-item'><a class='page-link' href='#'>1</a></li>");
-                firstpage.click(function () { this.trigger('webexpress.ui.change.page', 0); }.bind(this));
+                firstpage.click(function () { this.trigger('webexpress.webui.change.page', 0); }.bind(this));
                 this._container.append(firstpage);
 
                 let placeholder = $("<li class='page-item disabled'><a class='page-link' href='#'>..</a></li>");
@@ -92,7 +92,7 @@ webexpress.ui.paginationCtrl = class extends webexpress.ui.events {
 
                 for (let i = pagecount - 7; i < pagecount; i++) {
                     let page = $("<li class='page-item'><a class='page-link' href='#'>" + (i + 1) + "</a></li>");
-                    page.click(function () { this.trigger('webexpress.ui.change.page', i); }.bind(this));
+                    page.click(function () { this.trigger('webexpress.webui.change.page', i); }.bind(this));
 
                     if (i == currentpage) {
                         page.toggleClass("active");
@@ -103,7 +103,7 @@ webexpress.ui.paginationCtrl = class extends webexpress.ui.events {
 
             } else {
                 let firstpage = $("<li class='page-item'><a class='page-link' href='#'>1</a></li>");
-                firstpage.click(function () { this.trigger('webexpress.ui.change.page', 0); }.bind(this));
+                firstpage.click(function () { this.trigger('webexpress.webui.change.page', 0); }.bind(this));
                 this._container.append(firstpage);
 
                 let placeholder = $("<li class='page-item disabled'><a class='page-link' href='#'>..</a></li>");
@@ -111,7 +111,7 @@ webexpress.ui.paginationCtrl = class extends webexpress.ui.events {
 
                 for (let i = Math.max(currentpage - 2, 0); i < Math.min(currentpage + 3, pagecount); i++) {
                     let page = $("<li class='page-item'><a class='page-link' href='#'>" + (i + 1) + "</a></li>");
-                    page.click(function () { this.trigger('webexpress.ui.change.page', i); }.bind(this));
+                    page.click(function () { this.trigger('webexpress.webui.change.page', i); }.bind(this));
 
                     if (i == currentpage) {
                         page.toggleClass("active");
@@ -124,7 +124,7 @@ webexpress.ui.paginationCtrl = class extends webexpress.ui.events {
                 this._container.append(placeholder);
 
                 let lastpage = $("<li class='page-item'><a class='page-link' href='#'>" + pagecount + "</a></li>");
-                lastpage.click(function () { this.trigger('webexpress.ui.change.page', pagecount - 1); }.bind(this));
+                lastpage.click(function () { this.trigger('webexpress.webui.change.page', pagecount - 1); }.bind(this));
                 this._container.append(lastpage);
             }
         }

@@ -1,8 +1,8 @@
 /**
  * Auswahlfeld zum Aktivieren von Optionen
- * - webexpress.ui.change.value mit Parameter value
+ * - webexpress.webui.change.value mit Parameter value
  */
-webexpress.ui.moveCtrl = class extends webexpress.ui.events {
+webexpress.webui.moveCtrl = class extends webexpress.webui.events {
     _container = $("<div class='move'/>");
     _selectedList = $("<ul class='list-group list-group-flush'/>");
     _availableList = $("<ul class='list-group list-group-flush'/>");
@@ -385,7 +385,7 @@ webexpress.ui.moveCtrl = class extends webexpress.ui.events {
 
             this.update();
 
-            this.trigger('webexpress.ui.change.value', values);
+            this.trigger('webexpress.webui.change.value', values);
         }
     }
     

@@ -17,12 +17,12 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the label of the selected options.
         /// </summary>
-        public string SelectedHeader { get; set; } = "webexpress.ui:form.selectionmove.selected";
+        public string SelectedHeader { get; set; } = "webexpress.webui:form.selectionmove.selected";
 
         /// <summary>
         /// Returns or sets the label.
         /// </summary>
-        public string AvailableHeader { get; set; } = "webexpress.ui:form.selectionmove.available";
+        public string AvailableHeader { get; set; } = "webexpress.webui:form.selectionmove.available";
 
         /// <summary>
         /// Constructor
@@ -138,7 +138,7 @@ namespace WebExpress.WebUI.WebControl
             builder.Append($"var options = {optionsJson};");
             builder.Append($"var settings = {settingsJson};");
             builder.Append($"var container = $('#{id}');");
-            builder.Append($"var obj = new webexpress.ui.moveCtrl(settings);");
+            builder.Append($"var obj = new webexpress.webui.moveCtrl(settings);");
             builder.Append($"obj.options = options;");
             builder.Append($"obj.value = {(!string.IsNullOrWhiteSpace(valuesJson) ? valuesJson : "[]")};");
             builder.Append($"container.replaceWith(obj.getCtrl);");
