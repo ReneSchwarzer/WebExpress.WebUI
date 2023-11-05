@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebExpress.WebUI", "WebExpress.WebUI\WebExpress.WebUI.csproj", "{189A9A34-00F7-420E-B3AE-3347BA00762B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebExpress.WebUI.Test", "..\WebExpress.WebUI.Test\WebExpress.WebUI.Test.csproj", "{1CFFEA60-6650-4F50-8412-709B8813C553}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebExpress.WebUI.Test", "WebExpress.WebUI.Test\WebExpress.WebUI.Test.csproj", "{1CFFEA60-6650-4F50-8412-709B8813C553}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
