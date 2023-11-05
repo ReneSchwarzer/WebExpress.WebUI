@@ -7,7 +7,7 @@
 		<AssemblyVersion>0.0.1.0</AssemblyVersion>
 		<TargetFramework>net7.0</TargetFramework>
 		<RuntimeIdentifiers>any</RuntimeIdentifiers>
-		<RepositoryUrl>https://github.com/ReneSchwarzer/WebExpress.git</RepositoryUrl>
+		<RepositoryUrl>https://github.com/ReneSchwarzer/WebExpress.WebUI</RepositoryUrl>
 		<Authors>Rene_Schwarzer@hotmail.de</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Company>Rene_Schwarzer@hotmail.de</Company>
@@ -384,7 +384,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Markdig" Version="0.32.0" />
+		<PackageReference Include="Markdig" Version="0.33.0" />
 		<PackageReference Include="WebExpress" Version="0.0.1-alpha" />
 	</ItemGroup>
 
