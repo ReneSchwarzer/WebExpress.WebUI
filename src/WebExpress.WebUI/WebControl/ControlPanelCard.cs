@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.Internationalization;
-using WebExpress.WebPage;
+using WebExpress.Core.Internationalization;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Box mit Rahmen
+    /// Box with frame.
     /// </summary>
     public class ControlPanelCard : ControlPanel
     {
@@ -39,7 +39,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlPanelCard(string id = null)
             : base(id)
         {
@@ -49,7 +49,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlPanelCard(string id, params Control[] items)
             : base(id, items)
         {
@@ -59,7 +59,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="items">The controls to insert.</param>
         public ControlPanelCard(params Control[] items)
             : base(items)
         {

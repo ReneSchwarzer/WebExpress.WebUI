@@ -15,22 +15,22 @@ namespace WebExpress.WebUI.WebControl
         public float[] Data { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die Hintergrundfarbe
+        /// Returns or sets the background color.
         /// </summary>
         public List<PropertyColorChart> BackgroundColor { get; set; } = new List<PropertyColorChart> { new PropertyColorChart(TypeColorChart.Primary) };
 
         /// <summary>
-        /// Liefert oder setzt die Rahmenfarbe
+        /// Returns or sets the frame color.
         /// </summary>
         public List<PropertyColorChart> BorderColor { get; set; } = new List<PropertyColorChart> { new PropertyColorChart(TypeColorChart.Primary) };
 
         /// <summary>
-        /// Bestimmt, wie die Datenreihen ausgefüllt werden
+        /// Returns or sets how the data series are populated.
         /// </summary>
         public TypeFillChart Fill { get; set; } = TypeFillChart.None;
 
         /// <summary>
-        /// Bestimmt, die Datenwerte angezeigt werden
+        /// Returns or sets how the data series are populated.
         /// </summary>
         public TypePointChart Point { get; set; } = TypePointChart.Circle;
 

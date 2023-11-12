@@ -1,19 +1,19 @@
-﻿using WebExpress.WebHtml;
-using WebExpress.WebPage;
+﻿using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlHtml : Control
     {
         /// <summary>
-        /// Liefert oder setzt den HTML-Quelltext
+        /// Retruns or sets the html source code.
         /// </summary>
         public string Html { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlHtml(string id = null)
             : base(id)
         {
@@ -23,7 +23,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="value">The text.</param>
         public ControlHtml(string id, int value)
             : base(id)

@@ -1,15 +1,15 @@
-﻿using WebExpress.WebHtml;
-using WebExpress.WebPage;
+﻿using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Erstellt eine Box, welche die Aufmerksamkeit des Benutzers erlangen soll 
+    /// Creates a box that should grab the user's attention.
     /// </summary>
     public class ControlAlert : Control
     {
         /// <summary>
-        /// Die Hintergrundfarbe
+        /// Returns or set the background color.
         /// </summary>
         public new PropertyColorBackgroundAlert BackgroundColor
         {
@@ -18,7 +18,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt ob das Control geschlossen werden kann
+        /// Returns or sets whether the control can be closed.
         /// </summary>
         public TypeDismissibleAlert Dismissible
         {
@@ -27,7 +27,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt ob der Fadereffekt verwendet werden soll
+        /// Returns or sets whether the fader effect should be used.
         /// </summary>
         public TypeFade Fade
         {
@@ -41,14 +41,14 @@ namespace WebExpress.WebUI.WebControl
         public string Head { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die Text
+        /// Returns or sets the text.
         /// </summary>
         public string Text { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlAlert(string id = null)
             : base(id)
         {

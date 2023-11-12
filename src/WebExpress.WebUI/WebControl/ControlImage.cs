@@ -1,12 +1,12 @@
-﻿using WebExpress.WebHtml;
-using WebExpress.WebPage;
+﻿using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlImage : Control
     {
         /// <summary>
-        /// Liefert oder setzt die Bildquelle
+        /// Returns or sets the image source.
         /// </summary>
         public string Uri { get; set; }
 
@@ -21,14 +21,14 @@ namespace WebExpress.WebUI.WebControl
         public new int Height { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt einen Tooltiptext
+        /// Returns or sets a tooltip text.
         /// </summary>
         public string Tooltip { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlImage(string id = null)
             : base(id)
         {
@@ -37,8 +37,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="source">Die Bildquelle</param>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="source">The image source.</param>
         public ControlImage(string id, string source)
             : base(id)
         {

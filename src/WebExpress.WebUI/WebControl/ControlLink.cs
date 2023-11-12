@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.Internationalization;
-using WebExpress.WebHtml;
-using WebExpress.WebMessage;
-using WebExpress.WebPage;
+using WebExpress.Core.Internationalization;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebMessage;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlLink : Control, IControlLink
     {
         /// <summary>
-        /// Bestimmt ob der Link aktiv ist oder nicht
+        /// Returns or sets whether the link is active or not.
         /// </summary>
         public TypeActive Active
         {
@@ -19,7 +19,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Bestimmt ob der Link unterstrichen ist oder nicht
+        /// Returns or sets whether the link is underlined or not.
         /// </summary>
         public TypeTextDecoration Decoration
         {
@@ -43,7 +43,7 @@ namespace WebExpress.WebUI.WebControl
         public string Uri { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt das Ziel
+        /// Returns or sets the target.
         /// </summary>
         public TypeTarget Target { get; set; }
 
@@ -58,7 +58,7 @@ namespace WebExpress.WebUI.WebControl
         public List<Control> Content { get; private set; }
 
         /// <summary>
-        /// Liefert oder setzt die für den Link gültigen Parameter
+        /// Returns or sets the parameters that apply to the link.
         /// </summary>
         public List<Parameter> Params { get; set; }
 
@@ -68,12 +68,12 @@ namespace WebExpress.WebUI.WebControl
         public PropertyIcon Icon { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt einen Tooltiptext
+        /// Returns or sets a tooltip text.
         /// </summary>
         public string Tooltip { get; set; }
 
         /// <summary>
-        /// Die vertikale Ausrichtung
+        /// Return or specifies the vertical orientation..
         /// </summary>
         public TypeVerticalAlignment VerticalAlignment
         {
@@ -93,7 +93,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlLink(string id = null)
             : base(id)
         {
@@ -103,7 +103,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="text">The content of the html element.</param>
         public ControlLink(string id, string text)
             : this(id)
@@ -124,7 +124,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlLink(string id, params Control[] content)
             : this(id)
@@ -135,7 +135,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlLink(string id, List<Control> content)
             : base(id)
@@ -154,10 +154,10 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert alle lokalen und temporären Parameter
+        /// Returns all local and temporary parameters.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>Die Parameter</returns>
+        /// <returns>The parameters.</returns>
         public string GetParams(IPage page)
         {
             var dict = new Dictionary<string, Parameter>();

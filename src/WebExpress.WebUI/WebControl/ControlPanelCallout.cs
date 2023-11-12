@@ -1,13 +1,13 @@
 ﻿using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlPanelCallout : ControlPanel
     {
         /// <summary>
-        /// Liefert oder sezt den Titel
+        /// Delivers or sets the title.
         /// </summary>
         public string Title { get; set; }
 
@@ -23,7 +23,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlPanelCallout(string id = null)
             : base(id)
         {
@@ -42,7 +42,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlPanelCallout(string id, params Control[] content)
             : this(id)

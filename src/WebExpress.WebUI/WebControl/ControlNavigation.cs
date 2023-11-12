@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -16,7 +16,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Die horizontale Anordnung
+        /// Returns or sets the horizontal arrangement.
         /// </summary>
         public new TypeHorizontalAlignmentTab HorizontalAlignment
         {
@@ -25,7 +25,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt ob die Tab-Register die gleiche Größe besitzen sollen
+        /// Returns or sets whether the tab tabs should be the same size.
         /// </summary>
         public TypeJustifiedTab Justified
         {
@@ -34,7 +34,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setztdie horizontale oder vertikale Ausrichtung
+        /// Returns or sets the horizontal or vertical orientation.
         /// </summary>
         public TypeOrientationTab Orientation
         {
@@ -43,29 +43,29 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt die aktive Farbe
+        /// Returns or sets the active color.
         /// </summary>
         public PropertyColorBackground ActiveColor { get; set; } = new PropertyColorBackground();
 
         /// <summary>
-        /// Liefert oder setzt die aktive Farbe
+        /// Returns or sets the active text color.
         /// </summary>
         public PropertyColorText ActiveTextColor { get; set; } = new PropertyColorText();
 
         /// <summary>
-        /// Liefert oder setzt die normale Farbe
+        /// Returns or sets the link color.
         /// </summary>
         public PropertyColorText LinkColor { get; set; } = new PropertyColorText();
 
         /// <summary>
-        /// Liefert oder setzt die Listeneinträge
+        /// Returns or sets the navigation items.
         /// </summary>
         public List<IControlNavigationItem> Items { get; private set; } = new List<IControlNavigationItem>();
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlNavigation(string id = null)
             : base(id)
         {
@@ -75,7 +75,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="items">Die Linkelemente</param>
+        /// <param name="items">The navigation items.</param>
         public ControlNavigation(params IControlNavigationItem[] items)
             : base(null)
         {
@@ -87,7 +87,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlNavigation(string id, IEnumerable<IControlNavigationItem> content)
             : base(id)

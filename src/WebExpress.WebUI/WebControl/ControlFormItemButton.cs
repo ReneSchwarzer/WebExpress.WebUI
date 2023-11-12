@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using static WebExpress.Internationalization.InternationalizationManager;
+using WebExpress.Core.WebHtml;
+using static WebExpress.Core.Internationalization.InternationalizationManager;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -78,7 +78,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlFormItemButton(string id = null)
             : base(id)
         {

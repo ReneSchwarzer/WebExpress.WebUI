@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using WebExpress.WebComponent;
-using WebExpress.WebPage;
-using WebExpress.WebResource;
-using WebExpress.WebUri;
+using WebExpress.Core.WebComponent;
+using WebExpress.Core.WebPage;
+using WebExpress.Core.WebResource;
+using WebExpress.Core.WebUri;
 
 namespace WebExpress.WebUI.WebPage
 {

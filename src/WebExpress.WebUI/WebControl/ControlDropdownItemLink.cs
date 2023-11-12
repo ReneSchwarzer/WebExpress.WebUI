@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using WebExpress.Internationalization;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.Core.Internationalization;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -10,7 +10,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlDropdownItemLink(string id = null)
             : base(id)
         {

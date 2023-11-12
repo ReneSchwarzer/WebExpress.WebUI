@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.Internationalization;
-using WebExpress.WebPage;
+using WebExpress.Core.Internationalization;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Anzeige einer Liste mit Links
+    /// Display a list of links.
     /// </summary>
     public class ControlLinkList : Control
     {
         /// <summary>
-        /// Liefert oder setzt die Textfarbe des Namens
+        /// Returns or sets the text.farbe des Namens
         /// </summary>
         public PropertyColorText NameColor { get; set; }
 
@@ -27,14 +27,14 @@ namespace WebExpress.WebUI.WebControl
         public string Name { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die Links
+        /// Returns or sets the links.
         /// </summary>
         public List<IControlLink> Links { get; } = new List<IControlLink>();
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlLinkList(string id = null)
             : base(id)
         {

@@ -3,12 +3,12 @@
     public class ControlMultipleProgressBarItem
     {
         /// <summary>
-        /// Liefert oder setzt die Textfarbe
+        /// Returns or sets the text.farbe
         /// </summary>
         public PropertyColorText Color { get; set; }
 
         /// <summary>
-        /// Die Hintergrundfarbe
+        /// Returns or set the background color.
         /// </summary>
         public PropertyColorBackground BackgroundColor { get; set; }
 
@@ -18,7 +18,7 @@
         public int Value { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die Text
+        /// Returns or sets the text.
         /// </summary>
         public string Text { get; set; }
     }

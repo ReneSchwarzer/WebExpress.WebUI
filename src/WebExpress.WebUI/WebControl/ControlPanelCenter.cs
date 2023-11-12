@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -9,7 +9,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlPanelCenter(string id = null)
             : base(id)
         {
@@ -29,7 +29,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlPanelCenter(string id, params Control[] content)
             : this(id)

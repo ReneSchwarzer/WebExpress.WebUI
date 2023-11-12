@@ -1,4 +1,4 @@
-﻿using WebExpress.WebAttribute;
+﻿using WebExpress.Core.WebAttribute;
 
 namespace WebExpress.WebUI.WebResource
 {
@@ -9,7 +9,7 @@ namespace WebExpress.WebUI.WebResource
     [ContextPath("/")]
     [IncludeSubPaths(true)]
     [Module<Module>]
-    public sealed class Asset : WebExpress.WebResource.ResourceAsset
+    public sealed class Asset : Core.WebResource.ResourceAsset
     {
         /// <summary>
         /// Constructor

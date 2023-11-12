@@ -1,16 +1,16 @@
 ﻿using System;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Numerischer Indikator
+    /// A numerical indicator.
     /// </summary>
     public class ControlBadge : Control
     {
         /// <summary>
-        /// Die Hintergrundfarbe
+        /// Returns or set the background color.
         /// </summary>
         public new PropertyColorBackgroundBadge BackgroundColor
         {
@@ -19,7 +19,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt ob abgerundete Ecken verwendet werden soll
+        /// Return or specifies whether rounded corners should be used.
         /// </summary>
         public TypePillBadge Pill
         {
@@ -38,7 +38,7 @@ namespace WebExpress.WebUI.WebControl
         public string Value { get; set; }
 
         /// <summary>
-        /// Die vertikale Ausrichtung
+        /// Return or specifies the vertical orientation..
         /// </summary>
         public TypeVerticalAlignment VerticalAlignment
         {
@@ -58,7 +58,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlBadge(string id = null)
             : base(id)
         {
@@ -68,7 +68,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="value">The value.</param>
         public ControlBadge(string id, string value)
             : base(id)

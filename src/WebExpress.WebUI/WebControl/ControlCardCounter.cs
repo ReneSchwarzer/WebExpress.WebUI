@@ -1,5 +1,5 @@
-﻿using WebExpress.WebHtml;
-using WebExpress.WebPage;
+﻿using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -19,19 +19,19 @@ namespace WebExpress.WebUI.WebControl
         public string Value { get; set; }
 
         /// <summary>
-        /// Returns or sets the value. des Fortschrittbalkens
+        /// Returns or sets the value of the progrss.
         /// </summary>
         public int Progress { get; set; }
 
         /// <summary>
-        /// Returns or sets the text. des Counters
+        /// Returns or sets the text.
         /// </summary>
         public string Text { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlCardCounter(string id = null)
             : base(id)
         {

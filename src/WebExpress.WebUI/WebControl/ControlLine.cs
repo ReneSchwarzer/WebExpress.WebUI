@@ -1,17 +1,17 @@
-﻿using WebExpress.WebHtml;
-using WebExpress.WebPage;
+﻿using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlLine : Control, IControlSplitButtonItem, IControlDropdownItem
     {
         /// <summary>
-        /// Returns or sets the color. des Textes
+        /// Returns or sets the text color.
         /// </summary>
         public new PropertyColorText TextColor { get; private set; }
 
         /// <summary>
-        /// Die Hintergrundfarbe
+        /// Returns or set the background color.
         /// </summary>
         public new PropertyColorBackground BackgroundColor { get; private set; }
 
@@ -27,7 +27,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlLine(string id = null)
             : base(id)
         {

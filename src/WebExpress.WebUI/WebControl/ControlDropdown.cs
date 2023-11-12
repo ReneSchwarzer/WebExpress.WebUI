@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -13,7 +13,7 @@ namespace WebExpress.WebUI.WebControl
         public List<IControlDropdownItem> Items { get; private set; } = new List<IControlDropdownItem>();
 
         /// <summary>
-        /// Returns or sets the color. der Schaltfläche
+        /// Returns or sets the background color. 
         /// </summary>
         public new PropertyColorButton BackgroundColor
         {
@@ -45,7 +45,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt ein Indikator, welcher darauf hinweist, dass ein Menü vorhanden ist.
+        /// Returns or sets an indicator that indicates that a menu is present.
         /// </summary>
         public TypeToggleDropdown Toogle
         {
@@ -83,7 +83,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt den die Ausrichtung des Menüs
+        /// Returns or sets the orientation of the menu.
         /// </summary>
         public TypeAlignmentDropdownMenu AlignmentMenu
         {
@@ -92,7 +92,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt das Bild
+        /// Returns or sets the image.
         /// </summary>
         public string Image { get; set; }
 
@@ -109,7 +109,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlDropdown(string id = null)
             : base(id)
         {
@@ -119,7 +119,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlDropdown(string id, params IControlDropdownItem[] content)
             : base(id)
@@ -167,16 +167,16 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Fügt ein neues Item hinzu
+        /// Adds a new item.
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="item">The item.</param>
         public void Add(IControlDropdownItem item)
         {
             Items.Add(item);
         }
 
         /// <summary>
-        /// Fügt ein neuen Seterator hinzu
+        /// Adds a new separator.
         /// </summary>
         public void AddSeperator()
         {
@@ -184,9 +184,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Fügt ein neuen Kopf hinzu
+        /// Adds a new head.
         /// </summary>
-        /// <param name="text">Der Überschriftstext</param>
+        /// <param name="text">The headline text.</param>
         public void AddHeader(string text)
         {
             Items.Add(new ControlDropdownItemHeader() { Text = text });
@@ -201,9 +201,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Fügt Einträge hinzu
+        /// Adds items.
         /// </summary>
-        /// <param name="item">The entries. welcher hinzugefügt werden sollen</param>
+        /// <param name="item">The items which should be added.</param>
         public void Add(params IControlDropdownItem[] item)
         {
             Items.AddRange(item);

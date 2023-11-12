@@ -1,5 +1,5 @@
-﻿using WebExpress.WebAttribute;
-using WebExpress.WebPlugin;
+﻿using WebExpress.Core.WebAttribute;
+using WebExpress.Core.WebPlugin;
 
 [assembly: SystemPlugin()]
 

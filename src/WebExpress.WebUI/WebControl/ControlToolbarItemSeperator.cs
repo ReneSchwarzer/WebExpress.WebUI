@@ -5,7 +5,7 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlToolBarItemSeperator(string id = null)
             : base(id)
         {

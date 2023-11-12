@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -13,34 +13,34 @@ namespace WebExpress.WebUI.WebControl
         public TypesLayoutTableRow ColumnLayout { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die Spalten
+        /// Returns or sets the columns.
         /// </summary>
         public List<ControlTableColumn> Columns { get; private set; }
 
         /// <summary>
-        /// Liefert oder setzt die Zeilen
+        /// Returns or sets the rows.
         /// </summary>
         public List<ControlTableRow> Rows { get; private set; }
 
         /// <summary>
-        /// Liefert oder setzt die Responsive-Eigenschaft
+        /// Returns or sets the responsive property.
         /// </summary>
         public bool Responsive { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die Striped-Eigenschaft
+        /// Returns or sets the striped property.
         /// </summary>
         public bool Striped { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt das die Tabelle gedreht wird
+        /// Returns or sets the table to be rotated.
         /// </summary>
         public bool Reflow { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlTable(string id = null)
             : base(id)
         {
@@ -58,10 +58,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Fügt eine Spalte hinzu
+        /// Adds a column.
         /// </summary>
-        /// <param name="name">Name der Spalte</param>
-        /// <returns></returns>
+        /// <param name="name">The header of the column.</param>
         public virtual void AddColumn(string name)
         {
             Columns.Add(new ControlTableColumn(null)
@@ -71,11 +70,10 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Fügt eine Spalte hinzu
+        /// Adds a column.
         /// </summary>
-        /// <param name="name">Name der Spalte</param>
-        /// <param name="icon">Das Icon der Spalte</param>
-        /// <returns></returns>
+        /// <param name="name">The header of the column.</param>
+        /// <param name="icon">The icon of the column.</param>
         public virtual void AddColumn(string name, PropertyIcon icon)
         {
             Columns.Add(new ControlTableColumn(null)
@@ -86,12 +84,11 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Fügt eine Spalte hinzu
+        /// Adds a column.
         /// </summary>
-        /// <param name="name">Name der Spalte</param>
-        /// <param name="icon">Das Icon der Spalte</param>
-        /// <param name="layout">Das Layout der Spalte</param>
-        /// <returns></returns>
+        /// <param name="name">The header of the column.</param>
+        /// <param name="icon">The icon of the column.</param>
+        /// <param name="layout">The layout of the column.</param>
         public virtual void AddColumn(string name, PropertyIcon icon, TypesLayoutTableRow layout)
         {
             Columns.Add(new ControlTableColumn(null)
@@ -103,9 +100,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Fügt eine Zeile hinzu
+        /// Adds a row.
         /// </summary>
-        /// <param name="cells">Die Zellen der Zeile</param>
+        /// <param name="cells">The cells of the row.</param>
         public void AddRow(params Control[] cells)
         {
             var r = new ControlTableRow(null);
@@ -115,10 +112,10 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Fügt eine Zeile hinzu
+        /// Adds a row.
         /// </summary>
-        /// <param name="cells">Die Zellen der Zeile</param>
-        /// <param name="cssClass">Die Css-Klasse</param>
+        /// <param name="cells">The cells of the row.</param>
+        /// <param name="cssClass">The css class.</param>
         public void AddRow(Control[] cells, string cssClass = null)
         {
             var r = new ControlTableRow(null) { Classes = new List<string>(new[] { cssClass }) };
@@ -128,11 +125,11 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Fügt eine Zeile hinzu
+        /// Adds a row.
         /// </summary>
-        /// <param name="cells">Die Zellen der Zeile</param>
-        /// <param name="layout">Das Layout</param>
-        /// <param name="cssClass">Die Css-Klasse</param>
+        /// <param name="cells">The cells of the row.</param>
+        /// <param name="layout">The layout.</param>
+        /// <param name="cssClass">The css class.</param>
         public void AddRow(Control[] cells, TypesLayoutTableRow layout, string cssClass = null)
         {
             var r = new ControlTableRow(null) { Classes = new List<string>(new[] { cssClass }), Layout = layout };

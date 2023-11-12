@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -13,7 +13,7 @@ namespace WebExpress.WebUI.WebControl
         public List<Control> Content { get; private set; } = new List<Control>();
 
         /// <summary>
-        /// Liefert oder setzt die Ativitätsstatus des Listenelements
+        /// Returns or sets the ativity state of the list item.
         /// </summary>
         public TypeActive Active
         {
@@ -24,7 +24,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlListItem(string id = null)
             : base(id)
         {
@@ -34,7 +34,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlListItem(string id, params Control[] content)
             : this(id)
@@ -54,7 +54,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlListItem(string id, List<Control> content)
             : base(id)

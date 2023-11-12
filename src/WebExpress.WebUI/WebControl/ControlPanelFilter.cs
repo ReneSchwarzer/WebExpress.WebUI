@@ -5,7 +5,7 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlPanelFilter(string id = null)
             : base(id)
         {
@@ -17,7 +17,7 @@
         /// </summary>
         private void Init()
         {
-            SubmitButton.Text = "Aktualisieren";
+            SubmitButton.Text = "Update";
         }
     }
 }

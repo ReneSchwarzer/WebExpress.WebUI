@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using WebExpress.WebHtml;
-using WebExpress.Internationalization;
+using WebExpress.Core.Internationalization;
+using WebExpress.Core.WebHtml;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -17,7 +17,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlFormItemGroupColumn(string id = null)
             : base(id)
         {
@@ -26,7 +26,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         ///<param name="items">The form controls.</param> 
         public ControlFormItemGroupColumn(string id, params ControlFormItem[] items)
             : base(id, items)

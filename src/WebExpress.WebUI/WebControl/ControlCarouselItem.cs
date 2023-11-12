@@ -1,7 +1,7 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Erstellt eine Slideshowelement
+    /// Creates a slideshow element.
     /// </summary>
     public class ControlCarouselItem
     {
@@ -16,7 +16,7 @@
         public string Text { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt das Slideshowelement, wie zum Beispiel ein Bild
+        /// Retruns or sets the slideshow element, such as an image.
         /// </summary>
         public IControl Control { get; set; }
 

@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.Internationalization;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.Core.Internationalization;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlSplitButton : Control, IControlButton
     {
         /// <summary>
-        /// Returns or sets the color. der Schaltfläche
+        /// Returns or sets the background color.
         /// </summary>
         public new PropertyColorButton BackgroundColor
         {
@@ -77,7 +77,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlSplitButton(string id = null)
             : base(id)
         {
@@ -99,7 +99,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="items">The content of the html element.</param>
         public ControlSplitButton(string id, params IControlSplitButtonItem[] items)
             : base(id)
@@ -112,7 +112,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="items">The content of the html element.</param>
         public ControlSplitButton(string id, IEnumerable<IControlSplitButtonItem> items)
             : base(id)

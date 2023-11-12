@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
-using static WebExpress.Internationalization.InternationalizationManager;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
+using static WebExpress.Core.Internationalization.InternationalizationManager;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -15,7 +15,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlModalFormular(string id = null)
             : this(id, string.Empty, null)
         {
@@ -25,8 +25,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="header">Die Überschrift</param>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="header">The headline.</param>
         public ControlModalFormular(string id, string header)
             : this(id, header, null)
         {
@@ -36,8 +36,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="content">Die Formularsteuerelemente</param>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="content">The form controls.</param>
         public ControlModalFormular(string id, params ControlFormItem[] content)
             : this(id, string.Empty, content)
         {
@@ -47,9 +47,9 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="header">Die Überschrift</param>
-        /// <param name="content">Die Formularsteuerelemente</param>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="header">The headline.</param>
+        /// <param name="content">The form controls.</param>
         public ControlModalFormular(string id, string header, params ControlFormItem[] content)
             : base("modal_" + id, string.Empty, content)
         {
@@ -60,9 +60,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Aufruf erfolgt, wenn das Formular initialisiert wird.
+        /// Invoked when the form is initialized.
         /// </summary>
-        /// <param name="sender">Der Auslöser</param>
+        /// <param name="sender">The sender.</param>
         /// <param name="e">The event argument.</param>
         private void OnInitializeFormular(object sender, FormularEventArgs e)
         {
@@ -70,9 +70,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Wird aufgerufen, wenn das Formular validiert wurde
+        /// Invoked when the form has been validated.
         /// </summary>
-        /// <param name="sender">Der Auslöser</param>
+        /// <param name="sender">The sender.</param>
         /// <param name="e">The event argument.</param>
         private void OnValidatedFormular(object sender, ValidationResultEventArgs e)
         {

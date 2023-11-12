@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using WebExpress.WebHtml;
-using static WebExpress.Internationalization.InternationalizationManager;
+using WebExpress.Core.WebHtml;
+using static WebExpress.Core.Internationalization.InternationalizationManager;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -27,7 +27,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlFormItemInputMove(string id = null)
             : base(string.IsNullOrEmpty(id) ? typeof(ControlFormItemInputSelection).GUID.ToString() : id)
         {
@@ -37,7 +37,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="items">The entries.</param>
         public ControlFormItemInputMove(string id, params ControlFormItemInputSelectionItem[] items)
             : this(id)

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
+using WebExpress.Core.WebHtml;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -51,7 +51,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlFormItemInputRadio(string id = null)
             : base(id)
         {
@@ -61,7 +61,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="name">The name.</param>
         public ControlFormItemInputRadio(string id, string name)
             : this(id)

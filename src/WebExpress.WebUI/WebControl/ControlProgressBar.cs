@@ -1,12 +1,12 @@
-﻿using WebExpress.WebHtml;
-using WebExpress.WebPage;
+﻿using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlProgressBar : Control
     {
         /// <summary>
-        /// Liefert oder setzt das Format des Fortschrittbalkens
+        /// Returns or sets the format of the progress bar.
         /// </summary>
         public TypeFormatProgress Format { get; set; }
 
@@ -25,7 +25,7 @@ namespace WebExpress.WebUI.WebControl
         public PropertyColorProgress Color { get; set; }
 
         /// <summary>
-        /// Returns or sets the color. des Textes
+        /// Returns or sets the text color.
         /// </summary>
         public new PropertyColorText TextColor { get; set; }
 
@@ -35,24 +35,24 @@ namespace WebExpress.WebUI.WebControl
         public int Value { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt den Minimumwert
+        /// Returns or sets the minimum value.
         /// </summary>
         public int Min { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt dem Maximumwert
+        /// Returns or sets the maximum value.
         /// </summary>
         public int Max { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die Text
+        /// Returns or sets the text.
         /// </summary>
         public string Text { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlProgressBar(string id = null)
             : base(id)
         {
@@ -62,7 +62,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="value">The value.</param>
         public ControlProgressBar(string id, int value)
             : this(id)
@@ -73,7 +73,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="value">The value.</param>
         public ControlProgressBar(string id, int value, int min = 0, int max = 100)
             : this(id)

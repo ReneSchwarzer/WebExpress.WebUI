@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using WebExpress.WebHtml;
+using WebExpress.Core.WebHtml;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -37,7 +37,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlFormItemInputSelection(string id = null)
             : base(id ?? Guid.NewGuid().ToString())
         {
@@ -47,7 +47,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="items">The entries.</param>
         public ControlFormItemInputSelection(string id, params ControlFormItemInputSelectionItem[] items)
             : this(id)

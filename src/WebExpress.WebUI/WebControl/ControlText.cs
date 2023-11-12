@@ -1,13 +1,13 @@
-﻿using WebExpress.WebHtml;
-using WebExpress.WebPage;
-using static WebExpress.Internationalization.InternationalizationManager;
+﻿using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebPage;
+using static WebExpress.Core.Internationalization.InternationalizationManager;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlText : Control
     {
         /// <summary>
-        /// Returns or sets the color. des Textes
+        /// Returns or sets the text color.
         /// </summary>
         public new virtual PropertyColorText TextColor
         {
@@ -30,19 +30,18 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt die Text
+        /// Returns or sets the text.
         /// </summary>
         public string Text { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt einen Tooltiptext
+        /// Returns or sets a tooltip text.
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
         public ControlText()
             : base(null)
         {
@@ -51,7 +50,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlText(string id)
             : base(id)
         {

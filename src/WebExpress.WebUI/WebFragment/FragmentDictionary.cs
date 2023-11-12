@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using WebExpress.WebPlugin;
+using WebExpress.Core.WebPlugin;
 
 namespace WebExpress.WebUI.WebFragment
 {

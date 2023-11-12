@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using WebExpress.WebHtml;
-using WebExpress.WebMessage;
-using WebExpress.WebPage;
+using WebExpress.Core.WebHtml;
+using WebExpress.Core.WebMessage;
+using WebExpress.Core.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlPagination : Control
     {
         /// <summary>
-        /// Liefert oder setzt die Anzahl der Seiten
+        /// Returns or sets the number of pages.
         /// </summary>
         public int PageCount { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die Seitengröße
+        /// Returns or sets the page size.
         /// </summary>
         public int PageSize { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die aktuelle Seite
+        /// Returns or sets the current page.
         /// </summary>
         public int PageOffset { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die maximale Anzahl der Seitenschaltflächen
+        /// Returns or sets the maximum number of side buttons.
         /// </summary>
         public int MaxDisplayCount { get; set; }
 
@@ -40,7 +40,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlPagination(string id = null)
             : base(id)
         {
