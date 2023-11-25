@@ -1,6 +1,6 @@
 ﻿using System;
-using WebExpress.Core.WebHtml;
-using WebExpress.Core.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.Internationalization;
 
 namespace WebExpress.WebUI.WebControl
 {

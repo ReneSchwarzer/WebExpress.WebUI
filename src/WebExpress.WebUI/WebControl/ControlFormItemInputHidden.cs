@@ -1,4 +1,4 @@
-﻿using WebExpress.Core.WebHtml;
+﻿using WebExpress.WebCore.WebHtml;
 
 namespace WebExpress.WebUI.WebControl
 {

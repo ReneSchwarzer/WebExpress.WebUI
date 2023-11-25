@@ -1,4 +1,4 @@
-﻿using WebExpress.Core.WebPage;
+﻿using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {

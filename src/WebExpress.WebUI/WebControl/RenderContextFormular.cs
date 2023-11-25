@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using WebExpress.Core.WebMessage;
-using WebExpress.Core.WebPage;
+using WebExpress.WebCore.WebMessage;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebExpress.Core;
-using WebExpress.Core.Internationalization;
-using WebExpress.Core.WebApplication;
-using WebExpress.Core.WebAttribute;
-using WebExpress.Core.WebComponent;
-using WebExpress.Core.WebCondition;
-using WebExpress.Core.WebModule;
-using WebExpress.Core.WebPage;
-using WebExpress.Core.WebPlugin;
+using WebExpress.WebCore;
+using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebApplication;
+using WebExpress.WebCore.WebAttribute;
+using WebExpress.WebCore.WebComponent;
+using WebExpress.WebCore.WebCondition;
+using WebExpress.WebCore.WebModule;
+using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebPlugin;
 using WebExpress.WebUI.WebAttribute;
 using WebExpress.WebUI.WebControl;
 

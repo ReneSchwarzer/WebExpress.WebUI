@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using WebExpress.WebUI.WebControl;
-using WebExpress.Core.WebPage;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebFragment
 {

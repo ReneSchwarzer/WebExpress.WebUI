@@ -1,6 +1,6 @@
-﻿using WebExpress.Core.WebComponent;
-using WebExpress.Core.WebHtml;
-using WebExpress.Core.WebUri;
+﻿using WebExpress.WebCore.WebComponent;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebUri;
 
 namespace WebExpress.WebUI.WebControl
 {

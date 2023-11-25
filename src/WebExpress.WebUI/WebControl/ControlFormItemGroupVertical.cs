@@ -1,5 +1,5 @@
-﻿using WebExpress.Core.Internationalization;
-using WebExpress.Core.WebHtml;
+﻿using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
 
 namespace WebExpress.WebUI.WebControl
 {

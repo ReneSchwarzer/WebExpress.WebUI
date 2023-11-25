@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebExpress.Core.WebApplication;
-using WebExpress.Core.WebComponent;
-using WebExpress.Core.WebModule;
-using WebExpress.Core.WebPlugin;
+using WebExpress.WebCore.WebApplication;
+using WebExpress.WebCore.WebComponent;
+using WebExpress.WebCore.WebModule;
+using WebExpress.WebCore.WebPlugin;
 
 namespace WebExpress.WebUI.SettingPage
 {

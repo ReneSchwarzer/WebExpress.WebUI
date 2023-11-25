@@ -1,4 +1,4 @@
-﻿using WebExpress.Core.WebAttribute;
+﻿using WebExpress.WebCore.WebAttribute;
 
 namespace WebExpress.WebUI.WebAttribute
 {

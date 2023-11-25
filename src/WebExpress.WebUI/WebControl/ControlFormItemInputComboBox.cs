@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.Core.WebHtml;
-using static WebExpress.Core.Internationalization.InternationalizationManager;
+using WebExpress.WebCore.WebHtml;
+using static WebExpress.WebCore.Internationalization.InternationalizationManager;
 
 namespace WebExpress.WebUI.WebControl
 {
