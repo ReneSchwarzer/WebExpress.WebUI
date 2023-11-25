@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public abstract class Control : IControl
     {
         /// <summary>
-        /// Die horizontale Anordnung
+        /// Returns or sets the horizontal alignment.
         /// </summary>
         public virtual TypeHorizontalAlignment HorizontalAlignment
         {
@@ -19,7 +19,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Returns or sets the color. des Textes
+        /// Returns or sets the text color.
         /// </summary>
         public virtual PropertyColorText TextColor
         {
@@ -28,7 +28,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Die Hintergrundfarbe
+        /// Returns or sets the background color.
         /// </summary>
         public virtual PropertyColorBackground BackgroundColor
         {
@@ -37,7 +37,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Die Rahmenfarbe
+        /// Returns or sets the border color.
         /// </summary>
         public virtual PropertyColorBorder BorderColor
         {
@@ -46,7 +46,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Padding
+        /// Returns or sets the padding.
         /// </summary>
         public virtual PropertySpacingPadding Padding
         {
@@ -55,7 +55,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Margin
+        /// Returns or sets the margin.
         /// </summary>
         public virtual PropertySpacingMargin Margin
         {
@@ -64,7 +64,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Rahmen
+        /// Returns or sets the border.
         /// </summary>
         public virtual PropertyBorder Border
         {
@@ -73,7 +73,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Die Column-Eigenschaft, wenn das Steuerelement in einem Grid befindet
+        /// Returns or sets the column property if the control is on a grid.
         /// </summary>
         public virtual PropertyGrid GridColumn
         {
@@ -82,7 +82,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Die Weiten-Eigenschaft, wenn das Steuerelements
+        /// Returns or sets the width property of the control.
         /// </summary>
         public virtual TypeWidth Width
         {
@@ -91,7 +91,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Die Höhen-Eigenschaft, wenn das Steuerelements
+        /// Returns or sets the height property of the control.
         /// </summary>
         public virtual TypeHeight Height
         {
@@ -100,37 +100,37 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Returns or sets Returns or sets the id.
+        /// Returns or sets the id of the control.
         /// </summary>
         public string Id { get; private set; }
 
         /// <summary>
-        /// Liefert oder setzt die Css-Klasse
+        /// Returns or sets the css class.
         /// </summary>
         public List<string> Classes { get; set; } = new List<string>();
 
         /// <summary>
-        /// Liefert oder setzt Eigenschaften, die durch Enums bestimmt werden
+        /// Retruns or sets properties determined by enums.
         /// </summary>
         protected Dictionary<string, Tuple<object, Func<string>, Func<string>>> Propertys { get; private set; } = new Dictionary<string, Tuple<object, Func<string>, Func<string>>>();
 
         /// <summary>
-        /// Liefert oder setzt die Css-Style
+        /// Returns or sets the css style.
         /// </summary>
         public List<string> Styles { get; set; } = new List<string>();
 
         /// <summary>
-        /// Liefert oder setzt die Rolle
+        /// Returns or sets the role.
         /// </summary>
         public string Role { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die OnClick-Attribut, welches ein Java-Script auf dem Client ausführt
+        /// Returns or sets the OnClick attribute, which executes a java script on the client.
         /// </summary>
         public PropertyOnClick OnClick { get; set; }
 
         /// <summary>
-        /// Bestimmt, ob das Steuerelement aktiv ist und gerendert wird
+        /// Determines whether the control is active and rendering.
         /// </summary>
         public bool Enable { get; set; } = true;
 
@@ -156,10 +156,10 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert eine Property
+        /// Returns a property.
         /// </summary>
-        /// <param name="defaultValue">Der Standardwert Property</param>
-        /// <param name="propertyName">Der Name der Property</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <param name="propertyName">The name of the property.</param>
         /// <returns>The value.</returns>
         protected Enum GetProperty(Enum defaultValue, [CallerMemberName] string propertyName = "")
         {
@@ -174,9 +174,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert eine Property
+        /// Returns a property.
         /// </summary>
-        /// <param name="propertyName">Der Name der Property</param>
+        /// <param name="propertyName">The name of the property.</param>
         /// <returns>The value.</returns>
         protected Enum GetProperty([CallerMemberName] string propertyName = "")
         {
@@ -191,9 +191,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert eine Property
+        /// Returns a property.
         /// </summary>
-        /// <param name="propertyName">Der Name der Property</param>
+        /// <param name="propertyName">he name of the property.</param>
         /// <returns>The value.</returns>
         protected IProperty GetPropertyObject([CallerMemberName] string propertyName = "")
         {
@@ -208,9 +208,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert ein Propertywert
+        /// Returns a property value.
         /// </summary>
-        /// <param name="propertyName">Der Name der Property</param>
+        /// <param name="propertyName">The name of the property.</param>
         /// <returns>The value.</returns>
         protected string GetPropertyValue([CallerMemberName] string propertyName = "")
         {
@@ -225,12 +225,12 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Speichert eine Property
+        /// Stores a property.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <param name="callbackClass">Die Rückruffunktion zur Ermittlung der CSS-Klasse</param>
-        /// <param name="callbackStyle">Die Rückruffunktion zu Ermittlung des CSS-Styles</param>
-        /// <param name="propertyName">Der Name der Property</param>
+        /// <param name="callbackClass">The callback function to determine the css class.</param>
+        /// <param name="callbackStyle">The callback function to determine the css style.</param>
+        /// <param name="propertyName">The name of the property.</param>
         protected void SetProperty(Enum value, Func<string> callbackClass, Func<string> callbackStyle = null, [CallerMemberName] string propertyName = "")
         {
             if (!Propertys.ContainsKey(propertyName))
@@ -243,12 +243,12 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Speichert eine Property
+        /// Stores a property.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <param name="callbackClass">Die Rückruffunktion zur Ermittlung der CSS-Klasse</param>
-        /// <param name="callbackStyle">Die Rückruffunktion zu Ermittlung des CSS-Styles</param>
-        /// <param name="propertyName">Der Name der Property</param>
+        /// <param name="callbackClass">The callback function to determine the css class.</param>
+        /// <param name="callbackStyle">The callback function to determine the css style.</param>
+        /// <param name="propertyName">The name of the property.</param>
         protected void SetProperty(IProperty value, Func<string> callbackClass, Func<string> callbackStyle = null, [CallerMemberName] string propertyName = "")
         {
             if (!Propertys.ContainsKey(propertyName))
@@ -261,12 +261,12 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Speichert eine Property
+        /// Stores a property.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <param name="callbackClass">Die Rückruffunktion zur Ermittlung der CSS-Klasse</param>
-        /// <param name="callbackStyle">Die Rückruffunktion zur Ermittlung des CSS-Styles</param>
-        /// <param name="propertyName">Der Name der Property</param>
+        /// <param name="callbackClass">The callback function to determine the css class.</param>
+        /// <param name="callbackStyle">The callback function to determine the css style.</param>
+        /// <param name="propertyName">The name of the property.</param>
         protected void SetProperty(Func<string> callbackClass, Func<string> callbackStyle = null, [CallerMemberName] string propertyName = "")
         {
             if (!Propertys.ContainsKey(propertyName))
@@ -279,9 +279,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert alle Css-Klassen
+        /// Returns all css classes.
         /// </summary>
-        /// <returns>Die CSS-Kalssen</returns>
+        /// <returns>The css classes.</returns>
         protected string GetClasses()
         {
             var list = Propertys.Values.Select(x => x.Item2()).Where(x => !string.IsNullOrEmpty(x)).Distinct();
@@ -290,15 +290,14 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert alle Css-Styles
+        /// Returns all css styles.
         /// </summary>
-        /// <returns>Die CSS-Styles</returns>
+        /// <returns>The css styles.</returns>
         protected string GetStyles()
         {
             var list = Propertys.Values.Where(x => x.Item3 != null).Select(x => x.Item3()).Where(x => !string.IsNullOrEmpty(x)).Distinct();
 
             return string.Join(" ", Styles.Union(list));
         }
-
     }
 }

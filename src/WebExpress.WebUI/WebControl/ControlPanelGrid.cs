@@ -1,20 +1,18 @@
 ﻿using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Grid aus 12-Zellen pro Zeile
+    /// Grid of 12 cells per row.
     /// </summary>
     public class ControlPanelGrid : ControlPanel
     {
-
-
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlPanelGrid(string id = null)
             : base(id)
         {

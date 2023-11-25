@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlPanelFlexbox : ControlPanel
     {
         /// <summary>
-        /// Bestimmt, ob die Items inline angezeigt werden sollen
+        /// Returns or sets whether the items should be displayed inline.
         /// </summary>
         public virtual TypeLayoutFlexbox Layout
         {
@@ -17,7 +17,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Bestimmt, ob die horizentale Ausrichtung der Items
+        /// Returns or sets the horizontal alignment of the items.
         /// </summary>
         public virtual TypeJustifiedFlexbox Justify
         {
@@ -26,7 +26,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Bestimmt, ob die vertikale Ausrichtung der Items
+        /// Bestimmt, ob Specifies or sets the vertical orientation of the items.
         /// </summary>
         public virtual TypeAlignFlexbox Align
         {
@@ -35,7 +35,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Bestimmt, das Überlaufverhalten der Items
+        /// Returns or sets the overflow behavior of the items.
         /// </summary>
         public virtual TypeWrap Wrap
         {
@@ -46,7 +46,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlPanelFlexbox(string id = null)
             : base(id)
         {
@@ -55,8 +55,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="content">Die Listeneinträge</param>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="content">The flexbox items.</param>
         public ControlPanelFlexbox(string id, params IControl[] content)
             : base(id, content)
         {
@@ -65,7 +65,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="content">Die Listeneinträge</param>
+        /// <param name="content">The flexbox items.</param>
         public ControlPanelFlexbox(params IControl[] content)
             : base(null, content)
         {
@@ -74,8 +74,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="items">Die Listeneinträge</param>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="items">The flexbox items.</param>
         public ControlPanelFlexbox(string id, IEnumerable<IControl> content)
             : base(id, content)
         {
@@ -84,7 +84,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="items">Die Listeneinträge</param>
+        /// <param name="items">The flexbox items.</param>
         public ControlPanelFlexbox(IEnumerable<IControl> content)
             : base(null, content)
         {

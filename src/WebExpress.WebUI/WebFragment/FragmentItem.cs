@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebExpress.Internationalization;
-using WebExpress.WebCondition;
-using WebExpress.WebModule;
-using WebExpress.WebPlugin;
+using WebExpress.WebCore;
+using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebCondition;
+using WebExpress.WebCore.WebModule;
+using WebExpress.WebCore.WebPlugin;
 
 namespace WebExpress.WebUI.WebFragment
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -10,13 +10,20 @@ namespace WebExpress.WebUI.WebControl
     /// </summary>
     public class ControlTableRow : Control
     {
+        /// <summary>
+        /// Returns or sets the layout.
+        /// </summary>
         public TypesLayoutTableRow Layout { get; set; }
+
+        /// <summary>
+        /// Returns or set the cells.
+        /// </summary>
         public List<Control> Cells { get; private set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlTableRow(string id = null)
             : base(id)
         {

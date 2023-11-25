@@ -1,19 +1,19 @@
-﻿using WebExpress.WebHtml;
-using WebExpress.WebPage;
+﻿using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlDropdownItemHeader : Control, IControlDropdownItem
     {
         /// <summary>
-        /// Liefert oder setzt die Text
+        /// Returns or sets the text.
         /// </summary>
         public string Text { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlDropdownItemHeader(string id = null)
             : base(id)
         {
@@ -23,7 +23,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="text">The text.</param>
         public ControlDropdownItemHeader(string id, string text)
             : base(id)

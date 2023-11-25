@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebMessage;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebMessage;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -20,7 +20,7 @@ namespace WebExpress.WebUI.WebControl
         public string Text { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt das Ziel
+        /// Returns or sets the target.
         /// </summary>
         public TypeTarget Target { get; set; }
 
@@ -30,7 +30,7 @@ namespace WebExpress.WebUI.WebControl
         public string Title { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt einen Tooltiptext
+        /// Returns or sets a tooltip text.
         /// </summary>
         public string Tooltip { get; set; }
 
@@ -40,15 +40,14 @@ namespace WebExpress.WebUI.WebControl
         public PropertyIcon Icon { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die für den Link gültigen Parameter
+        /// Returns or sets the parameters that apply to the link.
         /// </summary>
         public List<Parameter> Params { get; set; }
-
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlListItemLink(string id = null)
             : base(id)
         {
@@ -58,7 +57,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlListItemLink(string id, params Control[] content)
             : base(id, content)
@@ -79,7 +78,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlListItemLink(string id, List<Control> content)
             : base(id, content)
@@ -105,15 +104,15 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert alle lokalen und temporären Parameter
+        /// Returns all local and temporary parameters.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>Die Parameter</returns>
+        /// <returns>The parameters.</returns>
         public string GetParams(IPage page)
         {
             var dict = new Dictionary<string, Parameter>();
 
-            // Übernahme der Parameter des Link
+            // copying the parameters of the link
             if (Params != null)
             {
                 foreach (var v in Params)

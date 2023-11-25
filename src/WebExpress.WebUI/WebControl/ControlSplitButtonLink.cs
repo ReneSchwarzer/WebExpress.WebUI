@@ -1,27 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.Internationalization;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlSplitButtonLink : ControlSplitButton
     {
         /// <summary>
-        /// Liefert oder setzt das Ziel
+        /// Returns or sets the target.
         /// </summary>
         public TypeTarget Target { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die Ziel-Url
+        /// Returns or sets the uri.
         /// </summary>
         public string Uri { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlSplitButtonLink(string id)
             : base(id)
         {
@@ -31,7 +31,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlSplitButtonLink(string id, params IControlSplitButtonItem[] content)
             : base(id)

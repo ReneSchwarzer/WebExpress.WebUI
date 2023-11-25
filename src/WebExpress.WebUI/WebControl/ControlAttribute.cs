@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.Internationalization;
-using WebExpress.WebPage;
+using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Anzeige eines Namen-Wert-Paares
+    /// Display of a name-value pair.
     /// </summary>
     public class ControlAttribute : Control
     {
         /// <summary>
-        /// Liefert oder setzt die Textfarbe des Namens
+        /// Returns or sets the text.farbe des Namens
         /// </summary>
         public PropertyColorText NameColor { get; set; }
 
@@ -32,14 +32,14 @@ namespace WebExpress.WebUI.WebControl
         public string Value { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt ein Link
+        /// Returns or sets a link.
         /// </summary>
         public Uri Uri { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlAttribute(string id = null)
             : base(id)
         {

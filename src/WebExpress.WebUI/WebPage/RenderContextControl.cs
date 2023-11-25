@@ -1,5 +1,5 @@
-﻿using WebExpress.WebMessage;
-using WebExpress.WebPage;
+﻿using WebExpress.WebCore.WebMessage;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebPage
 {

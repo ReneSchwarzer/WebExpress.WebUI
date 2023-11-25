@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
-using static WebExpress.Internationalization.InternationalizationManager;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
+using static WebExpress.WebCore.Internationalization.InternationalizationManager;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -14,34 +14,34 @@ namespace WebExpress.WebUI.WebControl
         public List<Control> Content { get; private set; }
 
         /// <summary>
-        /// Liefert oder setzt ob der Fadereffekt verwendet werden soll
+        /// Returns or sets whether the fader effect should be used.
         /// </summary>
         public bool Fade { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt den Header
+        /// Returns or sets the header.
         /// </summary>
         public string Header { get; set; }
 
         /// <summary>
-        /// Bestimmt, ob das Modal beim Laden des Steuerelementes angezeigt werden soll oder erst nach Nutzeraufforderung
+        /// Returns or sets whether the modal should be displayed when the control is loaded or only after the user is prompted.
         /// </summary>
         public bool ShowIfCreated { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt den JQuerryCode, welcher beim anzeigen des Modal-Dialoges ausgefürt werden soll
+        /// Returns or sets the jquerry code to be executed when the modal dialog is displayed.
         /// </summary>
         public string OnShownCode { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt den JQuerryCode, welcher beim ausblenden des Modal-Dialoges ausgefürt werden soll
+        /// Returns or sets the jquerry code to be executed when the modal dialog is hidden.
         /// </summary>
         public string OnHiddenCode { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlModal(string id)
             : base(!string.IsNullOrWhiteSpace(id) ? id : "modal")
         {
@@ -51,8 +51,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="header">Die Überschrift</param>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="header">The headline.</param>
         public ControlModal(string id, string header)
             : this(id)
         {
@@ -62,8 +62,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="header">Die Überschrift</param>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="header">The headline.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlModal(string id, string header, params Control[] content)
             : this(id, header)
@@ -77,7 +77,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="text">The text.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlModal(string id, string text, IEnumerable<Control> content)
@@ -89,7 +89,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="text">The text.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlModal(string id = null, params Control[] content)

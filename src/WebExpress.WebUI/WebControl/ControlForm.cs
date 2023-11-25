@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebExpress.Internationalization;
-using WebExpress.WebHtml;
-using WebExpress.WebMessage;
-using WebExpress.WebPage;
-using static WebExpress.Internationalization.InternationalizationManager;
+using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebMessage;
+using WebExpress.WebCore.WebPage;
+using static WebExpress.WebCore.Internationalization.InternationalizationManager;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -97,7 +97,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlForm(string id = null)
             : base(id)
         {
@@ -108,7 +108,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="items">The controls that are associated with the form.</param>
         public ControlForm(string id, params ControlFormItem[] items)
             : this(id)

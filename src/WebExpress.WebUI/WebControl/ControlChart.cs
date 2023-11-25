@@ -2,10 +2,10 @@
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using WebExpress.WebHtml;
-using WebExpress.WebComponent;
-using WebExpress.WebPage;
-using WebExpress.WebUri;
+using WebExpress.WebCore.WebComponent;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebUri;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -64,14 +64,14 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlChart(string id = null)
             : base(id)
         {
         }
 
         /// <summary>
-        /// Initializes the form element.
+        /// Initializes the control.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
         public void Initialize(RenderContext context)

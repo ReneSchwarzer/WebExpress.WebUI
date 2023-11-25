@@ -1,4 +1,4 @@
-﻿using WebExpress.WebHtml;
+﻿using WebExpress.WebCore.WebHtml;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlFormItemInputHidden(string id = null)
             : base(id)
         {
@@ -17,7 +17,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="name">The name.</param>
         public ControlFormItemInputHidden(string id, string name)
             : base(id)

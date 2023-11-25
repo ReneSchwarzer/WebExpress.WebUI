@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.Internationalization;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
-using WebExpress.WebResource;
+using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebResource;
 using WebExpress.WebUI.WebControl;
 
 namespace WebExpress.WebUI.WebPage

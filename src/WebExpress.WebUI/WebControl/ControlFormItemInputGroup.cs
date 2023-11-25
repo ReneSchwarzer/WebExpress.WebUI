@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using WebExpress.WebHtml;
+using WebExpress.WebCore.WebHtml;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -23,7 +23,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlFormItemInputGroup(string id = null)
             : base(id)
         {
@@ -34,7 +34,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="group">The name.</param>
         public ControlFormItemInputGroup(string id, ControlFormItemGroup group)
             : base(id)

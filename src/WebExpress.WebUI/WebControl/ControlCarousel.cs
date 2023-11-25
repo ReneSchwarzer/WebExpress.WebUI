@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Erstellt eine Slideshow
+    /// Creates a slideshow.
     /// </summary>
     public class ControlCarousel : Control
     {
@@ -17,7 +17,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlCarousel(string id = null)
             : base(string.IsNullOrWhiteSpace(id) ? "carousel" : id)
         {
@@ -26,7 +26,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="items">Die Inhalte der Slideshow</param>
+        /// <param name="items">The contents of the slideshow.</param>
         public ControlCarousel(params ControlCarouselItem[] items)
             : this()
         {
@@ -40,7 +40,7 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>The control as html.</returns>
         public override IHtmlNode Render(RenderContext context)
         {
-            // Indicators 
+            // indicators 
             var indicators = new HtmlElementTextContentUl() { Class = "carousel-indicators" };
             var index = 0;
 
@@ -57,7 +57,7 @@ namespace WebExpress.WebUI.WebControl
 
             index = 0;
 
-            // Ittems
+            // items
             var inner = new HtmlElementTextContentDiv() { Class = "carousel-inner" };
             foreach (var v in Items)
             {
@@ -82,7 +82,7 @@ namespace WebExpress.WebUI.WebControl
                 index++;
             }
 
-            // Navigationssteuerelemente
+            // navigation
             var navLeft = new HtmlElementTextSemanticsA(new HtmlElementTextSemanticsSpan() { Class = "carousel-control-prev-icon" })
             {
                 Class = "carousel-control-prev",

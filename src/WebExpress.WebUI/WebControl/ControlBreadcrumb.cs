@@ -1,18 +1,18 @@
-﻿using WebExpress.WebHtml;
-using WebExpress.Internationalization;
-using WebExpress.WebPage;
+﻿using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlBreadcrumb : Control
     {
         /// <summary>
-        /// Liefert oder setzt die Uri
+        /// Return or sets the uri.
         /// </summary>
         public string Uri { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt das Rootelement
+        /// Return or sets the root element.
         /// </summary>
         public string EmptyName { get; set; }
 
@@ -26,20 +26,19 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefet oder setzt ein Präfix, welcher statisch vor den Links angezeigt wird.
+        /// Return or sets a prefix, which is statically displayed in front of the links.
         /// </summary>
         public string Prefix { get; set; }
 
         /// <summary>
-        /// Bestimmt wie viele Links angezeigt werden sollen. Es wird am Anfang der Linkkette abgeschniiten.
+        /// Return or sets how many links to display. It will be truncated at the beginning of the link chain.
         /// </summary>
         public ushort TakeLast { get; set; } = ushort.MaxValue;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="page">Die zugehörige Seite</param>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlBreadcrumb(string id = null)
             : base(id)
         {
@@ -49,7 +48,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="page">Die zugehörige Seite</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="uri">Der Verzeichnispfad</param>
         public ControlBreadcrumb(string id, string uri)
             : base(id)

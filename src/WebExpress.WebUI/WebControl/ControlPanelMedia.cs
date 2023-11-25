@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -12,24 +12,24 @@ namespace WebExpress.WebUI.WebControl
         public Control Title { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die URL zum Bild
+        /// Returns or sets the uri to the image.
         /// </summary>
         public string Image { get; set; }
 
         /// <summary>
-        /// Returns or sets the width. des Bildes in Pixel
+        /// Returns or sets the width of the image in pixel.
         /// </summary>
         public int ImageWidth { get; set; } = -1;
 
         /// <summary>
-        /// Returns or sets the height. des Bildes in Pixel
+        /// Returns or sets the height of the image in pixel.
         /// </summary>
         public int ImageHeight { get; set; } = -1;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlPanelMedia(string id = null)
             : base(id)
         {
@@ -39,8 +39,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="title">Die Überschrift</param>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="title">The headline.</param>
         public ControlPanelMedia(string id, string title)
             : this(id)
         {

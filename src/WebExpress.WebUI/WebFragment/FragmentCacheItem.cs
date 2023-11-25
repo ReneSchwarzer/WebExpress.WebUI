@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebUI.WebControl;
-using WebExpress.WebMessage;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebMessage;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebFragment
 {

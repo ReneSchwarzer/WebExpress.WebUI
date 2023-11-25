@@ -1,23 +1,23 @@
 ﻿using System.Collections.Generic;
-using WebExpress.WebMessage;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebMessage;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class RenderContextFormular : RenderContext
     {
         /// <summary>
-        /// Das Formular, indem das Steuerelement gerendert wird
+        /// The form in which the control is rendered.
         /// </summary>
         public IControlForm Formular { get; private set; }
 
         /// <summary>
-        /// Liefert oder setzt die Links auf die zu verwendenden JavaScript-Dateien
+        /// Returns or sets the links to the java script files to be used.
         /// </summary>
         public IDictionary<string, string> Scripts { get; } = new Dictionary<string, string>();
 
         /// <summary>
-        /// Liefert die Validierungsfehler
+        /// Returns the validation errors.
         /// </summary>
         public ICollection<ValidationResult> ValidationResults { get; } = new List<ValidationResult>();
 
@@ -27,7 +27,7 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="page">The page where the control is rendered.</param>
         /// <param name="request">The request.</param>
         /// <param name="visualTree">The visual tree.</param>
-        /// <param name="formular">Das Formular, indem das Steuerelement gerendert wird</param>
+        /// <param name="formular">The form in which the control is rendered.</param>
         public RenderContextFormular(IPage page, Request request, IVisualTree visualTree, IControlForm formular)
                 : base(page, request, visualTree)
         {
@@ -37,8 +37,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="context">Der Kontext, indem das Steuerelement gerendert wird</param>
-        /// <param name="formular">Das Formular, indem das Steuerelement gerendert wird</param>
+        /// <param name="context">The context in which the control is rendered.</param>
+        /// <param name="formular">The form in which the control is rendered.</param>
         public RenderContextFormular(RenderContext context, IControlForm formular)
             : base(context)
         {
@@ -56,10 +56,10 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Fügt eine Java-Script hinzu oder sersetzt dieses, falls vorhanden
+        /// Adds or replaces a java script if it exists.
         /// </summary>
-        /// <param name="key">Der Schlüssel</param>
-        /// <param name="code">Der Code</param>
+        /// <param name="key">The key.</param>
+        /// <param name="code">The java script code.</param>
         public void AddScript(string key, string code)
         {
             if (!Scripts.ContainsKey(key))
@@ -67,6 +67,5 @@ namespace WebExpress.WebUI.WebControl
                 Scripts.Add(key, code);
             }
         }
-
     }
 }

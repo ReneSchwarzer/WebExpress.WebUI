@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlMultipleProgressBar : Control
     {
         /// <summary>
-        /// Liefert oder setzt das Format des Fortschrittbalkens
+        /// Returns or sets the format of the progress bar.
         /// </summary>
         public TypeFormatProgress Format { get; set; }
 
@@ -20,7 +20,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlMultipleProgressBar(string id = null)
             : base(id)
         {
@@ -30,7 +30,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="value">The value.</param>
         public ControlMultipleProgressBar(string id, params ControlMultipleProgressBarItem[] items)
             : this(id)

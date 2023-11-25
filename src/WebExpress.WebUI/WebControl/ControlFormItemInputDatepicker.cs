@@ -1,6 +1,6 @@
-﻿using WebExpress.WebHtml;
-using WebExpress.WebComponent;
-using WebExpress.WebUri;
+﻿using WebExpress.WebCore.WebComponent;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebUri;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -44,7 +44,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlFormItemInputDatepicker(string id = null)
             : base(!string.IsNullOrWhiteSpace(id) ? id : "datepicker")
         {

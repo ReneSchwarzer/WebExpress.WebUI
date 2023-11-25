@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using WebExpress.WebHtml;
+using WebExpress.WebCore.WebHtml;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -28,7 +28,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlFormItemInputFile(string id = null)
             : base(!string.IsNullOrWhiteSpace(id) ? id : "file")
         {
@@ -39,7 +39,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="name">The name.</param>
         public ControlFormItemInputFile(string id, string name)
             : base(!string.IsNullOrWhiteSpace(id) ? id : "file")

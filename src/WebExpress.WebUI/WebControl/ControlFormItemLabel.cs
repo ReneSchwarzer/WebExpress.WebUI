@@ -1,5 +1,5 @@
-﻿using WebExpress.WebHtml;
-using static WebExpress.Internationalization.InternationalizationManager;
+﻿using WebExpress.WebCore.WebHtml;
+using static WebExpress.WebCore.Internationalization.InternationalizationManager;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -18,7 +18,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlFormItemLabel(string id)
             : base(id)
         {
@@ -27,7 +27,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="text">The text.</param>
         public ControlFormItemLabel(string id, string text)
             : this(id)

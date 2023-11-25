@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using WebExpress.WebComponent;
-using WebExpress.WebHtml;
-using WebExpress.WebUri;
-using static WebExpress.Internationalization.InternationalizationManager;
+using WebExpress.WebCore.WebComponent;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebUri;
+using static WebExpress.WebCore.Internationalization.InternationalizationManager;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -57,7 +57,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlFormItemInputTextBox(string id = null)
             : base(id)
         {
@@ -68,7 +68,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="name">The name of the text box.</param>
         public ControlFormItemInputTextBox(string id, string name)
             : base(id)

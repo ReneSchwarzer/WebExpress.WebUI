@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlAvatar : Control
     {
         /// <summary>
-        /// Liefert oder setzt das Avatarbild
+        /// Returns or sets the avatar image.
         /// </summary>
         public Uri Image { get; set; }
 
         /// <summary>
-        /// Returns or sets the name. des Users
+        /// Returns or sets the name of the user.
         /// </summary>
         public string User { get; set; }
 
@@ -34,8 +34,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="page">Die zugehörige Seite</param>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlAvatar(string id = null)
             : base(id)
         {

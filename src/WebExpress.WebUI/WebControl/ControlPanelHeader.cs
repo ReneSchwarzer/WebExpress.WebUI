@@ -1,13 +1,13 @@
 ﻿using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     public class ControlPanelHeader : ControlPanel
     {
         /// <summary>
-        /// Die fixierte Anordnung
+        /// Returns or sets the fixed arrangement.
         /// </summary>
         public virtual TypeFixed Fixed
         {
@@ -16,7 +16,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Fixiert die Anordnung, wenn sich die Toolbar am oberen Rand befindet
+        /// Returns or sets the pinned arrangement when the toolbar is at the top.
         /// </summary>
         public virtual TypeSticky Sticky
         {
@@ -27,7 +27,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlPanelHeader(string id = null)
             : base(id)
         {
@@ -47,7 +47,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
         public ControlPanelHeader(string id, params Control[] content)
             : this(id)

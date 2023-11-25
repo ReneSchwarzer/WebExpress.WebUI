@@ -1,66 +1,66 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebComponent;
-using WebExpress.WebPage;
-using WebExpress.WebUri;
+using WebExpress.WebCore.WebComponent;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebUri;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Box mit Rahmen
+    /// Two panels that can be resized by a variable splitter.
     /// </summary>
     public class ControlPanelSplit : Control
     {
         /// <summary>
-        /// Bestimmt ob der Splitter horziontal oder vertikal ausgerichtet ist. 
+        /// Returns or sets whether the splitter is horziontal or vertically oriented.
         /// </summary>
         public TypeOrientationSplit Orientation { get; set; }
 
         /// <summary>
-        /// Returns or sets the color. des Splitters
+        /// Returns or sets the color of the splitter.
         /// </summary>
         public PropertyColorBackground SplitterColor { get; set; } = new PropertyColorBackground(TypeColorBackground.Light);
 
         /// <summary>
-        /// Liefert oder setzt die Breite des Splitters
+        /// Returns or sets the width of the splitter.
         /// </summary>
         public int SplitterSize { get; set; } = 6;
 
         /// <summary>
-        /// Der linke oder obere Bereich im ControlPanelSplit
+        /// Returns the left or top panel in the ControlPanelSplit.
         /// </summary>
         public List<IControl> Panel1 { get; } = new List<IControl>();
 
         /// <summary>
-        /// Die minimale Größe der linken oder des oberen Bereiches im ControlPanelSplit
+        /// Returns or sets the minimum size of the left or top area in the ControlPanelSplit.
         /// </summary>
         public int Panel1MinSize { get; set; }
 
         /// <summary>
-        /// Die initiale Größe der linken oder des oberen Bereiches im ControlPanelSplit in %
+        /// Returns or sets the initial size of the left or top area in the ControlPanelSplit in %.
         /// </summary>
         public int Panel1InitialSize { get; set; } = -1;
 
         /// <summary>
-        /// Der rechte oder untere Bereich im ControlPanelSplit
+        /// Returns the right or bottom pane in the ControlPanelSplit.
         /// </summary>
         public List<IControl> Panel2 { get; } = new List<IControl>();
 
         /// <summary>
-        /// Die minimale Größe des rechten oder des unteren Bereiches im ControlPanelSplit
+        /// Returns or sets the minimum size of the right or bottom area in the ControlPanelSplit.
         /// </summary>
         public int Panel2MinSize { get; set; }
 
         /// <summary>
-        /// Die initiale Größe des rechten oder des unteren Bereiches im ControlPanelSplit in %
+        /// Returns or sets the initial size of the right or bottom area in the ControlPanelSplit in %.
         /// </summary>
         public int Panel2InitialSize { get; set; } = -1;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlPanelSplit(string id = null)
             : base(id)
         {
@@ -69,9 +69,9 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="panel1">Steuerelemente des linken oder oberen Bereiches</param>
-        /// <param name="panel2">Steuerelemente des rechten oder unteren Bereiches</param>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="panel1">Left or top panel controls.</param>
+        /// <param name="panel2">Right or bottom panel controls.</param>
         public ControlPanelSplit(string id, Control[] panel1, Control[] panel2)
             : base(id)
         {
@@ -82,8 +82,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="panel1">Steuerelemente des linken oder oberen Bereiches</param>
-        /// <param name="panel2">Steuerelemente des rechten oder unteren Bereiches</param>
+        /// <param name="panel1">Left or top panel controls.</param>
+        /// <param name="panel2">Right or bottom panel controls.</param>
         public ControlPanelSplit(Control[] panel1, Control[] panel2)
             : this(null, panel1, panel2)
         {

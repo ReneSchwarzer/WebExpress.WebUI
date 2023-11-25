@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
-using WebExpress.WebApplication;
-using WebExpress.WebCondition;
-using WebExpress.WebModule;
-using WebExpress.WebPlugin;
+using WebExpress.WebCore.WebApplication;
+using WebExpress.WebCore.WebCondition;
+using WebExpress.WebCore.WebModule;
+using WebExpress.WebCore.WebPlugin;
 
 namespace WebExpress.WebUI.WebFragment
 {

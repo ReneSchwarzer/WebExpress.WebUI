@@ -1,5 +1,5 @@
 ﻿using WebExpress.WebUI.WebControl;
-using WebExpress.WebAttribute;
+using WebExpress.WebCore.WebAttribute;
 
 namespace WebExpress.WebUI.WebAttribute
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebHtml;
-using WebExpress.WebPage;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -17,24 +17,24 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt die Listeneinträge
+        /// Returns or sets the list entries.
         /// </summary>
         public List<ControlListItem> Items { get; private set; } = new List<ControlListItem>();
 
         /// <summary>
-        /// Bestimm, ob es sich um eine sotrierte oder unsortierte Liste handelt
+        /// Returns or sets whether it's sorted or unsorted.
         /// </summary>
         public bool Sorted { get; set; }
 
         /// <summary>
-        /// Zeigt einen Rahmen an oder keinen
+        /// Returns or sets whether to display a frame.
         /// </summary>
         public bool ShowBorder { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlList(string id = null)
             : base(id)
         {
@@ -44,8 +44,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="items">Die Listeneinträge</param>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="items">The list entries.</param>
         public ControlList(string id, params ControlListItem[] items)
             : base(id)
         {
@@ -55,7 +55,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="items">Die Listeneinträge</param>
+        /// <param name="items">The list entries.</param>
         public ControlList(params ControlListItem[] items)
             : this(null, items)
         {
@@ -64,8 +64,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="items">Die Listeneinträge</param>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="items">The list entries.</param>
         public ControlList(string id, List<ControlListItem> items)
             : base(id)
         {
@@ -75,7 +75,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="items">Die Listeneinträge</param>
+        /// <param name="items">The list entries.</param>
         public ControlList(List<ControlListItem> items)
             : this(null, items)
         {
@@ -91,18 +91,18 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Fügt Listeneinträge hinzu
+        /// Adds list entries.
         /// </summary>
-        /// <param name="items">Die Listeneinträge</param>
+        /// <param name="items">The list entries.</param>
         public void Add(IEnumerable<ControlListItem> items)
         {
             Items.AddRange(items);
         }
 
         /// <summary>
-        /// Fügt Listeneinträge hinzu
+        /// Adds list entries.
         /// </summary>
-        /// <param name="item">Der Listeneintrag</param>
+        /// <param name="item">The list entry.</param>
         public void Add(ControlListItem item)
         {
             Items.Add(item);

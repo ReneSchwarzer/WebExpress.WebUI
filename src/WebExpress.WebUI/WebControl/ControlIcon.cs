@@ -1,5 +1,5 @@
-﻿using WebExpress.WebHtml;
-using WebExpress.WebPage;
+﻿using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -20,7 +20,7 @@ namespace WebExpress.WebUI.WebControl
         public string Title { get; set; }
 
         /// <summary>
-        /// Die vertikale Ausrichtung
+        /// Return or specifies the vertical orientation.
         /// </summary>
         public TypeVerticalAlignment VerticalAlignment
         {
@@ -40,7 +40,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the control.</param>
         public ControlIcon(string id = null)
             : base(id)
         {
