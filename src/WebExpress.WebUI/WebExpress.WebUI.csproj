@@ -388,7 +388,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="WebExpress.WebCore" Version="0.0.5-alpha" />
+		<PackageReference Include="WebExpress.WebCore" Version="0.0.6-alpha" />
 	</ItemGroup>
 
 </Project>
