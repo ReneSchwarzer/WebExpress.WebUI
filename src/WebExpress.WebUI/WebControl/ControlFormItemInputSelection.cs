@@ -12,12 +12,17 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns the entries.
         /// </summary>
-        public ICollection<ControlFormItemInputSelectionItem> Options { get; } = new List<ControlFormItemInputSelectionItem>();
+        public ICollection<ControlFormItemInputSelectionItem> Options { get; } = [];
 
         /// <summary>
         /// Returns or sets the label of the selected options.
         /// </summary>
         public string Placeholder { get; set; }
+
+        /// <summary>
+        /// Returns or sets whether to display the description of the option or hide it.
+        /// </summary>
+        public bool HideDescription { get; set; }
 
         /// <summary>
         /// Allows you to select multiple items.
@@ -32,7 +37,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the value.
         /// </summary>
-        public virtual ICollection<string> Values => base.Value != null ? base.Value.Split(';', System.StringSplitOptions.RemoveEmptyEntries) : new List<string>();
+        public virtual ICollection<string> Values => base.Value != null ? base.Value.Split(';', System.StringSplitOptions.RemoveEmptyEntries) : [];
 
         /// <summary>
         /// Constructor
@@ -126,6 +131,7 @@ namespace WebExpress.WebUI.WebControl
                 Name = Id,
                 CSS = css,
                 Placeholder,
+                HideDescription,
                 MultiSelect
             };
 

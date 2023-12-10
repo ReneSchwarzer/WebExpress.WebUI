@@ -14,6 +14,7 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
     _options = [];
     _values = []; // array with selected ids from _options.
     _placeholder = null;
+    _hidedescription = false;
     _multiselect = false;
     _optionfilter = function (x, y) { return x?.toLowerCase().startsWith(y?.toLowerCase()); };
 
@@ -29,6 +30,7 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
         let id = settings.id;
         let name = settings.name;
         let css = settings.css;
+        let hidedescription = settings.hidedescription;
         let multiselect = settings.multiselect;
         let placeholder = settings.placeholder !== undefined ? settings.placeholder : null;
                 
@@ -45,6 +47,10 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
 
         if (name != null) {
             this._hidden.attr("name", name);
+        }
+
+        if (hidedescription != null) {
+            this._hidedescription = hidedescription;
         }
 
         if (multiselect != null) {
@@ -119,13 +125,13 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
                         box.append(img);
                         box.append(a);
                         span.append(box);
-                        if (description != null) {
+                        if (this._hidedescription == false && description != null) {
                             span.append(p);
                         }
                         li.append(span);
                     } else {
                         li.append(a);
-                        if (description != null) {
+                        if (this._hidedescription && description != null) {
                             li.append(p);
                         }
                     }
