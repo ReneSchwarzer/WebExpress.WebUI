@@ -1,7 +1,7 @@
 /**
- * Seitennavigationssteuerelement
- * Folgende Events werden ausgelöst:
- * - webexpress.webui.change.page mit Parameter page
+ * Page navigation control.
+ * The following events are triggered:
+ * - webexpress.webui.change.page with parameter page.
  */
 webexpress.webui.paginationCtrl = class extends webexpress.webui.events {
     _container = $("<ul class='pagination'/>");
@@ -11,9 +11,9 @@ webexpress.webui.paginationCtrl = class extends webexpress.webui.events {
 
     /**
      * Constructor
-     * @param settings Optionen zur Gestaltung des Steuerelementes
-     *                - id Returns or sets the id. des Steuerelements
-     *                - css CSS-Klasse zur Gestaltung des Steuerelementes
+     * @param settings Options for styling the control:
+     *                - id Sets the id of the control.
+     *                - css The CSS classes used to design the control.
      */
     constructor(settings) {
         super();
@@ -25,9 +25,9 @@ webexpress.webui.paginationCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Setzt die Seite 
-     * @param currentpage Die Seitennummer der aktuellen Seite
-     * @param pagecount Die Anzahl der Seiten
+     * Sets the page.
+     * @param currentpage The page number of the current page.
+     * @param pagecount The number of pages.
      */
     page(currentpage, pagecount) {
         this._currentpage = currentpage;
@@ -133,21 +133,21 @@ webexpress.webui.paginationCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Gibt die Seitennummer der aktuellen Seite zurück
+     * Returns the page number of the current page.
      */
     get currentpage() {
         return this._currentpage;
     }
 
     /**
-     * Gibt die Anzahl der Seiten zurück
+     * Returns the number of pages.
      */
     get pagecount() {
         return this._pagecount;
     }
 
     /**
-     * Gibt das Steuerelement zurück
+     * Returns the control.
      */
     get getCtrl() {
         return this._container;

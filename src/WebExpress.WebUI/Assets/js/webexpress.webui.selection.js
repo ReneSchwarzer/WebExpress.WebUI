@@ -1,8 +1,8 @@
 /**
- * Ein Auswahlfeld
- * Folgende Events werden ausgelöst:
- * - webexpress.webui.change.filter mit Parameter filter
- * - webexpress.webui.change.value mit Parameter value
+ * A selection box.
+ * The following events are triggered:
+ * - webexpress.webui.change.filter with parameter filter.
+ * - webexpress.webui.change.value with parameter value.
  */
 webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
     _container = $("<span class='selection form-control' />");
@@ -12,17 +12,17 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
     _dropdownoptions = $("<ul/>");
     _filter = $("<input type='text'/>");
     _options = [];
-    _values = []; // Arry mit ausgewählten Ids aus _options
+    _values = []; // array with selected ids from _options.
     _placeholder = null;
     _multiselect = false;
     _optionfilter = function (x, y) { return x?.toLowerCase().startsWith(y?.toLowerCase()); };
 
     /**
      * Constructor
-     * @param settings Optionen zur Gestaltung des Steuerelementes
-     *        - id Returns or sets the id. des Steuerelements
-     *        - css CSS-Klasse zur Gestaltung des Steuerelementes
-     *        - placeholder Der Platzhaltertext
+     * @param settings Options for styling the control:
+     *        - id Sets the id of the control.
+     *        - css The CSS classes used to design the control.
+     *        - placeholder The placeholder text.
      *        - multiselect Allows you to select multiple items.
      */
     constructor(settings) {
@@ -87,7 +87,7 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Aktualisierung des Steuerelementes
+     * Update of the control.
      */
     update() {
         this._dropdownoptions.children().remove();
@@ -182,23 +182,23 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Gibt die Optionen zurück
+     * Returns the options.
      */
     get options() {
         return this._options;
     }
 
     /**
-     * Setzt die Optionen
-     * @param data Ein Array mit ObjektIds {id, label, description, image, color, instruction}
+     * Sets the options.
+     * @param data An array with object ids {id, label, description, image, color, instruction}.
      */
     set options(options) {
         if (options != null) {
-            // selektierte Optionen ermitteln
+            // determine selected options
             let selectedOptions = this.selectedOptions;
-            // entferne die selektierten Optionen, wenn diese in den übergebenen neuen Optionen enthalten sind
+            // remove the selected options if they are included in the new options
             selectedOptions = selectedOptions.filter(elem => !options.some(o => o.Id === elem.id));
-            // Vereinige die selectierten und die neuen Optionen
+            // join the selected and the new options
             this._options = [...new Set([...options, ...selectedOptions])];
         } else {
             this._options = [];
@@ -207,22 +207,22 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Gibt die ausgewählten Optionen zurück
+     * Returns the selected options.
      */
     get selectedOptions() {
         return this._options.filter(elem => this.value.includes(elem.id));
     }
 
     /**
-     * Gibt die ausgewählten Optionen zurück
+     * Returns the selected options.
      */
     get value() {
         return this._values;
     }
 
     /**
-     * Setzt die ausgewählten Optionen
-     * @param values Returns or sets the id. des ausgewählten Eintrages
+     * Sets the selected options.
+     * @param values Sets the id of the selected option.
      */
     set value(values) {
         if (this._values != values) {
@@ -237,7 +237,7 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Gibt das Steuerelement zurück
+     * Returns the control.
      */
     get getCtrl() {
         return this._container;

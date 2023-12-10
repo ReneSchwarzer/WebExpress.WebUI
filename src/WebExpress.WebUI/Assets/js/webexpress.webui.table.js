@@ -1,5 +1,5 @@
 /**
- * Tabelle
+ * A table control.
  */
 webexpress.webui.tableCtrl = class extends webexpress.webui.events {
     _table = $("<table class='table table-hover mb-2'/>");
@@ -12,11 +12,11 @@ webexpress.webui.tableCtrl = class extends webexpress.webui.events {
 
     /**
      * Constructor
-     * @param settings Optionen zur Gestaltung des Steuerelementes
-     *        - id Returns or sets the id. des Steuerelements
-     *        - css CSS-Klasse zur Gestaltung des Steuerelementes
-     *        - optionsettings Optionen für die Darstellung der Optionen
-     *        - optionitems Die Optionen
+     * @param settings Options for styling the control:
+     *        - id Sets the id of the control.
+     *        - css The CSS classes used to design the control.
+     *        - optionsettings Options for displaying the options.
+     *        - optionitems The options.
      */
     constructor(settings) {
         super();
@@ -34,15 +34,15 @@ webexpress.webui.tableCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Löscht alle Zeilen aus der Tabelle
+     * Deletes all rows from the table.
      */
     clear() {
         this._body.children().remove();
     }
 
     /**
-     * Fügt eine Zeile ein
-     * @param row Ein Objekt mit den Werten der Spalten
+     * Inserts a row.
+     * @param row An object with the values of the columns.
      */
     add(row) {
         let th = $("<tr/>");
@@ -59,8 +59,8 @@ webexpress.webui.tableCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Fügt mehrere Zeilen ein
-     * @param data Ein Array mit Objekten der Zellen
+     * Inserts multiple rows.
+     * @param data An array of objects of the cells.
      */
     addRange(data) {
         let columns = this._columns;
@@ -114,8 +114,8 @@ webexpress.webui.tableCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Setzt die Spaltendefinitionen
-     * @param columns Die Spalten Array aus Objekten { Label, Icon, Width}
+     * Sets the column definitions.
+     * @param columns The columns array of objects { Label, Icon, Width}.
      */
     set columns(columns) {
         this._columns = columns;
@@ -163,14 +163,14 @@ webexpress.webui.tableCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Gibt Spaltendefinitionen zurück
+     * Returns column definitions.
      */
     get columns() {
         return this._columns;
     }
 
     /**
-     * Gibt das Steuerelement zurück
+     * Returns the control.
      */
     get getCtrl() {
         return this._table;

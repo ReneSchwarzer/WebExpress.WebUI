@@ -1,6 +1,7 @@
 /**
- * Auswahlfeld zum Aktivieren von Optionen
- * - webexpress.webui.change.value mit Parameter value
+ * Selection box to enable options.
+ * The following events are triggered:
+ * - webexpress.webui.change.value with parameter value.
  */
 webexpress.webui.moveCtrl = class extends webexpress.webui.events {
     _container = $("<div class='move'/>");
@@ -18,12 +19,12 @@ webexpress.webui.moveCtrl = class extends webexpress.webui.events {
     
     /**
      * Constructor
-     * @param settings Optionen zur Gestaltung des Steuerelementes
-     *        - id Returns or sets the id. des Steuerelements
-     *        - name Der Steuerelementenname
-     *        - css CSS-Klasse zur Gestaltung des Steuerelementes
-     *        - header Überschrift { Selected, Available }
-     *        - buttons Schaltflächenbeschriftung { toselectedall, toselected, toavailable, toavailableall }
+     * @param settings Options for styling the control:
+     *        - id Sets the id of the control.
+     *        - name The control name.
+     *        - css The CSS classes used to design the control.
+     *        - header The heading { Selected, Available }.
+     *        - buttons The button label { toselectedall, toselected, toavailable, toavailableall }.
      */
     constructor(settings) {
         super();
@@ -131,7 +132,7 @@ webexpress.webui.moveCtrl = class extends webexpress.webui.events {
     }
     
     /**
-     * Verschiebe alle Einträge nach links (selected)
+     * Move all entries to the left (selected).
      */
     moveToSelectedAll() {
         this.value = this._options.map(element => element.Id);
@@ -140,7 +141,7 @@ webexpress.webui.moveCtrl = class extends webexpress.webui.events {
     }
     
     /**
-     * Verschiebt ein einzelnen Eintrag nach links (selected)
+     * Moves a single entry to the left (selected).
      */
     moveToSelected() {
         this.value = this._values.concat(Array.from(this._availableoptions.values()).filter(elem => elem != null).map(elem => elem.Id));
@@ -149,7 +150,7 @@ webexpress.webui.moveCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Verschiebe alle Einträge nach rechts (available)
+     * Move all entries to the right (available).
      */
     moveToAvailableAll() {
         this.value = [];
@@ -158,7 +159,7 @@ webexpress.webui.moveCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Verschiebt ein einzelnen Eintrag nach rechts (available)
+     * Moves a single entry to the right (available).
      */
     moveToAvailable() {
         this.value = this._values.filter(b => !Array.from(this._selectedoptions.values()).filter(elem => elem != null).map(elem => elem.Id).includes(b));
@@ -167,7 +168,7 @@ webexpress.webui.moveCtrl = class extends webexpress.webui.events {
     }
    
     /**
-     * Aktualisierung des Steuerelementes
+     * Update of the control.
      */
     update() {
         let values = this._values != null ? this._values : [];
@@ -350,15 +351,15 @@ webexpress.webui.moveCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Gibt alle Optionen zurück
+     * Returns all options.
      */
     get options() {
         return this._options;
     }
 
     /**
-     * Setzt die Optionen
-     * @param options Ein Array mit Optionen { Id, Label, Icon, Image }
+     * Sets the options.
+     * @param options An array of options { Id, Label, Icon, Image }.
      */
     set options(options) {
         this._options = options;
@@ -367,15 +368,15 @@ webexpress.webui.moveCtrl = class extends webexpress.webui.events {
     }
     
     /**
-     * Gibt die ausgewählten Optionen zurück
+     * Returns the selected options.
      */
     get value() {
         return this._values;
     }
     
     /**
-     * Setzt die ausgewählten Optionen
-     * @param values Ein Array mit ObjektIds
+     * Sets the selected options.
+     * @param values An array with object ids.
      */
     set value(values) {
         if (this._values != values) {
@@ -390,7 +391,7 @@ webexpress.webui.moveCtrl = class extends webexpress.webui.events {
     }
     
     /**
-     * Gibt das Steuerelement zurück
+     * Returns the control.
      */
     get getCtrl() {
         return this._container;

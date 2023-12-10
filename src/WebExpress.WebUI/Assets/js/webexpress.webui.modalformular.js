@@ -1,6 +1,6 @@
 /**
- * Ein modulares Fenster/ Dialog
- * Folgende Events werden ausgelöst:
+ * A modular formular.
+ * The following events are triggered:
  * - webexpress.webui.close
  */
 webexpress.webui.modalFormularCtrl = class extends webexpress.webui.events {
@@ -9,12 +9,12 @@ webexpress.webui.modalFormularCtrl = class extends webexpress.webui.events {
 
     /**
      * Constructor
-     * @param settings Optionen zur Gestaltung des Steuerelementes
-     *        - id Returns or sets the id. des Steuerelements
-     *        - close Der Name der Schließenschaltfläche
-     *        - uri Die Url des Formulars
-     *        - size Die Größe des Modals (small, default, large, extralarge)
-     *        - redirect Die Weiterleitungs-Uri
+     * @param settings Options for styling the control:
+     *        - id Sets the id of the control.
+     *        - close The name of the close button.
+     *        - uri The uri of the form.
+     *        - size The size of the modal (small, default, large, extralarge).
+     *        - redirect The redirect uri.
      */
     constructor(settings) {
         super();
@@ -128,7 +128,7 @@ webexpress.webui.modalFormularCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Gibt das Steuerelement zurück
+     * Returns the control.
      */
     get getCtrl() {
         return this._container;

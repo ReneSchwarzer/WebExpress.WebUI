@@ -1,5 +1,5 @@
 var webexpress = webexpress || {}
-webexpress.ui = {}
+webexpress.webui = {}
 
 webexpress.webui.events = class {
     _listeners = new Map();
@@ -11,9 +11,9 @@ webexpress.webui.events = class {
     }
     
     /**
-     * Registriert ein Eventhandler für ein Event
-     * @param label Das Event-Label
-     * @param callback Die Rückrufsfunktion, wenn das Event gefeuert wird
+     * Registers an event handler for an event.
+     * @param label The event label.
+     * @param callback The callback function when the event is fired.
      */
     on(label, callback) {
         this._listeners.has(label) || this._listeners.set(label, []);
@@ -21,9 +21,9 @@ webexpress.webui.events = class {
     }
 
     /**
-     * Feuert ein Event
-     * @param Das Event-Label
-     * @param args Die Argumente
+     * Fire an event.
+     * @param label The event label.
+     * @param args The arguments.
      */
     trigger(label, ...args) {
         let res = false;

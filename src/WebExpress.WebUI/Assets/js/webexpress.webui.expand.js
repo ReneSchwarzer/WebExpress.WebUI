@@ -1,6 +1,6 @@
 /**
- * Ein Container zum verstecken von Inhalten
- * Folgende Events werden ausgelöst:
+ * A container for showing and hiding content.
+ * The following events are triggered:
  * - webexpress.webui.change.visibility 
  */
 webexpress.webui.expandCtrl = class extends webexpress.webui.events {
@@ -11,10 +11,10 @@ webexpress.webui.expandCtrl = class extends webexpress.webui.events {
 
     /**
      * Constructor
-     * @param settings Optionen zur Gestaltung des Steuerelementes
-     *        - id Returns or sets the id. des Steuerelements
-     *        - css CSS-Klasse zur Gestaltung des Steuerelementes
-     *        - header Der Überschriftsext
+     * @param settings Options for styling the control:
+     *        - id Sets the id of the control.
+     *        - css The CSS classes used to design the control.
+     *        - header The headline text.
      */
     constructor(settings) {
         let id = settings.id;
@@ -42,23 +42,23 @@ webexpress.webui.expandCtrl = class extends webexpress.webui.events {
         this.expand = true;
     }
     
-     /**
-     * Aktualisierung des Steuerelementes
+    /**
+     * Update of the control.
      */
     update() {
         this._content.toggleClass("hide");
     }
     
     /**
-     * Ermittelt, ob das Steuerelement aufgeplappt ist
+     * Determines if the control is pasted on.
      */
     get expand() {
         return this._expand;
     }
     
     /**
-     * Klappt das Stuerelement auf oder schließt es
-     * @param value Ein Wert, welcher bestimmt ob das Steuerelement auf- oder zugeklappt ist
+     * Show or hide the control content. 
+     * @param value A value that determines whether the control is expanded or closed.
      */
     set expand(value) {
         if (this._expand != value) {
@@ -76,15 +76,15 @@ webexpress.webui.expandCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Gibt den Inhalt zurück
+     * Returns the contents.
      */
     get content() {
         return this._content.children();
     }
     
     /**
-     * Setzt den Inhalt
-     * @param content Ein Array mit Inhalten
+     * Sets the content.
+     * @param content An array of contents.
      */
     set content(content) {
         this._content.children().remove();
@@ -93,7 +93,7 @@ webexpress.webui.expandCtrl = class extends webexpress.webui.events {
     }
     
     /**
-     * Gibt das Steuerelement zurück
+     * Returns the control.
      */
     get getCtrl() {
         return this._container;
