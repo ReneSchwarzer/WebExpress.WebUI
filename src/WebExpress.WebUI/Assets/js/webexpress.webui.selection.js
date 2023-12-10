@@ -24,6 +24,7 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
      *        - id Sets the id of the control.
      *        - css The CSS classes used to design the control.
      *        - placeholder The placeholder text.
+     *        - hidedescription Disabled the description.
      *        - multiselect Allows you to select multiple items.
      */
     constructor(settings) {

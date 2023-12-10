@@ -127,12 +127,12 @@ namespace WebExpress.WebUI.WebControl
         {
             var settings = new
             {
-                Id = id,
-                Name = Id,
-                CSS = css,
-                Placeholder,
-                HideDescription,
-                MultiSelect
+                id = id,
+                name = Id,
+                css = css,
+                placeholder = Placeholder,
+                hidedescription = HideDescription,
+                multiselect = MultiSelect
             };
 
             var jsonOptions = new JsonSerializerOptions { WriteIndented = false };
