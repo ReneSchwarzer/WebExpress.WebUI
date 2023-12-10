@@ -5,7 +5,7 @@ using WebExpress.WebCore.WebPlugin;
 
 namespace WebExpress.WebUI
 {
-    [Name("WebExpress.WebUI")]
+    [Name("webexpress.webui")]
     [Description("plugin.description")]
     [Icon("/assets/img/Logo.png")]
     public sealed class Plugin : IPlugin

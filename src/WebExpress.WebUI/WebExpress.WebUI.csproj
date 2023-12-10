@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
-		<Title>WebExpress.UI</Title>
+		<Title>WebExpress.WebUI</Title>
 		<Version>0.0.6.0</Version>
 		<AssemblyVersion>0.0.6.0</AssemblyVersion>
 		<TargetFramework>net8.0</TargetFramework>
@@ -174,7 +174,7 @@
 		<None Remove="Assets\js\split.min.js" />
 		<None Remove="Assets\js\summernote-bs5.min.js" />
 		<None Remove="Assets\js\summernote-de-DE.js" />
-		<None Remove="Assets\js\webexpress.ui.selection.move.js" />
+		<None Remove="Assets\js\webexpress.webui.selection.move.js" />
 		<None Remove="Assets\js\webexpress.webui.expand.js" />
 		<None Remove="Assets\js\webexpress.webui.js" />
 		<None Remove="Assets\js\webexpress.webui.modalformular.js" />
@@ -385,6 +385,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Markdig" Version="0.33.0" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="WebExpress.WebCore" Version="0.0.5-alpha" />
 	</ItemGroup>
 
