@@ -30,7 +30,7 @@
         }
 
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
         /// <returns>Die zur Farbe gehörende CSS-KLasse</returns>
         public override string ToClass()
@@ -48,7 +48,7 @@
         }
 
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
         /// <returns>Die zur Farbe gehörende CSS-KLasse</returns>
         public override string ToString()

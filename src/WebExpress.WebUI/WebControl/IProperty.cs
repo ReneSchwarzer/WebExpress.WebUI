@@ -6,7 +6,7 @@
     public interface IProperty
     {
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
         /// <returns>Die zur Eigenschaft gehörende CSS-KLasse</returns>
         string ToClass();

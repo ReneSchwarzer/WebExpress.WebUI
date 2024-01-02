@@ -12,7 +12,7 @@
     public static class TypeBlockButtonExtensions
     {
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
         /// <param name="block">Der Wert, welches umgewandelt werden soll</param>
         /// <returns>Die zum Block gehörende CSS-KLasse</returns>

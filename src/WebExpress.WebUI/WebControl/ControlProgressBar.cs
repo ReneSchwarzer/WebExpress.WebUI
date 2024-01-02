@@ -20,7 +20,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Returns or sets the color. des Balkens
+        /// Returns or sets the progress bar color.
         /// </summary>
         public PropertyColorProgress Color { get; set; }
 

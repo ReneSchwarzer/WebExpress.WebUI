@@ -1,7 +1,7 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Die Layoutmöglichkeiten des Panels-Steuerelementes
+    /// The layout options of the panel control.
     /// </summary>
     public enum TypePanelContainer
     {
@@ -13,10 +13,10 @@
     public static class TypePanelFluidExtensions
     {
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
-        /// <param name="layout">Das Layout, welches umgewandelt werden soll</param>
-        /// <returns>Die zum Layout gehörende CSS-KLasse</returns>
+        /// <param name="layout">The layout to be converted</param>
+        /// <returns>The CSS class belonging to the layout</returns>
         public static string ToClass(this TypePanelContainer layout)
         {
             return layout switch

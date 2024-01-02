@@ -116,7 +116,7 @@
     public static class TypeIconExtensions
     {
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
         /// <param name="icon">Das Icon, welches umgewandelt werden soll</param>
         /// <returns>Die zum Icon gehörende CSS-KLasse</returns>
