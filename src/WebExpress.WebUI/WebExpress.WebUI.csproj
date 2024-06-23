@@ -22,6 +22,7 @@
 		<PackageTags>webexpress</PackageTags>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<IsPackable>true</IsPackable>
+		<Configurations>Debug;Release</Configurations>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -386,11 +387,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Markdig" Version="0.33.0" />
+		<PackageReference Include="Markdig" Version="0.37.0" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="'$(SolutionName)' != 'WebExpress.Deploy'">
 		<PackageReference Include="WebExpress.WebCore" Version="0.0.7-alpha" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(SolutionName)' == 'WebExpress.Deploy'">
+	  <ProjectReference Include="..\..\..\WebExpress.WebCore\src\WebExpress.WebCore\WebExpress.WebCore.csproj" />
 	</ItemGroup>
 
 </Project>
