@@ -1,8 +1,8 @@
 ﻿# Deutsch
-plugin.name=WebExpress.UI
+plugin.name=WebExpress.WebUI
 plugin.description=Stellt Basiskomponenten bereit.
 
-module.name=WebExpress.UI
+module.name=WebExpress.WebUI
 module.description=Stellt Basiskomponenten bereit.
 
 fragmentmanager.initialization=Der Fragmentmanager wurde initialisiert.

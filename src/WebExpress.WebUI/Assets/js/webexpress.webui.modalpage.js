@@ -1,6 +1,6 @@
 /**
- * Ein modulares Fenster/ Dialog
- * Folgende Events werden ausgelöst:
+ * A modular window/dialog.
+ * The following events are triggered:
  * - webexpress.webui.close
  */
 webexpress.webui.modalPageCtrl = class extends webexpress.webui.events {
@@ -9,9 +9,9 @@ webexpress.webui.modalPageCtrl = class extends webexpress.webui.events {
     
     /**
      * Constructor
-     * @param settings Optionen zur Gestaltung des Steuerelementes
-     *        - id Returns or sets the id. des Steuerelements
-     *        - close Der Name der Schließenschaltfläche
+     * @param settings Options for styling the control:
+     *        - id Sets the id of the control.
+     *        - close The name of the close button.
      */
     constructor(settings) {
         super();
@@ -58,14 +58,14 @@ webexpress.webui.modalPageCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Anzeige des modalen Dialogs
+     * Display of the modal dialog.
      */
     show() {
         
     }
 
     /**
-     * Gibt das Steuerelement zurück
+     * Returns the control.
      */
     get getCtrl() {
         return this._container;

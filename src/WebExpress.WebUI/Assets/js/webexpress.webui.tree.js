@@ -1,6 +1,6 @@
 /**
- * Baum
- * Folgende Events werden ausgelöst:
+ * A tree control.
+ * The following events are triggered:
  * - webexpress.webui.change.visibility 
  */
 webexpress.webui.treeCtrl = class extends webexpress.webui.events {
@@ -9,9 +9,9 @@ webexpress.webui.treeCtrl = class extends webexpress.webui.events {
 
     /**
      * Constructor
-     * @param settings Optionen zur Gestaltung des Steuerelementes
-     *        - id Returns or sets the id. des Steuerelements
-     *        - css CSS-Klasse zur Gestaltung des Steuerelementes
+     * @param settings Options for styling the control:
+     *        - id Sets the id of the control.
+     *        - css The CSS classes used to design the control.
      */
     constructor(settings) {
         super();
@@ -24,10 +24,10 @@ webexpress.webui.treeCtrl = class extends webexpress.webui.events {
     }
     
     /**
-     * Aktualisierung des Steuerelementes.
-     * Diese Funktion arbeitet rekursiv.
-     * @param container Das Stuerelement
-     * @param nodes Die einzufügenden Knoten
+     * Update of the control.
+     * This function works recursively.
+     * @param container The control.
+     * @param nodes The nodes to be inserted.
      */
     update(container, nodes) {
         container.children().remove();
@@ -87,15 +87,15 @@ webexpress.webui.treeCtrl = class extends webexpress.webui.events {
     }
     
     /**
-     * Gibt die Baumknoten zurück
+     * Returns the tree nodes.
      */
     get nodes() {
         return this._nodes;
     }
     
     /**
-     * Setzt die Knoten des Baumes
-     * @param nodes Ein Array mit ObjektIds {id, label, description, image, color, expand}
+     * Set the nodes of the tree.
+     * @param nodes An array with object ids {id, label, description, image, color, expand}.
      */
     set nodes(nodes) {
         this._nodes = nodes;
@@ -104,14 +104,14 @@ webexpress.webui.treeCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Löscht alle Einträge aus dem Baum
+     * Deletes all entries from the tree.
      */
     clear() {
         this._container.children().remove();
     }
 
     /**
-     * Gibt das Steuerelement zurück
+     * Returns the control.
      */
     get getCtrl() {
         return this._container;

@@ -144,7 +144,7 @@ namespace WebExpress.WebUI.WebControl
 
             if (string.IsNullOrWhiteSpace(SubmitButton.Text))
             {
-                SubmitButton.Text = context.I18N("webexpress.ui", "form.submit.label");
+                SubmitButton.Text = context.I18N("webexpress.webui", "form.submit.label");
             }
             else
             {
@@ -307,6 +307,14 @@ namespace WebExpress.WebUI.WebControl
             form.Elements.Add(FormularId.Render(renderContext));
             form.Elements.Add(SubmitType.Render(renderContext));
             var header = new HtmlElementSectionHeader();
+            header.Elements.Add(new ControlProgressBar()
+            {
+                Format = TypeFormatProgress.Animated,
+                Color = new PropertyColorProgress(TypeColorProgress.Success),
+                Margin = new PropertySpacingMargin(PropertySpacing.Space.None, PropertySpacing.Space.None, PropertySpacing.Space.None, PropertySpacing.Space.Three),
+                Styles = { "height: 3px;", "display: none;" },
+                Value = 0
+            }.Render(renderContext));
 
             foreach (var v in renderContext.ValidationResults)
             {
@@ -362,6 +370,8 @@ namespace WebExpress.WebUI.WebControl
             form.Elements.Add(footer);
 
             form.Elements.AddRange(renderContext.Scripts.Select(x => new HtmlElementScriptingScript(x.Value)));
+
+            context.VisualTree.AddScript(Id, $"new webexpress.webui.form.progess('{Id}', '{RequestMethod.POST.ToString()}');");
 
             return form;
         }

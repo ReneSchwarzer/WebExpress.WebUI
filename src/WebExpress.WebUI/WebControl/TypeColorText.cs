@@ -21,10 +21,10 @@
     public static class TypeColorTextExtensions
     {
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
         /// <param name="color">Die Farbe, welches umgewandelt werden soll</param>
-        /// <returns>Die zum Layout gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class belonging to the layout</returns>
         public static string ToClass(this TypeColorText color)
         {
             return color switch

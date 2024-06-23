@@ -63,12 +63,13 @@ namespace WebExpress.WebUI.WebPage
                 CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.table.css"));
                 CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.toolpanel.css"));
 
-                HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/jquery-3.7.0.min.js"));
+                HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/jquery-3.7.1.min.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/popper.min.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/bootstrap.min.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/summernote-bs5.min.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.expand.js"));
+                HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.form.progress.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalformular.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalpage.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.more.js"));

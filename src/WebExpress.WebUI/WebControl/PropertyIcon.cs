@@ -38,7 +38,7 @@
         }
 
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
         /// <returns>Die zum Icon gehörende CSS-KLasse</returns>
         public virtual string ToClass()

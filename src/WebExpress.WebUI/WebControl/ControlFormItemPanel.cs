@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
-    public class ControlPanel : Control
+    public class ControlFormItemPanel : ControlFormItem
     {
         /// <summary>
         /// Returns or sets the content.
         /// </summary>
-        public List<IControl> Content { get; private set; } = new List<IControl>();
+        public IEnumerable<IControl> Content { get; private set; } = new List<IControl>();
 
         /// <summary>
         /// Returns or sets the arrangement of the content.
@@ -34,7 +33,7 @@ namespace WebExpress.WebUI.WebControl
         /// Constructor
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlPanel(string id = null)
+        public ControlFormItemPanel(string id)
             : base(id)
         {
         }
@@ -42,54 +41,19 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlPanel(params IControl[] content)
-            : this()
-        {
-            Content.AddRange(content.Where(x => x != null));
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlPanel(ICollection<IControl> content)
-            : this()
-        {
-            Content.AddRange(content.Where(x => x != null));
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
-        public ControlPanel(string id, params IControl[] content)
-            : this(id)
-        {
-            Content.AddRange(content.Where(x => x != null));
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlPanel(string id, IEnumerable<IControl> content)
-            : this(id)
-        {
-            Content.AddRange(content.Where(x => x != null));
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlPanel(string id, List<IControl> content)
+        public ControlFormItemPanel(string id, IEnumerable<Control> content)
             : base(id)
         {
             Content = content;
+        }
+
+        /// <summary>
+        /// Initialization
+        /// </summary>
+        public override void Initialize(RenderContextFormular context)
+        {
         }
 
         /// <summary>
@@ -97,7 +61,7 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
         /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        public override IHtmlNode Render(RenderContextFormular context)
         {
             return new HtmlElementTextContentDiv(from x in Content select x.Render(context))
             {

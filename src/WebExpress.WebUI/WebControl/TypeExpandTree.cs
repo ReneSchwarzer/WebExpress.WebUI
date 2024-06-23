@@ -10,7 +10,7 @@
     public static class TypeExpandTreeExtensions
     {
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
         /// <param name="expand">Der Expansionszustand</param>
         /// <returns>Die zum Icon gehörende CSS-KLasse</returns>

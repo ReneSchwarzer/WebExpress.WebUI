@@ -91,9 +91,9 @@
         }
 
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
-        /// <returns>Die zum Layout gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class belonging to the layout</returns>
         protected string ToClass(string prefix)
         {
             if (Top == Bottom && Top == Left && Top == Right && Top == Space.None)
@@ -182,7 +182,7 @@
         }
 
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
         /// <returns>Die zum Spacing gehörende CSS-KLasse</returns>
         public abstract string ToClass();

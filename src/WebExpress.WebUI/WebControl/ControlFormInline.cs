@@ -124,7 +124,7 @@ namespace WebExpress.WebUI.WebControl
         {
             if (string.IsNullOrWhiteSpace(SubmitButton.Text))
             {
-                SubmitButton.Text = context.I18N("webexpress.ui", "form.submit.label");
+                SubmitButton.Text = context.I18N("webexpress.webui", "form.submit.label");
             }
         }
 

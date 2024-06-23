@@ -1,18 +1,18 @@
 /**
- * Ein Dropdown, welches erweiterte Funktionen (Links) anbietet
+ * A dropdown that offers advanced features (links).
  */
 webexpress.webui.moreCtrl = class {
     _container = $("<div class='dropdown'/>");
 
     /**
      * Constructor
-     * @param options Die Menüeinräge Array von { css: "", icon: "", color: "", label: "", url: "", onclick: "", item: null, disabled: false}
-     * @param settings Optionen zur Gestaltung des Steuerelementes
-     *        - id Returns or sets the id. des Steuerelements
-     *        - css CSS-Klasse zur Gestaltung des Steuerelementes
-     *        - menucss CSS-Klasse zur Gestaltung des Popupmenüs
+     * @param options The menu items array of { css: "", icon: "", color: "", label: "", url: "", onclick: "", item: null, disabled: false}.
+     * @param settings Options for styling the control:
+     *        - id Sets the id of the control.
+     *        - css The CSS classes used to design the control.
+     *        - menucss A CSS class for designing the pop-up menu.
      *        - label The text.
-     *        - icon Die Icon-Klasse des Steuerelements
+     *        - icon The Icon class of the control.
      */
     constructor(options, settings) {
         let id = settings.id;
@@ -98,7 +98,7 @@ webexpress.webui.moreCtrl = class {
     }
 
     /**
-     * Gibt das Steuerelement zurück
+     * Returns the control.
      */
     get getCtrl() {
         return this._container;

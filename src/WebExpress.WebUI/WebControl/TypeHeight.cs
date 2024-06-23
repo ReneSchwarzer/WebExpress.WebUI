@@ -15,7 +15,7 @@
     public static class TypesHeightExtensions
     {
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
         /// <param name="width">Die Weite, welche umgewandelt werden soll</param>
         /// <returns>Die zur Anordnung gehörende CSS-KLasse</returns>

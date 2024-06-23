@@ -13,10 +13,10 @@
     public static class TypesHorizontalAlignmentExtensions
     {
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
         /// <param name="alignment">Die Ausrichtung, welches umgewandelt werden soll</param>
-        /// <returns>Die zum Layout gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class belonging to the layout</returns>
         public static string ToClass(this TypeHorizontalAlignment alignment)
         {
             return alignment switch

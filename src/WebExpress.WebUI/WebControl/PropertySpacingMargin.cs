@@ -42,9 +42,9 @@
         }
 
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
-        /// <returns>Die zum Layout gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class belonging to the layout</returns>
         public override string ToClass()
         {
             return ToClass("m");

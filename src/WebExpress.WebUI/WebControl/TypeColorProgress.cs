@@ -20,10 +20,10 @@
     public static class TypeColorProgressExtensions
     {
         /// <summary>
-        /// Umwandlung in eine CSS-Klasse
+        /// Conversion to a CSS class.
         /// </summary>
         /// <param name="color">Die Hintergrundfarbe, welches umgewandelt werden soll</param>
-        /// <returns>Die zum Layout gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class belonging to the layout</returns>
         public static string ToClass(this TypeColorProgress color)
         {
             return color switch

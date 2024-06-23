@@ -1,18 +1,18 @@
 /**
- * Ein Feld, inden Suchbefehle eingegeben werden können.
- * Folgende Events werden ausgelöst:
- * - webexpress.webui.change.filter mit Parameter filter
+ * A field where search commands can be entered.
+ * The following events are triggered:
+ * - webexpress.webui.change.filter with parameter filter.
  */
 webexpress.webui.searchCtrl = class extends webexpress.webui.events {
     _container = $("<span class='search form-control'>");
 
     /**
      * Constructor
-     * @param settings Optionen zur Gestaltung des Steuerelementes
-     *        - id Returns or sets the id. des Steuerelements
-     *        - css CSS-Klasse zur Gestaltung des Steuerelementes
-     *        - placeholder Der Platzhaltertext
-     *        - icon Die Icon-Klasse des Suchsymbols
+     * @param settings Options for styling the control:
+     *        - id Sets the id of the control.
+     *        - css The CSS classes used to design the control.
+     *        - placeholder The placeholder text.
+     *        - icon The icon class of the search icon.
      */
     constructor(settings) {
         super();
@@ -46,7 +46,7 @@ webexpress.webui.searchCtrl = class extends webexpress.webui.events {
     }
 
     /**
-     * Gibt das Steuerelement zurück
+     * Returns the control.
      */
     get getCtrl() {
         return this._container;
