@@ -90,9 +90,19 @@ namespace WebExpress.WebUI.WebControl
         };
 
         /// <summary>
-        /// Returns or sets the form items.
+        /// Returns or sets the request method.
         /// </summary>
-        public IList<ControlFormItem> Items { get; } = new List<ControlFormItem>();
+        public RequestMethod Method { get; set; } = RequestMethod.POST;
+
+        /// <summary>
+        /// Returns the form items.
+        /// </summary>
+        protected List<ControlFormItem> _Items { get; } = new List<ControlFormItem>();
+
+        /// <summary>
+        /// Returns the form items.
+        /// </summary>
+        public IEnumerable<ControlFormItem> Items => _Items;
 
         /// <summary>
         /// Constructor
@@ -113,10 +123,7 @@ namespace WebExpress.WebUI.WebControl
         public ControlForm(string id, params ControlFormItem[] items)
             : this(id)
         {
-            if (items != null)
-            {
-                (Items as List<ControlFormItem>).AddRange(items);
-            }
+            _Items.AddRange(items);
         }
 
         /// <summary>
@@ -300,7 +307,7 @@ namespace WebExpress.WebUI.WebControl
                 Style = GetStyles(),
                 Role = Role,
                 Action = Uri?.ToString() ?? renderContext.Uri?.ToString(),
-                Method = RequestMethod.POST.ToString(),
+                Method = Method.ToString(),
                 Enctype = TypeEnctype.None
             };
 
@@ -371,7 +378,7 @@ namespace WebExpress.WebUI.WebControl
 
             form.Elements.AddRange(renderContext.Scripts.Select(x => new HtmlElementScriptingScript(x.Value)));
 
-            context.VisualTree.AddScript(Id, $"new webexpress.webui.form.progess('{Id}', '{RequestMethod.POST.ToString()}');");
+            context.VisualTree.AddScript(Id, $"new webexpress.webui.form.progess('{Id}', '{Method.ToString()}');");
 
             return form;
         }
@@ -382,7 +389,16 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="item">The form item.</param>
         public void Add(params ControlFormItem[] item)
         {
-            (Items as List<ControlFormItem>).AddRange(item);
+            _Items.AddRange(item);
+        }
+
+        /// <summary>
+        /// Removes a form control item from the form.
+        /// </summary>
+        /// <param name="formItem">The form item.</param>
+        public void Remove(ControlFormItem formItem)
+        {
+            _Items.Remove(formItem);
         }
 
         /// <summary>

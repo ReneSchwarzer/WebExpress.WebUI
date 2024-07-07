@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using WebExpress.WebCore.WebMessage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -53,7 +54,12 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the form items.
         /// </summary>
-        IList<ControlFormItem> Items { get; }
+        IEnumerable<ControlFormItem> Items { get; }
+
+        /// <summary>
+        /// Returns or sets the request method.
+        /// </summary>
+        RequestMethod Method { get; set; }
 
         /// <summary>
         /// Initializes the form.
@@ -62,19 +68,25 @@ namespace WebExpress.WebUI.WebControl
         void Initialize(RenderContextFormular context);
 
         /// <summary>
-        /// Vorverarbeitung des Formulars
+        /// Pre-processes the form.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
         void PreProcess(RenderContextFormular context);
 
         /// <summary>
-        /// Fügt Formularsteuerelement dem Formular hinzu
+        /// Adds form control items to the form.
         /// </summary>
-        /// <param name="item">Die Formularelemente</param>
+        /// <param name="item">The form items.</param>
         void Add(params ControlFormItem[] item);
 
         /// <summary>
-        /// Prüft die Eingabeelemente auf Korrektheit der Daten
+        /// Removes a form control item from the form.
+        /// </summary>
+        /// <param name="formItem">The form item.</param>
+        void Remove(ControlFormItem formItem);
+
+        /// <summary>
+        /// Validates the input elements for correctness of the data.
         /// </summary>
         /// <param name="context">The context in which the inputs are validated.</param>
         /// <returns>True if all form items are valid, false otherwise.</returns>

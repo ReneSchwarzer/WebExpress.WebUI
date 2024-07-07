@@ -66,9 +66,19 @@ namespace WebExpress.WebUI.WebControl
         public ParameterScope Scope { get; set; }
 
         /// <summary>
-        /// Returns or sets the form items.
+        /// Returns or sets the request method.
         /// </summary>
-        public IList<ControlFormItem> Items { get; } = new List<ControlFormItem>();
+        public RequestMethod Method { get; set; } = RequestMethod.POST;
+
+        /// <summary>
+        /// Returns the form items.
+        /// </summary>
+        protected List<ControlFormItem> _Items { get; } = new List<ControlFormItem>();
+
+        /// <summary>
+        /// Returns the form items.
+        /// </summary>
+        public IEnumerable<ControlFormItem> Items => _Items;
 
         /// <summary>
         /// Returns the validation results.
@@ -103,7 +113,7 @@ namespace WebExpress.WebUI.WebControl
         public ControlFormInline(string id, params ControlFormItem[] items)
             : this(id)
         {
-            (Items as List<ControlFormItem>).AddRange(items);
+            _Items.AddRange(items);
 
         }
 
@@ -190,7 +200,7 @@ namespace WebExpress.WebUI.WebControl
                 Role = Role,
                 Name = formName.ToLower(),
                 Action = Uri?.ToString(),
-                Method = "post",
+                Method = Method.ToString(),
                 Enctype = TypeEnctype.None
             };
 
@@ -253,7 +263,16 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="item">The form item.</param>
         public void Add(params ControlFormItem[] item)
         {
-            (Items as List<ControlFormItem>).AddRange(item);
+            _Items.AddRange(item);
+        }
+
+        /// <summary>
+        /// Removes a form control item from the form.
+        /// </summary>
+        /// <param name="formItem">The form item.</param>
+        public void Remove(ControlFormItem formItem)
+        {
+            _Items.Remove(formItem);
         }
 
         /// <summary>
