@@ -270,19 +270,6 @@ namespace WebExpress.WebUI.SettingPage
                 string.Empty.PadRight(deep) +
                 InternationalizationManager.I18N("webexpress.webui:settingpagemanager.titel")
             );
-
-            //foreach (var fragmentItem in GetFragmentItems(pluginContext))
-            //{
-            //    output.Add
-            //    (
-            //        string.Empty.PadRight(deep + 2) +
-            //        InternationalizationManager.I18N
-            //        (
-            //            "webexpress.webui:settingpagemanager.settingpage",
-            //            fragmentItem.FragmentClass.Name
-            //        )
-            //    );
-            //}
         }
     }
 }
