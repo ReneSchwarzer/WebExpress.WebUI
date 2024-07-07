@@ -5,6 +5,9 @@ using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a control list that can contain multiple control list items.
+    /// </summary>
     public class ControlList : Control
     {
         /// <summary>
@@ -66,17 +69,17 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="items">The list entries.</param>
-        public ControlList(string id, List<ControlListItem> items)
+        public ControlList(string id, IEnumerable<ControlListItem> items)
             : base(id)
         {
-            Items = items;
+            Items.AddRange(items);
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="items">The list entries.</param>
-        public ControlList(List<ControlListItem> items)
+        public ControlList(IEnumerable<ControlListItem> items)
             : this(null, items)
         {
         }
@@ -86,7 +89,6 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         private void Init()
         {
-            Items = new List<ControlListItem>();
             ShowBorder = true;
         }
 
@@ -115,18 +117,28 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>The control as html.</returns>
         public override IHtmlNode Render(RenderContext context)
         {
-            var items = Items.Where(x => x.Enable).Select(x => x.Render(context)).ToList();
+            return Render(context, Items);
+        }
 
+        /// <summary>
+        /// Convert to html.
+        /// </summary>
+        /// <param name="context">The context in which the control is rendered.</param>
+        /// <param name="items">The list entries.</param>
+        /// <returns>The control as html.</returns>
+        public virtual IHtmlNode Render(RenderContext context, IEnumerable<ControlListItem> items)
+        {
+            var li = items.Where(x => x.Enable).Select(x => x.Render(context)).ToList();
             switch (Layout)
             {
                 case TypeLayoutList.Horizontal:
                 case TypeLayoutList.Flush:
                 case TypeLayoutList.Group:
-                    items.ForEach(x => x.AddClass("list-group-item"));
+                    li.ForEach(x => x.AddClass("list-group-item"));
                     break;
             }
 
-            var html = new HtmlElementTextContentUl(items)
+            var html = new HtmlElementTextContentUl(li)
             {
                 Id = Id,
                 Class = Css.Concatenate("", GetClasses()),
