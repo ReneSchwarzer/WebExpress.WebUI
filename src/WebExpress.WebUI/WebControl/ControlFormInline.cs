@@ -139,125 +139,6 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Vorverarbeitung des Formulars
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public virtual void PreProcess(RenderContextFormular context)
-        {
-
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            var renderContext = new RenderContextFormular(context, this);
-            var formName = Name != null ? Name.StartsWith("formular") ? Name : $"formular_{Name}" : "formular";
-
-            Initialize(renderContext);
-            (Items as List<ControlFormItem>).ForEach(x => x.Initialize(renderContext));
-            OnInitialize(renderContext);
-            SubmitButton.Initialize(renderContext);
-
-            // Prüfe ob Formular abgeschickt wurde -> Fomular mit Daten füllen 
-            if (!context.Request.HasParameter("submit-" + formName))
-            {
-                OnFill(renderContext);
-            }
-
-            PreProcess(renderContext);
-
-            var button = SubmitButton.Render(renderContext);
-
-            if (context.Request.HasParameter("formular-id"))
-            {
-                var value = context.Request.GetParameter("formular-id")?.Value;
-
-                if (!string.IsNullOrWhiteSpace(Id) && value == Id)
-                {
-                    var valid = Validate(renderContext);
-
-                    if (valid)
-                    {
-                        OnProcess(renderContext);
-
-                        if (!string.IsNullOrWhiteSpace(RedirectUri?.ToString()))
-                        {
-                            renderContext.Page.Redirecting(RedirectUri);
-                        }
-                    }
-                }
-            }
-
-            var html = new HtmlElementFormForm()
-            {
-                Id = Id,
-                Class = Css.Concatenate("form-inline", GetClasses()),
-                Style = GetStyles(),
-                Role = Role,
-                Name = formName.ToLower(),
-                Action = Uri?.ToString(),
-                Method = Method.ToString(),
-                Enctype = TypeEnctype.None
-            };
-
-            html.Elements.Add(new ControlFormItemInputHidden() { Name = "formular-id", Value = Id }.Render(renderContext));
-
-            foreach (var item in Items)
-            {
-                if (item is ControlFormItemInput input)
-                {
-                    var icon = new ControlIcon() { Icon = input?.Icon };
-                    var label = new ControlFormItemLabel(!string.IsNullOrEmpty(item.Id) ? item.Id + "_label" : string.Empty);
-                    var help = new ControlFormItemHelpText(!string.IsNullOrEmpty(item.Id) ? item.Id + "_help" : string.Empty);
-                    var fieldset = new HtmlElementFormFieldset() { Class = "form-group" };
-
-                    label.Initialize(renderContext);
-                    help.Initialize(renderContext);
-
-                    label.Text = context.I18N(input?.Label);
-                    label.FormularItem = item;
-                    label.Classes.Add("me-2");
-                    help.Text = context.I18N(input?.Help);
-                    help.Classes.Add("ms-2");
-
-                    if (icon.Icon != null)
-                    {
-                        icon.Classes.Add("me-2 pt-1");
-                        fieldset.Elements.Add(new HtmlElementTextSemanticsSpan(icon.Render(renderContext), label.Render(renderContext))
-                        {
-                            Style = "display: flex;"
-                        });
-                    }
-                    else
-                    {
-                        fieldset.Elements.Add(label.Render(renderContext));
-                    }
-
-                    fieldset.Elements.Add(item.Render(renderContext));
-
-                    if (input != null)
-                    {
-                        fieldset.Elements.Add(help.Render(renderContext));
-                    }
-
-                    html.Elements.Add(fieldset);
-                }
-                else
-                {
-                    html.Elements.Add(item.Render(context));
-                }
-            }
-
-            html.Elements.Add(button);
-
-            return html;
-        }
-
-        /// <summary>
         /// Adds a form element.
         /// </summary>
         /// <param name="item">The form item.</param>
@@ -357,5 +238,145 @@ namespace WebExpress.WebUI.WebControl
             return valid;
         }
 
+        /// <summary>
+        /// Vorverarbeitung des Formulars
+        /// </summary>
+        /// <param name="context">The context in which the control is rendered.</param>
+        public virtual void PreProcess(RenderContextFormular context)
+        {
+
+        }
+
+        /// <summary>
+        /// Convert to html.
+        /// </summary>
+        /// <param name="context">The context in which the control is rendered.</param>
+        /// <returns>The control as html.</returns>
+        public override IHtmlNode Render(RenderContext context)
+        {
+            return Render(context, Items);
+        }
+
+        /// <summary>
+        /// Convert to html.
+        /// </summary>
+        /// <param name="context">The context in which the control is rendered.</param>
+        /// <param name="items">The formular items.</param>
+        /// <returns>The control as html.</returns>
+        public virtual IHtmlNode Render(RenderContext context, params ControlFormItem[] items)
+        {
+            return Render(context, items);
+        }
+
+        /// <summary>
+        /// Convert to html.
+        /// </summary>
+        /// <param name="context">The context in which the control is rendered.</param>
+        /// <param name="items">The formular items.</param>
+        /// <returns>The control as html.</returns>
+        public virtual IHtmlNode Render(RenderContext context, IEnumerable<ControlFormItem> items)
+        {
+            var renderContext = new RenderContextFormular(context, this);
+            var formName = Name != null ? Name.StartsWith("formular") ? Name : $"formular_{Name}" : "formular";
+
+            Initialize(renderContext);
+            (Items as List<ControlFormItem>).ForEach(x => x.Initialize(renderContext));
+            OnInitialize(renderContext);
+            SubmitButton.Initialize(renderContext);
+
+            // Prüfe ob Formular abgeschickt wurde -> Fomular mit Daten füllen 
+            if (!context.Request.HasParameter("submit-" + formName))
+            {
+                OnFill(renderContext);
+            }
+
+            PreProcess(renderContext);
+
+            var button = SubmitButton.Render(renderContext);
+
+            if (context.Request.HasParameter("formular-id"))
+            {
+                var value = context.Request.GetParameter("formular-id")?.Value;
+
+                if (!string.IsNullOrWhiteSpace(Id) && value == Id)
+                {
+                    var valid = Validate(renderContext);
+
+                    if (valid)
+                    {
+                        OnProcess(renderContext);
+
+                        if (!string.IsNullOrWhiteSpace(RedirectUri?.ToString()))
+                        {
+                            renderContext.Page.Redirecting(RedirectUri);
+                        }
+                    }
+                }
+            }
+
+            var html = new HtmlElementFormForm()
+            {
+                Id = Id,
+                Class = Css.Concatenate("form-inline", GetClasses()),
+                Style = GetStyles(),
+                Role = Role,
+                Name = formName.ToLower(),
+                Action = Uri?.ToString(),
+                Method = Method.ToString(),
+                Enctype = TypeEnctype.None
+            };
+
+            html.Elements.Add(new ControlFormItemInputHidden() { Name = "formular-id", Value = Id }.Render(renderContext));
+
+            foreach (var item in items)
+            {
+                if (item is ControlFormItemInput input)
+                {
+                    var icon = new ControlIcon() { Icon = input?.Icon };
+                    var label = new ControlFormItemLabel(!string.IsNullOrEmpty(item.Id) ? item.Id + "_label" : string.Empty);
+                    var help = new ControlFormItemHelpText(!string.IsNullOrEmpty(item.Id) ? item.Id + "_help" : string.Empty);
+                    var fieldset = new HtmlElementFormFieldset() { Class = "form-group" };
+
+                    label.Initialize(renderContext);
+                    help.Initialize(renderContext);
+
+                    label.Text = context.I18N(input?.Label);
+                    label.FormularItem = item;
+                    label.Classes.Add("me-2");
+                    help.Text = context.I18N(input?.Help);
+                    help.Classes.Add("ms-2");
+
+                    if (icon.Icon != null)
+                    {
+                        icon.Classes.Add("me-2 pt-1");
+                        fieldset.Elements.Add(new HtmlElementTextSemanticsSpan(icon.Render(renderContext), label.Render(renderContext))
+                        {
+                            Style = "display: flex;"
+                        });
+                    }
+                    else
+                    {
+                        fieldset.Elements.Add(label.Render(renderContext));
+                    }
+
+                    fieldset.Elements.Add(item.Render(renderContext));
+
+                    if (input != null)
+                    {
+                        fieldset.Elements.Add(help.Render(renderContext));
+                    }
+
+                    html.Elements.Add(fieldset);
+                }
+                else
+                {
+                    html.Elements.Add(item.Render(context));
+                }
+            }
+
+            html.Elements.Add(button);
+
+            return html;
+        }
     }
 }

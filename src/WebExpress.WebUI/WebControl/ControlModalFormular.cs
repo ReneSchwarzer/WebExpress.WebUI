@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using WebExpress.WebCore.WebHtml;
 using WebExpress.WebCore.WebPage;
 using static WebExpress.WebCore.Internationalization.InternationalizationManager;
@@ -60,6 +61,15 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
+        /// Adds a form control.
+        /// </summary>
+        /// <param name="item">The form item.</param>
+        public void Add(params ControlFormItem[] item)
+        {
+            Formular.Add(item);
+        }
+
+        /// <summary>
         /// Invoked when the form is initialized.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -89,6 +99,28 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="context">The context in which the control is rendered.</param>
         /// <returns>The control as html.</returns>
         public override IHtmlNode Render(RenderContext context)
+        {
+            return Render(context, Formular.Items);
+        }
+
+        /// <summary>
+        /// Convert to html.
+        /// </summary>
+        /// <param name="context">The context in which the control is rendered.</param>
+        /// <param name="items">The formular items.</param>
+        /// <returns>The control as html.</returns>
+        public virtual IHtmlNode Render(RenderContext context, params ControlFormItem[] items)
+        {
+            return Render(context, items);
+        }
+
+        /// <summary>
+        /// Convert to html.
+        /// </summary>
+        /// <param name="context">The context in which the control is rendered.</param>
+        /// <param name="items">The formular items.</param>
+        /// <returns>The control as html.</returns>
+        public virtual IHtmlNode Render(RenderContext context, IEnumerable<ControlFormItem> items)
         {
             var fade = Fade;
             var classes = Classes.ToList();
@@ -195,15 +227,6 @@ namespace WebExpress.WebUI.WebControl
             Fade = fade;
 
             return form;
-        }
-
-        /// <summary>
-        /// Fügt eine Formularsteuerelement hinzu
-        /// </summary>
-        /// <param name="item">The form item.</param>
-        public void Add(params ControlFormItem[] item)
-        {
-            Formular.Add(item);
         }
     }
 }

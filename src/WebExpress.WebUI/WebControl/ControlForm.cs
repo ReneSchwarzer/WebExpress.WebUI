@@ -246,11 +246,33 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>The control as html.</returns>
         public override IHtmlNode Render(RenderContext context)
         {
+            return Render(context, Items);
+        }
+
+        /// <summary>
+        /// Convert to html.
+        /// </summary>
+        /// <param name="context">The context in which the control is rendered.</param>
+        /// <param name="items">The formular items.</param>
+        /// <returns>The control as html.</returns>
+        public virtual IHtmlNode Render(RenderContext context, params ControlFormItem[] items)
+        {
+            return Render(context, items);
+        }
+
+        /// <summary>
+        /// Convert to html.
+        /// </summary>
+        /// <param name="context">The context in which the control is rendered.</param>
+        /// <param name="items">The formular items.</param>
+        /// <returns>The control as html.</returns>
+        public virtual IHtmlNode Render(RenderContext context, IEnumerable<ControlFormItem> items)
+        {
             var renderContext = new RenderContextFormular(context, this);
             var fill = false;
             var process = false;
 
-            // Prüfe ob und wie das Formular abgeschickt wurde 
+            // check if and how the form was submitted
             if (context.Request.GetParameter("formular-id")?.Value == Id && context.Request.HasParameter("formular-submit-type"))
             {
                 var value = context.Request.GetParameter("formular-submit-type")?.Value;
@@ -278,7 +300,10 @@ namespace WebExpress.WebUI.WebControl
 
             // initialization
             Initialize(renderContext);
-            (Items as List<ControlFormItem>).ForEach(x => x?.Initialize(renderContext));
+            foreach (var item in items)
+            {
+                item.Initialize(renderContext);
+            }
             OnInitialize(renderContext);
             SubmitButton.Initialize(renderContext);
 
@@ -346,7 +371,7 @@ namespace WebExpress.WebUI.WebControl
                 }.Render(renderContext));
             }
 
-            foreach (var item in Items.Where(x => x is ControlFormItemInputHidden))
+            foreach (var item in items.Where(x => x is ControlFormItemInputHidden))
             {
                 form.Elements.Add(item.Render(renderContext));
             }
@@ -362,7 +387,7 @@ namespace WebExpress.WebUI.WebControl
                 _ => new ControlFormItemGroupVertical(),
             };
 
-            foreach (var item in Items.Where(x => x is not ControlFormItemInputHidden))
+            foreach (var item in items.Where(x => x is not ControlFormItemInputHidden))
             {
                 group.Items.Add(item);
             }
