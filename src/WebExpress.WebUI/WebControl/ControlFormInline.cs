@@ -263,17 +263,6 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="context">The context in which the control is rendered.</param>
         /// <param name="items">The formular items.</param>
         /// <returns>The control as html.</returns>
-        public virtual IHtmlNode Render(RenderContext context, params ControlFormItem[] items)
-        {
-            return Render(context, items);
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <param name="items">The formular items.</param>
-        /// <returns>The control as html.</returns>
         public virtual IHtmlNode Render(RenderContext context, IEnumerable<ControlFormItem> items)
         {
             var renderContext = new RenderContextFormular(context, this);

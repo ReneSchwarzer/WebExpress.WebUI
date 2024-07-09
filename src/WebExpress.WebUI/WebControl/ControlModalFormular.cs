@@ -52,12 +52,12 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="header">The headline.</param>
         /// <param name="content">The form controls.</param>
         public ControlModalFormular(string id, string header, params ControlFormItem[] content)
-            : base("modal_" + id, string.Empty, content)
+            : base("modal_" + id, string.Empty, null)
         {
-            Formular = new ControlForm(id);
+            Formular = content != null ? new ControlForm(id, content) : new ControlForm(id);
             Formular.InitializeFormular += OnInitializeFormular;
-
             Formular.Validated += OnValidatedFormular;
+            Header = header;
         }
 
         /// <summary>
@@ -67,6 +67,15 @@ namespace WebExpress.WebUI.WebControl
         public void Add(params ControlFormItem[] item)
         {
             Formular.Add(item);
+        }
+
+        /// <summary>
+        /// Removes a form control.
+        /// </summary>
+        /// <param name="item">The form item.</param>
+        public void Remove(ControlFormItem item)
+        {
+            Formular.Remove(item);
         }
 
         /// <summary>
@@ -109,23 +118,12 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="context">The context in which the control is rendered.</param>
         /// <param name="items">The formular items.</param>
         /// <returns>The control as html.</returns>
-        public virtual IHtmlNode Render(RenderContext context, params ControlFormItem[] items)
-        {
-            return Render(context, items);
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <param name="items">The formular items.</param>
-        /// <returns>The control as html.</returns>
         public virtual IHtmlNode Render(RenderContext context, IEnumerable<ControlFormItem> items)
         {
             var fade = Fade;
             var classes = Classes.ToList();
 
-            var form = Formular.Render(context) as HtmlElementFormForm;
+            var form = Formular.Render(context, items) as HtmlElementFormForm;
 
             classes.Add("modal");
 
