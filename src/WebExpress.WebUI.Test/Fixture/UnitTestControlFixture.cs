@@ -6,6 +6,7 @@ using WebExpress.WebCore;
 using WebExpress.WebCore.WebLog;
 using WebExpress.WebCore.WebMessage;
 using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebControl;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.Fixture
@@ -15,7 +16,7 @@ namespace WebExpress.WebUI.Test.Fixture
         /// <summary>
         /// Create a fake render context;
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A fake context for testing.</returns>
         public RenderContext CrerateContext()
         {
             var ctorRequestHeaderFields = typeof(RequestHeaderFields).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, [typeof(IFeatureCollection)], null);
@@ -77,6 +78,15 @@ namespace WebExpress.WebUI.Test.Fixture
             var visualTree = new VisualTreeControl();
 
             return new WebCore.WebPage.RenderContext(page, request, visualTree);
+        }
+
+        /// <summary>
+        /// Create a fake render formular context;
+        /// </summary>
+        /// <returns>A fake context for testing.</returns>
+        public RenderContextFormular CrerateContextFormular()
+        {
+            return new RenderContextFormular(CrerateContext(), new ControlForm());
         }
     }
 }

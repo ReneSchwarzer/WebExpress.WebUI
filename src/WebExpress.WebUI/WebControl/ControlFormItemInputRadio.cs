@@ -11,23 +11,6 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         public string Option { get; set; }
 
-        ///// <summary>
-        ///// Returns or sets the value of the optiopn.
-        ///// </summary>
-        //public new string Value
-        //{
-        //    get => GetParam(Name);
-        //    set
-        //    {
-        //        var v = GetParam(Name);
-
-        //        if (string.IsNullOrWhiteSpace(v))
-        //        {
-        //            AddParam(Name, value, Formular.Scope);
-        //        }
-        //    }
-        //}
-
         /// <summary>
         /// Liefert oder setzt ob die Checkbox in einer neuen Zeile angezeigt werden soll
         /// </summary>
@@ -75,8 +58,6 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="context">The context in which the control is rendered.</param>
         public override void Initialize(RenderContextFormular context)
         {
-            //AddParam(name, Formular.Scope);
-            //Value = GetParam(Name);
         }
 
         /// <summary>

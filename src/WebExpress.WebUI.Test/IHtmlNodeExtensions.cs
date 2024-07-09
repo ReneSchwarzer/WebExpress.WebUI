@@ -12,11 +12,13 @@ namespace WebExpress.WebUI.Test
         /// <returns>A string with all consecutive spaces and line breaks reduced to single ones.</returns>
         public static string Trim(this IHtmlNode node)
         {
-            string withoutExtraSpaces = Regex.Replace(node.ToString().Trim(), @"\s+", " ");
-            string withoutExtraLineBreaks = Regex.Replace(withoutExtraSpaces, @"[\r\n]+", "\n");
-            string withoutSpacesBetweenBrackets = Regex.Replace(withoutExtraLineBreaks, @">\s+<", "><");
+            var withoutExtraLineBreaks = Regex.Replace(node.ToString().Trim(), @"[\r\n]+", "");
+            var withoutExtraSpaces = Regex.Replace(withoutExtraLineBreaks, @"\s+", " ");
+            var withoutSpacesBetweenBrackets = Regex.Replace(withoutExtraSpaces, @">\s+<", "><");
+            var withoutSpacesLeftBrackets = Regex.Replace(withoutSpacesBetweenBrackets, @"\s+<", "<");
+            var withoutSpacesRightBrackets = Regex.Replace(withoutSpacesLeftBrackets, @">\s+", ">");
 
-            return withoutSpacesBetweenBrackets;
+            return withoutSpacesRightBrackets;
         }
     }
 }
