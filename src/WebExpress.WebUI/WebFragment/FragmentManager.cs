@@ -373,7 +373,7 @@ namespace WebExpress.WebUI.WebFragment
             IEnumerable<string> scopes
         ) where T : IControl
         {
-            var applicationContext = page?.ApplicationContext;
+            var applicationContext = page?.ResourceContext.ApplicationContext;
             scopes ??= Enumerable.Empty<string>();
 
             var fragmentItems = GetFragmentItems($"{section}:")

@@ -41,6 +41,7 @@ namespace WebExpress.WebUI.Test.Control
             var control = new ControlFormInline();
 
             var html = control.Render(context);
+            var str = html.ToString();
 
             // test execution
             Assert.StartsWith(@"<form class=""form-inline""", html.Trim());
