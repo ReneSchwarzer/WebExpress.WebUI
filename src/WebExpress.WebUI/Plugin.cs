@@ -8,7 +8,7 @@ namespace WebExpress.WebUI
     [Name("webexpress.webui")]
     [Description("plugin.description")]
     [Icon("/assets/img/Logo.png")]
-    public sealed class Plugin : IPlugin
+    public sealed class Plugin : WebCore.WebPlugin.Plugin
     {
         /// <summary>
         /// Constructor
@@ -21,24 +21,25 @@ namespace WebExpress.WebUI
         /// Initialization of the plugin. Here, for example, managed resources can be loaded. 
         /// </summary>
         /// <param name="context">The context of the plugin that applies to the execution of the plugin.</param>
-        public void Initialization(IPluginContext context)
+        public override void Initialization(IPluginContext context)
         {
+            base.Initialization(context);
         }
 
         /// <summary>
         /// Called when the plugin starts working. Run is called concurrently.
         /// </summary>
-        public void Run()
+        public override void Run()
         {
-
+            base.Run();
         }
 
         /// <summary>
         /// Release of unmanaged resources reserved during use.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
-
+            base.Dispose();
         }
     }
 }
