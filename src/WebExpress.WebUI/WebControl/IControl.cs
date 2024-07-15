@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using WebExpress.WebCore.WebHtml;
+﻿using WebExpress.WebCore.WebHtml;
 using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -7,19 +6,9 @@ namespace WebExpress.WebUI.WebControl
     public interface IControl
     {
         /// <summary>
-        /// Liefert Returns or sets the id.
+        /// Returns or sets the id.
         /// </summary>
         string Id { get; }
-
-        /// <summary>
-        /// Liefert oder setzt die Css-Klasse
-        /// </summary>
-        List<string> Classes { get; set; }
-
-        /// <summary>
-        /// Liefert oder setzt die Css-Style
-        /// </summary>
-        List<string> Styles { get; set; }
 
         /// <summary>
         /// Convert to html.
