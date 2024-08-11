@@ -10,7 +10,7 @@ namespace WebExpress.WebUI.WebControl
     public class ControlFormItemGroupColumnMix : ControlFormItemGroupColumn
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemGroupColumnMix(string id = null)
@@ -19,7 +19,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         ///<param name="items">The form controls.</param> 
@@ -29,7 +29,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         ///<param name="items">The form controls.</param> 
         public ControlFormItemGroupColumnMix(params ControlFormItem[] items)
@@ -41,9 +41,9 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes the form element.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        public override void Initialize(RenderContextForm context)
         {
-            var grpupContex = new RenderContextFormularGroup(context, this);
+            var grpupContex = new RenderContextFormGroup(context, this);
 
             foreach (var item in Items)
             {
@@ -56,9 +56,9 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
         /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        public override IHtmlNode Render(RenderContextForm context)
         {
-            var renderContext = new RenderContextFormularGroup(context, this);
+            var renderContext = new RenderContextFormGroup(context, this);
 
             var html = new HtmlElementTextContentDiv()
             {
@@ -103,7 +103,7 @@ namespace WebExpress.WebUI.WebControl
                     help.Initialize(renderContext);
 
                     label.Text = context.I18N(input?.Label);
-                    label.FormularItem = item;
+                    label.FormItem = item;
                     help.Text = context.I18N(input?.Help);
 
                     if (icon.Icon != null)

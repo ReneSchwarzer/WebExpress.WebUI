@@ -6,7 +6,7 @@ namespace WebExpress.WebUI.WebAttribute
     public class SettingIconAttribute : System.Attribute, IResourceAttribute
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="icon">The icon.</param>
         public SettingIconAttribute(TypeIcon icon)
@@ -15,7 +15,7 @@ namespace WebExpress.WebUI.WebAttribute
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="icon">The icon.</param>
         public SettingIconAttribute(string icon)

@@ -40,7 +40,7 @@ namespace WebExpress.WebUI.WebControl
         public List<IControlToolBarItem> Items { get; private set; } = new List<IControlToolBarItem>();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlToolbar(string id = null)
@@ -50,7 +50,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="items">Die Toolitems</param>
@@ -61,7 +61,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="items">Die Toolitems</param>
         public ControlToolbar(params IControlToolBarItem[] items)

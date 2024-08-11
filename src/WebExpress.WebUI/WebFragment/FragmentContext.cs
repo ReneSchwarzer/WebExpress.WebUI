@@ -40,7 +40,7 @@ namespace WebExpress.WebUI.WebFragment
         public bool Cache { get; internal set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public FragmentContext()
         {

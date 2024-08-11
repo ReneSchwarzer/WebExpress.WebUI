@@ -3,7 +3,7 @@
     public class PropertyColorChart : PropertyColor<TypeColorChart>
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public PropertyColorChart()
         {
@@ -11,7 +11,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorChart(TypeColorChart color)
@@ -20,7 +20,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorChart(string color)

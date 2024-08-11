@@ -6,7 +6,7 @@ namespace WebExpress.WebUI.WebControl
     public class ControlNavigationItemDropdown : ControlDropdown, IControlNavigationItem
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlNavigationItemDropdown(string id = null)

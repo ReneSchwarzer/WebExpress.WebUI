@@ -3,7 +3,7 @@
     public class PropertyColorLine : PropertyColor<TypeColorLine>
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorLine(TypeColorLine color)
@@ -12,7 +12,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorLine(string color)

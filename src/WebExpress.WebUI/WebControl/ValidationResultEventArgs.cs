@@ -4,31 +4,31 @@ using System.Collections.Generic;
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Eventargument, welches nach einer volständigen Validierung des Formulars mit allen Stuerelementen erstellt wird
+    /// Event argument, which is created after a complete validation of the form with all controls.
     /// </summary>
     public class ValidationResultEventArgs : EventArgs
     {
         /// <summary>
-        /// Bestimmt, ob die Validierung erfolgreich abgeschlossen wurde
+        /// Returns whether validation has completed successfully.
         /// </summary>
         public bool Valid { get; private set; }
 
         /// <summary>
-        /// Liefert oder setzt die Validierungsnachrichten
+        /// Returns the validation results.
         /// </summary>
         public List<ValidationResult> Results { get; private set; } = new List<ValidationResult>();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public ValidationResultEventArgs()
         {
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="valid"> true wenn die Validierung erfolgreich abgeschlossen wurde, false sonst</param>
+        /// <param name="valid">true if validation is successful, false otherwise.</param>
         public ValidationResultEventArgs(bool valid)
         {
             Valid = valid;

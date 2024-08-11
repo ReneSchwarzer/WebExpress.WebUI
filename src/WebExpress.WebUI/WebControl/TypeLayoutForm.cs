@@ -1,12 +1,11 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// The layout options of the forms.
+    /// The layout options of the form in relation to the elements.
     /// </summary>
     public enum TypeLayoutForm
     {
-        Vertical,
-        Horizontal,
-        Mix
+        Default,
+        Inline
     }
 }

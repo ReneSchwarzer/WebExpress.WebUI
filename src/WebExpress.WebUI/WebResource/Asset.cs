@@ -13,7 +13,7 @@ namespace WebExpress.WebUI.WebResource
     public sealed class Asset : ResourceAsset
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public Asset()
         {

@@ -5,9 +5,9 @@ using Xunit.Abstractions;
 namespace WebExpress.WebUI.Test.Control
 {
     /// <summary>
-    /// Tests the modal formular control.
+    /// Tests the modal form control.
     /// </summary>
-    public class UnitTestControlModalFormular : IClassFixture<UnitTestControlFixture>
+    public class UnitTestControlModalForm : IClassFixture<UnitTestControlFixture>
     {
         /// <summary>
         /// Returns the log.
@@ -20,11 +20,11 @@ namespace WebExpress.WebUI.Test.Control
         protected UnitTestControlFixture Fixture { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="fixture">The log.</param>
         /// <param name="output">The test context.</param>
-        public UnitTestControlModalFormular(UnitTestControlFixture fixture, ITestOutputHelper output)
+        public UnitTestControlModalForm(UnitTestControlFixture fixture, ITestOutputHelper output)
         {
             Fixture = fixture;
             Output = output;
@@ -38,7 +38,7 @@ namespace WebExpress.WebUI.Test.Control
         {
             // preconditions
             var context = Fixture.CrerateContext();
-            var control = new ControlModalFormular();
+            var control = new ControlModalForm();
 
             var html = control.Render(context);
             var str = html.ToString();
@@ -55,7 +55,7 @@ namespace WebExpress.WebUI.Test.Control
         {
             // preconditions
             var context = Fixture.CrerateContext();
-            var control = new ControlModalFormular("form");
+            var control = new ControlModalForm("form");
 
             var html = control.Render(context);
 
@@ -71,7 +71,7 @@ namespace WebExpress.WebUI.Test.Control
         {
             // preconditions
             var context = Fixture.CrerateContext();
-            var control = new ControlModalFormular("form", "header");
+            var control = new ControlModalForm("form", "header");
 
             var html = control.Render(context);
 
@@ -87,7 +87,7 @@ namespace WebExpress.WebUI.Test.Control
         {
             // preconditions
             var context = Fixture.CrerateContext();
-            var control = new ControlModalFormular("form") { Header = "header" };
+            var control = new ControlModalForm("form") { Header = "header" };
 
             var html = control.Render(context);
 
@@ -104,7 +104,7 @@ namespace WebExpress.WebUI.Test.Control
         {
             // preconditions
             var context = Fixture.CrerateContext();
-            var control = new ControlModalFormular();
+            var control = new ControlModalForm();
             var item = new ControlFormItemInputTextBox() { };
 
             // test execution
@@ -124,7 +124,7 @@ namespace WebExpress.WebUI.Test.Control
             // preconditions
             var context = Fixture.CrerateContext();
             var item = new ControlFormItemInputTextBox() { };
-            var control = new ControlModalFormular("form", item);
+            var control = new ControlModalForm("form", item);
 
             // test execution
             var html = control.Render(context);
@@ -142,7 +142,7 @@ namespace WebExpress.WebUI.Test.Control
             // preconditions
             var context = Fixture.CrerateContext();
             var item = new ControlFormItemInputTextBox() { };
-            var control = new ControlModalFormular("form");
+            var control = new ControlModalForm("form");
 
             control.Add(item);
 

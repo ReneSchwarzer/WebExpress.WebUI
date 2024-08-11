@@ -5,7 +5,7 @@ namespace WebExpress.WebUI.WebControl
     public class ControlFormItemInputHidden : ControlFormItemInput
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemInputHidden(string id = null)
@@ -15,7 +15,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="name">The name.</param>
@@ -29,7 +29,7 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes the form element.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        public override void Initialize(RenderContextForm context)
         {
             Value = context?.Request.GetParameter(Name)?.Value;
         }
@@ -39,7 +39,7 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
         /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        public override IHtmlNode Render(RenderContextForm context)
         {
             return new HtmlElementFieldInput()
             {

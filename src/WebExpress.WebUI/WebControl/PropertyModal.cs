@@ -28,7 +28,7 @@
         public string RedirectUri { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="type">Der Typ</param>
         /// <param name="modal">Das benutzerdefinierte Modal oder null</param>
@@ -41,7 +41,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="type">Der Typ</param>
         /// <param name="size">Die Größe des Modals</param>
@@ -54,7 +54,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="type">Der Typ</param>
         /// <param name="modal">Das benutzerdefinierte Modal</param>
@@ -68,7 +68,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="type">Der Typ</param>
         /// <param name="uri">Die Uri</param>

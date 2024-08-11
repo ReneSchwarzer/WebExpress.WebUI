@@ -45,7 +45,7 @@ namespace WebExpress.WebUI.WebControl
 
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlTreeItemLink(string id = null)
@@ -55,7 +55,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
@@ -66,7 +66,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="content">The content of the html element.</param>
         public ControlTreeItemLink(params Control[] content)
@@ -76,7 +76,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
@@ -87,7 +87,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="content">The content of the html element.</param>
         public ControlTreeItemLink(List<Control> content)

@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using WebExpress.WebUI.Test.Fixture;
+﻿using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
 using Xunit.Abstractions;
 
@@ -21,7 +20,7 @@ namespace WebExpress.WebUI.Test.Control
         protected UnitTestControlFixture Fixture { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="fixture">The log.</param>
         /// <param name="output">The test context.</param>
@@ -67,7 +66,7 @@ namespace WebExpress.WebUI.Test.Control
         public void SimpleListAtRender()
         {
             // preconditions
-            var context = new WebCore.WebPage.RenderContext() { Culture = CultureInfo.CurrentCulture };
+            var context = new WebCore.WebPage.RenderContext() { };
             var item = new ControlListItem(new ControlText() { Text = "abc" });
             var control = new ControlList();
 
@@ -83,7 +82,7 @@ namespace WebExpress.WebUI.Test.Control
         public void SimpleListAtInstancing()
         {
             // preconditions
-            var context = new WebCore.WebPage.RenderContext() { Culture = CultureInfo.CurrentCulture };
+            var context = new WebCore.WebPage.RenderContext() { };
             var item = new ControlListItem(new ControlText() { Text = "abc" });
             var control = new ControlList(item);
 
@@ -99,7 +98,7 @@ namespace WebExpress.WebUI.Test.Control
         public void SimpleListAtAdd()
         {
             // preconditions
-            var context = new WebCore.WebPage.RenderContext() { Culture = CultureInfo.CurrentCulture };
+            var context = new WebCore.WebPage.RenderContext() { };
             var item = new ControlListItem(new ControlText() { Text = "abc" });
             var control = new ControlList();
 

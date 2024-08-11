@@ -6,7 +6,7 @@
     public class OrderAttribute : System.Attribute, IFragmentAttribute
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="order">The order within the section.</param>
         public OrderAttribute(int order)

@@ -19,7 +19,7 @@ namespace WebExpress.WebUI.WebPage
         public new List<Control> Content { get; } = new List<Control>();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public VisualTreeControl()
         {

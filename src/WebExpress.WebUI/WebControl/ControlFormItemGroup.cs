@@ -6,7 +6,7 @@ namespace WebExpress.WebUI.WebControl
     /// <summary>
     /// Grouping of controls.
     /// </summary>
-    public abstract class ControlFormItemGroup : ControlFormItem, IFormularValidation
+    public abstract class ControlFormItemGroup : ControlFormItem, IFormValidation
     {
         /// <summary>
         /// Returns or sets the form items.
@@ -50,7 +50,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemGroup(string id = null)
@@ -59,7 +59,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         ///<param name="item">The form item.</param> 
@@ -70,7 +70,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         ///<param name="item">The form item.</param> 
         public ControlFormItemGroup(params ControlFormItem[] item)
@@ -83,9 +83,9 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes the form element.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        public override void Initialize(RenderContextForm context)
         {
-            var groupContex = new RenderContextFormularGroup(context, this);
+            var groupContex = new RenderContextFormGroup(context, this);
 
             foreach (var item in Items)
             {
@@ -97,13 +97,13 @@ namespace WebExpress.WebUI.WebControl
         /// Checks the input element for correctness of the data.
         /// </summary>
         /// <param name="context">The context in which the inputs are validated.</param>
-        public virtual void Validate(RenderContextFormular context)
+        public virtual void Validate(RenderContextForm context)
         {
             var validationResults = ValidationResults as List<ValidationResult>;
 
             validationResults.Clear();
 
-            foreach (var v in Items.Where(x => x is IFormularValidation).Select(x => x as IFormularValidation))
+            foreach (var v in Items.Where(x => x is IFormValidation).Select(x => x as IFormValidation))
             {
                 v.Validate(context);
 

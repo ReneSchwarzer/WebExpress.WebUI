@@ -3,7 +3,7 @@
     public class PropertyColorCallout : PropertyColor<TypeColorCallout>
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorCallout(TypeColorCallout color)
@@ -12,7 +12,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorCallout(string color)

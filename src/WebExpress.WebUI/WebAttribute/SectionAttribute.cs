@@ -6,7 +6,7 @@
     public class SectionAttribute : System.Attribute, IFragmentAttribute
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="section">The section where the component is embedded.</param>
         public SectionAttribute(string section)

@@ -5,7 +5,7 @@ namespace WebExpress.WebUI.WebControl
     public class PropertyMaxSizeIcon : PropertySizeIcon
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="size">Die Größe</param>
         /// <param name="unit">Die Einheit</param>
@@ -15,7 +15,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="width">Die Weite in Pixel</param>
         /// <param name="height">Die Höhe in Pixel</param>

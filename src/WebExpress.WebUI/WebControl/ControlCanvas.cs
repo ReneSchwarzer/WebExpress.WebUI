@@ -12,7 +12,7 @@ namespace WebExpress.WebUI.WebControl
         public List<Control> Content { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlCanvas(string id = null)
@@ -22,7 +22,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="content">The content of the html element.</param>
         public ControlCanvas(params Control[] content)
@@ -32,7 +32,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <param name="content">The content of the html element.</param>
@@ -43,7 +43,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <param name="content">The content of the html element.</param>
@@ -54,7 +54,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <param name="content">The content of the html element.</param>

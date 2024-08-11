@@ -15,7 +15,7 @@ namespace WebExpress.WebUI.WebPage
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public RenderContextControl()
         {
@@ -23,7 +23,7 @@ namespace WebExpress.WebUI.WebPage
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="page">The page where the control is rendered.</param>
         /// <param name="request">The request.</param>

@@ -18,7 +18,7 @@
         public PropertySizeIcon Size { get; protected set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="icon">Das System-Icon</param>
         public PropertyIcon(TypeIcon icon)
@@ -27,7 +27,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="icon">Das benutzerdefinierte Icon</param>
         public PropertyIcon(string icon, PropertySizeIcon size = null)

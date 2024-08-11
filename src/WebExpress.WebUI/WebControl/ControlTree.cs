@@ -32,7 +32,7 @@ namespace WebExpress.WebUI.WebControl
         public bool ShowBorder { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlTree(string id = null)
@@ -42,7 +42,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="items">Die Listeneinträge</param>
@@ -53,7 +53,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="items">Die Listeneinträge</param>
         public ControlTree(params ControlTreeItem[] items)
@@ -62,7 +62,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <param name="items">Die Listeneinträge</param>
@@ -73,7 +73,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="items">Die Listeneinträge</param>
         public ControlTree(List<ControlTreeItem> items)

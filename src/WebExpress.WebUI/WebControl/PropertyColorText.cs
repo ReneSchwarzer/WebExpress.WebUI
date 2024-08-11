@@ -3,7 +3,7 @@
     public class PropertyColorText : PropertyColor<TypeColorText>
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public PropertyColorText()
         {
@@ -11,7 +11,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorText(TypeColorText color)
@@ -20,7 +20,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorText(string color)

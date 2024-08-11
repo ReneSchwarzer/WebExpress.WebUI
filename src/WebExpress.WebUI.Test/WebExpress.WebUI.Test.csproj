@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\ComplexForm.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="WebExpress.WebCore" Version="0.0.8-alpha" />
     <PackageReference Include="xunit" Version="2.8.1" />
@@ -22,6 +26,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebExpress.WebUI\WebExpress.WebUI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\ComplexForm.txt" />
   </ItemGroup>
 
 </Project>

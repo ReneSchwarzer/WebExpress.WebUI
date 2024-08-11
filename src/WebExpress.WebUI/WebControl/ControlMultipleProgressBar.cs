@@ -18,7 +18,7 @@ namespace WebExpress.WebUI.WebControl
         public List<ControlMultipleProgressBarItem> Items { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlMultipleProgressBar(string id = null)
@@ -28,7 +28,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="value">The value.</param>

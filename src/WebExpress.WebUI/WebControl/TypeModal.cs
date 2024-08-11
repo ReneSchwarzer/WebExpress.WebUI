@@ -6,7 +6,7 @@
     public enum TypeModal
     {
         None,
-        Formular,
+        Form,
         Brwoser,
         Modal
     }

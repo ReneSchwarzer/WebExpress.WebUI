@@ -5,9 +5,9 @@ using Xunit.Abstractions;
 namespace WebExpress.WebUI.Test.Control
 {
     /// <summary>
-    /// Tests the inline formular control.
+    /// Tests the inline form control.
     /// </summary>
-    public class UnitTestControlFormularInline : IClassFixture<UnitTestControlFixture>
+    public class UnitTestControlFormInline : IClassFixture<UnitTestControlFixture>
     {
         /// <summary>
         /// Returns the log.
@@ -20,11 +20,11 @@ namespace WebExpress.WebUI.Test.Control
         protected UnitTestControlFixture Fixture { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="fixture">The log.</param>
         /// <param name="output">The test context.</param>
-        public UnitTestControlFormularInline(UnitTestControlFixture fixture, ITestOutputHelper output)
+        public UnitTestControlFormInline(UnitTestControlFixture fixture, ITestOutputHelper output)
         {
             Fixture = fixture;
             Output = output;
@@ -38,7 +38,7 @@ namespace WebExpress.WebUI.Test.Control
         {
             // preconditions
             var context = Fixture.CrerateContext();
-            var control = new ControlFormInline();
+            var control = new ControlForm() { FormLayout = TypeLayoutForm.Inline };
 
             var html = control.Render(context);
             var str = html.ToString();
@@ -55,8 +55,8 @@ namespace WebExpress.WebUI.Test.Control
         {
             // preconditions
             var context = Fixture.CrerateContext();
-            var control = new ControlFormInline();
-            control.SubmitButton.Text = "sendbutton";
+            var control = new ControlForm() { FormLayout = TypeLayoutForm.Inline };
+            control.AddPrimaryButton(new ControlFormItemButtonSubmit("") { Text = "sendbutton" });
 
             var html = control.Render(context);
             var str = html.ToString();
@@ -73,7 +73,7 @@ namespace WebExpress.WebUI.Test.Control
         {
             // preconditions
             var context = Fixture.CrerateContext();
-            var control = new ControlFormInline("form");
+            var control = new ControlForm("form") { FormLayout = TypeLayoutForm.Inline };
 
             var html = control.Render(context);
 
@@ -90,7 +90,7 @@ namespace WebExpress.WebUI.Test.Control
         {
             // preconditions
             var context = Fixture.CrerateContext();
-            var control = new ControlFormInline();
+            var control = new ControlForm() { FormLayout = TypeLayoutForm.Inline };
             var item = new ControlFormItemInputTextBox() { };
 
             // test execution
@@ -109,7 +109,7 @@ namespace WebExpress.WebUI.Test.Control
             // preconditions
             var context = Fixture.CrerateContext();
             var item = new ControlFormItemInputTextBox() { };
-            var control = new ControlFormInline("form", item);
+            var control = new ControlForm("form", item) { FormLayout = TypeLayoutForm.Inline };
 
             // test execution
             var html = control.Render(context);
@@ -127,7 +127,7 @@ namespace WebExpress.WebUI.Test.Control
             // preconditions
             var context = Fixture.CrerateContext();
             var item = new ControlFormItemInputTextBox() { };
-            var control = new ControlFormInline("form");
+            var control = new ControlForm("form") { FormLayout = TypeLayoutForm.Inline };
 
             control.Add(item);
 

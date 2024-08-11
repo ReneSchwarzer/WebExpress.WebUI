@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
-using WebExpress.WebCore.WebApplication;
+using WebExpress.WebCore.WebAttribute;
 using WebExpress.WebCore.WebMessage;
-using WebExpress.WebCore.WebModule;
 using WebExpress.WebCore.WebPage;
 using WebExpress.WebCore.WebResource;
 
@@ -10,6 +9,10 @@ namespace WebExpress.WebUI.Test
     /// <summary>
     /// A dummy class for testing purposes.
     /// </summary>
+    [Title("webindex:homepage.label")]
+    [Segment(null, "webindex:homepage.label")]
+    [ContextPath(null)]
+    [Module<TestModule>]
     public sealed class TestPage : IPage
     {
         /// <summary>
@@ -18,24 +21,9 @@ namespace WebExpress.WebUI.Test
         public string Title { get; set; }
 
         /// <summary>
-        /// Returns or sets the ID of the page.
-        /// </summary>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Returns or sets the application context.
-        /// </summary>
-        public IApplicationContext ApplicationContext { get; set; }
-
-        /// <summary>
-        /// Returns or sets the module context.
-        /// </summary>
-        public IModuleContext ModuleContext { get; set; }
-
-        /// <summary>
         /// Returns or sets the resource context.
         /// </summary>
-        public IResourceContext ResourceContext { get; set; }
+        public IResourceContext ResourceContext { get; private set; }
 
         /// <summary>
         /// Returns or sets the culture information.
@@ -43,12 +31,12 @@ namespace WebExpress.WebUI.Test
         public CultureInfo Culture { get => CultureInfo.CurrentCulture; set => throw new NotImplementedException(); }
 
         /// <summary>
-        /// Initializes the resource context.
+        /// Instillation of the resource. Here, for example, managed resources can be loaded. 
         /// </summary>
-        /// <param name="resourceContext">The resource context.</param>
+        /// <param name="resourceContext">The context of the resource.</param>
         public void Initialization(IResourceContext resourceContext)
         {
-
+            ResourceContext = resourceContext;
         }
 
         /// <summary>

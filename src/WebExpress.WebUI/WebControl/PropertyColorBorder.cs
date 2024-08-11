@@ -3,7 +3,7 @@
     public class PropertyColorBorder : PropertyColor<TypeColorBorder>
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorBorder(TypeColorBorder color)
@@ -12,7 +12,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorBorder(string color)

@@ -107,7 +107,7 @@ namespace WebExpress.WebUI.WebControl
         public new int Width { get; set; } = -1;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlDropdown(string id = null)
@@ -117,7 +117,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
@@ -130,7 +130,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="content">The content of the html element.</param>
         public ControlDropdown(params IControlDropdownItem[] content)
@@ -142,7 +142,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <param name="content">The content of the html element.</param>
@@ -155,7 +155,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="content">The content of the html element.</param>
         public ControlDropdown(IEnumerable<IControlDropdownItem> content)

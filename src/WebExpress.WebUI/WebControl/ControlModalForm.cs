@@ -6,57 +6,57 @@ using static WebExpress.WebCore.Internationalization.InternationalizationManager
 
 namespace WebExpress.WebUI.WebControl
 {
-    public class ControlModalFormular : ControlModal
+    public class ControlModalForm : ControlModal
     {
         /// <summary>
-        /// Returns the form
+        /// Returns the form.
         /// </summary>
-        public ControlForm Formular { get; private set; }
+        public ControlForm Form { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlModalFormular(string id = null)
+        public ControlModalForm(string id = null)
             : this(id, string.Empty, null)
         {
 
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="header">The headline.</param>
-        public ControlModalFormular(string id, string header)
+        public ControlModalForm(string id, string header)
             : this(id, header, null)
         {
 
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The form controls.</param>
-        public ControlModalFormular(string id, params ControlFormItem[] content)
+        public ControlModalForm(string id, params ControlFormItem[] content)
             : this(id, string.Empty, content)
         {
 
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="header">The headline.</param>
         /// <param name="content">The form controls.</param>
-        public ControlModalFormular(string id, string header, params ControlFormItem[] content)
+        public ControlModalForm(string id, string header, params ControlFormItem[] content)
             : base("modal_" + id, string.Empty, null)
         {
-            Formular = content != null ? new ControlForm(id, content) : new ControlForm(id);
-            Formular.InitializeFormular += OnInitializeFormular;
-            Formular.Validated += OnValidatedFormular;
+            Form = content != null ? new ControlForm(id, content) : new ControlForm(id);
+            Form.InitializeForm += OnInitializeForm;
+            Form.Validated += OnValidatedForm;
             Header = header;
         }
 
@@ -66,7 +66,7 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="item">The form item.</param>
         public void Add(params ControlFormItem[] item)
         {
-            Formular.Add(item);
+            Form.Add(item);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="item">The form item.</param>
         public void Remove(ControlFormItem item)
         {
-            Formular.Remove(item);
+            Form.Remove(item);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event argument.</param>
-        private void OnInitializeFormular(object sender, FormularEventArgs e)
+        private void OnInitializeForm(object sender, FormEventArgs e)
         {
             ShowIfCreated = false;
         }
@@ -93,7 +93,7 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event argument.</param>
-        private void OnValidatedFormular(object sender, ValidationResultEventArgs e)
+        private void OnValidatedForm(object sender, ValidationResultEventArgs e)
         {
             if (!e.Valid)
             {
@@ -109,21 +109,21 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>The control as html.</returns>
         public override IHtmlNode Render(RenderContext context)
         {
-            return Render(context, Formular.Items);
+            return Render(context, Form.Items);
         }
 
         /// <summary>
         /// Convert to html.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        /// <param name="items">The formular items.</param>
+        /// <param name="items">The form items.</param>
         /// <returns>The control as html.</returns>
         public virtual IHtmlNode Render(RenderContext context, IEnumerable<ControlFormItem> items)
         {
             var fade = Fade;
             var classes = Classes.ToList();
 
-            var form = Formular.Render(context, items) as HtmlElementFormForm;
+            var form = Form.Render(context, items) as HtmlElementFormForm;
 
             classes.Add("modal");
 
@@ -158,17 +158,7 @@ namespace WebExpress.WebUI.WebControl
 
             var footer = default(HtmlElementTextContentDiv);
 
-            var submitFooterButton = new ControlFormItemButton()
-            {
-                Name = "submit_" + Formular?.Id?.ToLower(),
-                Text = Formular.SubmitButton.Text,
-                Icon = Formular.SubmitButton.Icon,
-                Color = Formular.SubmitButton.Color,
-                Type = TypeButton.Submit,
-                Value = "1",
-                Margin = new PropertySpacingMargin(PropertySpacing.Space.None, PropertySpacing.Space.Two, PropertySpacing.Space.None, PropertySpacing.Space.None),
-                OnClick = new PropertyOnClick($"$('#{Formular?.SubmitType.Id}').val('submit');")
-            };
+            var submitFooterButton = new ControlFormItemButton();
 
             var cancelFooterButton = new ControlButtonLink()
             {
@@ -177,7 +167,7 @@ namespace WebExpress.WebUI.WebControl
 
             cancelFooterButton.AddUserAttribute("data-bs-dismiss", "modal");
 
-            footer = new HtmlElementTextContentDiv(submitFooterButton.Render(new RenderContextFormular(context, Formular)), cancelFooterButton)
+            footer = new HtmlElementTextContentDiv(submitFooterButton.Render(new RenderContextForm(context, Form)), cancelFooterButton)
             {
                 Class = "modal-footer d-flex justify-content-between"
             };

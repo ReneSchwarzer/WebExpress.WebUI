@@ -37,7 +37,7 @@ namespace WebExpress.WebUI.WebControl
         public string FooterImage { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlPanelCard(string id = null)
@@ -47,7 +47,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlPanelCard(string id, params Control[] items)
@@ -57,7 +57,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="items">The controls to insert.</param>
         public ControlPanelCard(params Control[] items)
@@ -100,7 +100,7 @@ namespace WebExpress.WebUI.WebControl
 
             if (!string.IsNullOrWhiteSpace(Header))
             {
-                html.Elements.Add(new HtmlElementTextContentDiv(new HtmlText(InternationalizationManager.I18N(context, Header))) { Class = "card-header" });
+                html.Elements.Add(new HtmlElementTextContentDiv(new HtmlText(context.I18N(Header))) { Class = "card-header" });
             }
 
             if (!string.IsNullOrWhiteSpace(HeaderImage))
@@ -116,8 +116,8 @@ namespace WebExpress.WebUI.WebControl
             {
                 Content.Insert(0, new ControlText()
                 {
-                    Text = InternationalizationManager.I18N(context, Headline),
-                    Classes = new List<string>(new[] { "card-title" }),
+                    Text = context.I18N(Headline),
+                    Classes = new List<string>(["card-title"]),
                     Format = TypeFormatText.H4
                 });
             }

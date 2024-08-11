@@ -3,18 +3,18 @@ using WebExpress.WebUI.WebControl;
 
 namespace WebExpress.WebUI.WebFragment
 {
-    public class FragmentControlFormularInline : ControlFormInline, IFragment
+    public class FragmentControlModalForm : ControlModalForm, IFragment
     {
         /// <summary>
-        /// Liefert der Kontext
+        /// Returns the context of the fragment.
         /// </summary>
         public IFragmentContext FragmentContext { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the fragment or null.</param>
-        public FragmentControlFormularInline(string id = null)
+        public FragmentControlModalForm(string id = null)
             : base(id)
         {
         }

@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.WebControl
     public class ControlPanelNavbar : ControlPanel
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlPanelNavbar(string id = null)
@@ -17,7 +17,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="items">The navbar items.</param>
@@ -28,7 +28,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="items">The navbar items.</param>
         public ControlPanelNavbar(params Control[] items)

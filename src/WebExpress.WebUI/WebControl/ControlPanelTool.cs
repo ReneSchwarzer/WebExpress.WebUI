@@ -15,7 +15,7 @@ namespace WebExpress.WebUI.WebControl
         public ControlDropdown Tools { get; } = new ControlDropdown();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlPanelTool(string id = null)
@@ -25,7 +25,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlPanelTool(string id, params Control[] items)
@@ -35,7 +35,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlPanelTool(params Control[] items)

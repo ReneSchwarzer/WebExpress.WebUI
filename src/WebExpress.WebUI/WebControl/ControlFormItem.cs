@@ -11,7 +11,7 @@ namespace WebExpress.WebUI.WebControl
         public string Name { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItem(string id = null)
@@ -23,14 +23,14 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes the form element.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        public abstract void Initialize(RenderContextFormular context);
+        public abstract void Initialize(RenderContextForm context);
 
         /// <summary>
         /// Convert to html.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
         /// <returns>The control as html.</returns>
-        public abstract IHtmlNode Render(RenderContextFormular context);
+        public abstract IHtmlNode Render(RenderContextForm context);
 
         /// <summary>
         /// Convert to html.
@@ -39,7 +39,7 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>The control as html.</returns>
         public override IHtmlNode Render(RenderContext context)
         {
-            if (context is RenderContextFormular formContext)
+            if (context is RenderContextForm formContext)
             {
                 return Render(formContext);
             }

@@ -49,7 +49,7 @@ namespace WebExpress.WebUI.WebControl
         public int Likes { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlTimelineItem(string id = null)
@@ -191,11 +191,12 @@ namespace WebExpress.WebUI.WebControl
                 Name = !string.IsNullOrWhiteSpace(Name) ? Name : "form"
             };
 
-            form.SubmitButton.Icon = new PropertyIcon(TypeIcon.PaperPlane);
-            form.SubmitButton.Text = "Antworten";
-            form.SubmitButton.Outline = true;
-            form.SubmitButton.Size = TypeSizeButton.Small;
-            //form.SubmitButton.HorizontalAlignment = TypeHorizontalAlignment.Default;
+            form.AddPrimaryButton(new ControlFormItemButtonSubmit("")
+            {
+                Icon = new PropertyIcon(TypeIcon.PaperPlane),
+                Outline = true,
+                Size = TypeSizeButton.Small
+            });
 
             form.Add(new ControlFormItemInputTextBox() { Format = TypesEditTextFormat.Multiline, Placeholder = "Kommentieren..." });
 

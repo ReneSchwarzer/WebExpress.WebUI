@@ -40,7 +40,7 @@ namespace WebExpress.WebUI.WebControl
         public string Title { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public ControlText()
             : base(null)
@@ -48,7 +48,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlText(string id)

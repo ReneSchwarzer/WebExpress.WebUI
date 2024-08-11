@@ -32,7 +32,7 @@ namespace WebExpress.WebUI.WebControl
         public ControlModal Modal { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlAvatar(string id = null)

@@ -142,7 +142,7 @@ namespace WebExpress.WebUI.WebControl
         public abstract IHtmlNode Render(RenderContext context);
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id.</param>
         public Control(string id = null)

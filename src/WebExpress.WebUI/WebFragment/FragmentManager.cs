@@ -41,7 +41,7 @@ namespace WebExpress.WebUI.WebFragment
         private FragmentDictionary Dictionary { get; set; } = new FragmentDictionary();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         internal FragmentManager()
         {
@@ -185,7 +185,7 @@ namespace WebExpress.WebUI.WebFragment
                 }
 
                 // register fragment
-                foreach (var context in scopes.Any() ? scopes : new List<string>(new[] { "" }))
+                foreach (var context in scopes.Count != 0 ? scopes : [""])
                 {
                     var key = string.Join(":", section, context);
 

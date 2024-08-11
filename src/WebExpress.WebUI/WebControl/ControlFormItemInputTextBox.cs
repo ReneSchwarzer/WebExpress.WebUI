@@ -55,7 +55,7 @@ namespace WebExpress.WebUI.WebControl
         public int Rows { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemInputTextBox(string id = null)
@@ -66,7 +66,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="name">The name of the text box.</param>
@@ -80,7 +80,7 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes the form element.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        public override void Initialize(RenderContextForm context)
         {
             base.Initialize(context);
 
@@ -105,7 +105,7 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
         /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        public override IHtmlNode Render(RenderContextForm context)
         {
             var id = Id ?? Guid.NewGuid().ToString();
 
@@ -182,7 +182,7 @@ namespace WebExpress.WebUI.WebControl
         /// Checks the input element for correctness of the data.
         /// </summary>
         /// <param name="context">The context in which the inputs are validated.</param>
-        public override void Validate(RenderContextFormular context)
+        public override void Validate(RenderContextForm context)
         {
             base.Validate(context);
 

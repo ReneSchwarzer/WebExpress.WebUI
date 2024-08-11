@@ -3,18 +3,62 @@ using Microsoft.AspNetCore.Http.Features;
 using System.Net;
 using System.Reflection;
 using WebExpress.WebCore;
+using WebExpress.WebCore.WebComponent;
 using WebExpress.WebCore.WebLog;
 using WebExpress.WebCore.WebMessage;
+using WebExpress.WebCore.WebModule;
 using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebPlugin;
+using WebExpress.WebCore.WebResource;
 using WebExpress.WebUI.WebControl;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.Fixture
 {
-    public class UnitTestControlFixture
+    public class UnitTestControlFixture : IDisposable
     {
         /// <summary>
-        /// Create a fake render context;
+        /// Returns a guard to protect against concurrent access.
+        /// </summary>
+        private static object guard = new object();
+
+        /// <summary>
+        /// Initializes a new instance of the class and boot the component manager.
+        /// </summary>
+        public UnitTestControlFixture()
+        {
+            lock (guard)
+            {
+                if (ComponentManager.PluginManager != null)
+                {
+                    return;
+                }
+
+                var initializationComponentManager = typeof(ComponentManager).GetMethod("Initialization", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static, [typeof(IHttpServerContext)]);
+                var registerPluginManager = typeof(PluginManager).GetMethod("Register", BindingFlags.NonPublic | BindingFlags.Instance, [typeof(Assembly), typeof(PluginLoadContext)]);
+                var serverContext = new HttpServerContext
+                (
+                    "localhost",
+                    [],
+                    "",
+                    "",
+                    "",
+                    "",
+                    null,
+                    null,
+                    new Log() { LogMode = LogMode.Off },
+                    null
+                );
+
+                initializationComponentManager.Invoke(null, [serverContext]);
+
+                registerPluginManager.Invoke(ComponentManager.PluginManager, [typeof(Plugin).Assembly, null]);
+                registerPluginManager.Invoke(ComponentManager.PluginManager, [GetType().Assembly, null]);
+            }
+        }
+
+        /// <summary>
+        /// Create a fake render context.
         /// </summary>
         /// <returns>A fake context for testing.</returns>
         public RenderContext CrerateContext()
@@ -77,16 +121,60 @@ namespace WebExpress.WebUI.Test.Fixture
             var page = new TestPage();
             var visualTree = new VisualTreeControl();
 
-            return new WebCore.WebPage.RenderContext(page, request, visualTree);
+            page.Initialization(CrerateResourceContext());
+
+            return new RenderContext(page, request, visualTree);
         }
 
         /// <summary>
-        /// Create a fake render formular context;
+        /// Create a fake render form context.
         /// </summary>
         /// <returns>A fake context for testing.</returns>
-        public RenderContextFormular CrerateContextFormular()
+        public RenderContextForm CrerateContextForm()
         {
-            return new RenderContextFormular(CrerateContext(), new ControlForm());
+            return new RenderContextForm(CrerateContext(), new ControlForm());
+        }
+
+        /// <summary>
+        /// Create a fake resource context.
+        /// </summary>
+        /// <returns>A fake context for testing.</returns>
+        public ResourceContext CrerateResourceContext()
+        {
+            var ctorResourceContext = typeof(ResourceContext).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, [typeof(IModuleContext)], null);
+
+            var moduleContext = ComponentManager.ModuleManager.Modules
+                .Where(x => x.ModuleId == typeof(TestModule).FullName.ToLower())
+                .FirstOrDefault();
+
+            var resourceContext = (ResourceContext)ctorResourceContext.Invoke([moduleContext]);
+
+            return resourceContext;
+        }
+
+        /// <summary>
+        /// Gets the content of an embedded resource as a string.
+        /// </summary>
+        /// <param name="fileName">The name of the resource file.</param>
+        /// <returns>The content of the embedded resource as a string.</returns>
+        public string GetEmbeddedResource(string fileName)
+        {
+            var assembly = GetType().Assembly;
+            var resourceName = assembly.GetManifestResourceNames()
+                                   .FirstOrDefault(name => name.EndsWith(fileName, StringComparison.OrdinalIgnoreCase));
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        /// <summary>
+        /// Release of unmanaged resources reserved during use.
+        /// </summary>
+        public void Dispose()
+        {
         }
     }
 }

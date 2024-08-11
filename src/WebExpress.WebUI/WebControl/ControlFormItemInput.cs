@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.WebControl
     /// <summary>
     /// Identifies a control that is to be filled in by the user.
     /// </summary>
-    public abstract class ControlFormItemInput : ControlFormItem, IControlFormLabel, IFormularValidation
+    public abstract class ControlFormItemInput : ControlFormItem, IControlFormLabel, IFormValidation
     {
         /// <summary>
         /// Event to validate the input values.
@@ -91,7 +91,7 @@ namespace WebExpress.WebUI.WebControl
         public virtual string Value { get; set; } = string.Empty;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemInput(string id)
@@ -114,7 +114,7 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes the form.emement
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        public override void Initialize(RenderContextForm context)
         {
         }
 
@@ -131,7 +131,7 @@ namespace WebExpress.WebUI.WebControl
         /// Checks the input element for correctness of the data.
         /// </summary>
         /// <param name="context">The context in which the inputs are validated.</param>
-        public virtual void Validate(RenderContextFormular context)
+        public virtual void Validate(RenderContextForm context)
         {
             IsValidated = true;
 

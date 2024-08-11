@@ -4,12 +4,12 @@ using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
-    public class RenderContextFormular : RenderContext
+    public class RenderContextForm : RenderContext
     {
         /// <summary>
         /// The form in which the control is rendered.
         /// </summary>
-        public IControlForm Formular { get; private set; }
+        public IControlForm Form { get; private set; }
 
         /// <summary>
         /// Returns or sets the links to the java script files to be used.
@@ -22,35 +22,35 @@ namespace WebExpress.WebUI.WebControl
         public ICollection<ValidationResult> ValidationResults { get; } = new List<ValidationResult>();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="page">The page where the control is rendered.</param>
         /// <param name="request">The request.</param>
         /// <param name="visualTree">The visual tree.</param>
-        /// <param name="formular">The form in which the control is rendered.</param>
-        public RenderContextFormular(IPage page, Request request, IVisualTree visualTree, IControlForm formular)
+        /// <param name="form">The form in which the control is rendered.</param>
+        public RenderContextForm(IPage page, Request request, IVisualTree visualTree, IControlForm form)
                 : base(page, request, visualTree)
         {
-            Formular = formular;
+            Form = form;
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        /// <param name="formular">The form in which the control is rendered.</param>
-        public RenderContextFormular(RenderContext context, IControlForm formular)
+        /// <param name="form">The form in which the control is rendered.</param>
+        public RenderContextForm(RenderContext context, IControlForm form)
             : base(context)
         {
-            Formular = formular;
+            Form = form;
         }
 
         /// <summary>
         /// Copy-Constructor
         /// </summary>
         /// <param name="context">The render context to copy./param>
-        public RenderContextFormular(RenderContextFormular context)
-            : this(context, context?.Formular)
+        public RenderContextForm(RenderContextForm context)
+            : this(context, context?.Form)
         {
             Scripts = context.Scripts;
         }

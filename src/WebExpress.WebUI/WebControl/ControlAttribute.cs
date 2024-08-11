@@ -37,7 +37,7 @@ namespace WebExpress.WebUI.WebControl
         public Uri Uri { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlAttribute(string id = null)

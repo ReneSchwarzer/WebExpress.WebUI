@@ -14,22 +14,22 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Event is raised when the form has been initialized.
         /// </summary>
-        event EventHandler<FormularEventArgs> InitializeFormular;
+        event EventHandler<FormEventArgs> InitializeForm;
 
         /// <summary>
         /// Event is raised when the form's data needs to be determined.
         /// </summary>
-        event EventHandler<FormularEventArgs> FillFormular;
+        event EventHandler<FormEventArgs> FillForm;
 
         /// <summary>
         /// Event is raised when the form is about to be processed.
         /// </summary>
-        event EventHandler<FormularEventArgs> ProcessFormular;
+        event EventHandler<FormEventArgs> ProcessForm;
 
         /// <summary>
         /// Event is raised when the form is to be processed and the next data is to be loaded.
         /// </summary>
-        event EventHandler<FormularEventArgs> ProcessAndNextFormular;
+        event EventHandler<FormEventArgs> ProcessAndNextForm;
 
         /// <summary>
         /// Returns or sets the name of the form.
@@ -47,11 +47,6 @@ namespace WebExpress.WebUI.WebControl
         string RedirectUri { get; set; }
 
         /// <summary>
-        /// Returns or sets the submit button.
-        /// </summary>
-        ControlFormItemButton SubmitButton { get; }
-
-        /// <summary>
         /// Returns or sets the form items.
         /// </summary>
         IEnumerable<ControlFormItem> Items { get; }
@@ -65,13 +60,13 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes the form.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        void Initialize(RenderContextFormular context);
+        void Initialize(RenderContextForm context);
 
         /// <summary>
         /// Pre-processes the form.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        void PreProcess(RenderContextFormular context);
+        void PreProcess(RenderContextForm context);
 
         /// <summary>
         /// Adds form control items to the form.
@@ -90,6 +85,6 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="context">The context in which the inputs are validated.</param>
         /// <returns>True if all form items are valid, false otherwise.</returns>
-        bool Validate(RenderContextFormular context);
+        bool Validate(RenderContextForm context);
     }
 }

@@ -20,7 +20,7 @@ namespace WebExpress.WebUI.Test.Control
         protected UnitTestControlFixture Fixture { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="fixture">The log.</param>
         /// <param name="output">The test context.</param>

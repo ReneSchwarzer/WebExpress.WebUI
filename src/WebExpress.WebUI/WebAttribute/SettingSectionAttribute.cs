@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.WebAttribute
     public class SettingSectionAttribute : System.Attribute, IResourceAttribute
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="section">The section where the settings page is listed.</param>
         public SettingSectionAttribute(SettingSection section)

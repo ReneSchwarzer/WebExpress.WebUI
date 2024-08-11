@@ -3,7 +3,7 @@
     public class ControlPanelFilter : ControlForm
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlPanelFilter(string id = null)
@@ -17,7 +17,6 @@
         /// </summary>
         private void Init()
         {
-            SubmitButton.Text = "Update";
         }
     }
 }

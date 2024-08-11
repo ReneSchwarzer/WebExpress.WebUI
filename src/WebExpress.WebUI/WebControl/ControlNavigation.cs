@@ -63,7 +63,7 @@ namespace WebExpress.WebUI.WebControl
         public List<IControlNavigationItem> Items { get; private set; } = new List<IControlNavigationItem>();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlNavigation(string id = null)
@@ -73,7 +73,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="items">The navigation items.</param>
         public ControlNavigation(params IControlNavigationItem[] items)
@@ -85,7 +85,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
@@ -98,7 +98,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="content">The content of the html element.</param>
         public ControlNavigation(IEnumerable<IControlNavigationItem> content)

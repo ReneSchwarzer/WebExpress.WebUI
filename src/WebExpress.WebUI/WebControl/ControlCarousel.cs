@@ -15,7 +15,7 @@ namespace WebExpress.WebUI.WebControl
         public List<ControlCarouselItem> Items { get; private set; } = new List<ControlCarouselItem>();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlCarousel(string id = null)
@@ -24,7 +24,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="items">The contents of the slideshow.</param>
         public ControlCarousel(params ControlCarouselItem[] items)

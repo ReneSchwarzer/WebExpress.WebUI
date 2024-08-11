@@ -75,7 +75,7 @@ namespace WebExpress.WebUI.WebControl
         protected List<IControlSplitButtonItem> Items { get; private set; } = new List<IControlSplitButtonItem>();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlSplitButton(string id = null)
@@ -85,7 +85,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="items">The content of the html element.</param>
         public ControlSplitButton(params IControlSplitButtonItem[] items)
@@ -97,7 +97,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="items">The content of the html element.</param>
@@ -110,7 +110,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="items">The content of the html element.</param>
@@ -123,7 +123,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="items">The content of the html element.</param>
         public ControlSplitButton(IEnumerable<IControlSplitButtonItem> items)
@@ -182,7 +182,7 @@ namespace WebExpress.WebUI.WebControl
             {
 
             }
-            else if (Modal.Type == TypeModal.Formular)
+            else if (Modal.Type == TypeModal.Form)
             {
                 button.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
             }

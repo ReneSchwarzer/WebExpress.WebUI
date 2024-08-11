@@ -22,7 +22,7 @@ namespace WebExpress.WebUI.WebControl
         public object Tag { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public ControlFormItemInputComboBoxItem()
         {
@@ -30,7 +30,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="subitems">The child entries.</param>
         public ControlFormItemInputComboBoxItem(params ControlFormItemInputComboBoxItem[] subitems)
@@ -40,7 +40,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="subitems">The child entries.</param>
         public ControlFormItemInputComboBoxItem(IEnumerable<ControlFormItemInputComboBoxItem> subitems)

@@ -3,7 +3,7 @@
     public class PropertyColorBackgroundBadge : PropertyColorBackground
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorBackgroundBadge(TypeColorBackground color)
@@ -12,7 +12,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorBackgroundBadge(string color)

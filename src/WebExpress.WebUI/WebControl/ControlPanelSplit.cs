@@ -58,7 +58,7 @@ namespace WebExpress.WebUI.WebControl
         public int Panel2InitialSize { get; set; } = -1;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlPanelSplit(string id = null)
@@ -67,7 +67,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="panel1">Left or top panel controls.</param>
@@ -80,7 +80,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="panel1">Left or top panel controls.</param>
         /// <param name="panel2">Right or bottom panel controls.</param>

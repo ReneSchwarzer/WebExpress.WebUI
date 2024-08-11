@@ -27,7 +27,7 @@ namespace WebExpress.WebUI.WebPage
         protected List<KeyValuePair<string, string>> Meta { get; } = new List<KeyValuePair<string, string>>();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public PageControl()
         {
@@ -53,7 +53,7 @@ namespace WebExpress.WebUI.WebPage
                 CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.css"));
                 CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.expand.css"));
                 CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.form.css"));
-                CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.modalformular.css"));
+                CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.modalform.css"));
                 CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.modalpage.css"));
                 CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.more.css"));
                 CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.move.css"));
@@ -70,7 +70,7 @@ namespace WebExpress.WebUI.WebPage
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.expand.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.form.progress.js"));
-                HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalformular.js"));
+                HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalform.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalpage.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.more.js"));
                 HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.move.js"));

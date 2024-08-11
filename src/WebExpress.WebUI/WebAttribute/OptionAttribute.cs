@@ -10,7 +10,7 @@ namespace WebExpress.WebUI.WebAttribute
     public class OptionAttribute : System.Attribute, IResourceAttribute
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="option">The option to activate.</param>
         public OptionAttribute(string option)

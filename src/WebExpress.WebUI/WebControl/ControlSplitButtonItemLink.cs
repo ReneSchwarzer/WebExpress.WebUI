@@ -6,7 +6,7 @@ namespace WebExpress.WebUI.WebControl
     public class ControlSplitButtonItemLink : ControlLink, IControlSplitButtonItem
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlSplitButtonItemLink(string id = null)

@@ -13,7 +13,7 @@
         public string Text { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="type">Der Fehlertyp</param>
         /// <param name="text">Der Fehlertext</param>

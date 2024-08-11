@@ -13,7 +13,7 @@
         public string UserColor { get; protected set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public PropertyColor()
         {

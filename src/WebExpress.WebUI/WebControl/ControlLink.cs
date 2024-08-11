@@ -91,7 +91,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlLink(string id = null)
@@ -101,7 +101,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="text">The content of the html element.</param>
@@ -112,7 +112,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="content">The content of the html element.</param>
         public ControlLink(params Control[] content)
@@ -122,7 +122,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
@@ -133,7 +133,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
@@ -229,9 +229,9 @@ namespace WebExpress.WebUI.WebControl
             {
 
             }
-            else if (Modal.Type == TypeModal.Formular)
+            else if (Modal.Type == TypeModal.Form)
             {
-                html.OnClick = $"new webexpress.webui.modalFormularCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Brwoser)

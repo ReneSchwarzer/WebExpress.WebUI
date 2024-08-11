@@ -25,7 +25,7 @@ namespace WebExpress.WebUI.WebFragment
         public IFragmentContext Context { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="context">The context of the fragment.</param>
         /// <param name="type">The type.</param>

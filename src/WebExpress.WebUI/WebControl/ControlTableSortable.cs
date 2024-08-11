@@ -26,7 +26,7 @@
     //    }
 
     //    /// <summary>
-    //    /// Constructor
+    //    /// Initializes a new instance of the class.
     //    /// </summary>
     //    /// <param name="page">The page id.</param>
     //    /// <param name="id">The id.</param>

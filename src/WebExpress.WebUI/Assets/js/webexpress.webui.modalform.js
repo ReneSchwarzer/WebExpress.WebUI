@@ -1,11 +1,11 @@
 /**
- * A modular formular.
+ * A modular form.
  * The following events are triggered:
  * - webexpress.webui.close
  */
-webexpress.webui.modalFormularCtrl = class extends webexpress.webui.events {
+webexpress.webui.modalFormCtrl = class extends webexpress.webui.events {
     _uri = null;
-    _container = $("<div class='modal modalformular fade' data-bs-backdrop='static' data-bs-keyboard='false' tabindex='-1' aria-hidden='true'></div>");
+    _container = $("<div class='modal modalform fade' data-bs-backdrop='static' data-bs-keyboard='false' tabindex='-1' aria-hidden='true'></div>");
 
     /**
      * Constructor

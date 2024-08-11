@@ -30,7 +30,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemPanel(string id)
@@ -39,7 +39,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
@@ -52,7 +52,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Initialization
         /// </summary>
-        public override void Initialize(RenderContextFormular context)
+        public override void Initialize(RenderContextForm context)
         {
         }
 
@@ -61,7 +61,7 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
         /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        public override IHtmlNode Render(RenderContextForm context)
         {
             return new HtmlElementTextContentDiv(from x in Content select x.Render(context))
             {

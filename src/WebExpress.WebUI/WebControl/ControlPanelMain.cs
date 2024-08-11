@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.WebControl
     public class ControlPanelMain : ControlPanel
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlPanelMain(string id = null)

@@ -2,7 +2,7 @@
 
 namespace WebExpress.WebUI.WebControl
 {
-    public interface IFormularValidation
+    public interface IFormValidation
     {
         /// <summary>
         /// Returns or sets whether the form element has been validated.
@@ -23,6 +23,6 @@ namespace WebExpress.WebUI.WebControl
         /// Checks the input element for correctness of the data.
         /// </summary>
         /// <param name="context">The context in which the inputs are validated.</param>
-        void Validate(RenderContextFormular context);
+        void Validate(RenderContextForm context);
     }
 }

@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.WebAttribute
     public class SettingGroupAttribute : System.Attribute, IResourceAttribute
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="name">The group name.</param>
         public SettingGroupAttribute(string name)

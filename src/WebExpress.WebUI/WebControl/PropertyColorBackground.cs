@@ -3,7 +3,7 @@
     public class PropertyColorBackground : PropertyColor<TypeColorBackground>
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public PropertyColorBackground()
         {
@@ -11,7 +11,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorBackground(TypeColorBackground color)
@@ -20,7 +20,7 @@
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="color">Die Farbe</param>
         public PropertyColorBackground(string color)

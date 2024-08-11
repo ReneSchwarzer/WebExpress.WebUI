@@ -20,7 +20,7 @@ namespace WebExpress.WebUI.Test.Control
         protected UnitTestControlFixture Fixture { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="fixture">The log.</param>
         /// <param name="output">The test context.</param>
@@ -37,7 +37,7 @@ namespace WebExpress.WebUI.Test.Control
         public void Empty()
         {
             // preconditions
-            var context = Fixture.CrerateContextFormular();
+            var context = Fixture.CrerateContextForm();
             var control = new ControlFormItemInputRadio();
 
             var html = control.Render(context).Trim();
@@ -53,7 +53,7 @@ namespace WebExpress.WebUI.Test.Control
         public void True()
         {
             // preconditions
-            var context = Fixture.CrerateContextFormular();
+            var context = Fixture.CrerateContextForm();
             var control = new ControlFormItemInputRadio() { Checked = true };
 
             var html = control.Render(context).Trim();
@@ -69,7 +69,7 @@ namespace WebExpress.WebUI.Test.Control
         public void False()
         {
             // preconditions
-            var context = Fixture.CrerateContextFormular();
+            var context = Fixture.CrerateContextForm();
             var control = new ControlFormItemInputRadio() { Checked = false };
 
             var html = control.Render(context).Trim();
@@ -85,7 +85,7 @@ namespace WebExpress.WebUI.Test.Control
         public void Description()
         {
             // preconditions
-            var context = Fixture.CrerateContextFormular();
+            var context = Fixture.CrerateContextForm();
             var control = new ControlFormItemInputRadio() { Description = "abcdefg" };
 
             var html = control.Render(context).Trim();

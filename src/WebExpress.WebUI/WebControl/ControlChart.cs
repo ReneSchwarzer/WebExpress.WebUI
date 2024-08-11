@@ -62,7 +62,7 @@ namespace WebExpress.WebUI.WebControl
         public ICollection<ControlChartDataset> Data { get; set; } = new List<ControlChartDataset>();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlChart(string id = null)

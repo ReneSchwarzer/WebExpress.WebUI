@@ -53,7 +53,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Event is triggered when the button is clicked.
         /// </summary>
-        public EventHandler<FormularEventArgs> Click;
+        public EventHandler<FormEventArgs> Click;
 
         /// <summary>
         /// Returns or sets the text.
@@ -76,7 +76,7 @@ namespace WebExpress.WebUI.WebControl
         public PropertyIcon Icon { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemButton(string id = null)
@@ -88,7 +88,7 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes the form element.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        public override void Initialize(RenderContextForm context)
         {
             Disabled = false;
             Size = TypeSizeButton.Default;
@@ -99,7 +99,7 @@ namespace WebExpress.WebUI.WebControl
 
                 if (!string.IsNullOrWhiteSpace(Value) && value == Value)
                 {
-                    OnClickEvent(new FormularEventArgs() { Context = context });
+                    OnClickEvent(new FormEventArgs() { Context = context });
                 }
             }
         }
@@ -109,7 +109,7 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
         /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        public override IHtmlNode Render(RenderContextForm context)
         {
             var html = new HtmlElementFieldButton()
             {
@@ -157,7 +157,7 @@ namespace WebExpress.WebUI.WebControl
         /// Triggers the click event.
         /// </summary>
         /// <param name="e">The event argument.</param>
-        protected virtual void OnClickEvent(FormularEventArgs e)
+        protected virtual void OnClickEvent(FormEventArgs e)
         {
             Click?.Invoke(this, e);
         }

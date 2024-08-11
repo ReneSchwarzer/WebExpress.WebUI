@@ -32,7 +32,7 @@ namespace WebExpress.WebUI.WebControl
         public List<IControlLink> Links { get; } = new List<IControlLink>();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlLinkList(string id = null)

@@ -41,7 +41,7 @@ namespace WebExpress.WebUI.SettingPage
         private SettingPageDictionary Dictionary { get; } = new SettingPageDictionary();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         internal SettingPageManager()
         {

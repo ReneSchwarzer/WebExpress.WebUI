@@ -27,7 +27,7 @@ namespace WebExpress.WebUI.WebControl
         public int ImageHeight { get; set; } = -1;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlPanelMedia(string id = null)
@@ -37,7 +37,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="title">The headline.</param>

@@ -18,7 +18,7 @@ namespace WebExpress.WebUI.WebControl
         public string Title { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlButtonLink(string id = null)
@@ -43,7 +43,7 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>The control as html.</returns>
         public override IHtmlNode Render(RenderContext context)
         {
-            var text = InternationalizationManager.I18N(context.Culture, Text);
+            var text = context.I18N(Text);
 
             var html = new HtmlElementTextSemanticsA()
             {
@@ -86,9 +86,9 @@ namespace WebExpress.WebUI.WebControl
             {
 
             }
-            else if (Modal.Type == TypeModal.Formular)
+            else if (Modal.Type == TypeModal.Form)
             {
-                html.OnClick = $"new webexpress.webui.modalFormularCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Brwoser)

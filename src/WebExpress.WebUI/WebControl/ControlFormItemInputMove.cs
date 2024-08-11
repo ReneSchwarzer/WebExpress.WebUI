@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using static WebExpress.WebCore.Internationalization.InternationalizationManager;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -25,7 +25,7 @@ namespace WebExpress.WebUI.WebControl
         public string AvailableHeader { get; set; } = "webexpress.webui:form.selectionmove.available";
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemInputMove(string id = null)
@@ -35,7 +35,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="items">The entries.</param>
@@ -49,7 +49,7 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes the form element.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        public override void Initialize(RenderContextForm context)
         {
             if (context.Request.HasParameter(Name))
             {
@@ -62,7 +62,7 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
         /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        public override IHtmlNode Render(RenderContextForm context)
         {
             var classes = Classes.ToList();
 
@@ -96,7 +96,7 @@ namespace WebExpress.WebUI.WebControl
         /// Checks the input element for correctness of the data.
         /// </summary>
         /// <param name="context">The context in which the inputs are validated.</param>
-        public override void Validate(RenderContextFormular context)
+        public override void Validate(RenderContextForm context)
         {
             base.Validate(context);
         }
@@ -108,7 +108,7 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="id">The id of the control.</param>
         /// <param name="css">The css classes that are assigned to the control.</param>
         /// <returns>The javascript code.</returns>
-        protected virtual string GetScript(RenderContextFormular context, string id, string css)
+        protected virtual string GetScript(RenderContextForm context, string id, string css)
         {
             var settings = new
             {
@@ -117,15 +117,15 @@ namespace WebExpress.WebUI.WebControl
                 CSS = css,
                 Header = new
                 {
-                    Selected = I18N(context, SelectedHeader),
-                    Available = I18N(context, AvailableHeader)
+                    Selected = context.I18N(SelectedHeader),
+                    Available = context.I18N(AvailableHeader)
                 },
                 Buttons = new
                 {
-                    ToSelectedAll = I18N(context, "˂˂"),
-                    ToSelected = I18N(context, "˂"),
-                    ToAvailableAll = I18N(context, "˃˃"),
-                    ToAvailable = I18N(context, "˃")
+                    ToSelectedAll = context.I18N("˂˂"),
+                    ToSelected = context.I18N("˂"),
+                    ToAvailableAll = context.I18N("˃˃"),
+                    ToAvailable = context.I18N("˃")
                 }
             };
 

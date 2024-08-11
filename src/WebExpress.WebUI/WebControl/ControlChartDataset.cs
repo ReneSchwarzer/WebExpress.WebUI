@@ -35,7 +35,7 @@ namespace WebExpress.WebUI.WebControl
         public TypePointChart Point { get; set; } = TypePointChart.Circle;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public ControlChartDataset()
         {
