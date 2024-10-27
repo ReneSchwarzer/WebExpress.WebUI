@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.WebAttribute
     /// Activation of options (e.g. WebEx.WebApp.Setting.SystemInformation for the display of system information).
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class OptionAttribute : System.Attribute, IResourceAttribute
+    public class OptionAttribute : System.Attribute, IEndpointAttribute
     {
         /// <summary>
         /// Initializes a new instance of the class.

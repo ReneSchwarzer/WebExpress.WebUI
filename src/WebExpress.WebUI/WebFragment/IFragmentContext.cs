@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
-using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebApplication;
+using WebExpress.WebCore.WebComponent;
 using WebExpress.WebCore.WebCondition;
-using WebExpress.WebCore.WebModule;
 using WebExpress.WebCore.WebPlugin;
 
 namespace WebExpress.WebUI.WebFragment
 {
-    public interface IFragmentContext : II18N
+    /// <summary>
+    /// Interface representing the context of a web fragment.
+    /// Provides access to plugin context, application context, conditions for activation, and caching behavior.
+    /// </summary>
+    public interface IFragmentContext : IContext
     {
         /// <summary>
         /// Returns the context of the associated plugin.
@@ -20,9 +23,9 @@ namespace WebExpress.WebUI.WebFragment
         IApplicationContext ApplicationContext { get; }
 
         /// <summary>
-        /// Returns the module context.
+        /// Gets the unique identifier for the fragment.
         /// </summary>
-        IModuleContext ModuleContext { get; }
+        string FragmentId { get; }
 
         /// <summary>
         /// Returns the conditions that must be met for the component to be active.

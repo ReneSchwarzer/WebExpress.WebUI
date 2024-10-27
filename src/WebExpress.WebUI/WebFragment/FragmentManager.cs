@@ -7,19 +7,23 @@ using WebExpress.WebCore.WebApplication;
 using WebExpress.WebCore.WebAttribute;
 using WebExpress.WebCore.WebComponent;
 using WebExpress.WebCore.WebCondition;
-using WebExpress.WebCore.WebModule;
 using WebExpress.WebCore.WebPage;
 using WebExpress.WebCore.WebPlugin;
 using WebExpress.WebUI.WebAttribute;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebFragment.Model;
 
 namespace WebExpress.WebUI.WebFragment
 {
     /// <summary>
     /// Fragment manager.
     /// </summary>
-    public sealed class FragmentManager : IComponentPlugin
+    public sealed class FragmentManager : IFragmentManager
     {
+        private readonly IComponentHub _componentHub;
+        private readonly IHttpServerContext _httpServerContext;
+        private readonly FragmentDictionary _dictionary = [];
+
         /// <summary>
         /// An event that fires when an fragment is added.
         /// </summary>
@@ -31,71 +35,67 @@ namespace WebExpress.WebUI.WebFragment
         public event EventHandler<IFragmentContext> RemoveFragment;
 
         /// <summary>
-        /// Returns the reference to the context of the host.
-        /// </summary>
-        public IHttpServerContext HttpServerContext { get; private set; }
-
-        /// <summary>
-        /// Returns or sets the directory where the components are listed.
-        /// </summary>
-        private FragmentDictionary Dictionary { get; set; } = new FragmentDictionary();
-
-        /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        internal FragmentManager()
+        /// <param name="componentHub">The component hub.</param>
+        /// <param name="httpServerContext">The reference to the context of the host.</param>
+        private FragmentManager(IComponentHub componentHub, IHttpServerContext httpServerContext)
         {
-            ComponentManager.PluginManager.AddPlugin += (s, pluginContext) =>
-            {
-                Register(pluginContext);
-            };
+            _componentHub = componentHub;
+            _httpServerContext = httpServerContext;
 
-            ComponentManager.PluginManager.RemovePlugin += (s, pluginContext) =>
-            {
-                Remove(pluginContext);
-            };
+            _componentHub.PluginManager.AddPlugin += OnAddPlugin;
+            _componentHub.PluginManager.RemovePlugin += OnRemovePlugin;
+            _componentHub.ApplicationManager.AddApplication += OnAddApplication;
+            _componentHub.ApplicationManager.RemoveApplication += OnRemoveApplication;
 
-            ComponentManager.ModuleManager.AddModule += (sender, moduleContext) =>
-            {
-                AssignToModule(moduleContext);
-            };
-
-            ComponentManager.ModuleManager.RemoveModule += (sender, moduleContext) =>
-            {
-                DetachFromModule(moduleContext);
-            };
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        /// <param name="context">The reference to the context of the host.</param>
-        public void Initialization(IHttpServerContext context)
-        {
-            HttpServerContext = context;
-
-            HttpServerContext.Log.Debug
+            _httpServerContext.Log.Debug
             (
-                InternationalizationManager.I18N("webexpress.webui:fragmentmanager.initialization")
+                I18N.Translate("webexpress.webui:fragmentmanager.initialization")
             );
         }
 
         /// <summary>
-        /// Discovers and registers entries from the specified plugin.
+        /// Discovers and binds fragments to an application.
         /// </summary>
-        /// <param name="pluginContext">A context of a plugin whose elements are to be registered.</param>
-        public void Register(IPluginContext pluginContext)
+        /// <param name="pluginContext">The context of the plugin whose fragments are to be associated.</param>
+        private void Register(IPluginContext pluginContext)
         {
-            // register plugin
-            if (!Dictionary.ContainsKey(pluginContext))
+            if (_dictionary.ContainsKey(pluginContext))
             {
-                Dictionary.Add(pluginContext, new FragmentDictionaryItem());
+                return;
             }
 
-            var pluginDictionary = Dictionary[pluginContext];
+            Register(pluginContext, _componentHub.ApplicationManager.GetApplications(pluginContext));
+        }
+
+        /// <summary>
+        /// Discovers and binds fragments to an application.
+        /// </summary>
+        /// <param name="applicationContext">The context of the application whose fragments are to be associated.</param>
+        private void Register(IApplicationContext applicationContext)
+        {
+            foreach (var pluginContext in _componentHub.PluginManager.GetPlugins(applicationContext))
+            {
+                if (_dictionary.TryGetValue(pluginContext, out var appDict) && appDict.ContainsKey(applicationContext))
+                {
+                    continue;
+                }
+
+                Register(pluginContext, [applicationContext]);
+            }
+        }
+
+        /// <summary>
+        /// Registers pages for a given plugin and application context.
+        /// </summary>
+        /// <param name="pluginContext">The plugin context.</param>
+        /// <param name="applicationContext">The application context (optional).</param>
+        private void Register(IPluginContext pluginContext, IEnumerable<IApplicationContext> applicationContexts)
+        {
             var assembly = pluginContext.Assembly;
 
-            foreach (var fragment in assembly.GetTypes().Where
+            foreach (var fragmentType in assembly.GetTypes().Where
                 (
                     x => x.IsClass &&
                     x.IsSealed &&
@@ -106,7 +106,7 @@ namespace WebExpress.WebUI.WebFragment
                     )
                 ))
             {
-                var moduleId = string.Empty;
+                var id = fragmentType.FullName?.ToLower();
                 var scopes = new List<string>();
                 var section = string.Empty;
                 var conditions = new List<ICondition>();
@@ -114,17 +114,13 @@ namespace WebExpress.WebUI.WebFragment
                 var order = 0;
 
                 // determining attributes
-                foreach (var customAttribute in fragment.CustomAttributes.Where
+                foreach (var customAttribute in fragmentType.CustomAttributes.Where
                 (
                     x => x.AttributeType.GetInterfaces()
-                            .Contains(typeof(IResourceAttribute))
+                            .Contains(typeof(IEndpointAttribute))
                 ))
                 {
-                    if (customAttribute.AttributeType.Name == typeof(ModuleAttribute<>).Name && customAttribute.AttributeType.Namespace == typeof(ModuleAttribute<>).Namespace)
-                    {
-                        moduleId = customAttribute.AttributeType.GenericTypeArguments.FirstOrDefault()?.FullName?.ToLower();
-                    }
-                    else if (customAttribute.AttributeType.Name == typeof(ScopeAttribute<>).Name && customAttribute.AttributeType.Namespace == typeof(ScopeAttribute<>).Namespace)
+                    if (customAttribute.AttributeType.Name == typeof(ScopeAttribute<>).Name && customAttribute.AttributeType.Namespace == typeof(ScopeAttribute<>).Namespace)
                     {
                         scopes.Add(customAttribute.AttributeType.GenericTypeArguments.FirstOrDefault()?.FullName?.ToLower());
                     }
@@ -139,7 +135,7 @@ namespace WebExpress.WebUI.WebFragment
                     }
                 }
 
-                foreach (var customAttribute in fragment.CustomAttributes.Where
+                foreach (var customAttribute in fragmentType.CustomAttributes.Where
                 (
                     x => x.AttributeType.GetInterfaces().Contains(typeof(IFragmentAttribute))
                 ))
@@ -160,23 +156,10 @@ namespace WebExpress.WebUI.WebFragment
                     }
                 }
 
-                // check module
-                if (string.IsNullOrWhiteSpace(moduleId))
-                {
-                    HttpServerContext.Log.Warning(InternationalizationManager.I18N
-                    (
-                        "webexpress.webui:fragmentmanager.moduleless",
-                        fragment.Name,
-                        pluginContext.PluginId
-                    ));
-
-                    continue;
-                }
-
                 // check section
                 if (string.IsNullOrWhiteSpace(section))
                 {
-                    HttpServerContext.Log.Warning(InternationalizationManager.I18N
+                    _httpServerContext.Log.Warning(I18N.Translate
                     (
                         "webexpress.webui:fragmentmanager.error.section"
                     ));
@@ -184,108 +167,92 @@ namespace WebExpress.WebUI.WebFragment
                     continue;
                 }
 
-                // register fragment
-                foreach (var context in scopes.Count != 0 ? scopes : [""])
+                // assign the fragment to existing applications
+                foreach (var applicationContext in _componentHub.ApplicationManager.GetApplications(pluginContext))
                 {
-                    var key = string.Join(":", section, context);
-
-                    if (!pluginDictionary.ContainsKey(key))
+                    // register fragment
+                    foreach (var context in scopes.Count != 0 ? scopes : [""])
                     {
-                        pluginDictionary.Add(key, new List<FragmentItem>());
+                        var fragmentContext = new FragmentContext()
+                        {
+                            PluginContext = pluginContext,
+                            ApplicationContext = applicationContext,
+                            FragmentId = id,
+                            Cache = cache,
+                            //Scopes = scopes,
+                            Conditions = conditions
+                        };
+
+                        var fragmentItem = new FragmentItem()
+                        {
+                            PluginContext = pluginContext,
+                            ApplicationContext = applicationContext,
+                            FragmentContext = fragmentContext,
+                            FragmentClass = fragmentType,
+                            Order = order,
+                            Cache = cache,
+                            Conditions = conditions,
+                            Section = section,
+                            Scopes = scopes
+                        };
+
+                        if (_dictionary.AddFragmentItem(pluginContext, applicationContext, fragmentItem))
+                        {
+                            OnAddFragment(fragmentContext);
+
+                            _httpServerContext?.Log.Debug
+                            (
+                                I18N.Translate
+                                (
+                                    "webexpress:fragmentmanager.register",
+                                    id,
+                                    section,
+                                    applicationContext.ApplicationId
+                                )
+                            );
+                        }
                     }
-
-                    var dictItem = pluginDictionary[key];
-
-                    var fragmentItem = new FragmentItem()
-                    {
-                        PluginContext = pluginContext,
-                        ModuleId = moduleId,
-                        FragmentClass = fragment,
-                        Order = order,
-                        Cache = cache,
-                        Conditions = conditions,
-                        Section = section,
-                        Scopes = scopes
-                    };
-
-                    dictItem.Add(fragmentItem);
-
-                    fragmentItem.AddFragment += (s, e) =>
-                    {
-                        OnAddFragment(e);
-                    };
-
-                    fragmentItem.RemoveFragment += (s, e) =>
-                    {
-                        OnRemoveFragment(e);
-                    };
-
-                    HttpServerContext.Log.Debug(InternationalizationManager.I18N
-                    (
-                        "webexpress.webui:fragmentmanager.register",
-                        fragment.Name,
-                        section,
-                        moduleId
-                    ));
-                }
-
-                // assign the fragments to existing modules.
-                foreach (var moduleContext in ComponentManager.ModuleManager.GetModules(pluginContext, moduleId))
-                {
-                    AssignToModule(moduleContext);
                 }
             }
-        }
 
-        /// <summary>
-        /// Discovers and registers entries from the specified plugin.
-        /// </summary>
-        /// <param name="pluginContexts">A list with plugin contexts that contain the components.</param>
-        public void Register(IEnumerable<IPluginContext> pluginContexts)
-        {
-            foreach (var pluginContext in pluginContexts)
-            {
-                Register(pluginContext);
-            }
+            Log();
         }
 
         /// <summary>
         /// Removes all components associated with the specified plugin context.
         /// </summary>
         /// <param name="pluginContext">The context of the plugin that contains the components to remove.</param>
-        public void Remove(IPluginContext pluginContext)
+        internal void Remove(IPluginContext pluginContext)
         {
-            Dictionary.Remove(pluginContext);
-        }
-
-        /// <summary>
-        /// Assign existing resources to the module.
-        /// </summary>
-        /// <param name="moduleContext">The context of the module.</param>
-        private void AssignToModule(IModuleContext moduleContext)
-        {
-            foreach (var resourceItem in Dictionary.Values
-                .SelectMany(x => x.Values)
-                .SelectMany(x => x)
-                .Where(x => x.ModuleId.Equals(moduleContext?.ModuleId, StringComparison.OrdinalIgnoreCase))
-                .Where(x => !x.IsAssociatedWithModule(moduleContext)))
+            if (pluginContext == null)
             {
-                resourceItem.AddModule(moduleContext);
+                return;
+            }
+
+            var fragments = _dictionary.RemoveFragments(pluginContext);
+
+            foreach (var fragment in fragments)
+            {
+                OnRemoveFragment(fragment);
             }
         }
 
         /// <summary>
-        /// Remove an existing modules to the application.
+        /// Removes all fragments associated with the specified application context.
         /// </summary>
-        /// <param name="moduleContext">The context of the module.</param>
-        private void DetachFromModule(IModuleContext moduleContext)
+        /// <param name="applicationContext">The context of the application that contains the fragments to remove.</param>
+        internal void Remove(IApplicationContext applicationContext)
         {
-            foreach (var resourceItem in Dictionary.Values
-                .SelectMany(x => x.Values)
-                .SelectMany(x => x)
-                .Where(x => !x.IsAssociatedWithModule(moduleContext)))
+            if (applicationContext == null)
             {
-                resourceItem.DetachModule(moduleContext);
+                return;
+            }
+
+            var fragments = _dictionary.RemoveFragments(applicationContext);
+
+            foreach (var fragment in fragments)
+            {
+                OnRemoveFragment(fragment);
             }
         }
 
@@ -305,6 +272,46 @@ namespace WebExpress.WebUI.WebFragment
         private void OnRemoveFragment(IFragmentContext fragmentContext)
         {
             RemoveFragment?.Invoke(this, fragmentContext);
+        }
+
+        /// <summary>
+        /// Raises the event when an plugin is added.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The context of the plugin being added.</param>
+        private void OnAddPlugin(object sender, IPluginContext e)
+        {
+            Register(e);
+        }
+
+        /// <summary>  
+        /// Raises the event when a plugin is removed.  
+        /// </summary>  
+        /// <param name="sender">The source of the event.</param>  
+        /// <param name="e">The context of the plugin being removed.</param>  
+        private void OnRemovePlugin(object sender, IPluginContext e)
+        {
+            Remove(e);
+        }
+
+        /// <summary>
+        /// Raises the event when an application is added.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The context of the application being added.</param>
+        private void OnAddApplication(object sender, IApplicationContext e)
+        {
+            Register(e);
+        }
+
+        /// <summary>
+        /// Raises the event when an application is removed.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The context of the application being removed.</param>
+        private void OnRemoveApplication(object sender, IApplicationContext e)
+        {
+            Remove(e);
         }
 
         /// <summary>
@@ -338,7 +345,7 @@ namespace WebExpress.WebUI.WebFragment
         /// <returns>An enumeration of the filtered fragment contexts.</returns>
         private IEnumerable<FragmentItem> GetFragmentItems(string section)
         {
-            return Dictionary.Values
+            return _dictionary.Values
                 .Where(x => x.ContainsKey(section?.ToLower()))
                 .SelectMany(x => x[section?.ToLower()])
                 .Select(x => x);
@@ -373,7 +380,7 @@ namespace WebExpress.WebUI.WebFragment
             IEnumerable<string> scopes
         ) where T : IControl
         {
-            var applicationContext = page?.ResourceContext.ApplicationContext;
+            var applicationContext = page?.ResourceContext?.ModuleContext?.ApplicationContext;
             scopes ??= Enumerable.Empty<string>();
 
             var fragmentItems = GetFragmentItems($"{section}:")
@@ -407,41 +414,51 @@ namespace WebExpress.WebUI.WebFragment
         /// <returns>A list with the fragment items.</returns>
         private IEnumerable<FragmentItem> GetFragmentItems(IPluginContext pluginContext)
         {
-            if (!Dictionary.ContainsKey(pluginContext))
+            if (!_dictionary.ContainsKey(pluginContext))
             {
-                return Enumerable.Empty<FragmentItem>();
+                return [];
             }
 
-            return Dictionary[pluginContext].Values
+            return _dictionary[pluginContext].Values
                 .SelectMany(x => x);
         }
 
         /// <summary>
         /// Information about the component is collected and prepared for output in the log.
         /// </summary>
-        /// <param name="pluginContext">The context of the plugin.</param>
-        /// <param name="output">A list of log entries.</param>
-        /// <param name="deep">The shaft deep.</param>
-        public void PrepareForLog(IPluginContext pluginContext, IList<string> output, int deep)
+        private void Log()
         {
-            output.Add
-            (
-                string.Empty.PadRight(deep) +
-                InternationalizationManager.I18N("webexpress.webui:fragmentmanager.titel")
-            );
+            //output.Add
+            //(
+            //    string.Empty.PadRight(deep) +
+            //    I18N.Translate("webexpress.webui:fragmentmanager.titel")
+            //);
 
-            foreach (var fragmentItem in GetFragmentItems(pluginContext))
-            {
-                output.Add
-                (
-                    string.Empty.PadRight(deep + 2) +
-                    InternationalizationManager.I18N
-                    (
-                        "webexpress.webui:fragmentmanager.fragment",
-                        fragmentItem.FragmentClass.Name
-                    )
-                );
-            }
+            //foreach (var fragmentItem in GetFragmentItems(pluginContext))
+            //{
+            //    output.Add
+            //    (
+            //        string.Empty.PadRight(deep + 2) +
+            //        I18N.Translate
+            //        (
+            //            "webexpress.webui:fragmentmanager.fragment",
+            //            fragmentItem.FragmentClass.Name
+            //        )
+            //    );
+            //}
+        }
+
+        /// <summary>
+        /// Release of unmanaged resources reserved during use.
+        /// </summary>
+        public void Dispose()
+        {
+            _componentHub.PluginManager.AddPlugin -= OnAddPlugin;
+            _componentHub.PluginManager.RemovePlugin -= OnRemovePlugin;
+            _componentHub.ApplicationManager.AddApplication -= OnAddApplication;
+            _componentHub.ApplicationManager.RemoveApplication -= OnRemoveApplication;
+
+            GC.SuppressFinalize(this);
         }
     }
 }

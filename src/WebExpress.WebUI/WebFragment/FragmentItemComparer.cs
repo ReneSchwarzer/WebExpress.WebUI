@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using WebExpress.WebUI.WebFragment.Model;
 
 namespace WebExpress.WebUI.WebFragment
 {

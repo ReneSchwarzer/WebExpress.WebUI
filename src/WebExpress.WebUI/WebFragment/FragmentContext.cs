@@ -2,11 +2,14 @@
 using System.Globalization;
 using WebExpress.WebCore.WebApplication;
 using WebExpress.WebCore.WebCondition;
-using WebExpress.WebCore.WebModule;
 using WebExpress.WebCore.WebPlugin;
 
 namespace WebExpress.WebUI.WebFragment
 {
+    /// <summary>
+    /// Represents the context for a web fragment, including plugin context, application context,
+    /// conditions for activation, culture information, and caching behavior.
+    /// </summary>
     public class FragmentContext : IFragmentContext
     {
         /// <summary>
@@ -17,17 +20,17 @@ namespace WebExpress.WebUI.WebFragment
         /// <summary>
         /// Returns the application context.
         /// </summary>
-        public IApplicationContext ApplicationContext => ModuleContext.ApplicationContext;
+        public IApplicationContext ApplicationContext { get; internal set; }
 
         /// <summary>
-        /// Returns the module context.
+        /// Gets the unique identifier for the fragment.
         /// </summary>
-        public IModuleContext ModuleContext { get; internal set; }
+        public string FragmentId { get; internal set; }
 
         /// <summary>
         /// Returns the conditions that must be met for the component to be active.
         /// </summary>
-        public ICollection<ICondition> Conditions { get; internal set; } = new List<ICondition>();
+        public ICollection<ICondition> Conditions { get; internal set; } = [];
 
         /// <summary>
         /// Returns the culture.
