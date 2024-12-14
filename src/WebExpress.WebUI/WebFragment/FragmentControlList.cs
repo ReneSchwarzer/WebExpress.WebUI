@@ -10,7 +10,7 @@ namespace WebExpress.WebUI.WebFragment
     public abstract class FragmentControlList : ControlList, IFragmentControl<ControlList>
     {
         /// <summary>
-        /// Gets the context of the fragment.
+        /// Returns the context of the fragment.
         /// </summary>
         public IFragmentContext FragmentContext { get; }
 

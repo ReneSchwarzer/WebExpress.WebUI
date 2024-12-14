@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.WebFragment
     public class FragmentControlDropdownItemLink : ControlDropdownItemLink, IFragmentControl<ControlDropdownItemLink>
     {
         /// <summary>
-        /// Liefert der Kontext
+        /// Returns the context of the fragment.
         /// </summary>
         public IFragmentContext FragmentContext { get; private set; }
 

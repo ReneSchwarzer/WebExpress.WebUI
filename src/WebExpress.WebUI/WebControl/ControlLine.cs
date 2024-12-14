@@ -1,62 +1,52 @@
-﻿//using WebExpress.WebCore.WebHtml;
-//using WebExpress.WebCore.WebPage;
+﻿using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
-//namespace WebExpress.WebUI.WebControl
-//{
-//    public class ControlLine : Control, IControlSplitButtonItem, IControlDropdownItem
-//    {
-//        /// <summary>
-//        /// Returns or sets the text color.
-//        /// </summary>
-//        public new PropertyColorText TextColor { get; private set; }
+namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Represents a control line that can be used as a split button item or a dropdown item.
+    /// </summary>
+    public class ControlLine : Control, IControlSplitButtonItem, IControlDropdownItem
+    {
+        /// <summary>
+        /// Returns or set the background color.
+        /// </summary>
+        public new PropertyColorBackground BackgroundColor { get; private set; }
 
-//        /// <summary>
-//        /// Returns or set the background color.
-//        /// </summary>
-//        public new PropertyColorBackground BackgroundColor { get; private set; }
+        /// <summary>
+        /// Returns or sets the color.
+        /// </summary>
+        public PropertyColorLine Color
+        {
+            get => (PropertyColorLine)GetPropertyObject();
+            set => SetProperty(value, () => value?.ToClass(), () => value?.ToStyle());
+        }
 
-//        /// <summary>
-//        /// Returns or sets the color.
-//        /// </summary>
-//        public PropertyColorLine Color
-//        {
-//            get => (PropertyColorLine)GetPropertyObject();
-//            set => SetProperty(value, () => value?.ToClass(), () => value?.ToStyle());
-//        }
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="id">The id of the control.</param>
+        public ControlLine(string id = null)
+            : base(id)
+        {
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        public ControlLine(string id = null)
-//            : base(id)
-//        {
-//            Init();
-//        }
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext)
+        {
+            var html = new HtmlElementTextContentHr()
+            {
+                Id = Id,
+                Class = GetClasses(),
+                Style = GetStyles(),
+                Role = Role
+            };
 
-//        /// <summary>
-//        /// Initialization
-//        /// </summary>
-//        private void Init()
-//        {
-//        }
-
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <returns>The control as html.</returns>
-//        public override IHtmlNode Render(IRenderContext context)
-//        {
-//            var html = new HtmlElementTextContentHr()
-//            {
-//                Id = Id,
-//                Class = GetClasses(),
-//                Style = GetStyles(),
-//                Role = Role
-//            };
-
-//            return html;
-//        }
-//    }
-//}
+            return html;
+        }
+    }
+}

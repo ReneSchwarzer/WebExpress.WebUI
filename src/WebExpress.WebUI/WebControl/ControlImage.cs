@@ -33,10 +33,9 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="uri">The image source.</param>
-        public ControlImage(string id = null, string uri = null)
+        public ControlImage(string id = null)
             : base(id)
         {
-            Uri = uri;
         }
 
         /// <summary>
@@ -44,7 +43,7 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext context)
+        public override IHtmlNode Render(IRenderControlContext renderContext)
         {
             Classes.Add(HorizontalAlignment.ToClass());
 

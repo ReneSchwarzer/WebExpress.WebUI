@@ -117,7 +117,7 @@ namespace WebExpress.WebUI.WebControl
                 Class = "modal-header"
             };
 
-            var body = new HtmlElementTextContentDiv(from x in Content select x.Render(renderContext))
+            var body = new HtmlElementTextContentDiv(Content.Select(x => x.Render(renderContext)).ToArray())
             {
                 Class = "modal-body"
             };

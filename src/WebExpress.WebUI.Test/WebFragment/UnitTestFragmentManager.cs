@@ -1,6 +1,5 @@
 ﻿using WebExpress.WebCore.WebScope;
 using WebExpress.WebUI.Test.Fixture;
-using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebFragment
 {
@@ -45,6 +44,8 @@ namespace WebExpress.WebUI.Test.WebFragment
         [InlineData(typeof(TestApplication), typeof(TestSectionD), typeof(IScope), @"<a id=""webexpress.webui.test.testfragmentcontrolbuttonlink"" class=""btn"">TestFragmentControlButtonLink</a>")]
         [InlineData(typeof(TestApplication), typeof(TestSectionE), typeof(IScope), @"<img id=""webexpress.webui.test.testfragmentcontrolimage"" src=""/a/b/c"">")]
         [InlineData(typeof(TestApplication), typeof(TestSectionF), typeof(IScope), @"<a id=""webexpress.webui.test.testfragmentcontroldropdownitemlink"" class=""link"">TestFragmentControlDropdownItemLink</a>")]
+        [InlineData(typeof(TestApplication), typeof(TestSectionG), typeof(IScope), @"<a id=""webexpress.webui.test.testfragmentcontrolnavigationitemlink"" class=""link"">TestFragmentControlNavigationItemLink</a>")]
+        [InlineData(typeof(TestApplication), typeof(TestSectionH), typeof(IScope), @"<div id=""webexpress.webui.test.testfragmentcontrolpanel""><div>TestFragmentControlPanel</div></div>")]
         public void Render(Type applicationType, Type sectionType, Type scopeType, string expected)
         {
             // preconditions
@@ -53,7 +54,7 @@ namespace WebExpress.WebUI.Test.WebFragment
             var renderContext = UnitTestControlFixture.CrerateRenderContextMock(application, [scopeType]);
 
             // test execution
-            var html = componentHub.FragmentManager.Render<IRenderControlContext>(renderContext, sectionType);
+            var html = componentHub.FragmentManager.Render(renderContext, sectionType);
 
             Assert.NotNull(html);
             Assert.NotEmpty(html);

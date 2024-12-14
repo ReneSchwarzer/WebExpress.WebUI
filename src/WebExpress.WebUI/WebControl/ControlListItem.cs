@@ -49,11 +49,10 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
-        /// <param name="items">The list entries.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext context)
+        public override IHtmlNode Render(IRenderControlContext renderContext)
         {
-            return new HtmlElementTextContentLi(Content.Where(x => x.Enable).Select(x => x.Render(context)))
+            return new HtmlElementTextContentLi(Content.Where(x => x.Enable).Select(x => x.Render(renderContext)).ToArray())
             {
                 Id = Id,
                 Class = GetClasses(),

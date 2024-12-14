@@ -15,7 +15,7 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
-        public ControlDropdownItemLink(string id = null, params Control[] content)
+        public ControlDropdownItemLink(string id = null, params IControl[] content)
             : base(id, content)
         {
         }
@@ -25,11 +25,11 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext context)
+        public override IHtmlNode Render(IRenderControlContext renderContext)
         {
             var param = ""; // GetParams(context?.Page);
 
-            var html = new HtmlElementTextSemanticsA(from x in Content select x.Render(context))
+            var html = new HtmlElementTextSemanticsA(Content.Select(x => x.Render(renderContext)).ToArray())
             {
                 Id = Id,
                 Class = Css.Concatenate("link", GetClasses()),
@@ -37,13 +37,13 @@ namespace WebExpress.WebUI.WebControl
                 Role = Role,
                 Href = Uri?.ToString() + (param.Length > 0 ? "?" + param : string.Empty),
                 Target = Target,
-                Title = string.IsNullOrEmpty(Title) ? I18N.Translate(context.Request.Culture, Tooltip) : I18N.Translate(context.Request.Culture, Title),
+                Title = string.IsNullOrEmpty(Title) ? I18N.Translate(renderContext.Request.Culture, Tooltip) : I18N.Translate(renderContext.Request.Culture, Title),
                 OnClick = OnClick?.ToString()
             };
 
             if (Icon != null && Icon.HasIcon)
             {
-                html.Elements.Add(new ControlIcon()
+                html.Add(new ControlIcon()
                 {
                     Icon = Icon,
                     Margin = !string.IsNullOrWhiteSpace(Text) ? new PropertySpacingMargin
@@ -53,12 +53,12 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None,
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None)
-                }.Render(context));
+                }.Render(renderContext));
             }
 
             if (!string.IsNullOrWhiteSpace(Text))
             {
-                html.Elements.Add(new HtmlText(I18N.Translate(context.Request.Culture, Text)));
+                html.Add(new HtmlText(I18N.Translate(renderContext.Request.Culture, Text)));
             }
 
             if (Modal == null || Modal.Type == TypeModal.None)
@@ -67,12 +67,12 @@ namespace WebExpress.WebUI.WebControl
             }
             else if (Modal.Type == TypeModal.Form)
             {
-                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(context.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(renderContext.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Brwoser)
             {
-                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{I18N.Translate(context.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{I18N.Translate(renderContext.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Modal)

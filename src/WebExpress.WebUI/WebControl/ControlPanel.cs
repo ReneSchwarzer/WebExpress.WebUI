@@ -1,111 +1,74 @@
-﻿//using System.Collections.Generic;
-//using System.Linq;
-//using WebExpress.WebCore.WebHtml;
-//using WebExpress.WebCore.WebPage;
+﻿using System.Collections.Generic;
+using System.Linq;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
-//namespace WebExpress.WebUI.WebControl
-//{
-//    public class ControlPanel : Control
-//    {
-//        /// <summary>
-//        /// Returns or sets the content.
-//        /// </summary>
-//        public List<IControl> Content { get; private set; } = new List<IControl>();
+namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Represents a control panel that can contain multiple child controls and manage their layout and rendering.
+    /// </summary>
+    public class ControlPanel : Control
+    {
+        private readonly List<IControl> _children = [];
 
-//        /// <summary>
-//        /// Returns or sets the arrangement of the content.
-//        /// </summary>
-//        public TypeDirection Direction
-//        {
-//            get => (TypeDirection)GetProperty(TypeDirection.Default);
-//            set => SetProperty(value, () => value.ToClass());
-//        }
+        // <summary>
+        // Returns the child controls contained within the control panel.
+        // </summary>
+        public IEnumerable<IControl> Children => _children;
 
-//        /// <summary>
-//        /// Fixed or full-width adjustment.
-//        /// </summary>
-//        public TypePanelContainer Fluid
-//        {
-//            get => (TypePanelContainer)GetProperty(TypePanelContainer.None);
-//            set => SetProperty(value, () => value.ToClass());
-//        }
+        /// <summary>
+        /// Returns or sets the arrangement of the content.
+        /// </summary>
+        public TypeDirection Direction
+        {
+            get => (TypeDirection)GetProperty(TypeDirection.Default);
+            set => SetProperty(value, () => value.ToClass());
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        public ControlPanel(string id = null)
-//            : base(id)
-//        {
-//        }
+        /// <summary>
+        /// Fixed or full-width adjustment.
+        /// </summary>
+        public TypePanelContainer Fluid
+        {
+            get => (TypePanelContainer)GetProperty(TypePanelContainer.None);
+            set => SetProperty(value, () => value.ToClass());
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="content">The content of the html element.</param>
-//        public ControlPanel(params IControl[] content)
-//            : this()
-//        {
-//            Content.AddRange(content.Where(x => x != null));
-//        }
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="children">The child controls to be added to the panel.</param>
+        public ControlPanel(string id = null, params IControl[] children)
+            : base(id)
+        {
+            _children.AddRange(children.Where(x => x != null));
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="content">The content of the html element.</param>
-//        public ControlPanel(ICollection<IControl> content)
-//            : this()
-//        {
-//            Content.AddRange(content.Where(x => x != null));
-//        }
+        /// <summary>
+        /// Adds one or more child controls to the control panel.
+        /// </summary>
+        /// <param name="children">The child controls to add.</param>
+        public void AddChild(params IControl[] children)
+        {
+            _children.AddRange(children);
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        /// <param name="content">The content of the html element.</param>
-//        public ControlPanel(string id, params IControl[] content)
-//            : this(id)
-//        {
-//            Content.AddRange(content.Where(x => x != null));
-//        }
-
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        /// <param name="content">The content of the html element.</param>
-//        public ControlPanel(string id, IEnumerable<IControl> content)
-//            : this(id)
-//        {
-//            Content.AddRange(content.Where(x => x != null));
-//        }
-
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        /// <param name="content">The content of the html element.</param>
-//        public ControlPanel(string id, List<IControl> content)
-//            : base(id)
-//        {
-//            Content = content;
-//        }
-
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <returns>The control as html.</returns>
-//        public override IHtmlNode Render(IRenderContext context)
-//        {
-//            return new HtmlElementTextContentDiv(from x in Content select x.Render(context))
-//            {
-//                Id = Id,
-//                Class = GetClasses(),
-//                Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
-//                Role = Role
-//            };
-//        }
-//    }
-//}
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext)
+        {
+            return new HtmlElementTextContentDiv(Children.Select(x => x.Render(renderContext)).ToArray())
+            {
+                Id = Id,
+                Class = GetClasses(),
+                Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
+                Role = Role
+            };
+        }
+    }
+}

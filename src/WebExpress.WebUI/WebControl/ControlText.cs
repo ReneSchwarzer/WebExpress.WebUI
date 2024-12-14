@@ -49,16 +49,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        public ControlText()
-            : base(null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlText(string id)
+        public ControlText(string id = null)
             : base(id)
         {
         }
@@ -68,9 +60,9 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext context)
+        public override IHtmlNode Render(IRenderControlContext renderContext)
         {
-            var text = I18N.Translate(context?.Request.Culture, Text);
+            var text = I18N.Translate(renderContext?.Request.Culture, Text);
             HtmlElement html;
 
             switch (Format)

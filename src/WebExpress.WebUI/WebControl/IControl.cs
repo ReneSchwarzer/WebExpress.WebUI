@@ -18,6 +18,6 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        IHtmlNode Render(IRenderControlContext context);
+        IHtmlNode Render(IRenderControlContext renderContext);
     }
 }

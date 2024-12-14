@@ -1,32 +1,35 @@
-﻿//using WebExpress.WebUI.WebControl;
-//using WebExpress.WebCore.WebPage;
+﻿using System;
+using WebExpress.WebCore.WebFragment;
+using WebExpress.WebUI.WebControl;
 
-//namespace WebExpress.WebUI.WebFragment
-//{
-//    public class FragmentControlPanel : ControlPanel, IFragment
-//    {
-//        /// <summary>
-//        /// Returns the context of the fragment.
-//        /// </summary>
-//        public IFragmentContext FragmentContext { get; private set; }
+namespace WebExpress.WebUI.WebFragment
+{
+    /// <summary>
+    /// Represents a control panel that is part of a web fragment and implements the IFragmentControl interface.
+    /// </summary>
+    public class FragmentControlPanel : ControlPanel, IFragmentControl<ControlPanel>
+    {
+        /// <summary>
+        /// Returns the context of the fragment.
+        /// </summary>
+        public IFragmentContext FragmentContext { get; private set; }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the fragment or null.</param>
-//        public FragmentControlPanel(string id = null)
-//            : base(id)
-//        {
-//        }
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="fragmentContext">The context of the fragment.</param>
+        public FragmentControlPanel(IFragmentContext fragmentContext)
+            : base(fragmentContext?.FragmentId?.ToString())
+        {
+            FragmentContext = fragmentContext;
+        }
 
-//        /// <summary>
-//        /// Initialization
-//        /// </summary>
-//        /// <param name="context">The context.</param>
-//        /// <param name="page">The page where the fragment is active.</param>
-//        public virtual void Initialization(IFragmentContext context, IPage page)
-//        {
-//            FragmentContext = context;
-//        }
-//    }
-//}
+        /// <summary>
+        /// Releases all resources used by the fragment.
+        /// </summary>
+        public virtual void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+    }
+}
