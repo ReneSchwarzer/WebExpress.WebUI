@@ -1,9 +1,12 @@
-﻿using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
-using static WebExpress.WebCore.Internationalization.InternationalizationManager;
+﻿using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a text control with various formatting options.
+    /// </summary>
     public class ControlText : Control
     {
         /// <summary>
@@ -16,8 +19,12 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt das Format des Textes
+        /// Returns or sets the format of the text.
         /// </summary>
+        /// <value>The format of the text.</value>
+        /// <remarks>
+        /// This property allows you to specify the format of the text, such as paragraph, italic, bold, underline, etc.
+        /// </remarks>
         public TypeFormatText Format { get; set; }
 
         /// <summary>
@@ -57,13 +64,13 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Convert the control to HTML.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext context)
         {
-            var text = I18N(context.Culture, Text);
+            var text = I18N.Translate(context?.Request.Culture, Text);
             HtmlElement html;
 
             switch (Format)

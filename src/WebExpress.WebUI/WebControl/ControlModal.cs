@@ -1,22 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
-using static WebExpress.WebCore.Internationalization.InternationalizationManager;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a modal control that can display content in a modal dialog.
+    /// </summary>
     public class ControlModal : Control
     {
         /// <summary>
         /// Returns or sets the content.
         /// </summary>
-        public List<Control> Content { get; private set; }
+        public IEnumerable<Control> Content { get; private set; } = [];
 
         /// <summary>
         /// Returns or sets whether the fader effect should be used.
         /// </summary>
-        public bool Fade { get; set; }
+        public bool Fade { get; set; } = true;
 
         /// <summary>
         /// Returns or sets the header.
@@ -42,10 +45,9 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlModal(string id)
-            : base(!string.IsNullOrWhiteSpace(id) ? id : "modal")
+        public ControlModal(string id = null)
+            : base(id)
         {
-            Init();
         }
 
         /// <summary>
@@ -68,22 +70,7 @@ namespace WebExpress.WebUI.WebControl
         public ControlModal(string id, string header, params Control[] content)
             : this(id, header)
         {
-            if (content != null)
-            {
-                Content.AddRange(content);
-            }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="text">The text.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlModal(string id, string text, IEnumerable<Control> content)
-            : this(id, text)
-        {
-            Content.AddRange(content);
+            Content = content ?? [];
         }
 
         /// <summary>
@@ -95,25 +82,15 @@ namespace WebExpress.WebUI.WebControl
         public ControlModal(string id = null, params Control[] content)
             : this(id, string.Empty)
         {
-            Content.AddRange(content);
+            Content = content ?? [];
         }
 
         /// <summary>
-        /// Initialization
+        /// Convert the control to HTML.
         /// </summary>
-        private void Init()
-        {
-            //Id = !string.IsNullOrWhiteSpace(Id) ? Id : "modal";
-            Content = new List<Control>();
-            Fade = true;
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext)
         {
             var classes = Classes.ToList();
             classes.Add("modal");
@@ -123,7 +100,7 @@ namespace WebExpress.WebUI.WebControl
                 classes.Add("fade");
             }
 
-            var headerText = new HtmlElementSectionH4(I18N(context.Culture, Header))
+            var headerText = new HtmlElementSectionH4(I18N.Translate(renderContext.Request.Culture, Header))
             {
                 Class = "modal-title"
             };
@@ -140,14 +117,14 @@ namespace WebExpress.WebUI.WebControl
                 Class = "modal-header"
             };
 
-            var body = new HtmlElementTextContentDiv(from x in Content select x.Render(context))
+            var body = new HtmlElementTextContentDiv(from x in Content select x.Render(renderContext))
             {
                 Class = "modal-body"
             };
 
             var footer = default(HtmlElementTextContentDiv);
 
-            var footerButton = new HtmlElementFieldButton(new HtmlText(I18N(context.Culture, "webexpress.webui:modal.close.label")))
+            var footerButton = new HtmlElementFieldButton(new HtmlText(I18N.Translate(renderContext.Request.Culture, "webexpress.webui:modal.close.label")))
             {
                 Type = "button",
                 Class = Css.Concatenate("btn", new PropertyColorButton(TypeColorButton.Primary).ToStyle())
@@ -181,19 +158,19 @@ namespace WebExpress.WebUI.WebControl
             if (!string.IsNullOrWhiteSpace(OnShownCode))
             {
                 var shown = "$('#" + Id + "').on('shown.bs.modal', function(e) { " + OnShownCode + " });";
-                context.VisualTree.AddScript(Id + "_shown", shown);
+                renderContext.AddScript(Id + "_shown", shown);
             }
 
             if (!string.IsNullOrWhiteSpace(OnHiddenCode))
             {
                 var hidden = "$('#" + Id + "').on('hidden.bs.modal', function() { " + OnHiddenCode + " });";
-                context.VisualTree.AddScript(Id + "_hidden", hidden);
+                renderContext.AddScript(Id + "_hidden", hidden);
             }
 
             if (ShowIfCreated)
             {
                 var show = "$('#" + Id + "').modal('show');";
-                context.VisualTree.AddScript(Id + "_showifcreated", show);
+                renderContext.AddScript(Id + "_showifcreated", show);
             }
 
             return html;

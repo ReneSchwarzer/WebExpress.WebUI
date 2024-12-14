@@ -6,18 +6,25 @@ namespace WebExpress.WebUI.Test
     /// <summary>
     /// A dummy application for testing purposes.
     /// </summary>
-    [Name("webexpress.webui.unittest")]
-    [Description("plugin.description")]
+    [Name("TestApplication")]
+    [Description("application.description")]
     [Icon("/assets/img/Logo.png")]
-    [Dependency("webexpress.webui")]
+    [ContextPath("/app")]
+    [AssetPath("/asset")]
+    [DataPath("/data")]
     public sealed class TestApplication : IApplication
     {
         /// <summary>
-        /// Initialization of the application.
+        /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="applicationContext">The application context.</param>
-        public void Initialization(IApplicationContext applicationContext)
+        /// <param name="applicationContext">The application context, for testing the injection.</param>
+        private TestApplication(IApplicationContext applicationContext)
         {
+            // test the injection
+            if (applicationContext == null)
+            {
+                throw new ArgumentNullException(nameof(applicationContext), "Parameter cannot be null or empty.");
+            }
         }
 
         /// <summary>

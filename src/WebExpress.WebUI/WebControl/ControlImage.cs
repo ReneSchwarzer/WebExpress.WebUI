@@ -1,8 +1,11 @@
 ﻿using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents an image control that can be rendered as HTML.
+    /// </summary>
     public class ControlImage : Control
     {
         /// <summary>
@@ -29,28 +32,19 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlImage(string id = null)
+        /// <param name="uri">The image source.</param>
+        public ControlImage(string id = null, string uri = null)
             : base(id)
         {
+            Uri = uri;
         }
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Convert the control to HTML.
         /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="source">The image source.</param>
-        public ControlImage(string id, string source)
-            : base(id)
-        {
-            Uri = source;
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext context)
         {
             Classes.Add(HorizontalAlignment.ToClass());
 

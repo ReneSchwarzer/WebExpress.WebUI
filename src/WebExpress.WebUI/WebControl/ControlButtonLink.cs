@@ -1,10 +1,13 @@
 ﻿using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a link button control.
+    /// </summary>
     public class ControlButtonLink : ControlButton
     {
         /// <summary>
@@ -15,44 +18,36 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the tooltip.
         /// </summary>
-        public string Title { get; set; }
+        public string Tooltip { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlButtonLink(string id = null)
-            : base(id)
+        /// <param name="content">The child controls to be added to the button.</param>
+        public ControlButtonLink(string id = null, params Control[] content)
+            : base(id, content)
         {
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-            Size = TypeSizeButton.Default;
             Classes.Add("btn");
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Convert the control to HTML.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext context)
         {
-            var text = context.I18N(Text);
+            var text = I18N.Translate(Text);
 
             var html = new HtmlElementTextSemanticsA()
             {
                 Id = Id,
-                Class = Css.Concatenate(GetClasses(), Size.ToClass()),
+                Class = GetClasses(),
                 Style = GetStyles(),
                 Role = Role,
                 Href = Uri?.ToString(),
-                Title = Title,
+                Title = Tooltip,
                 OnClick = OnClick?.ToString()
             };
 
@@ -77,7 +72,7 @@ namespace WebExpress.WebUI.WebControl
                 html.Elements.Add(new HtmlText(text));
             }
 
-            if (Content.Count > 0)
+            if (Content.Any())
             {
                 html.Elements.AddRange(Content.Select(x => x.Render(context)));
             }
@@ -88,12 +83,12 @@ namespace WebExpress.WebUI.WebControl
             }
             else if (Modal.Type == TypeModal.Form)
             {
-                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(context.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Brwoser)
             {
-                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{I18N.Translate(context.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Modal)
@@ -102,6 +97,11 @@ namespace WebExpress.WebUI.WebControl
                 html.AddUserAttribute("data-bs-target", "#" + Modal.Modal.Id);
 
                 return new HtmlList(html, Modal.Modal.Render(context));
+            }
+
+            if (!string.IsNullOrWhiteSpace(Tooltip))
+            {
+                html.AddUserAttribute("data-bs-toggle", "tooltip");
             }
 
             return html;

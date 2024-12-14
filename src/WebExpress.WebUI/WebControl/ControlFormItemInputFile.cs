@@ -1,114 +1,114 @@
-﻿using System.Collections.Generic;
-using WebExpress.WebCore.WebHtml;
+﻿//using System.Collections.Generic;
+//using WebExpress.WebCore.WebHtml;
 
-namespace WebExpress.WebUI.WebControl
-{
-    public class ControlFormItemInputFile : ControlFormItemInput
-    {
-        /// <summary>
-        /// Returns or sets the description.
-        /// </summary>
-        public string Description { get; set; }
+//namespace WebExpress.WebUI.WebControl
+//{
+//    public class ControlFormItemInputFile : ControlFormItemInput
+//    {
+//        /// <summary>
+//        /// Returns or sets the description.
+//        /// </summary>
+//        public string Description { get; set; }
 
-        /// <summary>
-        /// Returns or sets a placeholder text.
-        /// </summary>
-        public string Placeholder { get; set; }
+//        /// <summary>
+//        /// Returns or sets a placeholder text.
+//        /// </summary>
+//        public string Placeholder { get; set; }
 
-        /// <summary>
-        /// Returns or sets whether inputs are enforced.
-        /// </summary>
-        public bool Required { get; set; }
+//        /// <summary>
+//        /// Returns or sets whether inputs are enforced.
+//        /// </summary>
+//        public bool Required { get; set; }
 
-        /// <summary>
-        /// Returns or sets the accepted files.
-        /// </summary>
-        public ICollection<string> AcceptFile { get; set; } = new List<string>();
+//        /// <summary>
+//        /// Returns or sets the accepted files.
+//        /// </summary>
+//        public ICollection<string> AcceptFile { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlFormItemInputFile(string id = null)
-            : base(!string.IsNullOrWhiteSpace(id) ? id : "file")
-        {
-            Name = Id;
-            Margin = new PropertySpacingMargin(PropertySpacing.Space.None, PropertySpacing.Space.Two, PropertySpacing.Space.None, PropertySpacing.Space.None);
-        }
+//        /// <summary>
+//        /// Initializes a new instance of the class.
+//        /// </summary>
+//        /// <param name="id">The id of the control.</param>
+//        public ControlFormItemInputFile(string id = null)
+//            : base(!string.IsNullOrWhiteSpace(id) ? id : "file")
+//        {
+//            Name = Id;
+//            Margin = new PropertySpacingMargin(PropertySpacing.Space.None, PropertySpacing.Space.Two, PropertySpacing.Space.None, PropertySpacing.Space.None);
+//        }
 
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="name">The name.</param>
-        public ControlFormItemInputFile(string id, string name)
-            : base(!string.IsNullOrWhiteSpace(id) ? id : "file")
-        {
-            Name = name;
-        }
+//        /// <summary>
+//        /// Initializes a new instance of the class.
+//        /// </summary>
+//        /// <param name="id">The id of the control.</param>
+//        /// <param name="name">The name.</param>
+//        public ControlFormItemInputFile(string id, string name)
+//            : base(!string.IsNullOrWhiteSpace(id) ? id : "file")
+//        {
+//            Name = name;
+//        }
 
-        /// <summary>
-        /// Initializes the form element.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextForm context)
-        {
-            Value = context?.Request.GetParameter(Name)?.Value;
-        }
+//        /// <summary>
+//        /// Initializes the form element.
+//        /// </summary>
+//        /// <param name="context">The context in which the control is rendered.</param>
+//        public override void Initialize(RenderContextForm context)
+//        {
+//            Value = context?.Request.GetParameter(Name)?.Value;
+//        }
 
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextForm context)
-        {
-            switch (ValidationResult)
-            {
-                case TypesInputValidity.Warning:
-                    Classes.Add("input-warning");
-                    break;
-                case TypesInputValidity.Error:
-                    Classes.Add("input-error");
-                    break;
-            }
+//        /// <summary>
+//        /// Convert to html.
+//        /// </summary>
+//        /// <param name="context">The context in which the control is rendered.</param>
+//        /// <returns>The control as html.</returns>
+//        public override IHtmlNode Render(RenderContextForm context)
+//        {
+//            switch (ValidationResult)
+//            {
+//                case TypesInputValidity.Warning:
+//                    Classes.Add("input-warning");
+//                    break;
+//                case TypesInputValidity.Error:
+//                    Classes.Add("input-error");
+//                    break;
+//            }
 
-            var html = new HtmlElementFieldInput()
-            {
-                Id = Id,
-                Value = Value,
-                Name = Name,
-                Type = "file",
-                Class = Css.Concatenate("form-control-file", GetClasses()),
-                Style = GetStyles(),
-                Role = Role,
-                Placeholder = Placeholder
-            };
+//            var html = new HtmlElementFieldInput()
+//            {
+//                Id = Id,
+//                Value = Value,
+//                Name = Name,
+//                Type = "file",
+//                Class = Css.Concatenate("form-control-file", GetClasses()),
+//                Style = GetStyles(),
+//                Role = Role,
+//                Placeholder = Placeholder
+//            };
 
-            html.AddUserAttribute("accept", string.Join(",", AcceptFile));
+//            html.AddUserAttribute("accept", string.Join(",", AcceptFile));
 
-            return html;
-        }
+//            return html;
+//        }
 
-        /// <summary>
-        /// Checks the input element for correctness of the data.
-        /// </summary>
-        /// <param name="context">The context in which the inputs are validated.</param>
-        public override void Validate(RenderContextForm context)
-        {
-            if (Disabled)
-            {
-                return;
-            }
+//        /// <summary>
+//        /// Checks the input element for correctness of the data.
+//        /// </summary>
+//        /// <param name="context">The context in which the inputs are validated.</param>
+//        public override void Validate(RenderContextForm context)
+//        {
+//            if (Disabled)
+//            {
+//                return;
+//            }
 
-            if (Required && string.IsNullOrWhiteSpace(base.Value))
-            {
-                ValidationResults.Add(new ValidationResult(TypesInputValidity.Error, "webexpress.webui:form.inputfile.validation.required"));
+//            if (Required && string.IsNullOrWhiteSpace(base.Value))
+//            {
+//                ValidationResults.Add(new ValidationResult(TypesInputValidity.Error, "webexpress.webui:form.inputfile.validation.required"));
 
-                return;
-            }
+//                return;
+//            }
 
-            base.Validate(context);
-        }
-    }
-}
+//            base.Validate(context);
+//        }
+//    }
+//}

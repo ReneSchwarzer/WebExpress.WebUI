@@ -1,19 +1,17 @@
-﻿using System.Globalization;
-using WebExpress.WebCore.WebAttribute;
-using WebExpress.WebCore.WebMessage;
+﻿using WebExpress.WebCore.WebAttribute;
 using WebExpress.WebCore.WebPage;
-using WebExpress.WebCore.WebResource;
+using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test
 {
     /// <summary>
     /// A dummy class for testing purposes.
     /// </summary>
-    [Title("webindex:homepage.label")]
-    [Segment(null, "webindex:homepage.label")]
+    [Title("webindex:pagea.label")]
+    [Segment("pagea", "webindex:homepage.label")]
     [ContextPath(null)]
-    [Module<TestModule>]
-    public sealed class TestPage : IPage
+    public sealed class TestPage : IPage<VisualTreeControl>
     {
         /// <summary>
         /// Returns or sets the title of the page.
@@ -21,61 +19,46 @@ namespace WebExpress.WebUI.Test
         public string Title { get; set; }
 
         /// <summary>
-        /// Returns or sets the resource context.
+        /// Returns or sets the page context.
         /// </summary>
-        public IResourceContext ResourceContext { get; private set; }
+        public IPageContext PageContext { get; private set; }
 
         /// <summary>
-        /// Returns or sets the culture information.
+        /// Initialization of the page. Here, for example, managed resources can be loaded. 
         /// </summary>
-        public CultureInfo Culture { get => CultureInfo.CurrentCulture; set => throw new NotImplementedException(); }
-
-        /// <summary>
-        /// Instillation of the resource. Here, for example, managed resources can be loaded. 
-        /// </summary>
-        /// <param name="resourceContext">The context of the resource.</param>
-        public void Initialization(IResourceContext resourceContext)
+        /// <param name="pageContext">The context of the page.</param>
+        public TestPage(IPageContext pageContext)
         {
-            ResourceContext = resourceContext;
+            PageContext = pageContext;
+
+            // test the injection
+            if (pageContext == null)
+            {
+                throw new ArgumentNullException(nameof(pageContext), "Parameter cannot be null or empty.");
+            }
         }
 
         /// <summary>
-        /// Post-processes the request and response.
+        /// Processing of the page.
         /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="response">The response.</param>
-        /// <returns>The processed response.</returns>
-        public Response PostProcess(Request request, Response response)
+        /// <param name="renderContext">The context for rendering the page.</param>
+        /// <param name="visualTree">The visual tree control to be processed.</param>
+        public void Process(IRenderContext renderContext, VisualTreeControl visualTree)
         {
-            return null;
+            // test the context
+            if (renderContext == null)
+            {
+                throw new ArgumentNullException(nameof(renderContext), "Parameter cannot be null or empty.");
+            }
+
+            visualTree.Content.Add(new ControlText() { Text = "Hello World" });
         }
 
         /// <summary>
-        /// Pre-processes the request.
+        /// Release of unmanaged resources reserved during use.
         /// </summary>
-        /// <param name="request">The request.</param>
-        public void PreProcess(Request request)
+        public void Dispose()
         {
-
-        }
-
-        /// <summary>
-        /// Processes the request.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <returns>The processed response.</returns>
-        public Response Process(Request request)
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Redirects to the specified URI.
-        /// </summary>
-        /// <param name="uri">The URI to redirect to.</param>
-        public void Redirecting(string uri)
-        {
-
         }
     }
 }

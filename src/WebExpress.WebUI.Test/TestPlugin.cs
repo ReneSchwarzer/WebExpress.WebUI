@@ -6,18 +6,19 @@ namespace WebExpress.WebUI.Test
     /// <summary>
     /// A dummy plugin for testing purposes.
     /// </summary>
-    [Name("webexpress.webui.unittest")]
+    [Name("TestPlugin")]
     [Description("plugin.description")]
     [Icon("/assets/img/Logo.png")]
-    [Dependency("webexpress.webui")]
+    [Application<TestApplication>()]
     public sealed class TestPlugin : IPlugin
     {
         /// <summary>
-        /// Initialization of the plugin.
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="pluginContext">The plugin context.</param>
-        public void Initialization(IPluginContext pluginContext)
+        private TestPlugin(IPluginContext pluginContext)
         {
+
         }
 
         /// <summary>

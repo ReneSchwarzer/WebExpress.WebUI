@@ -1,59 +1,59 @@
-﻿using System.Collections.Generic;
-using WebExpress.WebCore.WebHtml;
-using static WebExpress.WebCore.Internationalization.InternationalizationManager;
+﻿//using System.Collections.Generic;
+//using WebExpress.WebCore.Internationalization;
+//using WebExpress.WebCore.WebHtml;
 
-namespace WebExpress.WebUI.WebControl
-{
-    public class ControlFormItemStaticText : ControlFormItem, IControlFormLabel
-    {
-        /// <summary>
-        /// Returns or sets the label.
-        /// </summary>
-        public string Label { get; set; }
+//namespace WebExpress.WebUI.WebControl
+//{
+//    public class ControlFormItemStaticText : ControlFormItem, IControlFormLabel
+//    {
+//        /// <summary>
+//        /// Returns or sets the label.
+//        /// </summary>
+//        public string Label { get; set; }
 
-        /// <summary>
-        /// Returns or sets the text.
-        /// </summary>
-        public string Text { get; set; }
+//        /// <summary>
+//        /// Returns or sets the text.
+//        /// </summary>
+//        public string Text { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlFormItemStaticText(string id = null)
-            : base(id)
-        {
-        }
+//        /// <summary>
+//        /// Initializes a new instance of the class.
+//        /// </summary>
+//        /// <param name="id">The id of the control.</param>
+//        public ControlFormItemStaticText(string id = null)
+//            : base(id)
+//        {
+//        }
 
-        /// <summary>
-        /// Initializes the form element.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextForm context)
-        {
-        }
+//        /// <summary>
+//        /// Initializes the form element.
+//        /// </summary>
+//        /// <param name="context">The context in which the control is rendered.</param>
+//        public override void Initialize(RenderContextForm context)
+//        {
+//        }
 
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextForm context)
-        {
-            var c = new List<string>
-            {
-                "form-control-static"
-            };
+//        /// <summary>
+//        /// Convert to html.
+//        /// </summary>
+//        /// <param name="context">The context in which the control is rendered.</param>
+//        /// <returns>The control as html.</returns>
+//        public override IHtmlNode Render(RenderContextForm context)
+//        {
+//            var c = new List<string>
+//            {
+//                "form-control-static"
+//            };
 
-            var html = new HtmlElementTextContentP()
-            {
-                Text = I18N(context.Culture, Text),
-                Class = Css.Concatenate(GetClasses()),
-                Style = Style.Concatenate(GetStyles()),
-                Role = Role
-            };
+//            var html = new HtmlElementTextContentP()
+//            {
+//                Text = I18N.Translate(context.Culture, Text),
+//                Class = Css.Concatenate(GetClasses()),
+//                Style = Style.Concatenate(GetStyles()),
+//                Role = Role
+//            };
 
-            return html;
-        }
-    }
-}
+//            return html;
+//        }
+//    }
+//}

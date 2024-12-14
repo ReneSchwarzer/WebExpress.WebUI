@@ -1,37 +1,38 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents the characteristics of a modal.
+    /// </summary>
     public class PropertyModal
     {
         /// <summary>
-        /// Der Typ
+        /// The modal type.
         /// </summary>
         public TypeModal Type { get; protected set; }
 
         /// <summary>
-        /// Das benutzerdefinierte Modal
+        /// The custom modal.
         /// </summary>
         public ControlModal Modal { get; protected set; }
 
         /// <summary>
-        /// Die Größe des Modals
+        /// The size of the modal.
         /// </summary>
         public TypeModalSize Size { get; protected set; }
 
         /// <summary>
-        /// Die Uri
+        /// The uri.
         /// </summary>
         public string Uri { get; protected set; }
 
         /// <summary>
-        /// Die Weiterleitungs-Uri
+        /// The forwarding uri.
         /// </summary>
         public string RedirectUri { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="type">Der Typ</param>
-        /// <param name="modal">Das benutzerdefinierte Modal oder null</param>
         public PropertyModal()
         {
             Type = TypeModal.None;
@@ -43,8 +44,8 @@
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="type">Der Typ</param>
-        /// <param name="size">Die Größe des Modals</param>
+        /// <param name="type">The modal type.</param>
+        /// <param name="size">The size of the modal.</param>
         public PropertyModal(TypeModal type, TypeModalSize size = TypeModalSize.Default)
         {
             Type = type;
@@ -56,9 +57,9 @@
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="type">Der Typ</param>
-        /// <param name="modal">Das benutzerdefinierte Modal</param>
-        /// <param name="size">Die Größe des Modals</param>
+        /// <param name="type">The modal type</param>
+        /// <param name="modal">Custom modal or null.</param>
+        /// <param name="size">The size of the modal.</param>
         public PropertyModal(TypeModal type, ControlModal modal, TypeModalSize size = TypeModalSize.Default)
         {
             Type = type;
@@ -70,9 +71,9 @@
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="type">Der Typ</param>
-        /// <param name="uri">Die Uri</param>
-        /// <param name="size">Die Größe des Modals</param>
+        /// <param name="type">The modal type</param>
+        /// <param name="uri">The uri.</param>
+        /// <param name="size">The size of the modal.</param>
         public PropertyModal(TypeModal type, string uri, TypeModalSize size = TypeModalSize.Default)
         {
             Type = type;

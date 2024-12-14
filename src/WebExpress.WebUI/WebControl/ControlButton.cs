@@ -2,10 +2,13 @@
 using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a button control.
+    /// </summary>
     public class ControlButton : Control, IControlButton
     {
         /// <summary>
@@ -41,9 +44,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Returns or sets the content.
+        /// Returns the content.
         /// </summary>
-        public List<Control> Content { get; private set; }
+        public IEnumerable<Control> Content { get; private set; } = [];
 
         /// <summary>
         /// Returns or sets the text.
@@ -78,30 +81,24 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlButton(string id = null)
+        /// <param name="content">The child controls to be added to the button.</param>
+        public ControlButton(string id = null, params Control[] content)
             : base(id)
         {
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
             Size = TypeSizeButton.Default;
-            Content = new List<Control>();
+            Content = content ?? [];
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Convert the control to HTML.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext context)
         {
             var html = new HtmlElementFieldButton()
             {
+                Id = Id,
                 Type = "button",
                 Value = Value,
                 Class = Css.Concatenate("btn", GetClasses()),
@@ -128,7 +125,7 @@ namespace WebExpress.WebUI.WebControl
 
             if (!string.IsNullOrWhiteSpace(Text))
             {
-                html.Elements.Add(new HtmlText(InternationalizationManager.I18N(context.Culture, Text)));
+                html.Elements.Add(new HtmlText(I18N.Translate(context.Request.Culture, Text)));
             }
 
             if (!string.IsNullOrWhiteSpace(OnClick?.ToString()))
@@ -136,7 +133,7 @@ namespace WebExpress.WebUI.WebControl
                 html.AddUserAttribute("onclick", OnClick?.ToString());
             }
 
-            if (Content.Count > 0)
+            if (Content.Any())
             {
                 html.Elements.AddRange(Content.Select(x => x.Render(context)));
             }
@@ -147,11 +144,11 @@ namespace WebExpress.WebUI.WebControl
             }
             else if (Modal.Type == TypeModal.Form)
             {
-                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(context.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
             }
             else if (Modal.Type == TypeModal.Brwoser)
             {
-                html.OnClick = $"new webexpress.WebUI.modalPageCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.WebUI.modalPageCtrl({{ close: '{I18N.Translate(context.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
             }
             else if (Modal.Type == TypeModal.Modal)
             {

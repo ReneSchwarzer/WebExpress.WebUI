@@ -1,32 +1,35 @@
-﻿using WebExpress.WebCore.WebPage;
+﻿using System;
+using WebExpress.WebCore.WebFragment;
 using WebExpress.WebUI.WebControl;
 
 namespace WebExpress.WebUI.WebFragment
 {
-    public class FragmentControlLink : ControlLink, IFragment
+    /// <summary>
+    /// Represents a link control fragment that can be processed and rendered within a web page.
+    /// </summary>
+    public abstract class FragmentControlLink : ControlLink, IFragmentControl<ControlText>
     {
         /// <summary>
-        /// Returns the context of the fragment.
+        /// Gets the context of the fragment.
         /// </summary>
-        public IFragmentContext FragmentContext { get; private set; }
+        public IFragmentContext FragmentContext { get; }
 
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="id">The id of the fragment or null.</param>
-        public FragmentControlLink(string id = null)
-            : base(id)
+        /// <param name="fragmentContext">The context of the fragment.</param>
+        protected FragmentControlLink(IFragmentContext fragmentContext)
+            : base(fragmentContext?.FragmentId?.ToString())
         {
+            FragmentContext = fragmentContext;
         }
 
         /// <summary>
-        /// Initialization
+        /// Releases all resources used by the fragment.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="page">The page where the fragment is active.</param>
-        public virtual void Initialization(IFragmentContext context, IPage page)
+        public virtual void Dispose()
         {
-            FragmentContext = context;
+            GC.SuppressFinalize(this);
         }
     }
 }

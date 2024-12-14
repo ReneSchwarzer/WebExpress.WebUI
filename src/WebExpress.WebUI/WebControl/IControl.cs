@@ -1,8 +1,11 @@
 ﻿using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Interface for a control.
+    /// </summary>
     public interface IControl
     {
         /// <summary>
@@ -11,10 +14,10 @@ namespace WebExpress.WebUI.WebControl
         string Id { get; }
 
         /// <summary>
-        /// Convert to html.
+        /// Convert the control to HTML.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        IHtmlNode Render(RenderContext context);
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        IHtmlNode Render(IRenderControlContext context);
     }
 }

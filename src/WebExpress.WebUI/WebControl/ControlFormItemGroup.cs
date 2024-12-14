@@ -1,114 +1,114 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿//using System.Collections.Generic;
+//using System.Linq;
 
-namespace WebExpress.WebUI.WebControl
-{
-    /// <summary>
-    /// Grouping of controls.
-    /// </summary>
-    public abstract class ControlFormItemGroup : ControlFormItem, IFormValidation
-    {
-        /// <summary>
-        /// Returns or sets the form items.
-        /// </summary>
-        public ICollection<ControlFormItem> Items { get; } = new List<ControlFormItem>();
+//namespace WebExpress.WebUI.WebControl
+//{
+//    /// <summary>
+//    /// Grouping of controls.
+//    /// </summary>
+//    public abstract class ControlFormItemGroup : ControlFormItem, IFormValidation
+//    {
+//        /// <summary>
+//        /// Returns or sets the form items.
+//        /// </summary>
+//        public ICollection<ControlFormItem> Items { get; } = new List<ControlFormItem>();
 
-        /// <summary>
-        /// Determines whether the inputs are valid.
-        /// </summary>
-        public ICollection<ValidationResult> ValidationResults { get; } = new List<ValidationResult>();
+//        /// <summary>
+//        /// Determines whether the inputs are valid.
+//        /// </summary>
+//        public ICollection<ValidationResult> ValidationResults { get; } = new List<ValidationResult>();
 
-        /// <summary>
-        /// Returns or sets whether the form element has been validated.
-        /// </summary>
-        private bool IsValidated { get; set; }
+//        /// <summary>
+//        /// Returns or sets whether the form element has been validated.
+//        /// </summary>
+//        private bool IsValidated { get; set; }
 
-        /// <summary>
-        /// Returns the most serious validation result.
-        /// </summary>
-        public virtual TypesInputValidity ValidationResult
-        {
-            get
-            {
-                var buf = ValidationResults;
+//        /// <summary>
+//        /// Returns the most serious validation result.
+//        /// </summary>
+//        public virtual TypesInputValidity ValidationResult
+//        {
+//            get
+//            {
+//                var buf = ValidationResults;
 
-                if (buf.Where(x => x.Type == TypesInputValidity.Error).Any())
-                {
-                    return TypesInputValidity.Error;
-                }
-                else if (buf.Where(x => x.Type == TypesInputValidity.Warning).Any())
-                {
-                    return TypesInputValidity.Warning;
-                }
-                else if (buf.Where(x => x.Type == TypesInputValidity.Success).Any())
-                {
-                    return TypesInputValidity.Success;
-                }
+//                if (buf.Where(x => x.Type == TypesInputValidity.Error).Any())
+//                {
+//                    return TypesInputValidity.Error;
+//                }
+//                else if (buf.Where(x => x.Type == TypesInputValidity.Warning).Any())
+//                {
+//                    return TypesInputValidity.Warning;
+//                }
+//                else if (buf.Where(x => x.Type == TypesInputValidity.Success).Any())
+//                {
+//                    return TypesInputValidity.Success;
+//                }
 
-                return IsValidated ? TypesInputValidity.Success : TypesInputValidity.Default;
-            }
-        }
+//                return IsValidated ? TypesInputValidity.Success : TypesInputValidity.Default;
+//            }
+//        }
 
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlFormItemGroup(string id = null)
-            : base(id)
-        {
-        }
+//        /// <summary>
+//        /// Initializes a new instance of the class.
+//        /// </summary>
+//        /// <param name="id">The id of the control.</param>
+//        public ControlFormItemGroup(string id = null)
+//            : base(id)
+//        {
+//        }
 
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        ///<param name="item">The form item.</param> 
-        public ControlFormItemGroup(string id, params ControlFormItem[] item)
-            : base(id)
-        {
-            (Items as List<ControlFormItem>).AddRange(item);
-        }
+//        /// <summary>
+//        /// Initializes a new instance of the class.
+//        /// </summary>
+//        /// <param name="id">The id of the control.</param>
+//        ///<param name="item">The form item.</param> 
+//        public ControlFormItemGroup(string id, params ControlFormItem[] item)
+//            : base(id)
+//        {
+//            (Items as List<ControlFormItem>).AddRange(item);
+//        }
 
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        ///<param name="item">The form item.</param> 
-        public ControlFormItemGroup(params ControlFormItem[] item)
-            : base(null)
-        {
-            (Items as List<ControlFormItem>).AddRange(item);
-        }
+//        /// <summary>
+//        /// Initializes a new instance of the class.
+//        /// </summary>
+//        ///<param name="item">The form item.</param> 
+//        public ControlFormItemGroup(params ControlFormItem[] item)
+//            : base(null)
+//        {
+//            (Items as List<ControlFormItem>).AddRange(item);
+//        }
 
-        /// <summary>
-        /// Initializes the form element.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextForm context)
-        {
-            var groupContex = new RenderContextFormGroup(context, this);
+//        /// <summary>
+//        /// Initializes the form element.
+//        /// </summary>
+//        /// <param name="context">The context in which the control is rendered.</param>
+//        public override void Initialize(RenderContextForm context)
+//        {
+//            var groupContex = new RenderContextFormGroup(context, this);
 
-            foreach (var item in Items)
-            {
-                item.Initialize(groupContex);
-            }
-        }
+//            foreach (var item in Items)
+//            {
+//                item.Initialize(groupContex);
+//            }
+//        }
 
-        /// <summary>
-        /// Checks the input element for correctness of the data.
-        /// </summary>
-        /// <param name="context">The context in which the inputs are validated.</param>
-        public virtual void Validate(RenderContextForm context)
-        {
-            var validationResults = ValidationResults as List<ValidationResult>;
+//        /// <summary>
+//        /// Checks the input element for correctness of the data.
+//        /// </summary>
+//        /// <param name="context">The context in which the inputs are validated.</param>
+//        public virtual void Validate(RenderContextForm context)
+//        {
+//            var validationResults = ValidationResults as List<ValidationResult>;
 
-            validationResults.Clear();
+//            validationResults.Clear();
 
-            foreach (var v in Items.Where(x => x is IFormValidation).Select(x => x as IFormValidation))
-            {
-                v.Validate(context);
+//            foreach (var v in Items.Where(x => x is IFormValidation).Select(x => x as IFormValidation))
+//            {
+//                v.Validate(context);
 
-                validationResults.AddRange(v.ValidationResults);
-            }
-        }
-    }
-}
+//                validationResults.AddRange(v.ValidationResults);
+//            }
+//        }
+//    }
+//}

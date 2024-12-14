@@ -1,5 +1,8 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Enumeration of button color types.
+    /// </summary>
     public enum TypeColorButton
     {
         Default = 0,
@@ -13,6 +16,9 @@
         Light = 8
     }
 
+    /// <summary>
+    /// Provides extension methods for the TypeColorButton enumeration.
+    /// </summary>
     public static class TypeColorButtonExtensions
     {
         /// <summary>

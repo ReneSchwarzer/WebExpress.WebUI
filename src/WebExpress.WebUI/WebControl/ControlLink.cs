@@ -3,10 +3,13 @@ using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
 using WebExpress.WebCore.WebMessage;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a hyperlink control.
+    /// </summary>
     public class ControlLink : Control, IControlLink
     {
         /// <summary>
@@ -33,7 +36,7 @@ namespace WebExpress.WebUI.WebControl
         public string Text { get; set; }
 
         /// <summary>
-        /// Returns or sets the tooltip.
+        /// Returns or sets the title.
         /// </summary>
         public string Title { get; set; }
 
@@ -53,16 +56,6 @@ namespace WebExpress.WebUI.WebControl
         public PropertyModal Modal { get; set; } = new PropertyModal();
 
         /// <summary>
-        /// Returns or sets the content.
-        /// </summary>
-        public List<Control> Content { get; private set; }
-
-        /// <summary>
-        /// Returns or sets the parameters that apply to the link.
-        /// </summary>
-        public List<Parameter> Params { get; set; }
-
-        /// <summary>
         /// Returns or sets the icon.
         /// </summary>
         public PropertyIcon Icon { get; set; }
@@ -71,6 +64,16 @@ namespace WebExpress.WebUI.WebControl
         /// Returns or sets a tooltip text.
         /// </summary>
         public string Tooltip { get; set; }
+
+        /// <summary>
+        /// Returns or sets the content.
+        /// </summary>
+        public IEnumerable<Control> Content { get; private set; } = [];
+
+        /// <summary>
+        /// Returns or sets the parameters that apply to the link.
+        /// </summary>
+        public List<Parameter> Params { get; set; } = [];
 
         /// <summary>
         /// Return or specifies the vertical orientation..
@@ -94,75 +97,23 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlLink(string id = null)
-            : base(id)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="text">The content of the html element.</param>
-        public ControlLink(string id, string text)
-            : this(id)
-        {
-            Text = text;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
         /// <param name="content">The content of the html element.</param>
-        public ControlLink(params Control[] content)
-            : this((string)null)
-        {
-            Content.AddRange(content);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlLink(string id, params Control[] content)
-            : this(id)
-        {
-            Content.AddRange(content);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlLink(string id, List<Control> content)
+        public ControlLink(string id = null, params Control[] content)
             : base(id)
         {
             Content = content;
-            Params = new List<Parameter>();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-            Content = new List<Control>();
-            Params = new List<Parameter>();
         }
 
         /// <summary>
         /// Returns all local and temporary parameters.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The parameters.</returns>
-        public string GetParams(IPage page)
+        /// <param name="request">The context in which the control is rendered.</param>
+        /// <returns>The parameters as a query string.</returns>
+        private string GetParams(Request request)
         {
             var dict = new Dictionary<string, Parameter>();
 
-            // Übernahme der Parameter des Link
+            // transfer of the parameters from the request.
             if (Params != null)
             {
                 foreach (var v in Params)
@@ -189,9 +140,9 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
         /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        public override IHtmlNode Render(IRenderControlContext context)
         {
-            var param = GetParams(context?.Page);
+            var param = GetParams(context?.Request);
 
             var html = new HtmlElementTextSemanticsA(from x in Content select x.Render(context))
             {
@@ -201,7 +152,7 @@ namespace WebExpress.WebUI.WebControl
                 Role = Role,
                 Href = Uri?.ToString() + (param.Length > 0 ? "?" + param : string.Empty),
                 Target = Target,
-                Title = InternationalizationManager.I18N(context.Culture, Title),
+                Title = string.IsNullOrEmpty(Title) ? I18N.Translate(context.Request.Culture, Tooltip) : I18N.Translate(context.Request.Culture, Title),
                 OnClick = OnClick?.ToString()
             };
 
@@ -222,7 +173,7 @@ namespace WebExpress.WebUI.WebControl
 
             if (!string.IsNullOrWhiteSpace(Text))
             {
-                html.Elements.Add(new HtmlText(InternationalizationManager.I18N(context.Culture, Text)));
+                html.Elements.Add(new HtmlText(I18N.Translate(context.Request.Culture, Text)));
             }
 
             if (Modal == null || Modal.Type == TypeModal.None)
@@ -231,12 +182,12 @@ namespace WebExpress.WebUI.WebControl
             }
             else if (Modal.Type == TypeModal.Form)
             {
-                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(context.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Brwoser)
             {
-                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{I18N.Translate(context.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Modal)

@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Abstract base class for all controls.
+    /// </summary>
     public abstract class Control : IControl
     {
         /// <summary>
@@ -107,17 +110,17 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the css class.
         /// </summary>
-        public List<string> Classes { get; set; } = new List<string>();
+        public List<string> Classes { get; set; } = [];
 
         /// <summary>
         /// Retruns or sets properties determined by enums.
         /// </summary>
-        protected Dictionary<string, Tuple<object, Func<string>, Func<string>>> Propertys { get; private set; } = new Dictionary<string, Tuple<object, Func<string>, Func<string>>>();
+        protected Dictionary<string, Tuple<object, Func<string>, Func<string>>> Propertys { get; private set; } = [];
 
         /// <summary>
         /// Returns or sets the css style.
         /// </summary>
-        public List<string> Styles { get; set; } = new List<string>();
+        public List<string> Styles { get; set; } = [];
 
         /// <summary>
         /// Returns or sets the role.
@@ -135,16 +138,9 @@ namespace WebExpress.WebUI.WebControl
         public bool Enable { get; set; } = true;
 
         /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public abstract IHtmlNode Render(RenderContext context);
-
-        /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The control id.</param>
         public Control(string id = null)
         {
             Id = id;
@@ -193,7 +189,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns a property.
         /// </summary>
-        /// <param name="propertyName">he name of the property.</param>
+        /// <param name="propertyName">The name of the property.</param>
         /// <returns>The value.</returns>
         protected IProperty GetPropertyObject([CallerMemberName] string propertyName = "")
         {
@@ -299,5 +295,12 @@ namespace WebExpress.WebUI.WebControl
 
             return string.Join(" ", Styles.Union(list));
         }
+
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public abstract IHtmlNode Render(IRenderControlContext context);
     }
 }

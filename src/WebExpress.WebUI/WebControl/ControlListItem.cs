@@ -1,16 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a list item control that can contain other controls as its content.
+    /// </summary>
     public class ControlListItem : Control
     {
         /// <summary>
         /// Returns or sets the content.
         /// </summary>
-        public List<Control> Content { get; private set; } = new List<Control>();
+        public IEnumerable<Control> Content { get; private set; }
 
         /// <summary>
         /// Returns or sets the ativity state of the list item.
@@ -25,10 +28,10 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlListItem(string id = null)
+        public ControlListItem(string id = null, params Control[] content)
             : base(id)
         {
-            Init();
+            Content = content ?? [];
         }
 
         /// <summary>
@@ -36,57 +39,19 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
-        public ControlListItem(string id, params Control[] content)
-            : this(id)
-        {
-            Content.AddRange(content);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlListItem(params Control[] content)
-            : this(null, content)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlListItem(string id, List<Control> content)
+        public ControlListItem(string id = null, IEnumerable<Control> content = null)
             : base(id)
         {
-            Content = content;
-
-            Init();
+            Content = content ?? [];
         }
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Convert the control to HTML.
         /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlListItem(List<Control> content)
-            : this(null, content)
-        {
-            Content = content;
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="items">The list entries.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext context)
         {
             return new HtmlElementTextContentLi(Content.Where(x => x.Enable).Select(x => x.Render(context)))
             {
