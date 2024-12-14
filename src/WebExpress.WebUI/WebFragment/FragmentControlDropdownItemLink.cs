@@ -1,32 +1,32 @@
-﻿//using WebExpress.WebUI.WebControl;
-//using WebExpress.WebCore.WebPage;
+﻿using System;
+using WebExpress.WebCore.WebFragment;
+using WebExpress.WebUI.WebControl;
 
-//namespace WebExpress.WebUI.WebFragment
-//{
-//    public class FragmentControlDropdownItemLink : ControlDropdownItemLink, IFragment
-//    {
-//        /// <summary>
-//        /// Liefert der Kontext
-//        /// </summary>
-//        public IFragmentContext FragmentContext { get; private set; }
+namespace WebExpress.WebUI.WebFragment
+{
+    public class FragmentControlDropdownItemLink : ControlDropdownItemLink, IFragmentControl<ControlDropdownItemLink>
+    {
+        /// <summary>
+        /// Liefert der Kontext
+        /// </summary>
+        public IFragmentContext FragmentContext { get; private set; }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the fragment or null.</param>
-//        public FragmentControlDropdownItemLink(string id = null)
-//            : base(id)
-//        {
-//        }
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="fragmentContext">The context of the fragment.</param>
+        public FragmentControlDropdownItemLink(IFragmentContext fragmentContext)
+            : base(fragmentContext?.FragmentId?.ToString())
+        {
+            FragmentContext = fragmentContext;
+        }
 
-//        /// <summary>
-//        /// Initialization
-//        /// </summary>
-//        /// <param name="context">The context.</param>
-//        /// <param name="page">The page where the fragment is active.</param>
-//        public virtual void Initialization(IFragmentContext context, IPage page)
-//        {
-//            FragmentContext = context;
-//        }
-//    }
-//}
+        /// <summary>
+        /// Releases all resources used by the fragment.
+        /// </summary>
+        public virtual void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+    }
+}
