@@ -194,27 +194,113 @@ namespace WebExpress.WebUI.Test.WebControl
             Assert.Equal(expected, html.Trim());
         }
 
-        ///// <summary>
-        ///// Tests the add function of the dropdown control.
-        ///// </summary>
-        //[Theory]
-        //[InlineData(typeof(ControlText), @"<div><div></div></div>")]
-        //[InlineData(typeof(ControlLink), @"<div><a class=""link""></a></div>")]
-        //[InlineData(typeof(ControlImage), @"<div><img></div>")]
-        //public void Add(Type child, string expected)
-        //{
-        //    // preconditions
-        //    UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-        //    var context = UnitTestControlFixture.CrerateRenderContextMock();
-        //    var childInstance = Activator.CreateInstance(child, [null]) as IControl;
-        //    var control = new ControlDropdown();
+        /// <summary>
+        /// Tests the value property of the dropdown control.
+        /// </summary>
+        [Theory]
+        [InlineData(null, @"<div class=""dropdown""><button class=""btn"" data-bs-toggle=""dropdown"" aria-expanded=""false""></button><ul class=""dropdown-menu""></ul></div>")]
+        [InlineData("abc", @"<div class=""dropdown""><button class=""btn"" data-bs-toggle=""dropdown"" aria-expanded=""false""></button><ul class=""dropdown-menu""></ul></div>")]
+        [InlineData("webexpress.WebUI:plugin.name", @"<div class=""dropdown""><button class=""btn"" data-bs-toggle=""dropdown"" aria-expanded=""false""></button><ul class=""dropdown-menu""></ul></div>")]
+        public void Value(string value, string expected)
+        {
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var control = new ControlDropdown()
+            {
+                Value = value,
+            };
 
-        //    // test execution
-        //    control.AddChild(childInstance);
+            // test execution
+            var html = control.Render(context);
 
-        //    var html = control.Render(context);
+            Assert.Equal(expected, html.Trim());
+        }
 
-        //    Assert.Equal(expected, html.Trim());
-        //}
+        /// <summary>
+        /// Tests the icon property of the dropdown control.
+        /// </summary>
+        [Theory]
+        [InlineData(TypeIcon.None, @"<div class=""dropdown""><button class=""btn"" data-bs-toggle=""dropdown"" aria-expanded=""false""></button><ul class=""dropdown-menu""></ul></div>")]
+        [InlineData(TypeIcon.Star, @"<div class=""dropdown""><button class=""btn"" data-bs-toggle=""dropdown"" aria-expanded=""false""><span class=""fas fa-star""></span></button><ul class=""dropdown-menu""></ul></div>")]
+        public void Icon(TypeIcon icon, string expected)
+        {
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var control = new ControlDropdown()
+            {
+                Icon = new PropertyIcon(icon)
+            };
+
+            // test execution
+            var html = control.Render(context);
+
+            Assert.Equal(expected, html.Trim());
+        }
+
+        /// <summary>
+        /// Tests the active property of the dropdown control.
+        /// </summary>
+        [Theory]
+        [InlineData(TypeActive.None, @"<div class=""dropdown""><button class=""btn"" data-bs-toggle=""dropdown"" aria-expanded=""false""></button><ul class=""dropdown-menu""></ul></div>")]
+        [InlineData(TypeActive.Active, @"<div class=""dropdown""><button class=""btn active"" data-bs-toggle=""dropdown"" aria-expanded=""false""></button><ul class=""dropdown-menu""></ul></div>")]
+        [InlineData(TypeActive.Disabled, @"<div class=""dropdown""><button class=""btn disabled"" data-bs-toggle=""dropdown"" aria-expanded=""false""></button><ul class=""dropdown-menu""></ul></div>")]
+        public void Active(TypeActive active, string expected)
+        {
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var control = new ControlDropdown()
+            {
+                Active = active
+            };
+
+            // test execution
+            var html = control.Render(context);
+
+            Assert.Equal(expected, html.Trim());
+        }
+
+        /// <summary>
+        /// Tests the alignment menu property of the dropdown control.
+        /// </summary>
+        [Theory]
+        [InlineData(TypeAlignmentDropdownMenu.Default, @"<div class=""dropdown""><button class=""btn"" data-bs-toggle=""dropdown"" aria-expanded=""false""></button><ul class=""dropdown-menu""></ul></div>")]
+        [InlineData(TypeAlignmentDropdownMenu.Right, @"<div class=""dropdown""><button class=""btn dropdown-menu-lg-end"" data-bs-toggle=""dropdown"" aria-expanded=""false""></button><ul class=""dropdown-menu dropdown-menu-lg-end""></ul></div>")]
+        public void AlignmentMenu(TypeAlignmentDropdownMenu alignmentMenu, string expected)
+        {
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var control = new ControlDropdown()
+            {
+                AlignmentMenu = alignmentMenu
+            };
+
+            // test execution
+            var html = control.Render(context);
+
+            Assert.Equal(expected, UnitTestControlFixture.RemoveLineBreaks(html.ToString()));
+        }
+
+        /// <summary>
+        /// Tests the add function of the dropdown control.
+        /// </summary>
+        [Fact]
+        public void Add()
+        {
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var control = new ControlDropdown();
+
+            // test execution
+            control.Add(new ControlDropdownItemLink() { Text = "abc" });
+
+            var html = control.Render(context);
+
+            Assert.Equal(@"<div class=""dropdown""><button class=""btn"" data-bs-toggle=""dropdown"" aria-expanded=""false""></button><ul class=""dropdown-menu""><li class=""dropdown-item ""><a class=""link"">abc</a></li></ul></div>", html.Trim());
+        }
     }
 }
