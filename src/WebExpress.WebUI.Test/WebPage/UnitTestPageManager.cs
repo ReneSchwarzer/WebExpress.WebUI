@@ -3,7 +3,7 @@
 namespace WebExpress.WebUI.Test.WebPage
 {
     /// <summary>
-    /// Test the fragment manager.
+    /// Test the page manager.
     /// </summary>
     [Collection("NonParallelTests")]
     public class UnitTestPageManager

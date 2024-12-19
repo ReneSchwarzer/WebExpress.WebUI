@@ -10,7 +10,7 @@ namespace WebExpress.WebUI.WebFragment
     public abstract class FragmentControlImage : ControlImage, IFragmentControl<ControlImage>
     {
         /// <summary>
-        /// Gets the context of the fragment.
+        /// Returns the context of the fragment.
         /// </summary>
         public IFragmentContext FragmentContext { get; }
 
