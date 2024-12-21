@@ -5,7 +5,7 @@ namespace WebExpress.WebUI.Test
     /// <summary>
     /// Represents a test section for testing in the web UI.
     /// </summary>
-    internal class TestSectionB : ISection
+    internal class TestSectionFragmentControlNavigationItemLink : ISection
     {
     }
 }

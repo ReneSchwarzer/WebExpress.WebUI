@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.Test
     /// <summary>
     /// A dummy fragment for testing purposes.
     /// </summary>
-    [Section<TestSectionD>()]
+    [Section<TestSectionFragmentControlButtonLink>()]
     public sealed class TestFragmentControlButtonLink : FragmentControlButtonLink
     {
         /// <summary>

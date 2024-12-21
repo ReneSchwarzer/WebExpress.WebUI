@@ -1,35 +1,30 @@
-﻿//using WebExpress.WebCore.WebHtml;
-//using WebExpress.WebCore.WebPage;
+﻿using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
-//namespace WebExpress.WebUI.WebControl
-//{
-//    public class ControlSplitButtonItemLink : ControlLink, IControlSplitButtonItem
-//    {
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        public ControlSplitButtonItemLink(string id = null)
-//            : base(id)
-//        {
-//            Init();
-//        }
+namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Represents a link item within a split button control.
+    /// </summary>
+    public class ControlSplitButtonItemLink : ControlLink, IControlSplitButtonItem
+    {
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="id">The id of the control.</param>
+        public ControlSplitButtonItemLink(string id = null)
+            : base(id)
+        {
+        }
 
-//        /// <summary>
-//        /// Initialization
-//        /// </summary>
-//        private void Init()
-//        {
-//        }
-
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <returns>The control as html.</returns>
-//        public override IHtmlNode Render(IRenderContext context)
-//        {
-//            return base.Render(context);
-//        }
-//    }
-//}
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext)
+        {
+            return base.Render(renderContext);
+        }
+    }
+}

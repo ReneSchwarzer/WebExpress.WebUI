@@ -8,7 +8,7 @@ namespace WebExpress.WebUI.Test.WebControl
     /// Tests the dropdown item link control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlControlDropdownItemLink
+    public class UnitTestControlDropdownItemLink
     {
         /// <summary>
         /// Tests the id property of the dropdown item link control.
@@ -170,10 +170,10 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the content property of the dropdown item link control.
+        /// Tests the add function of the dropdown item link control.
         /// </summary>
         [Fact]
-        public void Content()
+        public void Add()
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
@@ -181,15 +181,28 @@ namespace WebExpress.WebUI.Test.WebControl
             var control1 = new ControlDropdownItemLink(null, new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
             var control2 = new ControlDropdownItemLink(null, [new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
             var control3 = new ControlDropdownItemLink(null, new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
+            var control4 = new ControlDropdownItemLink(null);
+            var control5 = new ControlDropdownItemLink(null);
+            var control6 = new ControlDropdownItemLink(null);
 
             // test execution
+            control4.Add(new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
+            control5.Add([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
+            control6.Add(new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
+
             var html1 = control1.Render(context);
             var html2 = control2.Render(context);
-            var html3 = control2.Render(context);
+            var html3 = control3.Render(context);
+            var html4 = control4.Render(context);
+            var html5 = control5.Render(context);
+            var html6 = control6.Render(context);
 
             Assert.Equal(@"<a class=""link""><span class=""fas fa-star""></span></a>", html1.Trim());
             Assert.Equal(@"<a class=""link""><span class=""fas fa-star""></span></a>", html2.Trim());
             Assert.Equal(@"<a class=""link""><span class=""fas fa-star""></span></a>", html3.Trim());
+            Assert.Equal(@"<a class=""link""><span class=""fas fa-star""></span></a>", html4.Trim());
+            Assert.Equal(@"<a class=""link""><span class=""fas fa-star""></span></a>", html5.Trim());
+            Assert.Equal(@"<a class=""link""><span class=""fas fa-star""></span></a>", html6.Trim());
         }
     }
 }

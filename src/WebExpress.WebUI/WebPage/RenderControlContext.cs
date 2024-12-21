@@ -29,6 +29,15 @@ namespace WebExpress.WebUI.WebPage
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
+        /// <param name="renderContext">The render context.</param>
+        public RenderControlContext(IRenderContext renderContext)
+            : base(renderContext?.PageContext, renderContext?.Request)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
         /// <param name="pageContext">>The page context.</param>
         /// <param name="request">The request associated with the rendering context.</param>
         public RenderControlContext(IPageContext pageContext, Request request)

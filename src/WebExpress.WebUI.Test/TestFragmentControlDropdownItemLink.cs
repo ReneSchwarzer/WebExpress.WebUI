@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.Test
     /// <summary>
     /// A dummy fragment for testing purposes.
     /// </summary>
-    [Section<TestSectionF>()]
+    [Section<TestSectionFragmentControlDropdownItemLink>()]
     public sealed class TestFragmentControlDropdownItemLink : FragmentControlDropdownItemLink
     {
         /// <summary>

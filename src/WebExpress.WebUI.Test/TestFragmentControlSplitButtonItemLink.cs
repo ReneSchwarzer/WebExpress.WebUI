@@ -7,16 +7,16 @@ namespace WebExpress.WebUI.Test
     /// <summary>
     /// A dummy fragment for testing purposes.
     /// </summary>
-    [Section<TestSectionFragmentControlImage>()]
-    public sealed class TestFragmentControlImage : FragmentControlImage
+    [Section<TestSectionFragmentControlSplitButtonItemLink>()]
+    public sealed class TestFragmentControlSplitButtonItemLink : FragmentControlSplitButtonItemLink
     {
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        public TestFragmentControlImage(IFragmentContext fragmentContext)
+        public TestFragmentControlSplitButtonItemLink(IFragmentContext fragmentContext)
             : base(fragmentContext)
         {
-            Uri = "/a/b/c";
+            Text = "TestFragmentControlSplitButtonItemLink";
         }
     }
 }

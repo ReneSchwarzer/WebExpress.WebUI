@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using WebExpress.WebCore;
 using WebExpress.WebCore.WebApplication;
 using WebExpress.WebCore.WebComponent;
@@ -25,9 +24,6 @@ namespace WebExpress.WebUI.Test.Fixture
     public partial class UnitTestControlFixture : IDisposable
     {
         private static readonly string[] _separator = ["\r\n", "\r", "\n"];
-
-        [GeneratedRegex(@">\s+<")]
-        private static partial Regex WhitespaceRegex();
 
         /// <summary>
         /// Initializes a new instance of the class and boot the component manager.
@@ -184,7 +180,6 @@ namespace WebExpress.WebUI.Test.Fixture
             featureCollection.Set<IHttpRequestIdentifierFeature>(requestIdentifierFeature);
             featureCollection.Set<IHttpConnectionFeature>(connectionFeature);
 
-            var componentManager = CreateComponentHubMock();
             var context = new WebCore.WebMessage.HttpContext(featureCollection, CreateHttpServerContextMock());
 
             return context;
@@ -240,27 +235,6 @@ namespace WebExpress.WebUI.Test.Fixture
             var data = memoryStream.ToArray();
 
             return Encoding.UTF8.GetString(data);
-        }
-
-        /// <summary>
-        /// Removes all line breaks from the input string.
-        /// </summary>
-        /// <param name="input">The input string from which to remove line breaks.</param>
-        /// <returns>A string with all line breaks removed.</returns>
-        public static string RemoveLineBreaks(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-            {
-                return input;
-            }
-
-            // remove all line breaks
-            string result = input.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
-
-            // remove whitespace of any length between '>' and '<'
-            result = WhitespaceRegex().Replace(result, "><");
-
-            return result;
         }
 
         /// <summary>

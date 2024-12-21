@@ -1,32 +1,34 @@
-﻿//using WebExpress.WebUI.WebControl;
-//using WebExpress.WebCore.WebPage;
+﻿using System;
+using WebExpress.WebCore.WebFragment;
+using WebExpress.WebUI.WebControl;
 
-//namespace WebExpress.WebUI.WebFragment
-//{
-//    public class FragmentControlSplitButtonItemLink : ControlSplitButtonItemLink, IFragment
-//    {
-//        /// <summary>
-//        /// Returns the context of the fragment.
-//        /// </summary>
-//        public IFragmentContext FragmentContext { get; private set; }
+namespace WebExpress.WebUI.WebFragment
+{
+    /// <summary>
+    /// Represents a link item within a split button control that is part of a fragment.
+    /// </summary>
+    public class FragmentControlSplitButtonItemLink : ControlSplitButtonItemLink, IFragmentControl<ControlSplitButtonItemLink>
+    {
+        /// <summary>
+        /// Returns the context of the fragment.
+        /// </summary>
+        public IFragmentContext FragmentContext { get; private set; }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the fragment or null.</param>
-//        public FragmentControlSplitButtonItemLink(string id = null)
-//            : base(id)
-//        {
-//        }
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="fragmentContext">The context of the fragment.</param>
+        public FragmentControlSplitButtonItemLink(IFragmentContext fragmentContext)
+            : base(fragmentContext?.FragmentId?.ToString())
+        {
+        }
 
-//        /// <summary>
-//        /// Initialization
-//        /// </summary>
-//        /// <param name="context">The context.</param>
-//        /// <param name="page">The page where the fragment is active.</param>
-//        public virtual void Initialization(IFragmentContext context, IPage page)
-//        {
-//            FragmentContext = context;
-//        }
-//    }
-//}
+        /// <summary>
+        /// Releases all resources used by the fragment.
+        /// </summary>
+        public virtual void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+    }
+}

@@ -11,6 +11,8 @@ namespace WebExpress.WebUI.WebControl
     /// </summary>
     public class ControlButton : Control, IControlButton
     {
+        private readonly List<IControl> _children = [];
+
         /// <summary>
         /// Returns or sets the color.
         /// </summary>
@@ -44,9 +46,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Returns the content.
+        /// Returns the children.
         /// </summary>
-        public IEnumerable<IControl> Content { get; private set; } = [];
+        public IEnumerable<IControl> Children => _children;
 
         /// <summary>
         /// Returns or sets the text.
@@ -86,7 +88,25 @@ namespace WebExpress.WebUI.WebControl
             : base(id)
         {
             Size = TypeSizeButton.Default;
-            Content = content ?? [];
+            _children.AddRange(content);
+        }
+
+        /// <summary>
+        /// Adds one or more content.
+        /// </summary>
+        /// <param name="items">The content to add to the button.</param>
+        public void Add(params IControl[] items)
+        {
+            _children.AddRange(items);
+        }
+
+        /// <summary>
+        /// Adds one or more items to the split button.
+        /// </summary>
+        /// <param name="items">The items to add to the split button.</param>
+        public void Add(IEnumerable<IControl> items)
+        {
+            _children.AddRange(items);
         }
 
         /// <summary>
@@ -133,9 +153,9 @@ namespace WebExpress.WebUI.WebControl
                 html.AddUserAttribute("onclick", OnClick?.ToString());
             }
 
-            if (Content.Any())
+            if (_children.Count != 0)
             {
-                html.Add(Content.Select(x => x.Render(renderContext)).ToArray());
+                html.Add(_children.Select(x => x.Render(renderContext)).ToArray());
             }
 
             if (Modal == null || Modal.Type == TypeModal.None)

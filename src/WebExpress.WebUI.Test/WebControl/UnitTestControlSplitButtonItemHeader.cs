@@ -4,13 +4,13 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the dropdown item header control.
+    /// Tests the split button item header control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlDropdownItemHeader
+    public class UnitTestControlSplitButtonItemHeader
     {
         /// <summary>
-        /// Tests the id property of the dropdown item header control.
+        /// Tests the id property of the split button item header control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<li class=""dropdown-header""></li>")]
@@ -20,7 +20,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlDropdownItemHeader(id)
+            var control = new ControlSplitButtonItemHeader(id)
             {
             };
 
@@ -31,18 +31,18 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the text property of the dropdown item header control.
+        /// Tests the text property of the split button item header control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<li class=""dropdown-header""></li>")]
         [InlineData("abc", @"<li class=""dropdown-header"">abc</li>")]
-        [InlineData("webexpress.WebUI:plugin.name", @"<li class=""dropdown-header"">WebExpress.WebUI</li>")]
+        [InlineData("webexpress.webui:plugin.name", @"<li class=""dropdown-header"">WebExpress.WebUI</li>")]
         public void Text(string text, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlDropdownItemHeader()
+            var control = new ControlSplitButtonItemHeader()
             {
                 Text = text,
             };

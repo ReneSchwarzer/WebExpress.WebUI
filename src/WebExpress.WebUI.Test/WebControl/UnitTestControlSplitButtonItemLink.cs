@@ -5,13 +5,13 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the link control.
+    /// Tests the split button item link control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlLink
+    public class UnitTestControlSplitButtonItemLink
     {
         /// <summary>
-        /// Tests the id property of the link control.
+        /// Tests the id property of the split button item link control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<a class=""link""></a>")]
@@ -21,7 +21,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlLink(id)
+            var control = new ControlSplitButtonItemLink(id)
             {
             };
 
@@ -32,7 +32,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the text property of the link control.
+        /// Tests the text property of the split button item link control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<a class=""link""></a>")]
@@ -43,7 +43,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlLink()
+            var control = new ControlSplitButtonItemLink()
             {
                 Text = text,
             };
@@ -55,7 +55,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the uri property of the link control.
+        /// Tests the uri property of the split button item link control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<a class=""link""></a>")]
@@ -66,7 +66,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlLink()
+            var control = new ControlSplitButtonItemLink()
             {
                 Uri = uri,
             };
@@ -78,7 +78,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the title property of the link control.
+        /// Tests the title property of the split button item link control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<a class=""link""></a>")]
@@ -89,7 +89,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlLink()
+            var control = new ControlSplitButtonItemLink()
             {
                 Title = title,
             };
@@ -101,7 +101,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the target property of the link control.
+        /// Tests the target property of the split button item link control.
         /// </summary>
         [Theory]
         [InlineData(TypeTarget.None, @"<a class=""link""></a>")]
@@ -114,7 +114,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlLink()
+            var control = new ControlSplitButtonItemLink()
             {
                 Target = target,
             };
@@ -126,7 +126,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the tooltip property of the link control.
+        /// Tests the tooltip property of the split button item link control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<a class=""link""></a>")]
@@ -138,7 +138,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlLink()
+            var control = new ControlSplitButtonItemLink()
             {
                 Tooltip = tooltip
             };
@@ -150,7 +150,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the icon property of the link control.
+        /// Tests the icon property of the split button item link control.
         /// </summary>
         [Fact]
         public void Icon()
@@ -158,7 +158,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlLink()
+            var control = new ControlSplitButtonItemLink()
             {
                 Icon = new PropertyIcon(TypeIcon.Star)
             };
@@ -170,7 +170,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add function of the link control.
+        /// Tests the add function of the split button item link control.
         /// </summary>
         [Fact]
         public void Add()

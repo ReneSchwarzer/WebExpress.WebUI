@@ -174,10 +174,10 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the content property of the button control.
+        /// Tests the add function of the button control.
         /// </summary>
         [Fact]
-        public void Content()
+        public void Add()
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
@@ -185,15 +185,28 @@ namespace WebExpress.WebUI.Test.WebControl
             var control1 = new ControlButton(null, new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
             var control2 = new ControlButton(null, [new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
             var control3 = new ControlButton(null, new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
+            var control4 = new ControlButton(null);
+            var control5 = new ControlButton(null);
+            var control6 = new ControlButton(null);
 
             // test execution
+            control4.Add(new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
+            control5.Add([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
+            control6.Add(new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
+
             var html1 = control1.Render(context);
             var html2 = control2.Render(context);
             var html3 = control2.Render(context);
+            var html4 = control1.Render(context);
+            var html5 = control2.Render(context);
+            var html6 = control2.Render(context);
 
             Assert.Equal(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html1.Trim());
             Assert.Equal(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html2.Trim());
             Assert.Equal(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html3.Trim());
+            Assert.Equal(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html4.Trim());
+            Assert.Equal(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html5.Trim());
+            Assert.Equal(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html6.Trim());
         }
     }
 }

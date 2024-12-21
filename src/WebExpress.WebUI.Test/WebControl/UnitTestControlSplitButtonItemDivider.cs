@@ -4,13 +4,13 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the dropdown item divider control.
+    /// Tests the split button item divider control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlDropdownItemDivider
+    public class UnitTestControlSplitButtonItemDivider
     {
         /// <summary>
-        /// Tests the id property of the dropdown item divider control.
+        /// Tests the id property of the split button item divider control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<div class=""dropdown-divider""></div>")]
@@ -20,7 +20,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlDropdownItemDivider(id)
+            var control = new ControlSplitButtonItemDivider(id)
             {
             };
 

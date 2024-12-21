@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebPage
@@ -88,9 +89,9 @@ namespace WebExpress.WebUI.WebPage
         /// <param name="visualTree">The visual tree control to be processed.</param>
         public override void Process(IRenderContext renderContext, T visualTree)
         {
-            visualTree.CssLinks.AddRange(CssLinks);
-            visualTree.HeaderScriptLinks.AddRange(HeaderScriptLinks);
-            visualTree.Meta.AddRange(Meta);
+            visualTree.AddCssLink(CssLinks.ToArray());
+            visualTree.AddHeaderScriptLink(HeaderScriptLinks.ToArray());
+            //visualTree.AddMeta(Meta);
         }
     }
 }

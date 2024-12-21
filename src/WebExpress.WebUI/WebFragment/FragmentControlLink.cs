@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.WebFragment
     /// <summary>
     /// Represents a link control fragment that can be processed and rendered within a web page.
     /// </summary>
-    public abstract class FragmentControlLink : ControlLink, IFragmentControl<ControlText>
+    public abstract class FragmentControlLink : ControlLink, IFragmentControl<ControlLink>
     {
         /// <summary>
         /// Returns the context of the fragment.

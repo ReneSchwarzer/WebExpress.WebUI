@@ -12,6 +12,8 @@ namespace WebExpress.WebUI.WebControl
     /// </summary>
     public class ControlLink : Control, IControlLink
     {
+        private readonly List<IControl> _children = [];
+
         /// <summary>
         /// Returns or sets whether the link is active or not.
         /// </summary>
@@ -68,7 +70,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the content.
         /// </summary>
-        public IEnumerable<IControl> Content { get; private set; } = [];
+        public IEnumerable<IControl> Children => _children;
 
         /// <summary>
         /// Returns or sets the parameters that apply to the link.
@@ -101,7 +103,25 @@ namespace WebExpress.WebUI.WebControl
         public ControlLink(string id = null, params IControl[] content)
             : base(id)
         {
-            Content = content;
+            _children.AddRange(content);
+        }
+
+        /// <summary>
+        /// Adds one or more children to the link.
+        /// </summary>
+        /// <param name="children">The children to add to the split button.</param>
+        public void Add(params IControl[] children)
+        {
+            _children.AddRange(children);
+        }
+
+        /// <summary>
+        /// Adds one or more children to the link.
+        /// </summary>
+        /// <param name="children">The children to add to the split button.</param>
+        public void Add(IEnumerable<IControl> children)
+        {
+            _children.AddRange(children);
         }
 
         /// <summary>
@@ -144,7 +164,7 @@ namespace WebExpress.WebUI.WebControl
         {
             var param = GetParams(renderContext?.Request);
 
-            var html = new HtmlElementTextSemanticsA(Content.Select(x => x.Render(renderContext)).ToArray())
+            var html = new HtmlElementTextSemanticsA(_children.Select(x => x.Render(renderContext)).ToArray())
             {
                 Id = Id,
                 Class = Css.Concatenate("link", GetClasses()),
