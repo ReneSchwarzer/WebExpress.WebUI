@@ -1,26 +1,28 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents the result of a validation process.
+    /// </summary>
     public class ValidationResult
     {
         /// <summary>
-        /// Returns or sets the type. des Fehlers
+        /// Returns the type of the validation result.
         /// </summary>
         public TypesInputValidity Type { get; private set; }
 
         /// <summary>
-        /// Liefert oder setzt den Fehlertext
+        /// Returns the error text.
         /// </summary>
         public string Text { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="type">Der Fehlertyp</param>
-        /// <param name="text">Der Fehlertext</param>
+        /// <param name="type">The type of the validation result.</param>
+        /// <param name="text">The error text.</param>
         public ValidationResult(TypesInputValidity type, string text)
         {
             Type = type;
             Text = text;
-        }
-    }
+        }    }
 }

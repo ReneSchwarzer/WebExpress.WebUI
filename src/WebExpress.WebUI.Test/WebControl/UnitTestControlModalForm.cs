@@ -6,6 +6,7 @@ namespace WebExpress.WebUI.Test.WebControl
     /// <summary>
     /// Tests the modal form control.
     /// </summary>
+    [Collection("NonParallelTests")]
     public class UnitTestControlModalForm : IClassFixture<UnitTestControlFixture>
     {
         /// <summary>

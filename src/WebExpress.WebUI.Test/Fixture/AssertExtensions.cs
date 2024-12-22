@@ -23,7 +23,7 @@ namespace WebExpress.WebUI.Test.Fixture
         /// <param name="actual">The actual string to compare.</param>
         public static void EqualWithPlaceholders(string expected, string actual)
         {
-            var str = RemoveLineBreaks(actual);
+            var str = RemoveLineBreaks(actual?.ToString() ?? "null");
             Assert.True(AreEqualWithPlaceholders(expected, str), $"Expected: {expected}{Environment.NewLine}Actual:   {str}");
         }
 
@@ -35,7 +35,7 @@ namespace WebExpress.WebUI.Test.Fixture
         /// <param name="actual">The actual string to compare.</param>
         public static void EqualWithPlaceholders(string expected, IHtmlNode actual)
         {
-            var str = RemoveLineBreaks(actual.ToString());
+            var str = RemoveLineBreaks(actual?.ToString() ?? "null");
             Assert.True(AreEqualWithPlaceholders(expected, str), $"Expected: {expected}{Environment.NewLine}Actual:   {str}");
         }
 

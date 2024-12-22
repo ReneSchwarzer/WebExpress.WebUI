@@ -1,32 +1,132 @@
 ﻿using WebExpress.WebUI.Test.Fixture;
-using Xunit.Abstractions;
+using WebExpress.WebUI.WebControl;
 
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
     /// Tests the form control.
     /// </summary>
-    public class UnitTestControlForm : IClassFixture<UnitTestControlFixture>
+    [Collection("NonParallelTests")]
+    public class UnitTestControlForm
     {
         /// <summary>
-        /// Returns the log.
+        /// Tests the id property of the form control.
         /// </summary>
-        protected ITestOutputHelper Output { get; private set; }
-
-        /// <summary>
-        /// Returns the test context.
-        /// </summary>
-        protected UnitTestControlFixture Fixture { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="fixture">The log.</param>
-        /// <param name="output">The test context.</param>
-        public UnitTestControlForm(UnitTestControlFixture fixture, ITestOutputHelper output)
+        [Theory]
+        [InlineData(null, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData("id", @"<form id=""id"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        public void Id(string id, string expected)
         {
-            Fixture = fixture;
-            Output = output;
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlForm(id)
+            {
+            };
+
+            // test execution
+            var html = control.Render(context);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
+        }
+
+        /// <summary>
+        /// Tests the backgroundcolor property of the form control.
+        /// </summary>
+        [Theory]
+        [InlineData(TypeColorBackground.Default, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(TypeColorBackground.Primary, @"<form class=""bg-primary"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(TypeColorBackground.Secondary, @"<form class=""bg-secondary"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(TypeColorBackground.Warning, @"<form class=""bg-warning"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(TypeColorBackground.Danger, @"<form class=""bg-danger"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(TypeColorBackground.Dark, @"<form class=""bg-dark"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(TypeColorBackground.Light, @"<form class=""bg-light"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(TypeColorBackground.Transparent, @"<form class=""bg-transparent"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        public void BackgroundColor(TypeColorBackground color, string expected)
+        {
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var control = new ControlForm()
+            {
+                BackgroundColor = new PropertyColorBackground(color)
+            };
+
+            // test execution
+            var html = control.Render(context);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
+        }
+
+        /// <summary>
+        /// Tests the name property of the form control.
+        /// </summary>
+        [Theory]
+        [InlineData(null, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData("abc", @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        public void Name(string name, string expected)
+        {
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlForm()
+            {
+                Name = name
+            };
+
+            // test execution
+            var html = control.Render(context);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
+        }
+
+        /// <summary>
+        /// Tests the form layout property of the form control.
+        /// </summary>
+        [Theory]
+        [InlineData(TypeLayoutForm.Default, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(TypeLayoutForm.Inline, @"<form class=""form-inline"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        public void FormLayout(TypeLayoutForm formLayout, string expected)
+        {
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlForm()
+            {
+                FormLayout = formLayout
+            };
+
+            // test execution
+            var html = control.Render(context);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
+        }
+
+        /// <summary>
+        /// Tests the item layout property of the form control.
+        /// </summary>
+        [Theory]
+        [InlineData(TypeLayoutFormItem.Horizontal, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(TypeLayoutFormItem.Vertical, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(TypeLayoutFormItem.Mix, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        public void ItemLayout(TypeLayoutFormItem itemLayout, string expected)
+        {
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlForm()
+            {
+                ItemLayout = itemLayout
+            };
+
+            // test execution
+            var html = control.Render(context);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
@@ -35,14 +135,15 @@ namespace WebExpress.WebUI.Test.WebControl
         [Fact]
         public void EmptyForm()
         {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlForm();
+            // preconditions
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlForm();
 
-            //var html = control.Render(context);
+            var html = control.Render(context);
 
-            //// test execution
-            //Assert.StartsWith("<form action=", html.Trim());
+            // test execution
+            AssertExtensions.EqualWithPlaceholders(@"<form action=*", html.Trim());
         }
 
         /// <summary>
@@ -52,15 +153,15 @@ namespace WebExpress.WebUI.Test.WebControl
         public void EmptyFormChangeSubmitText()
         {
             // preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlForm();
-            //control.AddPrimaryButton(new ControlFormItemButtonSubmit("") { Text = "sendbutton" });
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlForm();
+            control.AddPrimaryButton(new ControlFormItemButtonSubmit("") { Text = "sendbutton" });
 
-            //var html = control.Render(context);
-            //var str = html.ToString();
+            var html = control.Render(context);
 
-            //// test execution
-            //Assert.Contains(@"sendbutton", html.Trim());
+            // test execution
+            Assert.Contains(@"sendbutton", html.Trim());
         }
 
         /// <summary>

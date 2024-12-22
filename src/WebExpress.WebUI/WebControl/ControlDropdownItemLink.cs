@@ -29,7 +29,7 @@ namespace WebExpress.WebUI.WebControl
         {
             var param = ""; // GetParams(context?.Page);
 
-            var html = new HtmlElementTextSemanticsA(Children.Select(x => x.Render(renderContext)).ToArray())
+            var html = new HtmlElementTextSemanticsA(Controls.Select(x => x.Render(renderContext)).ToArray())
             {
                 Id = Id,
                 Class = Css.Concatenate("link", GetClasses()),

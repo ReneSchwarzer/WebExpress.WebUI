@@ -28,7 +28,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="valid">true if validation is successful, false otherwise.</param>
+        /// <param name="valid">True if validation is successful, false otherwise.</param>
         public ValidationResultEventArgs(bool valid)
         {
             Valid = valid;

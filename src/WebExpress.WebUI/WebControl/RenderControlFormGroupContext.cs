@@ -1,0 +1,24 @@
+﻿namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Provides the context for rendering a form control within a group on a web page.
+    /// </summary>
+    public class RenderControlFormGroupContext : RenderControlFormContext, IRenderControlFormGroupContext
+    {
+        /// <summary>
+        /// Die Gruppe, indem das Steuerelement gerendert wird
+        /// </summary>
+        public ControlFormItemGroup Group { get; private set; }
+
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="context">The context in which the control is rendered.</param>
+        /// <param name="group">Die Gruppe</param>
+        public RenderControlFormGroupContext(IRenderControlFormContext context, ControlFormItemGroup group)
+            : base(context)
+        {
+            Group = group;
+        }
+    }
+}

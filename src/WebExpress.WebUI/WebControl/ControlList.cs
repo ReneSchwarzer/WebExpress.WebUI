@@ -10,6 +10,13 @@ namespace WebExpress.WebUI.WebControl
     /// </summary>
     public class ControlList : Control
     {
+        private readonly List<ControlListItem> _items = [];
+
+        /// <summary>
+        /// Returns the list entries.
+        /// </summary>
+        public IEnumerable<ControlListItem> Items => _items;
+
         /// <summary>
         /// Returns or sets the layout.
         /// </summary>
@@ -20,11 +27,6 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Returns or sets the list entries.
-        /// </summary>
-        public IEnumerable<ControlListItem> Items { get; private set; } = [];
-
-        /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
@@ -32,27 +34,73 @@ namespace WebExpress.WebUI.WebControl
         public ControlList(string id = null, params ControlListItem[] items)
             : base(id)
         {
-            Items = items ?? [];
+            _items.AddRange(items);
         }
 
         /// <summary>
-        /// Adds list entries.
+        /// Adds a collection of list entries to the existing items.
         /// </summary>
-        /// <param name="items">The list entries.</param>
+        /// <param name="items">The list entries to add.</param>
+        /// <remarks>
+        /// This method appends the specified collection of <see cref="ControlListItem"/> instances to the 
+        /// current list of items. It ensures that the new items are concatenated with the existing ones, 
+        /// maintaining the order of addition.
+        /// Example usage:
+        /// <code>
+        /// var list = new ControlList();
+        /// var item1 = new ControlListItem { Text = "Item 1" };
+        /// var item2 = new ControlListItem { Text = "Item 2" };
+        /// list.Add(item1, item2);
+        /// </code>
+        /// This method accepts any item that derives from <see cref="ControlListItem"/>.
+        /// </remarks>
+        public void Add(params ControlListItem[] items)
+        {
+            _items.AddRange(items);
+        }
+
+        /// <summary>
+        /// Adds a collection of list entries to the existing items.
+        /// </summary>
+        /// <param name="items">The list entries to add.</param>
+        /// <remarks>
+        /// This method appends the specified collection of <see cref="ControlListItem"/> instances to the 
+        /// current list of items. It ensures that the new items are concatenated with the existing ones, 
+        /// maintaining the order of addition.
+        /// Example usage:
+        /// <code>
+        /// var list = new ControlList();
+        /// var item1 = new ControlListItem { Text = "Item 1" };
+        /// var item2 = new ControlListItem { Text = "Item 2" };
+        /// list.Add(new List<IControl>([ item1, item2 ]));
+        /// </code>
+        /// This method accepts any item that derives from <see cref="ControlListItem"/>.
+        /// </remarks>
         public void Add(IEnumerable<ControlListItem> items)
         {
-            Items = Items.Concat(items);
+            _items.AddRange(items);
         }
 
         /// <summary>
-        /// Adds list entries.
+        /// Removes a specified list entry from the existing items.
         /// </summary>
-        /// <param name="item">The list entry.</param>
-        public void Add(ControlListItem item)
+        /// <param name="item">The list entry to remove.</param>
+        /// <remarks>
+        /// This method removes the specified <see cref="ControlListItem"/> instance from the 
+        /// current list of items. If the item does not exist in the list, the method does nothing.
+        /// Example usage:
+        /// <code>
+        /// var list = new ControlList();
+        /// var item1 = new ControlListItem { Text = "Item 1" };
+        /// list.Add(item1);
+        /// list.Remove(item1);
+        /// </code>
+        /// This method accepts any item that derives from <see cref="ControlListItem"/>.
+        /// </remarks>
+        public void Remove(ControlListItem item)
         {
-            Items = Items.Concat([item]);
-        }
-
+            _items.Remove(item);
+        }
         /// <summary>
         /// Convert the control to HTML.
         /// </summary>

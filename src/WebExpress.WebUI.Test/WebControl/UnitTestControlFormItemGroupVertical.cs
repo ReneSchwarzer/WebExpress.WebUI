@@ -4,13 +4,13 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the text control.
+    /// Tests the form item group vertical control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlText
+    public class UnitTestControlFormItemGroupVertical
     {
         /// <summary>
-        /// Tests the id property of the text control.
+        /// Tests the id property of the form item group vertical control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<div></div>")]
@@ -19,8 +19,9 @@ namespace WebExpress.WebUI.Test.WebControl
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlText(id)
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemGroupVertical(id)
             {
             };
 
@@ -31,22 +32,20 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the text property of the text control.
+        /// Tests the name property of the form item group vertical control.
         /// </summary>
         [Theory]
-        [InlineData(null, TypeFormatText.Paragraph, @"<p></p>")]
-        [InlineData("abc", TypeFormatText.Paragraph, @"<p>abc</p>")]
-        [InlineData("abc", TypeFormatText.Default, @"<div>abc</div>")]
-        [InlineData("webexpress.webui:plugin.name", TypeFormatText.H1, @"<h1>WebExpress.WebUI</h1>")]
-        public void Text(string text, TypeFormatText format, string expected)
+        [InlineData(null, @"<div></div>")]
+        [InlineData("abc", @"<div></div>")]
+        public void Name(string name, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlText()
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemGroupVertical()
             {
-                Text = text,
-                Format = format
+                Name = name
             };
 
             // test execution

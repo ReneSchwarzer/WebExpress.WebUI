@@ -4,13 +4,13 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the button control.
+    /// Tests the form button control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlButton
+    public class UnitTestControlFormItemButton
     {
         /// <summary>
-        /// Tests the id property of the button control.
+        /// Tests the id property of the form button control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<button type=""button"" class=""btn""></button>")]
@@ -19,8 +19,9 @@ namespace WebExpress.WebUI.Test.WebControl
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlButton(id)
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemButton(id)
             {
             };
 
@@ -31,7 +32,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the text property of the button control.
+        /// Tests the text property of the form button control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<button type=""button"" class=""btn""></button>")]
@@ -40,8 +41,9 @@ namespace WebExpress.WebUI.Test.WebControl
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlButton()
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemButton()
             {
                 Text = text
             };
@@ -53,7 +55,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the size property of the button control.
+        /// Tests the size property of the form button control.
         /// </summary>
         [Theory]
         [InlineData(TypeSizeButton.Default, @"<button type=""button"" class=""btn""></button>")]
@@ -63,8 +65,9 @@ namespace WebExpress.WebUI.Test.WebControl
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlButton()
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemButton()
             {
                 Size = size
             };
@@ -76,23 +79,27 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the backgroundcolor property of the button control.
+        /// Tests the backgroundcolor property of the form button control.
         /// </summary>
         [Theory]
-        [InlineData(TypeColorButton.Default, @"<button type=""button"" class=""btn""></button>")]
-        [InlineData(TypeColorButton.Primary, @"<button type=""button"" class=""btn btn-primary""></button>")]
-        [InlineData(TypeColorButton.Secondary, @"<button type=""button"" class=""btn btn-secondary""></button>")]
-        [InlineData(TypeColorButton.Warning, @"<button type=""button"" class=""btn btn-warning""></button>")]
-        [InlineData(TypeColorButton.Danger, @"<button type=""button"" class=""btn btn-danger""></button>")]
-        [InlineData(TypeColorButton.Dark, @"<button type=""button"" class=""btn btn-dark""></button>")]
-        public void BackgroundColor(TypeColorButton color, string expected)
+        [InlineData(TypeColorBackground.Default, @"<button type=""button"" class=""btn""></button>")]
+        [InlineData(TypeColorBackground.Primary, @"<button type=""button"" class=""btn bg-primary""></button>")]
+        [InlineData(TypeColorBackground.Secondary, @"<button type=""button"" class=""btn bg-secondary""></button>")]
+        [InlineData(TypeColorBackground.Warning, @"<button type=""button"" class=""btn bg-warning""></button>")]
+        [InlineData(TypeColorBackground.Danger, @"<button type=""button"" class=""btn bg-danger""></button>")]
+        [InlineData(TypeColorBackground.Dark, @"<button type=""button"" class=""btn bg-dark""></button>")]
+        [InlineData(TypeColorBackground.Light, @"<button type=""button"" class=""btn bg-light""></button>")]
+        [InlineData(TypeColorBackground.White, @"<button type=""button"" class=""btn bg-white""></button>")]
+        [InlineData(TypeColorBackground.Transparent, @"<button type=""button"" class=""btn bg-transparent""></button>")]
+        public void BackgroundColor(TypeColorBackground color, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlButton()
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemButton()
             {
-                BackgroundColor = new PropertyColorButton(color)
+                BackgroundColor = new PropertyColorBackground(color)
             };
 
             // test execution
@@ -102,7 +109,35 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the outline property of the button control.
+        /// Tests the outline property of the form button control.
+        /// </summary>
+        [Theory]
+        [InlineData(TypeColorButton.Default, @"<button type=""button"" class=""btn""></button>")]
+        [InlineData(TypeColorButton.Primary, @"<button type=""button"" class=""btn btn-primary""></button>")]
+        [InlineData(TypeColorButton.Secondary, @"<button type=""button"" class=""btn btn-secondary""></button>")]
+        [InlineData(TypeColorButton.Warning, @"<button type=""button"" class=""btn btn-warning""></button>")]
+        [InlineData(TypeColorButton.Danger, @"<button type=""button"" class=""btn btn-danger""></button>")]
+        [InlineData(TypeColorButton.Dark, @"<button type=""button"" class=""btn btn-dark""></button>")]
+        [InlineData(TypeColorButton.Light, @"<button type=""button"" class=""btn btn-light""></button>")]
+        public void Color(TypeColorButton color, string expected)
+        {
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemButton()
+            {
+                Color = new PropertyColorButton(color)
+            };
+
+            // test execution
+            var html = control.Render(context);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
+        }
+
+        /// <summary>
+        /// Tests the outline property of the form button control.
         /// </summary>
         [Theory]
         [InlineData(false, TypeColorButton.Default, @"<button type=""button"" class=""btn""></button>")]
@@ -112,15 +147,17 @@ namespace WebExpress.WebUI.Test.WebControl
         [InlineData(true, TypeColorButton.Warning, @"<button type=""button"" class=""btn btn-outline-warning""></button>")]
         [InlineData(true, TypeColorButton.Danger, @"<button type=""button"" class=""btn btn-outline-danger""></button>")]
         [InlineData(true, TypeColorButton.Dark, @"<button type=""button"" class=""btn btn-outline-dark""></button>")]
+        [InlineData(true, TypeColorButton.Light, @"<button type=""button"" class=""btn""></button>")]
         public void Outline(bool outline, TypeColorButton color, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlButton()
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemButton()
             {
                 Outline = outline,
-                BackgroundColor = new PropertyColorButton(color)
+                Color = new PropertyColorButton(color)
             };
 
             // test execution
@@ -130,7 +167,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the block property of the button control.
+        /// Tests the block property of the form button control.
         /// </summary>
         [Theory]
         [InlineData(TypeBlockButton.None, @"<button type=""button"" class=""btn""></button>")]
@@ -139,8 +176,9 @@ namespace WebExpress.WebUI.Test.WebControl
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlButton()
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemButton()
             {
                 Block = block
             };
@@ -152,7 +190,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the icon property of the button control.
+        /// Tests the icon property of the form button control.
         /// </summary>
         [Theory]
         [InlineData(TypeIcon.None, @"<button type=""button"" class=""btn""></button>")]
@@ -161,8 +199,9 @@ namespace WebExpress.WebUI.Test.WebControl
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlButton()
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemButton()
             {
                 Icon = new PropertyIcon(icon)
             };
@@ -174,20 +213,21 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add function of the button control.
+        /// Tests the add function of the form button control.
         /// </summary>
         [Fact]
         public void Add()
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control1 = new ControlButton(null, new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
-            var control2 = new ControlButton(null, [new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
-            var control3 = new ControlButton(null, new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
-            var control4 = new ControlButton(null);
-            var control5 = new ControlButton(null);
-            var control6 = new ControlButton(null);
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control1 = new ControlFormItemButton(null, new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
+            var control2 = new ControlFormItemButton(null, [new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
+            var control3 = new ControlFormItemButton(null, new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
+            var control4 = new ControlFormItemButton(null);
+            var control5 = new ControlFormItemButton(null);
+            var control6 = new ControlFormItemButton(null);
 
             // test execution
             control4.Add(new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
@@ -201,12 +241,12 @@ namespace WebExpress.WebUI.Test.WebControl
             var html5 = control2.Render(context);
             var html6 = control2.Render(context);
 
-            Assert.Equal(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html1.Trim());
-            Assert.Equal(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html2.Trim());
-            Assert.Equal(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html3.Trim());
-            Assert.Equal(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html4.Trim());
-            Assert.Equal(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html5.Trim());
-            Assert.Equal(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html6.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html1.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html2.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html3.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html4.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html5.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>", html6.Trim());
         }
     }
 }

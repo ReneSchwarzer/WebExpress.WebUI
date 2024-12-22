@@ -3,6 +3,9 @@ using WebExpress.WebCore.WebHtml;
 
 namespace WebExpress.WebUI.Test
 {
+    /// <summary>
+    /// Provides extension methods for the <see cref="IHtmlNode"/> interface.
+    /// </summary>
     internal static class IHtmlNodeExtensions
     {
         /// <summary>
@@ -12,6 +15,11 @@ namespace WebExpress.WebUI.Test
         /// <returns>A string with all consecutive spaces and line breaks reduced to single ones.</returns>
         public static string Trim(this IHtmlNode node)
         {
+            if (node == null)
+            {
+                return string.Empty;
+            }
+
             var withoutExtraLineBreaks = Regex.Replace(node.ToString().Trim(), @"[\r\n]+", "");
             var withoutExtraSpaces = Regex.Replace(withoutExtraLineBreaks, @"\s+", " ");
             var withoutSpacesBetweenBrackets = Regex.Replace(withoutExtraSpaces, @">\s+<", "><");

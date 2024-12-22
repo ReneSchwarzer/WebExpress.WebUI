@@ -6,6 +6,7 @@ namespace WebExpress.WebUI.Test.WebControl
     /// <summary>
     /// Tests the inline form control.
     /// </summary>
+    [Collection("NonParallelTests")]
     public class UnitTestControlFormInline : IClassFixture<UnitTestControlFixture>
     {
         /// <summary>

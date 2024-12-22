@@ -6,6 +6,7 @@ namespace WebExpress.WebUI.Test.WebControl
     /// <summary>
     /// Tests the inline radio control.
     /// </summary>
+    [Collection("NonParallelTests")]
     public class UnitTestControlFormItemInputRadio : IClassFixture<UnitTestControlFixture>
     {
         /// <summary>

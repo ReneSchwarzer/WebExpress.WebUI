@@ -72,9 +72,9 @@ namespace WebExpress.WebUI.WebControl
                 html.Add(new HtmlText(text));
             }
 
-            if (Children.Any())
+            if (Content.Any())
             {
-                html.Add(Children.Select(x => x.Render(renderContext)).ToArray());
+                html.Add(Content.Select(x => x.Render(renderContext)).ToArray());
             }
 
             if (Modal == null || Modal.Type == TypeModal.None)

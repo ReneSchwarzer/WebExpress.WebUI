@@ -12,7 +12,15 @@ namespace WebExpress.WebUI.WebControl
     /// </summary>
     public class ControlLink : Control, IControlLink
     {
-        private readonly List<IControl> _children = [];
+        private readonly List<IControl> _controls = [];
+
+        /// <summary>
+        /// Returns the content of the control.
+        /// </summary>
+        /// <value>
+        /// An enumerable collection of child controls.
+        /// </value>
+        public IEnumerable<IControl> Controls => _controls;
 
         /// <summary>
         /// Returns or sets whether the link is active or not.
@@ -68,11 +76,6 @@ namespace WebExpress.WebUI.WebControl
         public string Tooltip { get; set; }
 
         /// <summary>
-        /// Returns or sets the content.
-        /// </summary>
-        public IEnumerable<IControl> Children => _children;
-
-        /// <summary>
         /// Returns or sets the parameters that apply to the link.
         /// </summary>
         public List<Parameter> Params { get; set; } = [];
@@ -103,25 +106,51 @@ namespace WebExpress.WebUI.WebControl
         public ControlLink(string id = null, params IControl[] content)
             : base(id)
         {
-            _children.AddRange(content);
+            _controls.AddRange(content);
         }
 
         /// <summary>
-        /// Adds one or more children to the link.
+        /// Adds one or more controls to the content.
         /// </summary>
-        /// <param name="children">The children to add to the split button.</param>
-        public void Add(params IControl[] children)
+        /// <param name="controls">The controls to add to the content.</param>
+        /// <remarks>
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of the control panel. 
+        /// It is useful for dynamically constructing the user interface by appending various controls to the panel's content.
+        /// 
+        /// Example usage:
+        /// <code>
+        /// var link = new ControlLink();
+        /// var text1 = new ControlText { Text = "A" };
+        /// var text2 = new ControlText { Text = "B" };
+        /// link.Add(text1, text2);
+        /// </code>
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public void Add(params IControl[] controls)
         {
-            _children.AddRange(children);
+            _controls.AddRange(controls);
         }
 
         /// <summary>
-        /// Adds one or more children to the link.
+        /// Adds one or more controls to the content.
         /// </summary>
-        /// <param name="children">The children to add to the split button.</param>
-        public void Add(IEnumerable<IControl> children)
+        /// <param name="controls">The controls to add to the content.</param>
+        /// <remarks>
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of the control panel. 
+        /// It is useful for dynamically constructing the user interface by appending various controls to the panel's content.
+        /// 
+        /// Example usage:
+        /// <code>
+        /// var link = new ControlLink();
+        /// var text1 = new ControlText { Text = "A" };
+        /// var text2 = new ControlText { Text = "B" };
+        /// link.Add(new List<IControl>([text1, text2]));
+        /// </code>
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public void Add(IEnumerable<IControl> controls)
         {
-            _children.AddRange(children);
+            _controls.AddRange(controls);
         }
 
         /// <summary>
@@ -164,7 +193,7 @@ namespace WebExpress.WebUI.WebControl
         {
             var param = GetParams(renderContext?.Request);
 
-            var html = new HtmlElementTextSemanticsA(_children.Select(x => x.Render(renderContext)).ToArray())
+            var html = new HtmlElementTextSemanticsA(_controls.Select(x => x.Render(renderContext)).ToArray())
             {
                 Id = Id,
                 Class = Css.Concatenate("link", GetClasses()),

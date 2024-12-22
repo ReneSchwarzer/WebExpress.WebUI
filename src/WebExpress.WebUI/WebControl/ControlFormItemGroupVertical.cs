@@ -1,116 +1,98 @@
-﻿//using WebExpress.WebCore.Internationalization;
-//using WebExpress.WebCore.WebHtml;
+﻿using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
 
-//namespace WebExpress.WebUI.WebControl
-//{
-//    /// <summary>
-//    /// Grouping of controls.
-//    /// </summary>
-//    public class ControlFormItemGroupVertical : ControlFormItemGroup
-//    {
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        public ControlFormItemGroupVertical(string id = null)
-//            : base(id)
-//        {
-//        }
+namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Grouping of controls in a vertical layout.
+    /// </summary>
+    public class ControlFormItemGroupVertical : ControlFormItemGroup
+    {
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="id">The id of the control.</param>
+        ///<param name="items">The form controls.</param> 
+        public ControlFormItemGroupVertical(string id = null, params ControlFormItem[] items)
+            : base(id, items)
+        {
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        ///<param name="items">The form controls.</param> 
-//        public ControlFormItemGroupVertical(string id, params ControlFormItem[] items)
-//            : base(id, items)
-//        {
-//        }
+        /// <summary>
+        /// Initializes the form element.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
+        {
+            var renderGroupContext = new RenderControlFormGroupContext(renderContext, this);
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        ///<param name="items">The form controls.</param> 
-//        public ControlFormItemGroupVertical(params ControlFormItem[] items)
-//            : base(null, items)
-//        {
-//        }
+            foreach (var item in Items)
+            {
+                item.Initialize(renderGroupContext);
+            }
+        }
 
-//        /// <summary>
-//        /// Initializes the form element.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        public override void Initialize(RenderContextForm context)
-//        {
-//            var grpupContex = new RenderContextFormGroup(context, this);
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext)
+        {
+            var renderGroupContext = new RenderControlFormGroupContext(renderContext, this);
 
-//            foreach (var item in Items)
-//            {
-//                item.Initialize(grpupContex);
-//            }
-//        }
+            var html = new HtmlElementTextContentDiv()
+            {
+                Id = Id,
+                Class = Css.Concatenate("", GetClasses()),
+                Style = GetStyles(),
+            };
 
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <returns>The control as html.</returns>
-//        public override IHtmlNode Render(RenderContextForm context)
-//        {
-//            var renderContext = new RenderContextFormGroup(context, this);
+            foreach (var item in Items)
+            {
+                if (item is ControlFormItemInput input)
+                {
+                    var icon = new ControlIcon() { Icon = input?.Icon };
+                    var label = new ControlFormItemLabel(!string.IsNullOrEmpty(item.Id) ? item.Id + "_label" : string.Empty);
+                    var help = new ControlFormItemHelpText(!string.IsNullOrEmpty(item.Id) ? item.Id + "_help" : string.Empty);
+                    var fieldset = new HtmlElementFormFieldset() { Class = "form-group" };
 
-//            var html = new HtmlElementTextContentDiv()
-//            {
-//                Id = Id,
-//                Class = Css.Concatenate("", GetClasses()),
-//                Style = GetStyles(),
-//            };
+                    label.Initialize(renderGroupContext);
+                    help.Initialize(renderGroupContext);
 
-//            foreach (var item in Items)
-//            {
-//                if (item is ControlFormItemInput input)
-//                {
-//                    var icon = new ControlIcon() { Icon = input?.Icon };
-//                    var label = new ControlFormItemLabel(!string.IsNullOrEmpty(item.Id) ? item.Id + "_label" : string.Empty);
-//                    var help = new ControlFormItemHelpText(!string.IsNullOrEmpty(item.Id) ? item.Id + "_help" : string.Empty);
-//                    var fieldset = new HtmlElementFormFieldset() { Class = "form-group" };
+                    label.Text = I18N.Translate(renderGroupContext.Request?.Culture, input?.Label);
+                    label.FormItem = item;
+                    help.Text = I18N.Translate(renderGroupContext.Request?.Culture, input?.Help);
 
-//                    label.Initialize(renderContext);
-//                    help.Initialize(renderContext);
+                    if (icon.Icon != null)
+                    {
+                        icon.Classes.Add("me-2 pt-1");
+                        fieldset.Add(new HtmlElementTextSemanticsSpan(icon.Render(renderGroupContext), label.Render(renderGroupContext))
+                        {
+                            Style = "display: flex;"
+                        });
+                    }
+                    else
+                    {
+                        fieldset.Add(label.Render(renderGroupContext));
+                    }
 
-//                    label.Text = I18N.Translate(input?.Label);
-//                    label.FormItem = item;
-//                    help.Text = I18N.Translate(input?.Help);
+                    fieldset.Add(item.Render(renderGroupContext));
 
-//                    if (icon.Icon != null)
-//                    {
-//                        icon.Classes.Add("me-2 pt-1");
-//                        fieldset.Elements.Add(new HtmlElementTextSemanticsSpan(icon.Render(renderContext), label.Render(renderContext))
-//                        {
-//                            Style = "display: flex;"
-//                        });
-//                    }
-//                    else
-//                    {
-//                        fieldset.Elements.Add(label.Render(renderContext));
-//                    }
+                    if (!string.IsNullOrWhiteSpace(input?.Help))
+                    {
+                        fieldset.Add(help.Render(renderGroupContext));
+                    }
 
-//                    fieldset.Elements.Add(item.Render(renderContext));
+                    html.Add(fieldset);
+                }
+                else
+                {
+                    html.Add(item?.Render(renderGroupContext));
+                }
+            }
 
-//                    if (!string.IsNullOrWhiteSpace(input?.Help))
-//                    {
-//                        fieldset.Elements.Add(help.Render(renderContext));
-//                    }
-
-//                    html.Elements.Add(fieldset);
-//                }
-//                else
-//                {
-//                    html.Elements.Add(item?.Render(context));
-//                }
-//            }
-
-//            return html;
-//        }
-//    }
-//}
+            return html;
+        }
+    }
+}

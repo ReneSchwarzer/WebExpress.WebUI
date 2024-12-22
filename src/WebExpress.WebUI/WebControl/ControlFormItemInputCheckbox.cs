@@ -4,7 +4,7 @@
 
 //namespace WebExpress.WebUI.WebControl
 //{
-//    public class ControlFormItemInputCheckbox : ControlFormItemInput
+//    public class ControlFormItemInputCheckBox : ControlFormItemInput
 //    {
 //        /// <summary>
 //        /// Returns or sets whether the checkbox should be displayed on a new line.
@@ -25,7 +25,7 @@
 //        /// Initializes a new instance of the class.
 //        /// </summary>
 //        /// <param name="id">The id.</param>
-//        public ControlFormItemInputCheckbox(string id = null)
+//        public ControlFormItemInputCheckBox(string id = null)
 //            : base(id)
 //        {
 //            Value = "false";

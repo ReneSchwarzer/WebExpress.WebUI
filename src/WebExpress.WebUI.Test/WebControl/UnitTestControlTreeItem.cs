@@ -6,6 +6,7 @@ namespace WebExpress.WebUI.Test.WebControl
     /// <summary>
     /// Tests the tree item control.
     /// </summary>
+    [Collection("NonParallelTests")]
     public class UnitTestControlTreeItem : IClassFixture<UnitTestControlFixture>
     {
         /// <summary>

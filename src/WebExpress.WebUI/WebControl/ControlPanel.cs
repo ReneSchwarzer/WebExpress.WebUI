@@ -53,7 +53,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary> 
         /// Adds one or more controls to the content of the control panel.
         /// </summary> 
-        /// <param name="children">The controls to add to the content.</param> 
+        /// <param name="controls">The controls to add to the content.</param> 
         /// <remarks> 
         /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of 
         /// the control panel. It is useful for dynamically constructing the user interface by appending 
@@ -61,17 +61,51 @@ namespace WebExpress.WebUI.WebControl
         /// Example usage: 
         /// <code> 
         /// var panel = new ControlPanel(); 
-        /// var button1 = new ControlText { Text = "Save" }; 
-        /// var button2 = new ControlText { Text = "Cancel" }; 
-        /// panel.Add(button1, button2); 
+        /// var text1 = new ControlText { Text = "Save" };
+        /// var text2 = new ControlText { Text = "Cancel" };
+        /// panel.Add(text1, text2);
         /// </code> 
         /// This method accepts any control that implements the <see cref="IControl"/> interface.
         /// </remarks>
-        public virtual void Add(params IControl[] children)
+        public virtual void Add(params IControl[] controls)
         {
-            _content.AddRange(children);
+            _content.AddRange(controls);
         }
 
+        /// <summary> 
+        /// Adds one or more controls to the content of the control panel.
+        /// </summary> 
+        /// <param name="controls">The controls to add to the content.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of 
+        /// the control panel. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the panel's content. 
+        /// Example usage: 
+        /// <code> 
+        /// var panel = new ControlPanel(); 
+        /// var text1 = new ControlText { Text = "Save" };
+        /// var text2 = new ControlText { Text = "Cancel" };
+        /// panel.Add(new List<IControl>([text1, text2]));
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public virtual void Add(IEnumerable<IControl> controls)
+        {
+            _content.AddRange(controls);
+        }
+
+        /// <summary>
+        /// Removes a control from the content of the control panel.
+        /// </summary>
+        /// <param name="control">The control to remove from the content.</param>
+        /// <remarks>
+        /// This method allows removing a specific control from the <see cref="Content"/> collection of 
+        /// the control panel.
+        /// </remarks>
+        public void Remove(Control control)
+        {
+            _content.Remove(control);
+        }
         /// <summary>
         /// Convert the control to HTML.
         /// </summary>
