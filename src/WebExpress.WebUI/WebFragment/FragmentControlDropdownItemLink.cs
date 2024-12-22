@@ -4,6 +4,9 @@ using WebExpress.WebUI.WebControl;
 
 namespace WebExpress.WebUI.WebFragment
 {
+    /// <summary>
+    /// Represents a dropdown item link control within a fragment context.
+    /// </summary>
     public class FragmentControlDropdownItemLink : ControlDropdownItemLink, IFragmentControl<ControlDropdownItemLink>
     {
         /// <summary>

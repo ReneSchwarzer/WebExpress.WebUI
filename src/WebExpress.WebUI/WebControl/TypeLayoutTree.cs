@@ -1,5 +1,8 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Specifies the different types of layout trees.
+    /// </summary>
     public enum TypeLayoutTree
     {
         Default,
@@ -11,6 +14,9 @@
         TreeView
     }
 
+    /// <summary>
+    /// Provides extension methods for the <see cref="TypeLayoutTree"/> enum.
+    /// </summary>
     public static class TypeLayoutTreeExtensions
     {
         /// <summary>

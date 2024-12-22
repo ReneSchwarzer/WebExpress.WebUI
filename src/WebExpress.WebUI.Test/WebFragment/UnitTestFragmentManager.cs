@@ -48,7 +48,7 @@ namespace WebExpress.WebUI.Test.WebFragment
         [InlineData(typeof(TestApplication), typeof(TestSectionFragmentControlPanel), typeof(IScope), @"<div id=""webexpress.webui.test.testfragmentcontrolpanel""><div>TestFragmentControlPanel</div></div>")]
         [InlineData(typeof(TestApplication), typeof(TestSectionFragmentControlPanelFlexbox), typeof(IScope), @"<div id=""webexpress.webui.test.testfragmentcontrolpanelflexbox""></div>")]
         [InlineData(typeof(TestApplication), typeof(TestSectionFragmentControlSplitButtonItemLink), typeof(IScope), @"<a id=""webexpress.webui.test.testfragmentcontrolsplitbuttonitemlink"" class=""link"">TestFragmentControlSplitButtonItemLink</a>")]
-        //[InlineData(typeof(TestApplication), typeof(TestSectionK), typeof(IScope), @"<a id=""webexpress.webui.test.testfragmentcontrol"" class=""link"">TestFragmentControl</a>")]
+        [InlineData(typeof(TestApplication), typeof(TestSectionFragmentControlTree), typeof(IScope), @"<ul id=""webexpress.webui.test.testfragmentcontroltree""><li></li></ul>")]
         public void Render(Type applicationType, Type sectionType, Type scopeType, string expected)
         {
             // preconditions
