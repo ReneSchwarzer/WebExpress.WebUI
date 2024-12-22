@@ -10,12 +10,16 @@ namespace WebExpress.WebUI.WebControl
     /// </summary>
     public class ControlPanel : Control
     {
-        private readonly List<IControl> _children = [];
+        private readonly List<IControl> _content = [];
 
-        // <summary>
-        // Returns the child controls contained within the control panel.
-        // </summary>
-        public IEnumerable<IControl> Children => _children;
+        /// <summary> 
+        /// Returns the content of the panel. 
+        /// </summary> 
+        /// <remarks> 
+        /// The content property holds a collection of controls that represent the visual and interactive elements 
+        /// within this container. 
+        /// </remarks>
+        public IEnumerable<IControl> Content => _content;
 
         /// <summary>
         /// Returns or sets the arrangement of the content.
@@ -43,16 +47,29 @@ namespace WebExpress.WebUI.WebControl
         public ControlPanel(string id = null, params IControl[] children)
             : base(id)
         {
-            _children.AddRange(children.Where(x => x != null));
+            _content.AddRange(children.Where(x => x != null));
         }
 
-        /// <summary>
-        /// Adds one or more child controls to the control panel.
-        /// </summary>
-        /// <param name="children">The child controls to add.</param>
-        public void AddChild(params IControl[] children)
+        /// <summary> 
+        /// Adds one or more controls to the content of the control panel.
+        /// </summary> 
+        /// <param name="children">The controls to add to the content.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of 
+        /// the control panel. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the panel's content. 
+        /// Example usage: 
+        /// <code> 
+        /// var panel = new ControlPanel(); 
+        /// var button1 = new ControlText { Text = "Save" }; 
+        /// var button2 = new ControlText { Text = "Cancel" }; 
+        /// panel.Add(button1, button2); 
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public virtual void Add(params IControl[] children)
         {
-            _children.AddRange(children);
+            _content.AddRange(children);
         }
 
         /// <summary>
@@ -62,7 +79,7 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext)
         {
-            return new HtmlElementTextContentDiv(Children.Select(x => x.Render(renderContext)).ToArray())
+            return new HtmlElementTextContentDiv(_content.Select(x => x.Render(renderContext)).ToArray())
             {
                 Id = Id,
                 Class = GetClasses(),

@@ -59,8 +59,8 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the fluid property of the panel control.
         /// </summary>
         [Theory]
-        [InlineData(TypePanelContainer.Default, @"<div class=""container""></div>")]
         [InlineData(TypePanelContainer.None, @"<div></div>")]
+        [InlineData(TypePanelContainer.Default, @"<div class=""container""></div>")]
         [InlineData(TypePanelContainer.Fluid, @"<div class=""container-fluid""></div>")]
         public void Fluid(TypePanelContainer fluid, string expected)
         {
@@ -85,7 +85,7 @@ namespace WebExpress.WebUI.Test.WebControl
         [InlineData(typeof(ControlText), @"<div><div></div></div>")]
         [InlineData(typeof(ControlLink), @"<div><a class=""link""></a></div>")]
         [InlineData(typeof(ControlImage), @"<div><img></div>")]
-        public void AddChildren(Type child, string expected)
+        public void Add(Type child, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
@@ -94,7 +94,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var control = new ControlPanel();
 
             // test execution
-            control.AddChild(childInstance);
+            control.Add(childInstance);
 
             var html = control.Render(context);
 

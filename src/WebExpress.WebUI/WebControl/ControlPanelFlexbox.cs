@@ -70,7 +70,7 @@ namespace WebExpress.WebUI.WebControl
                 Role = Role
             };
 
-            html.Add(Children.Select(x => x.Render(renderContext)));
+            html.Add(Content.Select(x => x.Render(renderContext)));
 
             return html;
         }

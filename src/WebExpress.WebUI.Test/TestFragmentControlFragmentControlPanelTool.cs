@@ -8,16 +8,16 @@ namespace WebExpress.WebUI.Test
     /// <summary>
     /// A dummy fragment for testing purposes.
     /// </summary>
-    [Section<TestSectionFragmentControlPanel>()]
-    public sealed class TestFragmentControlPanel : FragmentControlPanel
+    [Section<TestSectionFragmentControlPanelTool>()]
+    public sealed class TestFragmentControlPanelTool : FragmentControlPanelTool
     {
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        public TestFragmentControlPanel(IFragmentContext fragmentContext)
+        public TestFragmentControlPanelTool(IFragmentContext fragmentContext)
             : base(fragmentContext)
         {
-            Add(new ControlText() { Text = "TestFragmentControlPanel" });
+            Add(new ControlText() { Text = "TestFragmentControlPanelTool" });
         }
     }
 }

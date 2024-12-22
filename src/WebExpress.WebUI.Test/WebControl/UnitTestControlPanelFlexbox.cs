@@ -191,7 +191,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var control = new ControlPanelFlexbox();
 
             // test execution
-            control.AddChild(childInstance);
+            control.Add(childInstance);
 
             var html = control.Render(context);
 
