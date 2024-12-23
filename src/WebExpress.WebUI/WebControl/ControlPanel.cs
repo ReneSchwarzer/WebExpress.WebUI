@@ -61,8 +61,8 @@ namespace WebExpress.WebUI.WebControl
         /// Example usage: 
         /// <code> 
         /// var panel = new ControlPanel(); 
-        /// var text1 = new ControlText { Text = "Save" };
-        /// var text2 = new ControlText { Text = "Cancel" };
+        /// var text1 = new ControlText { Text = "A" };
+        /// var text2 = new ControlText { Text = "B" };
         /// panel.Add(text1, text2);
         /// </code> 
         /// This method accepts any control that implements the <see cref="IControl"/> interface.
@@ -83,8 +83,8 @@ namespace WebExpress.WebUI.WebControl
         /// Example usage: 
         /// <code> 
         /// var panel = new ControlPanel(); 
-        /// var text1 = new ControlText { Text = "Save" };
-        /// var text2 = new ControlText { Text = "Cancel" };
+        /// var text1 = new ControlText { Text = "A" };
+        /// var text2 = new ControlText { Text = "B" };
         /// panel.Add(new List<IControl>([text1, text2]));
         /// </code> 
         /// This method accepts any control that implements the <see cref="IControl"/> interface.
@@ -102,7 +102,7 @@ namespace WebExpress.WebUI.WebControl
         /// This method allows removing a specific control from the <see cref="Content"/> collection of 
         /// the control panel.
         /// </remarks>
-        public void Remove(Control control)
+        public virtual void Remove(Control control)
         {
             _content.Remove(control);
         }

@@ -11,10 +11,12 @@ namespace WebExpress.WebUI.WebControl
     /// </summary>
     public class ControlModal : Control
     {
+        private readonly List<IControl> _content = [];
+
         /// <summary>
-        /// Returns or sets the content.
+        /// Returns the content.
         /// </summary>
-        public IEnumerable<Control> Content { get; private set; } = [];
+        public IEnumerable<IControl> Content => _content;
 
         /// <summary>
         /// Returns or sets whether the fader effect should be used.
@@ -45,44 +47,69 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlModal(string id = null)
-            : base(id)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="header">The headline.</param>
-        public ControlModal(string id, string header)
-            : this(id)
-        {
-            Header = header;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="header">The headline.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlModal(string id, string header, params Control[] content)
-            : this(id, header)
-        {
-            Content = content ?? [];
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
         /// <param name="text">The text.</param>
         /// <param name="content">The content of the html element.</param>
-        public ControlModal(string id = null, params Control[] content)
-            : this(id, string.Empty)
+        public ControlModal(string id = null, params IControl[] content)
+            : base(id)
         {
-            Content = content ?? [];
+            _content.AddRange(content);
+        }
+
+        /// <summary> 
+        /// Adds one or more controls to the content of the modal.
+        /// </summary> 
+        /// <param name="controls">The controls to add to the modal.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of 
+        /// the modal. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the panel's content. 
+        /// Example usage: 
+        /// <code> 
+        /// var modal = new ControlModal(); 
+        /// var text1 = new ControlText { Text = "Save" };
+        /// var text2 = new ControlText { Text = "Cancel" };
+        /// modal.Add(text1, text2);
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public virtual void Add(params IControl[] controls)
+        {
+            _content.AddRange(controls);
+        }
+
+        /// <summary> 
+        /// Adds one or more controls to the content of the modal.
+        /// </summary> 
+        /// <param name="controls">The controls to add to the v.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of 
+        /// the modal. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the panel's content. 
+        /// Example usage: 
+        /// <code> 
+        /// var modal = new ControlModal(); 
+        /// var text1 = new ControlText { Text = "Save" };
+        /// var text2 = new ControlText { Text = "Cancel" };
+        /// modal.Add(new List<IControl>([text1, text2]));
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public virtual void Add(IEnumerable<IControl> controls)
+        {
+            _content.AddRange(controls);
+        }
+
+        /// <summary>
+        /// Removes a control from the content of the modal.
+        /// </summary>
+        /// <param name="control">The control to remove from the content.</param>
+        /// <remarks>
+        /// This method allows removing a specific control from the <see cref="Content"/> collection of 
+        /// the modal.
+        /// </remarks>
+        public virtual void Remove(Control control)
+        {
+            _content.Remove(control);
         }
 
         /// <summary>

@@ -1,220 +1,228 @@
-﻿//using System.Collections.Generic;
-//using System.Linq;
-//using WebExpress.WebCore.Internationalization;
-//using WebExpress.WebCore.WebHtml;
-//using WebExpress.WebCore.WebPage;
+﻿using System.Collections.Generic;
+using System.Linq;
+using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
-//namespace WebExpress.WebUI.WebControl
-//{
-//    public class ControlModalForm : ControlModal
-//    {
-//        /// <summary>
-//        /// Returns the form.
-//        /// </summary>
-//        public ControlForm Form { get; private set; }
+namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Represents a modal form control that can display a form in a modal dialog.
+    /// </summary>
+    public class ControlModalForm : ControlModal
+    {
+        /// <summary>
+        /// Returns the form.
+        /// </summary>
+        public ControlForm Form { get; private set; }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        public ControlModalForm(string id = null)
-//            : this(id, string.Empty, null)
-//        {
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="items">The form controls.</param>
+        public ControlModalForm(string id = null, params ControlFormItem[] items)
+            : base("modal_" + id)
+        {
+            Form = items != null ? new ControlForm(id, items) : new ControlForm(id);
+            Form.InitializeForm += OnInitializeForm;
+            Form.Validated += OnValidatedForm;
+        }
 
-//        }
+        /// <summary> 
+        /// Adds one or more form items to the content of the form.
+        /// </summary> 
+        /// <param name="controls">The form items to add to the form.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple form items to the <see cref="ControlFormItem"/> collection of 
+        /// the form. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the form's content. 
+        /// Example usage: 
+        /// <code> 
+        /// var form = new ControlForm(); 
+        /// var button1 = new ControlButton { Text = "Save" };
+        /// var button2 = new ControlButton { Text = "Cancel" };
+        /// form.Add(button1, button2);
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="ControlFormItem"/> interface.
+        /// </remarks>
+        public virtual void Add(params ControlFormItem[] items)
+        {
+            Form.Add(items);
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        /// <param name="header">The headline.</param>
-//        public ControlModalForm(string id, string header)
-//            : this(id, header, null)
-//        {
+        /// <summary> 
+        /// Adds one or more form items to the content of the form.
+        /// </summary> 
+        /// <param name="controls">The form items to add to the form.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple form items to the <see cref="ControlFormItem"/> collection of 
+        /// the form. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the form's content. 
+        /// Example usage: 
+        /// <code> 
+        /// var form = new ControlForm(); 
+        /// var button1 = new ControlButton { Text = "Save" };
+        /// var button2 = new ControlButton { Text = "Cancel" };
+        /// form.Add(button1, button2);
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="ControlFormItem"/> interface.
+        /// </remarks>
+        public virtual void Add(IEnumerable<ControlFormItem> items)
+        {
+            Form.Add(items);
+        }
 
-//        }
+        /// <summary>
+        /// Removes a form item from the content of the form.
+        /// </summary>
+        /// <param name="item">The form item to remove from the form.</param>
+        /// <remarks>
+        /// This method allows removing a specific form item from the <see cref="Items"/> collection of 
+        /// the form.
+        /// </remarks>
+        public virtual void Remove(ControlFormItem item)
+        {
+            Form.Remove(item);
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        /// <param name="content">The form controls.</param>
-//        public ControlModalForm(string id, params ControlFormItem[] content)
-//            : this(id, string.Empty, content)
-//        {
+        /// <summary>
+        /// Invoked when the form is initialized.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event argument.</param>
+        private void OnInitializeForm(object sender, FormEventArgs e)
+        {
+            ShowIfCreated = false;
+        }
 
-//        }
+        /// <summary>
+        /// Invoked when the form has been validated.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event argument.</param>
+        private void OnValidatedForm(object sender, ValidationResultEventArgs e)
+        {
+            if (!e.Valid)
+            {
+                ShowIfCreated = true;
+                Fade = false;
+            }
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        /// <param name="header">The headline.</param>
-//        /// <param name="content">The form controls.</param>
-//        public ControlModalForm(string id, string header, params ControlFormItem[] content)
-//            : base("modal_" + id, string.Empty, null)
-//        {
-//            Form = content != null ? new ControlForm(id, content) : new ControlForm(id);
-//            Form.InitializeForm += OnInitializeForm;
-//            Form.Validated += OnValidatedForm;
-//            Header = header;
-//        }
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext)
+        {
+            return Render(renderContext, Form.Items);
+        }
 
-//        /// <summary>
-//        /// Adds a form control.
-//        /// </summary>
-//        /// <param name="item">The form item.</param>
-//        public void Add(params ControlFormItem[] item)
-//        {
-//            Form.Add(item);
-//        }
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="items">The form items.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public virtual IHtmlNode Render(IRenderControlContext renderContext, IEnumerable<ControlFormItem> items)
+        {
+            var fade = Fade;
+            var classes = Classes.ToList();
 
-//        /// <summary>
-//        /// Removes a form control.
-//        /// </summary>
-//        /// <param name="item">The form item.</param>
-//        public void Remove(ControlFormItem item)
-//        {
-//            Form.Remove(item);
-//        }
+            var form = Form.Render(renderContext, items) as HtmlElementFormForm;
 
-//        /// <summary>
-//        /// Invoked when the form is initialized.
-//        /// </summary>
-//        /// <param name="sender">The sender.</param>
-//        /// <param name="e">The event argument.</param>
-//        private void OnInitializeForm(object sender, FormEventArgs e)
-//        {
-//            ShowIfCreated = false;
-//        }
+            classes.Add("modal");
 
-//        /// <summary>
-//        /// Invoked when the form has been validated.
-//        /// </summary>
-//        /// <param name="sender">The sender.</param>
-//        /// <param name="e">The event argument.</param>
-//        private void OnValidatedForm(object sender, ValidationResultEventArgs e)
-//        {
-//            if (!e.Valid)
-//            {
-//                ShowIfCreated = true;
-//                Fade = false;
-//            }
-//        }
+            if (Fade)
+            {
+                classes.Add("fade");
+            }
 
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <returns>The control as html.</returns>
-//        public override IHtmlNode Render(IRenderContext context)
-//        {
-//            return Render(context, Form.Items);
-//        }
+            var headerText = new HtmlElementSectionH4(I18N.Translate(renderContext.Request?.Culture, Header))
+            {
+                Class = "modal-title"
+            };
 
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <param name="items">The form items.</param>
-//        /// <returns>The control as html.</returns>
-//        public virtual IHtmlNode Render(IRenderContext context, IEnumerable<ControlFormItem> items)
-//        {
-//            var fade = Fade;
-//            var classes = Classes.ToList();
+            var headerButton = new HtmlElementFieldButton()
+            {
+                Class = "btn-close"
+            };
+            headerButton.AddUserAttribute("aria-label", "close");
+            headerButton.AddUserAttribute("data-bs-dismiss", "modal");
 
-//            var form = Form.Render(context, items) as HtmlElementFormForm;
+            var header = new HtmlElementTextContentDiv(headerText, headerButton)
+            {
+                Class = "modal-header"
+            };
 
-//            classes.Add("modal");
+            var formElements = form.Elements.Where(x => !(x is HtmlElementSectionFooter));
 
-//            if (Fade)
-//            {
-//                classes.Add("fade");
-//            }
+            var body = new HtmlElementTextContentDiv(formElements.ToArray())
+            {
+                Class = "modal-body"
+            };
 
-//            var headerText = new HtmlElementSectionH4(I18N.Translate(context.Culture, Header))
-//            {
-//                Class = "modal-title"
-//            };
+            var footer = default(HtmlElementTextContentDiv);
 
-//            var headerButton = new HtmlElementFieldButton()
-//            {
-//                Class = "btn-close"
-//            };
-//            headerButton.AddUserAttribute("aria-label", "close");
-//            headerButton.AddUserAttribute("data-bs-dismiss", "modal");
+            var submitFooterButton = new ControlFormItemButton();
 
-//            var header = new HtmlElementTextContentDiv(headerText, headerButton)
-//            {
-//                Class = "modal-header"
-//            };
+            var cancelFooterButton = new ControlButtonLink()
+            {
+                Text = I18N.Translate(renderContext.Request?.Culture, "webexpress.webui:modal.close.label")
+            }.Render(renderContext) as HtmlElement;
 
-//            var formElements = form.Elements.Where(x => !(x is HtmlElementSectionFooter));
+            cancelFooterButton.AddUserAttribute("data-bs-dismiss", "modal");
 
-//            var body = new HtmlElementTextContentDiv(formElements)
-//            {
-//                Class = "modal-body"
-//            };
+            footer = new HtmlElementTextContentDiv(submitFooterButton.Render(new RenderControlFormContext(renderContext, Form)), cancelFooterButton)
+            {
+                Class = "modal-footer d-flex justify-content-between"
+            };
 
-//            var footer = default(HtmlElementTextContentDiv);
+            var content = new HtmlElementTextContentDiv(header, body, footer)
+            {
+                Class = "modal-content"
+            };
 
-//            var submitFooterButton = new ControlFormItemButton();
+            var dialog = new HtmlElementTextContentDiv(content)
+            {
+                Class = "modal-dialog",
+                Role = "document"
+            };
 
-//            var cancelFooterButton = new ControlButtonLink()
-//            {
-//                Text = I18N.Translate(context.Culture, "webexpress.webui:modal.close.label")
-//            }.Render(context) as HtmlElement;
+            var html = new HtmlElementTextContentDiv(dialog)
+            {
+                Id = Id,
+                Class = string.Join(" ", classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
+                Role = "dialog"
+            };
 
-//            cancelFooterButton.AddUserAttribute("data-bs-dismiss", "modal");
+            if (!string.IsNullOrWhiteSpace(OnShownCode))
+            {
+                var shown = "$('#" + Id + "').on('shown.bs.modal', function(e) { " + OnShownCode + " });";
+                renderContext.AddScript(Id + "_shown", shown);
+            }
 
-//            footer = new HtmlElementTextContentDiv(submitFooterButton.Render(new RenderContextForm(context, Form)), cancelFooterButton)
-//            {
-//                Class = "modal-footer d-flex justify-content-between"
-//            };
+            if (!string.IsNullOrWhiteSpace(OnHiddenCode))
+            {
+                var hidden = "$('#" + Id + "').on('hidden.bs.modal', function() { " + OnHiddenCode + " });";
+                renderContext.AddScript(Id + "_hidden", hidden);
+            }
 
-//            var content = new HtmlElementTextContentDiv(header, body, footer)
-//            {
-//                Class = "modal-content"
-//            };
+            if (ShowIfCreated)
+            {
+                var show = "$('#" + Id + "').modal('show');";
+                renderContext.AddScript(Id + "_showifcreated", show);
+            }
 
-//            var dialog = new HtmlElementTextContentDiv(content)
-//            {
-//                Class = "modal-dialog",
-//                Role = "document"
-//            };
+            form.Clear();
+            form.Add(html);
 
-//            var html = new HtmlElementTextContentDiv(dialog)
-//            {
-//                Id = Id,
-//                Class = string.Join(" ", classes.Where(x => !string.IsNullOrWhiteSpace(x))),
-//                Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
-//                Role = "dialog"
-//            };
+            Fade = fade;
 
-//            if (!string.IsNullOrWhiteSpace(OnShownCode))
-//            {
-//                var shown = "$('#" + Id + "').on('shown.bs.modal', function(e) { " + OnShownCode + " });";
-//                context.VisualTree.AddScript(Id + "_shown", shown);
-//            }
-
-//            if (!string.IsNullOrWhiteSpace(OnHiddenCode))
-//            {
-//                var hidden = "$('#" + Id + "').on('hidden.bs.modal', function() { " + OnHiddenCode + " });";
-//                context.VisualTree.AddScript(Id + "_hidden", hidden);
-//            }
-
-//            if (ShowIfCreated)
-//            {
-//                var show = "$('#" + Id + "').modal('show');";
-//                context.VisualTree.AddScript(Id + "_showifcreated", show);
-//            }
-
-//            form.Elements.Clear();
-//            form.Elements.Add(html);
-
-//            Fade = fade;
-
-//            return form;
-//        }
-//    }
-//}
+            return form;
+        }
+    }
+}

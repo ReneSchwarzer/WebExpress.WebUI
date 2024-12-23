@@ -464,13 +464,61 @@ namespace WebExpress.WebUI.WebControl
             return form;
         }
 
-        /// <summary>
-        /// Adds a form control.
-        /// </summary>
-        /// <param name="item">The form item.</param>
-        public void Add(params ControlFormItem[] item)
+        /// <summary> 
+        /// Adds one or more form items to the content of the form.
+        /// </summary> 
+        /// <param name="controls">The form items to add to the form.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple form items to the <see cref="ControlFormItem"/> collection of 
+        /// the form. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the form's content. 
+        /// Example usage: 
+        /// <code> 
+        /// var form = new ControlForm(); 
+        /// var button1 = new ControlButton { Text = "Save" };
+        /// var button2 = new ControlButton { Text = "Cancel" };
+        /// form.Add(button1, button2);
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="ControlFormItem"/> interface.
+        /// </remarks>
+        public void Add(params ControlFormItem[] items)
         {
-            _items.AddRange(item);
+            _items.AddRange(items);
+        }
+
+        /// <summary> 
+        /// Adds one or more form items to the content of the form.
+        /// </summary> 
+        /// <param name="controls">The form items to add to the form.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple form items to the <see cref="ControlFormItem"/> collection of 
+        /// the form. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the form's content. 
+        /// Example usage: 
+        /// <code> 
+        /// var form = new ControlForm(); 
+        /// var button1 = new ControlButton { Text = "Save" };
+        /// var button2 = new ControlButton { Text = "Cancel" };
+        /// form.Add(button1, button2);
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="ControlFormItem"/> interface.
+        /// </remarks>
+        public void Add(IEnumerable<ControlFormItem> items)
+        {
+            _items.AddRange(items);
+        }
+
+        /// <summary>
+        /// Removes a form item from the content of the form.
+        /// </summary>
+        /// <param name="item">The form item to remove from the form.</param>
+        /// <remarks>
+        /// This method allows removing a specific form item from the <see cref="Items"/> collection of 
+        /// the form.
+        /// </remarks>
+        public virtual void Remove(ControlFormItem item)
+        {
+            _items.Remove(item);
         }
 
         /// <summary>
@@ -525,15 +573,6 @@ namespace WebExpress.WebUI.WebControl
         public void AddSecondaryButton(params ControlFormItemButton[] buttons)
         {
             _secondaryButtons.AddRange(buttons);
-        }
-
-        /// <summary>
-        /// Removes a form control item from the form.
-        /// </summary>
-        /// <param name="formItem">The form item.</param>
-        public void Remove(ControlFormItem formItem)
-        {
-            _items.Remove(formItem);
         }
 
         /// <summary>

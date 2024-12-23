@@ -1,155 +1,76 @@
 ﻿using WebExpress.WebUI.Test.Fixture;
-using Xunit.Abstractions;
+using WebExpress.WebUI.WebControl;
 
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the modal form control.
+    /// Tests the modal control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlModalForm : IClassFixture<UnitTestControlFixture>
+    public class UnitTestControlModalForm
     {
         /// <summary>
-        /// Returns the log.
+        /// Tests the id property of the modal control.
         /// </summary>
-        protected ITestOutputHelper Output { get; private set; }
-
-        /// <summary>
-        /// Returns the test context.
-        /// </summary>
-        protected UnitTestControlFixture Fixture { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="fixture">The log.</param>
-        /// <param name="output">The test context.</param>
-        public UnitTestControlModalForm(UnitTestControlFixture fixture, ITestOutputHelper output)
+        [Theory]
+        [InlineData(null, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData("id", @"<form id=""id"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        public void Id(string id, string expected)
         {
-            Fixture = fixture;
-            Output = output;
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var control = new ControlModalForm(id)
+            {
+            };
+
+            // test execution
+            var html = control.Render(context);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
-        /// Tests a empty form.
+        /// Tests the header property of the modal control.
         /// </summary>
-        [Fact]
-        public void EmptyForm()
+        [Theory]
+        [InlineData(null, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData("abc", @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*<h4 class=""modal-title"">abc</h4>*</form>")]
+
+        public void Header(string header, string expected)
         {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlModalForm();
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var control = new ControlModalForm()
+            {
+                Header = header
+            };
 
-            //var html = control.Render(context);
-            //var str = html.ToString();
+            // test execution
+            var html = control.Render(context);
 
-            //// test execution
-            //Assert.StartsWith("<form action=", html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
-        /// Tests a simple form with id.
+        /// Tests the add function of the modal control.
         /// </summary>
         [Fact]
-        public void EmptyFormWithId()
+        public void Add()
         {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlModalForm("form");
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var control = new ControlModalForm()
+            {
+            };
 
-            //var html = control.Render(context);
+            // test execution
+            control.Add(new ControlFormItemInputTextBox() { Value = "abc" });
+            var html = control.Render(context);
 
-            //// test execution
-            //Assert.StartsWith(@"<form id=""form""", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form with header.
-        /// </summary>
-        [Fact]
-        public void EmptyFormWithHeaderAtInstancing()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlModalForm("form", "header");
-
-            //var html = control.Render(context);
-
-            //// test execution
-            //Assert.Contains(@"<h4 class=""modal-title"">header</h4>", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form with header.
-        /// </summary>
-        [Fact]
-        public void EmptyFormWithHeaderAtProperty()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlModalForm("form") { Header = "header" };
-
-            //var html = control.Render(context);
-
-            //// test execution
-            //Assert.Contains(@"<h4 class=""modal-title"">header</h4>", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form.
-        /// The control elements are added during rendering.
-        /// </summary>
-        [Fact]
-        public void SimpleFormAtRender()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlModalForm();
-            //var item = new ControlFormItemInputTextBox() { };
-
-            //// test execution
-            //var html = control.Render(context, [item]);
-            ////var str = html.ToString();
-
-            //Assert.Contains(@"<input type=""text"" class=""form-control"">", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form.
-        /// The control elements are added when instantiating.
-        /// </summary>
-        [Fact]
-        public void SimpleFormAtInstancing()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var item = new ControlFormItemInputTextBox() { };
-            //var control = new ControlModalForm("form", item);
-
-            //// test execution
-            //var html = control.Render(context);
-
-            //Assert.Contains(@"<input type=""text"" class=""form-control"">", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form.
-        /// The control elements are added using add.
-        /// </summary>
-        [Fact]
-        public void SimpleFormAtAdd()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var item = new ControlFormItemInputTextBox() { };
-            //var control = new ControlModalForm("form");
-
-            //control.Add(item);
-
-            //// test execution
-            //var html = control.Render(context);
-
-            //Assert.Contains(@"<input type=""text"" class=""form-control"">", html.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*<input * type=""text"" class=""form-control"">*</form>", html);
         }
     }
 }

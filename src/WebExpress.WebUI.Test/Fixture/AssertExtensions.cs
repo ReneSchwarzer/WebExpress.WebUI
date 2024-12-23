@@ -23,7 +23,7 @@ namespace WebExpress.WebUI.Test.Fixture
         /// <param name="actual">The actual string to compare.</param>
         public static void EqualWithPlaceholders(string expected, string actual)
         {
-            var str = RemoveLineBreaks(actual?.ToString() ?? "null");
+            var str = RemoveLineBreaks(actual?.ToString());
             Assert.True(AreEqualWithPlaceholders(expected, str), $"Expected: {expected}{Environment.NewLine}Actual:   {str}");
         }
 
@@ -35,7 +35,7 @@ namespace WebExpress.WebUI.Test.Fixture
         /// <param name="actual">The actual string to compare.</param>
         public static void EqualWithPlaceholders(string expected, IHtmlNode actual)
         {
-            var str = RemoveLineBreaks(actual?.ToString() ?? "null");
+            var str = RemoveLineBreaks(actual?.ToString());
             Assert.True(AreEqualWithPlaceholders(expected, str), $"Expected: {expected}{Environment.NewLine}Actual:   {str}");
         }
 
@@ -47,6 +47,19 @@ namespace WebExpress.WebUI.Test.Fixture
         /// <returns>True if the actual string matches the expected string with placeholders; otherwise, false.</returns>
         private static bool AreEqualWithPlaceholders(string expected, string actual)
         {
+            if (expected == null && actual == null)
+            {
+                return true;
+            }
+            else if (expected != null && actual == null)
+            {
+                return false;
+            }
+            else if (expected == null && actual != null)
+            {
+                return false;
+            }
+
             var pattern = "^" + Regex.Escape(expected).Replace(@"\*", ".*") + "$";
 
             return Regex.IsMatch(actual, pattern);
