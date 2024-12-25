@@ -4,13 +4,13 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the panel control.
+    /// Tests the form panel control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlPanel
+    public class UnitTestControlFormItemPanel
     {
         /// <summary>
-        /// Tests the id property of the panel control.
+        /// Tests the id property of the form panel control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<div></div>")]
@@ -19,8 +19,9 @@ namespace WebExpress.WebUI.Test.WebControl
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlPanel(id)
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemPanel(id)
             {
             };
 
@@ -31,7 +32,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the direction property of the panel control.
+        /// Tests the direction property of the form panel control.
         /// </summary>
         [Theory]
         [InlineData(TypeDirection.Default, @"<div></div>")]
@@ -43,8 +44,9 @@ namespace WebExpress.WebUI.Test.WebControl
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlPanel()
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemPanel()
             {
                 Direction = direction,
             };
@@ -56,7 +58,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the fluid property of the panel control.
+        /// Tests the fluid property of the form panel control.
         /// </summary>
         [Theory]
         [InlineData(TypePanelContainer.None, @"<div></div>")]
@@ -66,8 +68,9 @@ namespace WebExpress.WebUI.Test.WebControl
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlPanel()
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var control = new ControlFormItemPanel()
             {
                 Fluid = fluid,
             };
@@ -79,7 +82,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add child function of the panel control.
+        /// Tests the add child function of the form panel control.
         /// </summary>
         [Theory]
         [InlineData(typeof(ControlText), @"<div><div></div></div>")]
@@ -89,9 +92,10 @@ namespace WebExpress.WebUI.Test.WebControl
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
             var childInstance = Activator.CreateInstance(child, [null]) as IControl;
-            var control = new ControlPanel();
+            var control = new ControlFormItemPanel();
 
             // test execution
             control.Add(childInstance);

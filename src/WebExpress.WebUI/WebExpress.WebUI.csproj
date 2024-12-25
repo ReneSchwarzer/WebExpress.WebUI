@@ -27,8 +27,14 @@
 
 	<ItemGroup>
 		<Compile Remove="Assets\js\locales\**" />
+		<Compile Remove="WebResource\**" />
+		<Compile Remove="WebSection\**" />
 		<EmbeddedResource Remove="Assets\js\locales\**" />
+		<EmbeddedResource Remove="WebResource\**" />
+		<EmbeddedResource Remove="WebSection\**" />
 		<None Remove="Assets\js\locales\**" />
+		<None Remove="WebResource\**" />
+		<None Remove="WebSection\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -392,11 +398,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="WebExpress.WebCore" Version="0.0.8-alpha" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="WebResource\" />
-	  <Folder Include="WebSection\" />
 	</ItemGroup>
 
 </Project>

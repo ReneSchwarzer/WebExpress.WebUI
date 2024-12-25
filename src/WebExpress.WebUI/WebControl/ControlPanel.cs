@@ -43,11 +43,11 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        /// <param name="children">The child controls to be added to the panel.</param>
-        public ControlPanel(string id = null, params IControl[] children)
+        /// <param name="controls">The child controls to be added to the panel.</param>
+        public ControlPanel(string id = null, params IControl[] controls)
             : base(id)
         {
-            _content.AddRange(children.Where(x => x != null));
+            _content.AddRange(controls.Where(x => x != null));
         }
 
         /// <summary> 
