@@ -15,7 +15,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Determines whether the inputs are valid.
         /// </summary>
-        ICollection<ValidationResult> ValidationResults { get; }
+        IEnumerable<ValidationResult> ValidationResults { get; }
 
         /// <summary>
         /// Returns the most serious validation result.

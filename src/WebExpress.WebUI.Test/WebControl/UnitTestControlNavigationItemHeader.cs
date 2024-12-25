@@ -4,13 +4,13 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the dropdown item header control.
+    /// Tests the navigation item header control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlDropdownItemHeader
+    public class UnitTestControlNavigationItemHeader
     {
         /// <summary>
-        /// Tests the id property of the dropdown item header control.
+        /// Tests the id property of the navigation item header control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<li class=""dropdown-header""></li>")]
@@ -20,7 +20,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlDropdownItemHeader(id)
+            var control = new ControlNavigationItemHeader(id)
             {
             };
 
@@ -31,7 +31,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the text property of the dropdown item header control.
+        /// Tests the text property of the navigation item header control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<li class=""dropdown-header""></li>")]
@@ -42,7 +42,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlDropdownItemHeader()
+            var control = new ControlNavigationItemHeader()
             {
                 Text = text,
             };

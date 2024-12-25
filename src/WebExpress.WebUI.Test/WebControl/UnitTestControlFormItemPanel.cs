@@ -82,7 +82,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add child function of the form panel control.
+        /// Tests the add function of the form panel control.
         /// </summary>
         [Theory]
         [InlineData(typeof(ControlText), @"<div><div></div></div>")]

@@ -1,129 +1,129 @@
-﻿//using WebExpress.WebCore.WebHtml;
-//using WebExpress.WebCore.WebUri;
+﻿using WebExpress.WebCore.WebHtml;
 
-//namespace WebExpress.WebUI.WebControl
-//{
-//    public class ControlFormItemInputDatepicker : ControlFormItemInput
-//    {
-//        /// <summary>
-//        /// Determines whether the control is automatically initialized.
-//        /// </summary>
-//        public bool AutoInitialize { get; set; }
+namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Represents a date picker input form item control.
+    /// </summary>
+    public class ControlFormItemInputDatepicker : ControlFormItemInput
+    {
+        /// <summary>
+        /// Determines whether the control is automatically initialized.
+        /// </summary>
+        public bool AutoInitialize { get; set; }
 
-//        /// <summary>
-//        /// Returns or sets the description.
-//        /// </summary>
-//        public string Description { get; set; }
+        /// <summary>
+        /// Returns or sets the description.
+        /// </summary>
+        public string Description { get; set; }
 
-//        /// <summary>
-//        /// Returns or sets the minimum length.
-//        /// </summary>
-//        public string MinLength { get; set; }
+        /// <summary>
+        /// Returns or sets the minimum length.
+        /// </summary>
+        public string MinLength { get; set; }
 
-//        /// <summary>
-//        /// Returns or sets the maximum length.
-//        /// </summary>
-//        public string MaxLength { get; set; }
+        /// <summary>
+        /// Returns or sets the maximum length.
+        /// </summary>
+        public string MaxLength { get; set; }
 
-//        /// <summary>
-//        /// Returns or sets whether inputs are enforced.
-//        /// </summary>
-//        public bool Required { get; set; }
+        /// <summary>
+        /// Returns or sets whether inputs are enforced.
+        /// </summary>
+        public bool Required { get; set; }
 
-//        /// <summary>
-//        /// Returns or sets a search pattern that checks the content.
-//        /// </summary>
-//        public string Pattern { get; set; }
+        /// <summary>
+        /// Returns or sets a search pattern that checks the content.
+        /// </summary>
+        public string Pattern { get; set; }
 
-//        ///// <summary>
-//        ///// Returns the initialization code (JQuerry).
-//        ///// </summary>
-//        //public string InitializeCode => "$('#" + Id + " input').datepicker({ startDate: -3 });";
+        ///// <summary>
+        ///// Returns the initialization code (JQuerry).
+        ///// </summary>
+        //public string InitializeCode => "$('#" + Id + " input').datepicker({ startDate: -3 });";
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        public ControlFormItemInputDatepicker(string id = null)
-//            : base(!string.IsNullOrWhiteSpace(id) ? id : "datepicker")
-//        {
-//        }
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="id">The id of the control.</param>
+        public ControlFormItemInputDatepicker(string id = null)
+            : base(!string.IsNullOrWhiteSpace(id) ? id : "datepicker")
+        {
+        }
 
-//        /// <summary>
-//        /// Initializes the form element.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        public override void Initialize(RenderContextForm context)
-//        {
-//            AutoInitialize = true;
+        /// <summary>
+        /// Initializes the form element.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
+        {
+            AutoInitialize = true;
 
-//            var contextPath = context.PageContext?.ApplicationContext?.ContextPath;
+            var contextPath = renderContext.PageContext?.ApplicationContext?.ContextPath;
 
-//            Value = context?.Request.GetParameter(Name)?.Value;
+            Value = renderContext?.Request.GetParameter(Name)?.Value;
 
-//            context.VisualTree.HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/bootstrap-datepicker.min.js"));
-//            context.VisualTree.HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/locales_datepicker/bootstrap-datepicker." + context.Culture.TwoLetterISOLanguageName.ToLower() + ".min.js"));
-//            context.VisualTree.CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/bootstrap-datepicker3.min.css"));
+            //renderContext.AddHeaderScriptLinks(UriResource.Combine(contextPath, "/assets/js/bootstrap-datepicker.min.js"));
+            //renderContext.AddHeaderScriptLinks(UriResource.Combine(contextPath, "/assets/js/locales_datepicker/bootstrap-datepicker." + context.Culture.TwoLetterISOLanguageName.ToLower() + ".min.js"));
+            //renderContext.AddCssLinks(UriResource.Combine(contextPath, "/assets/css/bootstrap-datepicker3.min.css"));
 
-//            context.AddScript(Id, @"$('#" + Id + @"').datepicker({format: ""dd.mm.yyyy"", todayBtn: true, language: ""de"", zIndexOffset: 999});");
-//        }
+            //renderContext.AddScript(Id, @"$('#" + Id + @"').datepicker({format: ""dd.mm.yyyy"", todayBtn: true, language: ""de"", zIndexOffset: 999});");
+        }
 
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <returns>The control as html.</returns>
-//        public override IHtmlNode Render(RenderContextForm context)
-//        {
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext)
+        {
+            //if (Disabled)
+            //{
+            //    Classes.Add("disabled");
+            //}
 
+            //if (AutoInitialize)
+            //{
+            //    context.Page.AddScript(Id, InitializeCode);
+            //    AutoInitialize = false;
+            //}
 
-//            //if (Disabled)
-//            //{
-//            //    Classes.Add("disabled");
-//            //}
+            var input = new HtmlElementFieldInput()
+            {
+                Id = Id,
+                Name = Name,
+                Type = "text",
+                Class = "form-control",
+                Value = Value
+            };
 
-//            //if (AutoInitialize)
-//            //{
-//            //    context.Page.AddScript(Id, InitializeCode);
-//            //    AutoInitialize = false;
-//            //}
+            //var span = new HtmlElementTextSemanticsSpan()
+            //{
+            //    Class = TypeIcon.Calendar.ToClass()
+            //};
 
-//            var input = new HtmlElementFieldInput()
-//            {
-//                Id = Id,
-//                Name = Name,
-//                Type = "text",
-//                Class = "form-control",
-//                Value = Value
-//            };
+            //var div = new HtmlElementTextContentDiv(span)
+            //{
+            //    Class = "input-group-text"
+            //};
 
-//            //var span = new HtmlElementTextSemanticsSpan()
-//            //{
-//            //    Class = TypeIcon.Calendar.ToClass()
-//            //};
+            //var html = new HtmlElementTextContentDiv(input, div)
+            //{
+            //    Id = Id,
+            //    Class = "input-group",
+            //    //DataProvide = "datepicker"
+            //};
 
-//            //var div = new HtmlElementTextContentDiv(span)
-//            //{
-//            //    Class = "input-group-text"
-//            //};
+            return input;
+        }
 
-//            //var html = new HtmlElementTextContentDiv(input, div)
-//            //{
-//            //    Id = Id,
-//            //    Class = "input-group",
-//            //    //DataProvide = "datepicker"
-//            //};
-
-//            return input;
-//        }
-
-//        /// <summary>
-//        /// Checks the input element for correctness of the data.
-//        /// </summary>
-//        /// <param name="context">The context in which the inputs are validated.</param>
-//        public override void Validate(RenderContextForm context)
-//        {
-//            base.Validate(context);
-//        }
-//    }
-//}
+        /// <summary>
+        /// Checks the input element for correctness of the data.
+        /// </summary>
+        /// <param name="renderContext">The context in which the inputs are validated.</param>
+        public override void Validate(IRenderControlFormContext renderContext)
+        {
+            base.Validate(renderContext);
+        }
+    }
+}

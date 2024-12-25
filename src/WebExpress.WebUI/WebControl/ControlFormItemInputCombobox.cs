@@ -75,7 +75,7 @@ namespace WebExpress.WebUI.WebControl
 
             foreach (var v in Items)
             {
-                if (v.SubItems.Count() > 0)
+                if (v.SubItems.Any())
                 {
                     html.Add(new HtmlElementFormOptgroup() { Label = v.Text });
                     foreach (var s in v.SubItems)

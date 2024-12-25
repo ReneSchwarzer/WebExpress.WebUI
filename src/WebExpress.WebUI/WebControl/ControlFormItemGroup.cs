@@ -9,6 +9,7 @@ namespace WebExpress.WebUI.WebControl
     public abstract class ControlFormItemGroup : ControlFormItem, IFormValidation
     {
         private readonly List<ControlFormItem> _items = [];
+        private readonly List<ValidationResult> _validationResults = [];
 
         /// <summary>
         /// Returns the form items.
@@ -18,7 +19,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Determines whether the inputs are valid.
         /// </summary>
-        public ICollection<ValidationResult> ValidationResults { get; } = new List<ValidationResult>();
+        public IEnumerable<ValidationResult> ValidationResults => _validationResults;
 
         /// <summary>
         /// Returns or sets whether the form element has been validated.
@@ -87,7 +88,7 @@ namespace WebExpress.WebUI.WebControl
         /// maintaining the order of addition.
         /// This method accepts any item that derives from <see cref="ControlListItem"/>.
         /// </remarks>
-        public void Add(IEnumerable<ControlFormItem> items)
+        public virtual void Add(IEnumerable<ControlFormItem> items)
         {
             _items.AddRange(items);
         }
@@ -101,9 +102,39 @@ namespace WebExpress.WebUI.WebControl
         /// current form of items. If the item does not exist in the list, the method does nothing.
         /// This method accepts any item that derives from <see cref="ControlListItem"/>.
         /// </remarks>
-        public void Remove(ControlFormItem item)
+        public virtual void Remove(ControlFormItem item)
         {
             _items.Remove(item);
+        }
+
+        /// <summary>
+        /// Adds a collection of validation results to the existing validation results.
+        /// </summary>
+        /// <param name="validationResults">The validation results to add.</param>
+        /// <remarks>
+        /// This method appends the specified collection of <see cref="ValidationResult"/> instances to the 
+        /// current list of validation results. It ensures that the new validation results are concatenated 
+        /// with the existing ones, maintaining the order of addition.
+        /// This method accepts any item that derives from <see cref="ValidationResult"/>.
+        /// </remarks>
+        public virtual void AddValidationResult(params ValidationResult[] validationResults)
+        {
+            _validationResults.AddRange(validationResults);
+        }
+
+        /// <summary>
+        /// Removes a specified validation result from the existing validation results.
+        /// </summary>
+        /// <param name="validationResult">The validation result to remove.</param>
+        /// <remarks>
+        /// This method removes the specified <see cref="ValidationResult"/> instance from the 
+        /// current list of validation results. If the validation result does not exist in the list, 
+        /// the method does nothing.
+        /// This method accepts any item that derives from <see cref="ValidationResult"/>.
+        /// </remarks>
+        public void RemoveValidationResult(ValidationResult validationResult)
+        {
+            _validationResults.Remove(validationResult);
         }
 
         /// <summary>

@@ -105,7 +105,8 @@ namespace WebExpress.WebUI.WebControl
         public virtual void Remove(Control control)
         {
             _content.Remove(control);
-        }
+        }
+
         /// <summary>
         /// Convert the control to HTML.
         /// </summary>

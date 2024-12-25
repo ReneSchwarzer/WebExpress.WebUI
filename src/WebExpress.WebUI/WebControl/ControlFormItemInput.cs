@@ -12,6 +12,7 @@ namespace WebExpress.WebUI.WebControl
     /// </remarks>
     public abstract class ControlFormItemInput : ControlFormItem, IControlFormLabel, IFormValidation
     {
+        private readonly List<ValidationResult> _validationResults = [];
         private readonly List<IControl> _prepend = [];
         private readonly List<IControl> _append = [];
 
@@ -19,6 +20,11 @@ namespace WebExpress.WebUI.WebControl
         /// Event to validate the input values.
         /// </summary>
         public event EventHandler<ValidationEventArgs> Validation;
+
+        /// <summary>
+        /// Determines whether the inputs are valid.
+        /// </summary>
+        public virtual IEnumerable<ValidationResult> ValidationResults => _validationResults;
 
         /// <summary>
         /// Returns or sets the icon.
@@ -61,11 +67,6 @@ namespace WebExpress.WebUI.WebControl
         public object Tag { get; set; }
 
         /// <summary>
-        /// Determines whether the inputs are valid.
-        /// </summary>
-        public virtual ICollection<ValidationResult> ValidationResults { get; } = new List<ValidationResult>();
-
-        /// <summary>
         /// Returns the most serious validation result.
         /// </summary>
         public virtual TypesInputValidity ValidationResult
@@ -106,10 +107,10 @@ namespace WebExpress.WebUI.WebControl
             IsValidated = false;
         }
 
-        // <summary>
-        // Adds one or more controls to the prepend list.
-        // </summary>
-        // <param name="controls">The controls to add.</param>
+        /// <summary>
+        /// Adds one or more controls to the prepend list.
+        /// </summary>
+        /// <param name="controls">The controls to add.</param>
         public void AddPrepend(params IControl[] controls)
         {
             _prepend.AddRange(controls);
@@ -139,6 +140,30 @@ namespace WebExpress.WebUI.WebControl
         public void RemoveAppend(IControl control)
         {
             _append.Remove(control);
+        }
+
+        /// <summary>
+        /// Adds a collection of validation results to the existing validation results.
+        /// </summary>
+        /// <param name="validationResults">The validation results to add.</param>
+        /// <remarks>
+        /// This method appends the specified collection of <see cref="ValidationResult"/> instances to the 
+        /// current list of validation results. It ensures that the new validation results are concatenated 
+        /// with the existing ones, maintaining the order of addition.
+        /// This method accepts any item that derives from <see cref="ValidationResult"/>.
+        /// </remarks>
+        public virtual void AddValidationResult(params ValidationResult[] validationResults)
+        {
+            _validationResults.AddRange(validationResults);
+        }
+
+        /// <summary>
+        /// Removes a validation result from the validation results collection.
+        /// </summary>
+        /// <param name="control">The control to remove.</param>
+        public virtual void RemoveValidationResult(ValidationResult validationResult)
+        {
+            _validationResults.Remove(validationResult);
         }
 
         /// <summary>

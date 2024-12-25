@@ -4,24 +4,24 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the form item input radio control.
+    /// Tests the form datepicker control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlFormItemInputRadio
+    public class UnitTestControlFormItemInputDatepicker
     {
         /// <summary>
-        /// Tests the id property of the form item input radio control.
+        /// Tests the id property of the form datepicker control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData("id", @"<div class=""radio""><label><input id=""id"" type=""radio""></label></div>")]
+        [InlineData(null, @"<input id=""datepicker"" type=""text"" class=""form-control"">")]
+        [InlineData("id", @"<input id=""id"" type=""text"" class=""form-control"">")]
         public void Id(string id, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio(id)
+            var control = new ControlFormItemInputDatepicker(id)
             {
             };
 
@@ -32,20 +32,20 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the Inline property of the form item input radio control.
+        /// Tests the name property of the form datepicker control.
         /// </summary>
         [Theory]
-        [InlineData(false, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData(true, @"<div class=""radio form-check-inline""><label><input type=""radio""></label></div>")]
-        public void Inline(bool inline, string expected)
+        [InlineData(null, @"<input id=""datepicker"" type=""text"" class=""form-control"">")]
+        [InlineData("abc", @"<input id=""datepicker"" name=""abc"" type=""text"" class=""form-control"">")]
+        public void Name(string name, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio
+            var control = new ControlFormItemInputDatepicker()
             {
-                Inline = inline
+                Name = name
             };
 
             // test execution
@@ -55,20 +55,20 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the Description property of the form item input radio control.
+        /// Tests the value property of the form datepicker control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData("description", @"<div class=""radio""><label><input type=""radio"">&nbsp;description </label></div>")]
-        public void Description(string description, string expected)
+        [InlineData(null, @"<input id=""datepicker"" type=""text"" class=""form-control"">")]
+        [InlineData("2023-10-10", @"<input id=""datepicker"" type=""text"" class=""form-control"" value=""2023-10-10"">")]
+        public void Value(string value, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio
+            var control = new ControlFormItemInputDatepicker()
             {
-                Description = description
+                Value = value
             };
 
             // test execution
@@ -78,20 +78,20 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the Pattern property of the form item input radio control.
+        /// Tests the required property of the form datepicker control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData("pattern", @"<div class=""radio""><label><input pattern=""pattern"" type=""radio""></label></div>")]
-        public void Pattern(string pattern, string expected)
+        [InlineData(false, @"<input id=""datepicker"" type=""text"" class=""form-control"">")]
+        [InlineData(true, @"<input id=""datepicker"" type=""text"" class=""form-control"">")]
+        public void Required(bool required, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio
+            var control = new ControlFormItemInputDatepicker()
             {
-                Pattern = pattern
+                Required = required
             };
 
             // test execution

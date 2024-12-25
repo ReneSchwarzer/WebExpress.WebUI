@@ -4,24 +4,24 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the form item input radio control.
+    /// Tests the form static text control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlFormItemInputRadio
+    public class UnitTestControlFormItemStaticText
     {
         /// <summary>
-        /// Tests the id property of the form item input radio control.
+        /// Tests the id property of the form static text control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData("id", @"<div class=""radio""><label><input id=""id"" type=""radio""></label></div>")]
+        [InlineData(null, @"<p></p>")]
+        [InlineData("id", @"<p id=""id""></p>")]
         public void Id(string id, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio(id)
+            var control = new ControlFormItemStaticText(id)
             {
             };
 
@@ -32,20 +32,20 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the Inline property of the form item input radio control.
+        /// Tests the name property of the form static text control.
         /// </summary>
         [Theory]
-        [InlineData(false, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData(true, @"<div class=""radio form-check-inline""><label><input type=""radio""></label></div>")]
-        public void Inline(bool inline, string expected)
+        [InlineData(null, @"<p></p>")]
+        [InlineData("abc", @"<p></p>")]
+        public void Name(string name, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio
+            var control = new ControlFormItemStaticText()
             {
-                Inline = inline
+                Name = name
             };
 
             // test execution
@@ -55,20 +55,20 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the Description property of the form item input radio control.
+        /// Tests the label property of the form static text control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData("description", @"<div class=""radio""><label><input type=""radio"">&nbsp;description </label></div>")]
-        public void Description(string description, string expected)
+        [InlineData(null, @"<p></p>")]
+        [InlineData("abc", @"<p></p>")]
+        public void Label(string label, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio
+            var control = new ControlFormItemStaticText()
             {
-                Description = description
+                Label = label
             };
 
             // test execution
@@ -78,20 +78,20 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the Pattern property of the form item input radio control.
+        /// Tests the text property of the form static text control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData("pattern", @"<div class=""radio""><label><input pattern=""pattern"" type=""radio""></label></div>")]
-        public void Pattern(string pattern, string expected)
+        [InlineData(null, @"<p></p>")]
+        [InlineData("abc", @"<p>abc</p>")]
+        public void Text(string text, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio
+            var control = new ControlFormItemStaticText()
             {
-                Pattern = pattern
+                Text = text
             };
 
             // test execution

@@ -4,24 +4,24 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the form item input radio control.
+    /// Tests the form move control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlFormItemInputRadio
+    public class UnitTestControlFormItemInputMove
     {
         /// <summary>
-        /// Tests the id property of the form item input radio control.
+        /// Tests the id property of the form move control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData("id", @"<div class=""radio""><label><input id=""id"" type=""radio""></label></div>")]
+        [InlineData(null, @"<div id=""selection-move-*""></div>")]
+        [InlineData("id", @"<div id=""selection-move-id""></div>")]
         public void Id(string id, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio(id)
+            var control = new ControlFormItemInputMove(id)
             {
             };
 
@@ -32,20 +32,20 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the Inline property of the form item input radio control.
+        /// Tests the name property of the form move control.
         /// </summary>
         [Theory]
-        [InlineData(false, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData(true, @"<div class=""radio form-check-inline""><label><input type=""radio""></label></div>")]
-        public void Inline(bool inline, string expected)
+        [InlineData(null, @"<div id=""selection-move-*""></div>")]
+        [InlineData("abc", @"<div id=""selection-move-*""></div>")]
+        public void Name(string name, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio
+            var control = new ControlFormItemInputMove()
             {
-                Inline = inline
+                Name = name
             };
 
             // test execution
@@ -55,20 +55,20 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the Description property of the form item input radio control.
+        /// Tests the value property of the form move control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData("description", @"<div class=""radio""><label><input type=""radio"">&nbsp;description </label></div>")]
-        public void Description(string description, string expected)
+        [InlineData(null, @"<div id=""selection-move-*""></div>")]
+        [InlineData("abc", @"<div id=""selection-move-*""></div>")]
+        public void Value(string value, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio
+            var control = new ControlFormItemInputMove()
             {
-                Description = description
+                Value = value
             };
 
             // test execution
@@ -78,26 +78,25 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the Pattern property of the form item input radio control.
+        /// Tests the Add method of the form move control.
         /// </summary>
-        [Theory]
-        [InlineData(null, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData("pattern", @"<div class=""radio""><label><input pattern=""pattern"" type=""radio""></label></div>")]
-        public void Pattern(string pattern, string expected)
+        [Fact]
+        public void Add()
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio
+            var control = new ControlFormItemInputMove()
             {
-                Pattern = pattern
             };
 
             // test execution
+            control.Add(new ControlFormItemInputSelectionItem() { Label = "label" });
             var html = control.Render(context);
 
-            AssertExtensions.EqualWithPlaceholders(expected, html);
+            Assert.NotEmpty(control.Options);
+            AssertExtensions.EqualWithPlaceholders(@"<div id=""selection-move-*""></div>", html);
         }
     }
 }

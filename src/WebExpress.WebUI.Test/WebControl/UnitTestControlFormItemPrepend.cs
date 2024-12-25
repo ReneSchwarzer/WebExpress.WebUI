@@ -4,24 +4,24 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the form item input radio control.
+    /// Tests the form item prepend control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlFormItemInputRadio
+    public class UnitTestControlFormItemPrepend
     {
         /// <summary>
-        /// Tests the id property of the form item input radio control.
+        /// Tests the id property of the form item prepend control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData("id", @"<div class=""radio""><label><input id=""id"" type=""radio""></label></div>")]
+        [InlineData(null, @"<div class=""input-group-prepend""></div>")]
+        [InlineData("id", @"<div id=""id"" class=""input-group-prepend""></div>")]
         public void Id(string id, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio(id)
+            var control = new ControlFormItemPrepend(id)
             {
             };
 
@@ -32,20 +32,23 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the Inline property of the form item input radio control.
+        /// Tests the direction property of the form item prepend control.
         /// </summary>
         [Theory]
-        [InlineData(false, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData(true, @"<div class=""radio form-check-inline""><label><input type=""radio""></label></div>")]
-        public void Inline(bool inline, string expected)
+        [InlineData(TypeDirection.Default, @"<div class=""input-group-prepend""></div>")]
+        [InlineData(TypeDirection.Vertical, @"<div class=""input-group-prepend flex-column""></div>")]
+        [InlineData(TypeDirection.VerticalReverse, @"<div class=""input-group-prepend flex-column-reverse""></div>")]
+        [InlineData(TypeDirection.Horizontal, @"<div class=""input-group-prepend flex-row""></div>")]
+        [InlineData(TypeDirection.HorizontalReverse, @"<div class=""input-group-prepend flex-row-reverse""></div>")]
+        public void Direction(TypeDirection direction, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio
+            var control = new ControlFormItemPrepend()
             {
-                Inline = inline
+                Direction = direction,
             };
 
             // test execution
@@ -55,20 +58,21 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the Description property of the form item input radio control.
+        /// Tests the fluid property of the form item prepend control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData("description", @"<div class=""radio""><label><input type=""radio"">&nbsp;description </label></div>")]
-        public void Description(string description, string expected)
+        [InlineData(TypePanelContainer.None, @"<div class=""input-group-prepend""></div>")]
+        [InlineData(TypePanelContainer.Default, @"<div class=""input-group-prepend container""></div>")]
+        [InlineData(TypePanelContainer.Fluid, @"<div class=""input-group-prepend container-fluid""></div>")]
+        public void Fluid(TypePanelContainer fluid, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio
+            var control = new ControlFormItemPrepend()
             {
-                Description = description
+                Fluid = fluid,
             };
 
             // test execution
@@ -78,23 +82,24 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the Pattern property of the form item input radio control.
+        /// Tests the add function of the form item prepend control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""radio""><label><input type=""radio""></label></div>")]
-        [InlineData("pattern", @"<div class=""radio""><label><input pattern=""pattern"" type=""radio""></label></div>")]
-        public void Pattern(string pattern, string expected)
+        [InlineData(typeof(ControlText), @"<div class=""input-group-prepend""><div></div></div>")]
+        [InlineData(typeof(ControlLink), @"<div class=""input-group-prepend""><a class=""link""></a></div>")]
+        [InlineData(typeof(ControlImage), @"<div class=""input-group-prepend""><img></div>")]
+        public void Add(Type child, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
-            var control = new ControlFormItemInputRadio
-            {
-                Pattern = pattern
-            };
+            var childInstance = Activator.CreateInstance(child, [null]) as IControl;
+            var control = new ControlFormItemPrepend();
 
             // test execution
+            control.Add(childInstance);
+
             var html = control.Render(context);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);

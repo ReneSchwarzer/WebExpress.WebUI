@@ -32,6 +32,34 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
+        /// Tests the background color property of the list control.
+        /// </summary>
+        [Theory]
+        [InlineData(TypeColorBackground.Default, @"<ul></ul>")]
+        [InlineData(TypeColorBackground.Primary, @"<ul class=""bg-primary""></ul>")]
+        [InlineData(TypeColorBackground.Secondary, @"<ul class=""bg-secondary""></ul>")]
+        [InlineData(TypeColorBackground.Warning, @"<ul class=""bg-warning""></ul>")]
+        [InlineData(TypeColorBackground.Danger, @"<ul class=""bg-danger""></ul>")]
+        [InlineData(TypeColorBackground.Dark, @"<ul class=""bg-dark""></ul>")]
+        [InlineData(TypeColorBackground.Light, @"<ul class=""bg-light""></ul>")]
+        [InlineData(TypeColorBackground.Transparent, @"<ul class=""bg-transparent""></ul>")]
+        public void BackgroundColor(TypeColorBackground backgroundColor, string expected)
+        {
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var control = new ControlList()
+            {
+                BackgroundColor = new PropertyColorBackground(backgroundColor)
+            };
+
+            // test execution
+            var html = control.Render(context);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
+        }
+
+        /// <summary>
         /// Tests the layout property of the list control.
         /// </summary>
         [Theory]
