@@ -7,8 +7,14 @@ namespace WebExpress.WebUI.WebControl
     /// <summary>
     /// Identifies a control that is to be filled in by the user.
     /// </summary>
+    /// <remarks>
+    /// This class provides the base functionality for form input items.
+    /// </remarks>
     public abstract class ControlFormItemInput : ControlFormItem, IControlFormLabel, IFormValidation
     {
+        private readonly List<IControl> _prepend = [];
+        private readonly List<IControl> _append = [];
+
         /// <summary>
         /// Event to validate the input values.
         /// </summary>
@@ -35,14 +41,14 @@ namespace WebExpress.WebUI.WebControl
         public bool Disabled { get; set; }
 
         /// <summary>
-        /// Returns or sets the elements that are displayed in front of the control.
+        /// Returns the elements that are displayed in front of the control.
         /// </summary>
-        public List<Control> Prepend { get; private set; }
+        public List<IControl> Prepend => _prepend;
 
         /// <summary>
-        /// Returns or sets the elements that are displayed after the control.
+        /// Returns the elements that are displayed after the control.
         /// </summary>
-        public List<Control> Append { get; private set; }
+        public List<IControl> Append => _append;
 
         /// <summary>
         /// Returns or sets whether the form element has been validated.
@@ -97,9 +103,42 @@ namespace WebExpress.WebUI.WebControl
         public ControlFormItemInput(string id)
             : base(id)
         {
-            Prepend = new List<Control>();
-            Append = new List<Control>();
             IsValidated = false;
+        }
+
+        // <summary>
+        // Adds one or more controls to the prepend list.
+        // </summary>
+        // <param name="controls">The controls to add.</param>
+        public void AddPrepend(params IControl[] controls)
+        {
+            _prepend.AddRange(controls);
+        }
+
+        /// <summary>
+        /// Removes a control from the prepend list.
+        /// </summary>
+        /// <param name="control">The control to remove.</param>
+        public void RemovePrepend(IControl control)
+        {
+            _prepend.Remove(control);
+        }
+
+        /// <summary>
+        /// Adds one or more controls to the append list.
+        /// </summary>
+        /// <param name="controls">The controls to add.</param>
+        public void AddAppend(params IControl[] controls)
+        {
+            _append.AddRange(controls);
+        }
+        /// <summary>
+        /// Removes a control from the append list.
+        /// </summary>
+        /// <param name="control">The control to remove.</param>
+        public void RemoveAppend(IControl control)
+        {
+            _append.Remove(control);
         }
 
         /// <summary>
