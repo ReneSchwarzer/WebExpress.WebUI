@@ -1,11 +1,14 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    // <summary>
+    // Interface for a control button.
+    // </summary>
     public interface IControlButton : IControl
     {
         /// <summary>
         /// Returns or sets the color. der Schaltfläche
         /// </summary>
-        PropertyColorButton BackgroundColor { get; set; }
+        new PropertyColorButton BackgroundColor { get; set; }
 
         /// <summary>
         /// Returns or sets the size.

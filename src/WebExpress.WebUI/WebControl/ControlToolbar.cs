@@ -1,129 +1,165 @@
-﻿//using System.Collections.Generic;
-//using System.Linq;
-//using WebExpress.WebCore.WebHtml;
-//using WebExpress.WebCore.WebPage;
+﻿using System.Collections.Generic;
+using System.Linq;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
-//namespace WebExpress.WebUI.WebControl
-//{
-//    public class ControlToolbar : Control
-//    {
-//        /// <summary>
-//        /// Die horizontale Anordnung
-//        /// </summary>
-//        public virtual TypeOrientationToolBar Orientation
-//        {
-//            get => (TypeOrientationToolBar)GetProperty(TypeOrientationToolBar.Default);
-//            set => SetProperty(value, () => value.ToClass());
-//        }
+namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Represents a toolbar control that can contain various toolbar items.
+    /// </summary>
+    public class ControlToolbar : Control
+    {
+        private List<IControlToolbarItem> _items = [];
 
-//        /// <summary>
-//        /// Die fixierte Anordnung
-//        /// </summary>
-//        public virtual TypeFixed Fixed
-//        {
-//            get => (TypeFixed)GetProperty(TypeFixed.None);
-//            set => SetProperty(value, () => value.ToClass());
-//        }
+        /// <summary>
+        /// Returns the list of toolbar items.
+        /// </summary>
+        /// <value>
+        /// A list of <see cref="IControlToolbarItem"/> representing the items in the toolbar.
+        /// </value>
+        public List<IControlToolbarItem> Items => _items;
 
-//        /// <summary>
-//        /// Fixiert die Anordnung, wenn sich die Toolbar am oberen Rand befindet
-//        /// </summary>
-//        public virtual TypeSticky Sticky
-//        {
-//            get => (TypeSticky)GetProperty(TypeSticky.None);
-//            set => SetProperty(value, () => value.ToClass());
-//        }
+        /// <summary>
+        /// Returns or sets the orientation of the toolbar.
+        /// </summary>
+        public virtual TypeOrientationToolBar Orientation
+        {
+            get => (TypeOrientationToolBar)GetProperty(TypeOrientationToolBar.Default);
+            set => SetProperty(value, () => value.ToClass());
+        }
 
-//        /// <summary>
-//        /// Returns or sets the content.
-//        /// </summary>
-//        public List<IControlToolBarItem> Items { get; private set; } = new List<IControlToolBarItem>();
+        /// <summary>
+        /// Returns or sets the fixed position of the toolbar.
+        /// </summary>
+        public virtual TypeFixed Fixed
+        {
+            get => (TypeFixed)GetProperty(TypeFixed.None);
+            set => SetProperty(value, () => value.ToClass());
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        public ControlToolbar(string id = null)
-//            : base(id)
-//        {
-//            Init();
-//        }
+        /// <summary>
+        /// Returns or sets the sticky position of the toolbar.
+        /// </summary>
+        public virtual TypeSticky Sticky
+        {
+            get => (TypeSticky)GetProperty(TypeSticky.None);
+            set => SetProperty(value, () => value.ToClass());
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        /// <param name="items">Die Toolitems</param>
-//        public ControlToolbar(string id = null, params IControlToolBarItem[] items)
-//            : this(id)
-//        {
-//            Add(items);
-//        }
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="items">Die Toolitems</param>
+        public ControlToolbar(string id = null, params IControlToolbarItem[] items)
+            : base(id)
+        {
+            BackgroundColor = new PropertyColorBackground(TypeColorBackground.Warning);
+            Orientation = TypeOrientationToolBar.Default;
+            Padding = new PropertySpacingPadding(PropertySpacing.Space.Two, PropertySpacing.Space.None);
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="items">Die Toolitems</param>
-//        public ControlToolbar(params IControlToolBarItem[] items)
-//            : this((string)null)
-//        {
-//            Add(items);
-//        }
+            _items.AddRange(items);
+        }
 
-//        /// <summary>
-//        /// Initialization
-//        /// </summary>
-//        private void Init()
-//        {
-//            BackgroundColor = new PropertyColorBackground(TypeColorBackground.Warning);
-//            Orientation = TypeOrientationToolBar.Default;
-//            Padding = new PropertySpacingPadding(PropertySpacing.Space.Two, PropertySpacing.Space.None);
-//        }
+        /// <summary>
+        /// Adds one or more toolbar items to the toolbar.
+        /// </summary>
+        /// <param name="items">The toolbar items to add.</param>
+        /// <remarks>
+        /// This method appends the specified collection of <see cref="IControlToolbarItem"/> instances to the 
+        /// current tool bar. It ensures that the new items are concatenated with the existing ones, 
+        /// maintaining the order of addition.
+        /// Example usage:
+        /// <code>
+        /// var tool = new ControlToolbar();
+        /// var item1 = new ControlToolBarItemButton { Text = "Item 1" };
+        /// var item2 = new ControlToolBarItemButton { Text = "Item 2" };
+        /// tool.Add(item1, item2);
+        /// </code>
+        /// This method accepts any item that derives from <see cref="ControlListItem"/>.
+        /// </remarks>
+        public void Add(params IControlToolbarItem[] items)
+        {
+            _items.AddRange(items);
+        }        /// <summary>
+        /// Adds one or more toolbar items to the toolbar.
+        /// </summary>
+        /// <param name="items">The toolbar items to add.</param>
+        /// <remarks>
+        /// This method appends the specified collection of <see cref="IControlToolbarItem"/> instances to the 
+        /// current tool bar. It ensures that the new items are concatenated with the existing ones, 
+        /// maintaining the order of addition.
+        /// Example usage:
+        /// <code>
+        /// var tool = new ControlToolbar();
+        /// var item1 = new ControlToolBarItemButton { Text = "Item 1" };
+        /// var item2 = new ControlToolBarItemButton { Text = "Item 2" };
+        /// tool.Add(new List<IControlToolbarItem>([ item1, item2 ]));
+        /// </code>
+        /// This method accepts any item that derives from <see cref="IControlToolbarItem"/>.
+        /// </remarks>
+        public void Add(IEnumerable<IControlToolbarItem> items)
+        {
+            _items.AddRange(items);
+        }
 
-//        /// <summary>
-//        /// Fügt Einträge hinzu
-//        /// </summary>
-//        /// <param name="item">The entries. welcher hinzugefügt werden sollen</param>
-//        public void Add(params IControlToolBarItem[] item)
-//        {
-//            Items.AddRange(item);
-//        }
+        /// <summary>
+        /// Removes a toolbar item from the toolbar.
+        /// </summary>
+        /// <param name="item">The toolbar item to remove.</param>
+        /// <remarks>
+        /// This method removes the specified <see cref="IControlToolbarItem"/> instance from the 
+        /// current tool bar. If the item does not exist in the tool bar, the method does nothing.
+        /// Example usage:
+        /// <code>
+        /// var tool = new ControlToolbar();
+        /// var item = new ControlToolBarItemButton { Text = "Item 1" };
+        /// tool.Add(item);
+        /// tool.Remove(item);
+        /// </code>
+        /// This method accepts any item that derives from <see cref="IControlToolbarItem"/>.
+        /// </remarks>
+        public void Remove(IControlToolbarItem item)
+        {
+            _items.Remove(item);
+        }
 
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <returns>The control as html.</returns>
-//        public override IHtmlNode Render(IRenderContext context)
-//        {
-//            var html = new HtmlElementSectionNav()
-//            {
-//                Id = Id,
-//                Class = GetClasses(),
-//                Style = GetStyles(),
-//                Role = Role
-//            };
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext)
+        {
+            var html = new HtmlElementSectionNav()
+            {
+                Id = Id,
+                Class = GetClasses(),
+                Style = GetStyles(),
+                Role = Role
+            };
 
-//            html.Elements.Add
-//            (
-//                new HtmlElementTextContentUl
-//                (
-//                    Items.Select
-//                    (
-//                        x =>
-//                        x == null || x is ControlDropdownItemDivider || x is ControlLine ?
-//                        new HtmlElementTextContentLi() { Class = "divider", Inline = true } :
-//                        x is ControlDropdownItemHeader ?
-//                        x.Render(context) :
-//                        new HtmlElementTextContentLi(x.Render(context)) { Class = "nav-item" }
-//                    )
-//                )
-//                {
-//                    Class = HorizontalAlignment == TypeHorizontalAlignment.Right ? "" : "navbar-nav"
-//                }
-//            );
+            html.Add
+            (
+                new HtmlElementTextContentUl
+                (
+                    Items.Select
+                    (
+                        x =>
+                        x == null || x is ControlDropdownItemDivider || x is ControlLine ?
+                        new HtmlElementTextContentLi() { Class = "divider", Inline = true } :
+                        x is ControlDropdownItemHeader ?
+                        x.Render(renderContext) :
+                        new HtmlElementTextContentLi(x.Render(renderContext)) { Class = "nav-item" }
+                    ).ToArray()
+                )
+                {
+                    Class = HorizontalAlignment == TypeHorizontalAlignment.Right ? "" : "navbar-nav"
+                }
+            );
 
-//            return html;
-//        }
-//    }
-//}
+            return html;
+        }
+    }
+}

@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.Test.WebControl
     /// Tests the list control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlList : IClassFixture<UnitTestControlFixture>
+    public class UnitTestControlList
     {
         /// <summary>
         /// Tests the id property of the list control.
@@ -28,7 +28,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // test execution
             var html = control.Render(context);
 
-            Assert.Equal(expected, html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // test execution
             var html = control.Render(context);
 
-            Assert.Equal(expected, html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // test execution
             var html = control.Render(context);
 
-            Assert.Equal(expected, html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>

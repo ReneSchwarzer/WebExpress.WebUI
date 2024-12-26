@@ -27,7 +27,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // test execution
             var html = control.Render(context);
 
-            Assert.Equal(expected, html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
@@ -180,33 +180,34 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Add()
         {
             // preconditions
-            //UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            //var context = UnitTestControlFixture.CrerateRenderContextMock();
-            //var control1 = new ControlSplitButton(null, new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
-            //var control2 = new ControlSplitButton(null, [new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
-            //var control3 = new ControlSplitButton(null, new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
-            //var control4 = new ControlSplitButton(null);
-            //var control5 = new ControlSplitButton(null);
-            //var control6 = new ControlSplitButton(null);
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var control1 = new ControlSplitButton(null, new ControlSplitButtonItemLink() { Text = "abc" });
+            var control2 = new ControlSplitButton(null, [new ControlSplitButtonItemLink() { Text = "abc" }]);
+            var control3 = new ControlSplitButton(null, new List<IControlSplitButtonItem>([new ControlSplitButtonItemLink() { Text = "abc" }]).ToArray());
+            var control4 = new ControlSplitButton(null);
+            var control5 = new ControlSplitButton(null);
+            var control6 = new ControlSplitButton(null);
 
-            //// test execution
-            //control4.Add(new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
-            //control5.Add([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
-            //control6.Add(new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
+            // test execution
+            control4.Add(new ControlSplitButtonItemLink() { Text = "abc" });
+            control5.Add([new ControlSplitButtonItemLink() { Text = "abc" }]);
+            control6.Add(new List<IControlSplitButtonItem>([new ControlSplitButtonItemLink() { Text = "abc" }]).ToArray());
 
-            //var html1 = control1.Render(context);
-            //var html2 = control2.Render(context);
-            //var html3 = control2.Render(context);
-            //var html4 = control1.Render(context);
-            //var html5 = control2.Render(context);
-            //var html6 = control2.Render(context);
+            var html1 = control1.Render(context);
+            var html2 = control2.Render(context);
+            var html3 = control2.Render(context);
+            var html4 = control1.Render(context);
+            var html5 = control2.Render(context);
+            var html6 = control2.Render(context);
 
-            //AssertExtensions.EqualWithPlaceholders(@"<div class=""btn-group ""><button class=""btn""></button>*</div>", html1.Trim());
-            //AssertExtensions.EqualWithPlaceholders(@"<div class=""btn-group ""><button class=""btn""></button>*</div>", html2.Trim());
-            //AssertExtensions.EqualWithPlaceholders(@"<div class=""btn-group ""><button class=""btn""></button>*</div>", html3.Trim());
-            //AssertExtensions.EqualWithPlaceholders(@"<div class=""btn-group ""><button class=""btn""></button>*</div>", html4.Trim());
-            //AssertExtensions.EqualWithPlaceholders(@"<div class=""btn-group ""><button class=""btn""></button>*</div>", html5.Trim());
-            //AssertExtensions.EqualWithPlaceholders(@"<div class=""btn-group ""><button class=""btn""></button>*</div>", html6.Trim());
+            var expected = @"<div class=""btn-group"">*<a class=""link"">abc</a>*</div>";
+            AssertExtensions.EqualWithPlaceholders(expected, html1);
+            AssertExtensions.EqualWithPlaceholders(expected, html2);
+            AssertExtensions.EqualWithPlaceholders(expected, html3);
+            AssertExtensions.EqualWithPlaceholders(expected, html4);
+            AssertExtensions.EqualWithPlaceholders(expected, html5);
+            AssertExtensions.EqualWithPlaceholders(expected, html6);
         }
     }
 }

@@ -1,84 +1,67 @@
-﻿//using System.Linq;
-//using WebExpress.WebCore.WebHtml;
-//using WebExpress.WebCore.WebPage;
+﻿using System.Linq;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
-//namespace WebExpress.WebUI.WebControl
-//{
-//    public class ControlPanelCallout : ControlPanel
-//    {
-//        /// <summary>
-//        /// Delivers or sets the title.
-//        /// </summary>
-//        public string Title { get; set; }
+namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Represents a callout panel control that can contain multiple child controls.
+    /// </summary>
+    public class ControlPanelCallout : ControlPanel
+    {
+        /// <summary>
+        /// Returns or sets the title.
+        /// </summary>
+        public string Title { get; set; }
 
-//        /// <summary>
-//        /// Returns or sets the color.
-//        /// </summary>
-//        public PropertyColorCallout Color
-//        {
-//            get => (PropertyColorCallout)GetPropertyObject();
-//            set => SetProperty(value, () => value?.ToClass(), () => value?.ToStyle());
-//        }
+        /// <summary>
+        /// Returns or sets the color.
+        /// </summary>
+        public PropertyColorCallout Color
+        {
+            get => (PropertyColorCallout)GetPropertyObject();
+            set => SetProperty(value, () => value?.ToClass(), () => value?.ToStyle());
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        public ControlPanelCallout(string id = null)
-//            : base(id)
-//        {
-//        }
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="content">The content of the html element.</param>
+        public ControlPanelCallout(string id = null, params IControl[] content)
+            : base(id, content)
+        {
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="content">The content of the html element.</param>
-//        public ControlPanelCallout(params Control[] content)
-//            : this()
-//        {
-//            Content.AddRange(content);
-//        }
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext)
+        {
+            var html = new HtmlElementTextContentDiv()
+            {
+                Id = Id,
+                Class = Css.Concatenate("callout", GetClasses()),
+                Style = GetStyles(),
+                Role = Role
+            };
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        /// <param name="content">The content of the html element.</param>
-//        public ControlPanelCallout(string id, params Control[] content)
-//            : this(id)
-//        {
-//            Content.AddRange(content);
-//        }
+            if (Title != null)
+            {
+                html.Add(new HtmlElementTextSemanticsSpan(new HtmlText(Title))
+                {
+                    Class = "callout-title"
+                });
+            }
 
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <returns>The control as html.</returns>
-//        public override IHtmlNode Render(IRenderContext context)
-//        {
-//            var html = new HtmlElementTextContentDiv()
-//            {
-//                Id = Id,
-//                Class = Css.Concatenate("callout", GetClasses()),
-//                Style = GetStyles(),
-//                Role = Role
-//            };
+            html.Add(new HtmlElementTextContentDiv(Content.Select(x => x.Render(renderContext)).ToArray())
+            {
+                Class = "callout-body"
+            });
 
-//            if (Title != null)
-//            {
-//                html.Elements.Add(new HtmlElementTextSemanticsSpan(new HtmlText(Title))
-//                {
-//                    Class = "callout-title"
-//                });
-//            }
-
-//            html.Elements.Add(new HtmlElementTextContentDiv(from x in Content select x.Render(context))
-//            {
-//                Class = "callout-body"
-//            });
-
-//            return html;
-//        }
-//    }
-//}
+            return html;
+        }
+    }
+}

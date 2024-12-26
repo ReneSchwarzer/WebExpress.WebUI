@@ -4,13 +4,13 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the panel control.
+    /// Tests the center panel control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlPanel
+    public class UnitTestControlPanelCenter
     {
         /// <summary>
-        /// Tests the id property of the panel control.
+        /// Tests the id property of the center panel control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<div></div>")]
@@ -20,7 +20,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlPanel(id)
+            var control = new ControlPanelCenter(id)
             {
             };
 
@@ -31,7 +31,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the background color property of the panel control.
+        /// Tests the background color property of the center panel control.
         /// </summary>
         [Theory]
         [InlineData(TypeColorBackground.Default, @"<div></div>")]
@@ -47,7 +47,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlPanel()
+            var control = new ControlPanelCenter()
             {
                 BackgroundColor = new PropertyColorBackground(backgroundColor)
             };
@@ -59,7 +59,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the direction property of the panel control.
+        /// Tests the direction property of the center panel control.
         /// </summary>
         [Theory]
         [InlineData(TypeDirection.Default, @"<div></div>")]
@@ -72,7 +72,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlPanel()
+            var control = new ControlPanelCenter()
             {
                 Direction = direction,
             };
@@ -84,7 +84,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the fluid property of the panel control.
+        /// Tests the fluid property of the center panel control.
         /// </summary>
         [Theory]
         [InlineData(TypePanelContainer.None, @"<div></div>")]
@@ -95,7 +95,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlPanel()
+            var control = new ControlPanelCenter()
             {
                 Fluid = fluid,
             };
@@ -107,7 +107,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add child function of the panel control.
+        /// Tests the add child function of the center panel control.
         /// </summary>
         [Theory]
         [InlineData(typeof(ControlText), @"<div><div></div></div>")]
@@ -119,7 +119,7 @@ namespace WebExpress.WebUI.Test.WebControl
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
             var childInstance = Activator.CreateInstance(child, [null]) as IControl;
-            var control = new ControlPanel();
+            var control = new ControlPanelCenter();
 
             // test execution
             control.Add(childInstance);

@@ -97,7 +97,8 @@ namespace WebExpress.WebUI.WebControl
         public void Add(params IControlSplitButtonItem[] items)
         {
             _items.AddRange(items);
-        }
+        }
+
         /// <summary>
         /// Adds one or more items to the split button.
         /// </summary>
@@ -105,6 +106,23 @@ namespace WebExpress.WebUI.WebControl
         public void Add(IEnumerable<IControlSplitButtonItem> items)
         {
             _items.AddRange(items);
+        }
+
+        /// <summary>
+        /// Adds a divider to the split button.
+        /// </summary>
+        public void AddDivider()
+        {
+            _items.Add(null);
+        }
+
+        /// <summary>
+        /// Adds a header item to the split button.
+        /// </summary>
+        /// <param name="text">The text of the header item.</param>
+        public void AddHeader(string text)
+        {
+            _items.Add(new ControlSplitButtonItemHeader() { Text = text });
         }
 
         /// <summary>

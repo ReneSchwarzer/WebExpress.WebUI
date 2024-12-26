@@ -100,7 +100,8 @@ namespace WebExpress.WebUI.WebControl
         public void Remove(ControlListItem item)
         {
             _items.Remove(item);
-        }
+        }
+
         /// <summary>
         /// Convert the control to HTML.
         /// </summary>

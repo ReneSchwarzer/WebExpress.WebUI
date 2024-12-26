@@ -1,7 +1,7 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Kennzeichnet ein Element als Eigenschaft
+    /// Interface for defining properties that can be converted to CSS classes or styles.
     /// </summary>
     public interface IProperty
     {
