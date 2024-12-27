@@ -10,7 +10,7 @@ namespace WebExpress.WebUI.WebControl
     /// </summary>
     public class RenderControlFormContext : RenderControlContext, IRenderControlFormContext
     {
-        private readonly IList<ValidationResult> _validationResults = [];
+        private readonly List<ValidationResult> _validationResults = [];
 
         /// <summary>
         /// The form in which the control is rendered.

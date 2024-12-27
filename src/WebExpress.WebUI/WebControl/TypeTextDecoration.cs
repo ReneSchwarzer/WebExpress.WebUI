@@ -1,18 +1,31 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Specifies the type of text decoration.
+    /// </summary>
     public enum TypeTextDecoration
     {
+        /// <summary>
+        /// The default text decoration.
+        /// </summary>
         Default,
+
+        /// <summary>
+        /// No text decoration.
+        /// </summary>
         None
     }
 
+    /// <summary>
+    /// Provides extension methods for the <see cref="TypeTextDecoration"/> enum.
+    /// </summary>
     public static class TypeTextDecorationExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the text decoration type to a corresponding CSS class.
         /// </summary>
-        /// <param name="layout">The layout to be converted</param>
-        /// <returns>The CSS class belonging to the layout</returns>
+        /// <param name="layout">The text decoration type to be converted.</param>
+        /// <returns>The CSS class corresponding to the text decoration type.</returns>
         public static string ToClass(this TypeTextDecoration layout)
         {
             return layout switch

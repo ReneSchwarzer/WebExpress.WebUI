@@ -2,28 +2,31 @@
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents the size properties of an icon, including width, height, and unit.
+    /// </summary>
     public class PropertySizeIcon : IProperty
     {
         /// <summary>
-        /// Die Einhelten
+        /// Gets the unit of measurement for the size.
         /// </summary>
         public TypeSizeUnit Unit { get; protected set; } = TypeSizeUnit.Pixel;
 
         /// <summary>
-        /// Die System-Größe
+        /// Gets the width of the icon.
         /// </summary>
         public int Width { get; protected set; } = -1;
 
         /// <summary>
-        /// Die benutzerdefinierte Größe
+        /// Gets the height of the icon.
         /// </summary>
         public int Height { get; protected set; } = -1;
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the class with the same width and height.
         /// </summary>
-        /// <param name="size">Die Größe</param>
-        /// <param name="unit">Die Einheit</param>
+        /// <param name="size">The size of the icon.</param>
+        /// <param name="unit">The unit of measurement for the size.</param>
         public PropertySizeIcon(int size, TypeSizeUnit unit)
         {
             Width = size;
@@ -32,11 +35,11 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the class with specified width and height.
         /// </summary>
-        /// <param name="width">Die Weite in Pixel</param>
-        /// <param name="height">Die Höhe in Pixel</param>
-        /// <param name="unit">Die Einheit</param>
+        /// <param name="width">The width of the icon.</param>
+        /// <param name="height">The height of the icon.</param>
+        /// <param name="unit">The unit of measurement for the size.</param>
         public PropertySizeIcon(int width, int height, TypeSizeUnit unit)
         {
             Width = width;
@@ -45,18 +48,18 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the size properties to a CSS class.
         /// </summary>
-        /// <returns>Die zur Farbe gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class representing the size properties.</returns>
         public virtual string ToClass()
         {
             return null;
         }
 
         /// <summary>
-        /// Umwandlung in einen CSS-Style
+        /// Converts the size properties to a CSS style.
         /// </summary>
-        /// <returns>Das zur Farbe gehörende CSS-Style</returns>
+        /// <returns>The CSS style representing the size properties.</returns>
         public virtual string ToStyle()
         {
             var style = new StringBuilder();
@@ -82,6 +85,5 @@ namespace WebExpress.WebUI.WebControl
 
             return style.ToString();
         }
-
     }
 }

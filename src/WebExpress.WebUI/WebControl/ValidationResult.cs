@@ -24,5 +24,6 @@
         {
             Type = type;
             Text = text;
-        }    }
+        }
+    }
 }

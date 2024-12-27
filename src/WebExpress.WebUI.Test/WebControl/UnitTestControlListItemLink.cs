@@ -172,6 +172,28 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
+        /// Tests the Active property of the list item link control.
+        /// </summary>
+        [Theory]
+        [InlineData(TypeActive.None, @"<a class=""list-group-item-action""></a>")]
+        [InlineData(TypeActive.Active, @"<a class=""list-group-item-action active""></a>")]
+        public void Active(TypeActive active, string expected)
+        {
+            // preconditions
+            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var control = new ControlListItemLink(null)
+            {
+                Active = active
+            };
+
+            // test execution
+            var html = control.Render(context);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
+        }
+
+        /// <summary>
         /// Tests the add function of the list item link control.
         /// </summary>
         [Fact]

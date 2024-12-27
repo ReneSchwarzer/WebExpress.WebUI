@@ -6,27 +6,27 @@
     public class PropertyModal
     {
         /// <summary>
-        /// The modal type.
+        /// Returns the modal type.
         /// </summary>
         public TypeModal Type { get; protected set; }
 
         /// <summary>
-        /// The custom modal.
+        /// Returns the custom modal.
         /// </summary>
         public ControlModal Modal { get; protected set; }
 
         /// <summary>
-        /// The size of the modal.
+        /// Returns the size of the modal.
         /// </summary>
         public TypeModalSize Size { get; protected set; }
 
         /// <summary>
-        /// The uri.
+        /// Returns the uri.
         /// </summary>
         public string Uri { get; protected set; }
 
         /// <summary>
-        /// The forwarding uri.
+        /// Returns the forwarding uri.
         /// </summary>
         public string RedirectUri { get; set; }
 
@@ -57,7 +57,7 @@
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="type">The modal type</param>
+        /// <param name="type">The modal type.</param>
         /// <param name="modal">Custom modal or null.</param>
         /// <param name="size">The size of the modal.</param>
         public PropertyModal(TypeModal type, ControlModal modal, TypeModalSize size = TypeModalSize.Default)
@@ -71,7 +71,7 @@
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="type">The modal type</param>
+        /// <param name="type">The modal type.</param>
         /// <param name="uri">The uri.</param>
         /// <param name="size">The size of the modal.</param>
         public PropertyModal(TypeModal type, string uri, TypeModalSize size = TypeModalSize.Default)

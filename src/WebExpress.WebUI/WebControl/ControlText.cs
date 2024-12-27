@@ -63,7 +63,7 @@ namespace WebExpress.WebUI.WebControl
         public override IHtmlNode Render(IRenderControlContext renderContext)
         {
             var text = I18N.Translate(renderContext?.Request.Culture, Text);
-            HtmlElement html;
+            var html = default(HtmlElement);
 
             switch (Format)
             {

@@ -79,7 +79,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add child function of the panel callout control.
+        /// Tests the add function of the panel callout control.
         /// </summary>
         [Theory]
         [InlineData(typeof(ControlText), @"<div class=""callout""><div class=""callout-body""><div></div></div></div>")]

@@ -1,6 +1,5 @@
 ﻿using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
-using Xunit.Abstractions;
 
 namespace WebExpress.WebUI.Test.WebControl
 {
@@ -8,29 +7,8 @@ namespace WebExpress.WebUI.Test.WebControl
     /// Tests the alert control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlAlert : IClassFixture<UnitTestControlFixture>
+    public class UnitTestControlAlert
     {
-        /// <summary>
-        /// Returns the log.
-        /// </summary>
-        protected ITestOutputHelper Output { get; private set; }
-
-        /// <summary>
-        /// Returns the test context.
-        /// </summary>
-        protected UnitTestControlFixture Fixture { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="fixture">The log.</param>
-        /// <param name="output">The test context.</param>
-        public UnitTestControlAlert(UnitTestControlFixture fixture, ITestOutputHelper output)
-        {
-            Fixture = fixture;
-            Output = output;
-        }
-
         /// <summary>
         /// Tests the id property of the alert control.
         /// </summary>

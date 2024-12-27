@@ -4,23 +4,23 @@ using WebExpress.WebUI.WebControl;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the center panel control.
+    /// Tests the grid control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlPanelCenter
+    public class UnitTestControlPanelGrid
     {
         /// <summary>
-        /// Tests the id property of the center panel control.
+        /// Tests the id property of the grid control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div></div>")]
-        [InlineData("id", @"<div id=""id""></div>")]
+        [InlineData(null, @"<div><div class=""row""></div></div>")]
+        [InlineData("id", @"<div id=""id""><div class=""row""></div></div>")]
         public void Id(string id, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlPanelCenter(id)
+            var control = new ControlPanelGrid(id)
             {
             };
 
@@ -31,23 +31,23 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the background color property of the center panel control.
+        /// Tests the background color property of the grid control.
         /// </summary>
         [Theory]
-        [InlineData(TypeColorBackground.Default, @"<div></div>")]
-        [InlineData(TypeColorBackground.Primary, @"<div class=""bg-primary""></div>")]
-        [InlineData(TypeColorBackground.Secondary, @"<div class=""bg-secondary""></div>")]
-        [InlineData(TypeColorBackground.Warning, @"<div class=""bg-warning""></div>")]
-        [InlineData(TypeColorBackground.Danger, @"<div class=""bg-danger""></div>")]
-        [InlineData(TypeColorBackground.Dark, @"<div class=""bg-dark""></div>")]
-        [InlineData(TypeColorBackground.Light, @"<div class=""bg-light""></div>")]
-        [InlineData(TypeColorBackground.Transparent, @"<div class=""bg-transparent""></div>")]
+        [InlineData(TypeColorBackground.Default, @"<div><div class=""row""></div></div>")]
+        [InlineData(TypeColorBackground.Primary, @"<div class=""bg-primary""><div class=""row""></div></div>")]
+        [InlineData(TypeColorBackground.Secondary, @"<div class=""bg-secondary""><div class=""row""></div></div>")]
+        [InlineData(TypeColorBackground.Warning, @"<div class=""bg-warning""><div class=""row""></div></div>")]
+        [InlineData(TypeColorBackground.Danger, @"<div class=""bg-danger""><div class=""row""></div></div>")]
+        [InlineData(TypeColorBackground.Dark, @"<div class=""bg-dark""><div class=""row""></div></div>")]
+        [InlineData(TypeColorBackground.Light, @"<div class=""bg-light""><div class=""row""></div></div>")]
+        [InlineData(TypeColorBackground.Transparent, @"<div class=""bg-transparent""><div class=""row""></div></div>")]
         public void BackgroundColor(TypeColorBackground backgroundColor, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlPanelCenter()
+            var control = new ControlPanelGrid()
             {
                 BackgroundColor = new PropertyColorBackground(backgroundColor)
             };
@@ -59,20 +59,20 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the direction property of the center panel control.
+        /// Tests the direction property of the grid control.
         /// </summary>
         [Theory]
-        [InlineData(TypeDirection.Default, @"<div></div>")]
-        [InlineData(TypeDirection.Vertical, @"<div class=""flex-column""></div>")]
-        [InlineData(TypeDirection.VerticalReverse, @"<div class=""flex-column-reverse""></div>")]
-        [InlineData(TypeDirection.Horizontal, @"<div class=""flex-row""></div>")]
-        [InlineData(TypeDirection.HorizontalReverse, @"<div class=""flex-row-reverse""></div>")]
+        [InlineData(TypeDirection.Default, @"<div><div class=""row""></div></div>")]
+        [InlineData(TypeDirection.Vertical, @"<div class=""flex-column""><div class=""row""></div></div>")]
+        [InlineData(TypeDirection.VerticalReverse, @"<div class=""flex-column-reverse""><div class=""row""></div></div>")]
+        [InlineData(TypeDirection.Horizontal, @"<div class=""flex-row""><div class=""row""></div></div>")]
+        [InlineData(TypeDirection.HorizontalReverse, @"<div class=""flex-row-reverse""><div class=""row""></div></div>")]
         public void Direction(TypeDirection direction, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlPanelCenter()
+            var control = new ControlPanelGrid()
             {
                 Direction = direction,
             };
@@ -84,18 +84,18 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the fluid property of the center panel control.
+        /// Tests the fluid property of the grid control.
         /// </summary>
         [Theory]
-        [InlineData(TypePanelContainer.None, @"<div></div>")]
-        [InlineData(TypePanelContainer.Default, @"<div class=""container""></div>")]
-        [InlineData(TypePanelContainer.Fluid, @"<div class=""container-fluid""></div>")]
+        [InlineData(TypePanelContainer.None, @"<div><div class=""row""></div></div>")]
+        [InlineData(TypePanelContainer.Default, @"<div class=""container""><div class=""row""></div></div>")]
+        [InlineData(TypePanelContainer.Fluid, @"<div class=""container-fluid""><div class=""row""></div></div>")]
         public void Fluid(TypePanelContainer fluid, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlPanelCenter()
+            var control = new ControlPanelGrid()
             {
                 Fluid = fluid,
             };
@@ -107,19 +107,19 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add function of the center panel control.
+        /// Tests the add function of the grid control.
         /// </summary>
         [Theory]
-        [InlineData(typeof(ControlText), @"<div><div></div></div>")]
-        [InlineData(typeof(ControlLink), @"<div><a class=""link""></a></div>")]
-        [InlineData(typeof(ControlImage), @"<div><img></div>")]
+        [InlineData(typeof(ControlText), @"<div><div class=""row""><div></div></div></div>")]
+        [InlineData(typeof(ControlLink), @"<div><div class=""row""><a class=""link""></a></div></div>")]
+        [InlineData(typeof(ControlImage), @"<div><div class=""row""><img></div></div>")]
         public void Add(Type child, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
             var childInstance = Activator.CreateInstance(child, [null]) as IControl;
-            var control = new ControlPanelCenter();
+            var control = new ControlPanelGrid();
 
             // test execution
             control.Add(childInstance);

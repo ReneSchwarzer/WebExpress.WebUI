@@ -1,22 +1,36 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Die Layoutmöglichkeiten des Grid-Systems
+    /// The layout options for the grid system.
     /// </summary>
     public enum TypePanelGridRow
     {
+        /// <summary>
+        /// No specific layout.
+        /// </summary>
         None,
+
+        /// <summary>
+        /// Automatic layout.
+        /// </summary>
         Auto,
+
+        /// <summary>
+        /// Fluid layout.
+        /// </summary>
         Fluid
     }
 
+    /// <summary>
+    /// Extension methods for the <see cref="TypePanelGridRow"/> enum.
+    /// </summary>
     public static class TypePanelGridRowExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the layout to a CSS class.
         /// </summary>
-        /// <param name="layout">The layout to be converted</param>
-        /// <returns>The CSS class belonging to the layout</returns>
+        /// <param name="layout">The layout to be converted.</param>
+        /// <returns>The CSS class corresponding to the layout.</returns>
         public static string ToClass(this TypePanelGridRow layout)
         {
             return layout switch

@@ -30,7 +30,7 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlListItem(string id = null, params Control[] content)
+        public ControlListItem(string id = null, params IControl[] content)
             : base(id)
         {
             _content.AddRange(content);
@@ -88,7 +88,7 @@ namespace WebExpress.WebUI.WebControl
         /// This method allows removing a specific control from the <see cref="Content"/> collection of 
         /// the list item.
         /// </remarks>
-        public virtual void Remove(Control control)
+        public virtual void Remove(IControl control)
         {
             _content.Remove(control);
         }

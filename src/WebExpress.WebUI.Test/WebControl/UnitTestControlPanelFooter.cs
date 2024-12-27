@@ -79,7 +79,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add child function of the panel footer control.
+        /// Tests the add function of the panel footer control.
         /// </summary>
         [Theory]
         [InlineData(typeof(ControlText), @"<footer><div></div></footer>")]

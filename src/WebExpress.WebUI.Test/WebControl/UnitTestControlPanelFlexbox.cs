@@ -176,13 +176,13 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add child function of the panel flexbox control.
+        /// Tests the add function of the panel flexbox control.
         /// </summary>
         [Theory]
         [InlineData(typeof(ControlText), @"<div><div></div></div>")]
         [InlineData(typeof(ControlLink), @"<div><a class=""link""></a></div>")]
         [InlineData(typeof(ControlImage), @"<div><img></div>")]
-        public void AddChildren(Type child, string expected)
+        public void Add(Type child, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();

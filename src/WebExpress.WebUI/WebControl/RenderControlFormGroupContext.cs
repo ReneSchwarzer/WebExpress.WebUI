@@ -6,7 +6,7 @@
     public class RenderControlFormGroupContext : RenderControlFormContext, IRenderControlFormGroupContext
     {
         /// <summary>
-        /// Die Gruppe, indem das Steuerelement gerendert wird
+        /// Returns the group in which the control is rendered.
         /// </summary>
         public ControlFormItemGroup Group { get; private set; }
 
@@ -14,7 +14,7 @@
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        /// <param name="group">Die Gruppe</param>
+        /// <param name="group">The group in which the control is rendered.</param>
         public RenderControlFormGroupContext(IRenderControlFormContext context, ControlFormItemGroup group)
             : base(context)
         {

@@ -1,23 +1,41 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Die ProgressBar Formate
+    /// The formats for the progress bar.
     /// </summary>
     public enum TypeFormatProgress
     {
+        /// <summary>
+        /// The default format.
+        /// </summary>
         Default,
+
+        /// <summary>
+        /// The colored format.
+        /// </summary>
         Colored,
+
+        /// <summary>
+        /// The striped format.
+        /// </summary>
         Striped,
+
+        /// <summary>
+        /// The animated format.
+        /// </summary>
         Animated
     }
 
+    /// <summary>
+    /// Extension methods for the <see cref="TypeFormatProgress"/> enum.
+    /// </summary>
     public static class TypesProgressBarFormatExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the layout to a CSS class.
         /// </summary>
-        /// <param name="layout">The layout to be converted</param>
-        /// <returns>The CSS class belonging to the layout</returns>
+        /// <param name="layout">The layout to be converted.</param>
+        /// <returns>The CSS class corresponding to the layout.</returns>
         public static string ToClass(this TypeFormatProgress layout)
         {
             return layout switch

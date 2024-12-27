@@ -107,7 +107,7 @@ namespace WebExpress.WebUI.WebControl
         /// This method allows removing a specific control from the <see cref="Content"/> collection of 
         /// the modal.
         /// </remarks>
-        public virtual void Remove(Control control)
+        public virtual void Remove(IControl control)
         {
             _content.Remove(control);
         }

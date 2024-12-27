@@ -107,7 +107,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add child function of the navbar control.
+        /// Tests the add function of the navbar control.
         /// </summary>
         [Theory]
         [InlineData(typeof(ControlText), @"<nav class=""navbar""><div></div></nav>")]

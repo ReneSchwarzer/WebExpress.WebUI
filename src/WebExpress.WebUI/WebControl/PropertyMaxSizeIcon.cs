@@ -2,42 +2,45 @@
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents the maximum size properties of an icon, including width, height, and unit.
+    /// </summary>
     public class PropertyMaxSizeIcon : PropertySizeIcon
     {
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the class with a specified size and unit.
         /// </summary>
-        /// <param name="size">Die Größe</param>
-        /// <param name="unit">Die Einheit</param>
+        /// <param name="size">The size of the icon.</param>
+        /// <param name="unit">The unit of the size.</param>
         public PropertyMaxSizeIcon(int size, TypeSizeUnit unit)
             : base(size, unit)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the class with specified width, height, and unit.
         /// </summary>
-        /// <param name="width">Die Weite in Pixel</param>
-        /// <param name="height">Die Höhe in Pixel</param>
-        /// <param name="unit">Die Einheit</param>
+        /// <param name="width">The width of the icon in pixels.</param>
+        /// <param name="height">The height of the icon in pixels.</param>
+        /// <param name="unit">The unit of the size.</param>
         public PropertyMaxSizeIcon(int width, int height, TypeSizeUnit unit)
             : base(width, height, unit)
         {
         }
 
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the property to a CSS class.
         /// </summary>
-        /// <returns>Die zur Farbe gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class corresponding to the property.</returns>
         public override string ToClass()
         {
             return null;
         }
 
         /// <summary>
-        /// Umwandlung in einen CSS-Style
+        /// Converts the property to a CSS style.
         /// </summary>
-        /// <returns>Das zur Farbe gehörende CSS-Style</returns>
+        /// <returns>The CSS style corresponding to the property.</returns>
         public override string ToStyle()
         {
             var style = new StringBuilder();
@@ -63,6 +66,5 @@ namespace WebExpress.WebUI.WebControl
 
             return style.ToString();
         }
-
     }
 }

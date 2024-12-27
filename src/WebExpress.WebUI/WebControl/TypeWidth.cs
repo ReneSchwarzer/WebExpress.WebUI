@@ -1,24 +1,46 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Die Weitenoptionen
+    /// Specifies the width types for a web control.
     /// </summary>
     public enum TypeWidth
     {
+        /// <summary>
+        /// Default width.
+        /// </summary>
         Default,
+
+        /// <summary>
+        /// Twenty-five percent width.
+        /// </summary>
         TwentyFive,
+
+        /// <summary>
+        /// Fifty percent width.
+        /// </summary>
         Fifty,
+
+        /// <summary>
+        /// Seventy-five percent width.
+        /// </summary>
         SeventyFive,
+
+        /// <summary>
+        /// One hundred percent width.
+        /// </summary>
         OneHundred
     }
 
+    /// <summary>
+    /// Extension methods for the <see cref="TypeWidth"/> enum.
+    /// </summary>
     public static class TypesWidthExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the width to a CSS class.
         /// </summary>
-        /// <param name="width">Die Weite, welche umgewandelt werden soll</param>
-        /// <returns>Die zur Anordnung gehörende CSS-KLasse</returns>
+        /// <param name="width">The width to be converted.</param>
+        /// <returns>The corresponding CSS class for the width.</returns>
         public static string ToClass(this TypeWidth width)
         {
             return width switch

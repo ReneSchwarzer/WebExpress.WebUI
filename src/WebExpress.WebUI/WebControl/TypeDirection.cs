@@ -1,24 +1,46 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Die Anordnungsmöglichkeiten
+    /// The possible arrangements.
     /// </summary>
     public enum TypeDirection
     {
+        /// <summary>
+        /// The default arrangement.
+        /// </summary>
         Default,
+
+        /// <summary>
+        /// The vertical arrangement.
+        /// </summary>
         Vertical,
+
+        /// <summary>
+        /// The horizontal arrangement.
+        /// </summary>
         Horizontal,
+
+        /// <summary>
+        /// The reverse vertical arrangement.
+        /// </summary>
         VerticalReverse,
+
+        /// <summary>
+        /// The reverse horizontal arrangement.
+        /// </summary>
         HorizontalReverse
     }
 
+    /// <summary>
+    /// Extension methods for the <see cref="TypeDirection"/> enum.
+    /// </summary>
     public static class TypesFlexboxDirectionExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the direction to a CSS class.
         /// </summary>
-        /// <param name="direction">Die Anordnung, welches umgewandelt werden soll</param>
-        /// <returns>Die zur Anordnung gehörende CSS-KLasse</returns>
+        /// <param name="direction">The direction to be converted.</param>
+        /// <returns>The CSS class corresponding to the direction.</returns>
         public static string ToClass(this TypeDirection direction)
         {
             return direction switch

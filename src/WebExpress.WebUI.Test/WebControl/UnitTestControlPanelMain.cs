@@ -79,7 +79,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add child function of the panel main control.
+        /// Tests the add function of the panel main control.
         /// </summary>
         [Theory]
         [InlineData(typeof(ControlText), @"<main><div></div></main>")]

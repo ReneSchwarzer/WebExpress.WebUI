@@ -130,7 +130,7 @@ namespace WebExpress.WebUI.WebControl
         /// </code>
         /// This method accepts any control that implements the <see cref="IControl"/> interface.
         /// </remarks>
-        public void Add(IEnumerable<Control> controls)
+        public void Add(IEnumerable<IControl> controls)
         {
             _content.AddRange(controls);
         }
@@ -143,7 +143,7 @@ namespace WebExpress.WebUI.WebControl
         /// This method allows removing a specific control from the <see cref="Content"/> collection of 
         /// the control panel.
         /// </remarks>
-        public void Remove(Control control)
+        public void Remove(IControl control)
         {
             _content.Remove(control);
         }

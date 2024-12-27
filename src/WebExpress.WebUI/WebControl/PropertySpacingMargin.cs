@@ -1,5 +1,8 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents the margin spacing properties for a web control.
+    /// </summary>
     public class PropertySpacingMargin : PropertySpacing
     {
         /// <summary>
@@ -11,40 +14,40 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the class with the same spacing for all sides.
         /// </summary>
-        /// <param name="size">Die Abstände</param>
+        /// <param name="size">The spacing size for all sides.</param>
         public PropertySpacingMargin(Space size)
             : base(size)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the class with different horizontal and vertical spacing.
         /// </summary>
-        /// <param name="horizontal">Der horzontale Abstand</param>
-        /// <param name="vertical">Der vertikale Abstand</param>
+        /// <param name="horizontal">The horizontal spacing.</param>
+        /// <param name="vertical">The vertical spacing.</param>
         public PropertySpacingMargin(Space horizontal, Space vertical)
             : base(horizontal, vertical)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the <see cref="PropertySpacingMargin"/> class with specific spacing for each side.
         /// </summary>
-        /// <param name="left">Der linke Abstand</param>
-        /// <param name="right">Der rechte Abstand</param>
-        /// <param name="top">Der obere Abstand</param>
-        /// <param name="bottom">Der untere Abstand</param>
+        /// <param name="left">The left spacing.</param>
+        /// <param name="right">The right spacing.</param>
+        /// <param name="top">The top spacing.</param>
+        /// <param name="bottom">The bottom spacing.</param>
         public PropertySpacingMargin(Space left, Space right, Space top, Space bottom)
             : base(left, right, top, bottom)
         {
         }
 
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the margin spacing values to a CSS class.
         /// </summary>
-        /// <returns>The CSS class belonging to the layout</returns>
+        /// <returns>The CSS class representing the margin spacing.</returns>
         public override string ToClass()
         {
             return ToClass("m");

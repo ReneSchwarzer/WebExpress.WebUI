@@ -1,35 +1,39 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents an icon property that can be either a system-defined icon or a user-defined icon.
+    /// </summary>
     public class PropertyIcon : IProperty
     {
         /// <summary>
-        /// Das System-Icon
+        /// Returns the system icon.
         /// </summary>
         public TypeIcon SystemIcon { get; protected set; }
 
         /// <summary>
-        /// Das benutzerdefinierte Icon
+        /// Returns te user-defined icon.
         /// </summary>
         public string UserIcon { get; protected set; }
 
         /// <summary>
-        /// Die Größe des Icons (nur bei Benutzerdefinierten Icons)
+        /// Returns the size of the icon (only for user-defined icons).
         /// </summary>
         public PropertySizeIcon Size { get; protected set; }
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the class with a system icon.
         /// </summary>
-        /// <param name="icon">Das System-Icon</param>
+        /// <param name="icon">The system icon.</param>
         public PropertyIcon(TypeIcon icon)
         {
             SystemIcon = icon;
         }
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the class with a user-defined icon.
         /// </summary>
-        /// <param name="icon">Das benutzerdefinierte Icon</param>
+        /// <param name="icon">The user-defined icon.</param>
+        /// <param name="size">The size of the icon.</param>
         public PropertyIcon(string icon, PropertySizeIcon size = null)
         {
             SystemIcon = TypeIcon.None;
@@ -38,9 +42,9 @@
         }
 
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the icon to a CSS class.
         /// </summary>
-        /// <returns>Die zum Icon gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class corresponding to the icon.</returns>
         public virtual string ToClass()
         {
             if (SystemIcon != TypeIcon.None)
@@ -52,9 +56,9 @@
         }
 
         /// <summary>
-        /// Umwandlung in einen CSS-Style
+        /// Converts the icon to a CSS style.
         /// </summary>
-        /// <returns>Das zum Icon gehörende CSS-Style</returns>
+        /// <returns>The CSS style corresponding to the icon.</returns>
         public virtual string ToStyle()
         {
             if (SystemIcon == TypeIcon.None)
@@ -66,15 +70,15 @@
         }
 
         /// <summary>
-        /// Prüft ob ein Icon gesetzt ist
+        /// Checks if an icon is set.
         /// </summary>
-        /// <returns>True wenn ein Icon gesetzt ist, false sonst</returns>
+        /// <returns>True if an icon is set, false otherwise.</returns>
         public virtual bool HasIcon => SystemIcon != TypeIcon.None || UserIcon != null;
 
         /// <summary>
-        /// Prüft ob ein benutzerdefiniertes Icon gesetzt ist
+        /// Checks if a user-defined icon is set.
         /// </summary>
-        /// <returns>True wenn ein benutzerdefiniertes Icon gesetzt ist, false sonst</returns>
+        /// <returns>True if a user-defined icon is set, false otherwise.</returns>
         public virtual bool IsUserIcon => UserIcon != null;
     }
 }

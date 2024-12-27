@@ -1,28 +1,66 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Die Standardhintergrundfarben
+    /// The standard background colors.
     /// </summary>
     public enum TypeColorLine
     {
+        /// <summary>
+        /// Default background color.
+        /// </summary>
         Default = 0,
+
+        /// <summary>
+        /// Primary background color.
+        /// </summary>
         Primary = 1,
+
+        /// <summary>
+        /// Secondary background color.
+        /// </summary>
         Secondary = 2,
+
+        /// <summary>
+        /// Success background color.
+        /// </summary>
         Success = 3,
+
+        /// <summary>
+        /// Info background color.
+        /// </summary>
         Info = 4,
+
+        /// <summary>
+        /// Warning background color.
+        /// </summary>
         Warning = 5,
+
+        /// <summary>
+        /// Danger background color.
+        /// </summary>
         Danger = 6,
+
+        /// <summary>
+        /// Dark background color.
+        /// </summary>
         Dark = 7,
+
+        /// <summary>
+        /// Light background color.
+        /// </summary>
         Light = 8
     }
 
+    /// <summary>
+    /// Extension methods for the <see cref="TypeColorLine"/> enum.
+    /// </summary>
     public static class TypeColorLineExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the background color to a CSS class.
         /// </summary>
-        /// <param name="color">Die Hintergrundfarbe, welches umgewandelt werden soll</param>
-        /// <returns>The CSS class belonging to the layout</returns>
+        /// <param name="color">The background color to be converted.</param>
+        /// <returns>The CSS class corresponding to the background color.</returns>
         public static string ToClass(this TypeColorLine color)
         {
             return color switch

@@ -1,21 +1,31 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Spannt die Schaltfläche über die gesammte Bereite
+    /// Specifies the type of block button.
     /// </summary>
     public enum TypeBlockButton
     {
+        /// <summary>
+        /// No block button.
+        /// </summary>
         None,
+
+        /// <summary>
+        /// Block button that spans the entire width.
+        /// </summary>
         Block
     }
 
+    /// <summary>
+    /// Provides extension methods for the <see cref="TypeBlockButton"/> enum.
+    /// </summary>
     public static class TypeBlockButtonExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the block button type to a corresponding CSS class.
         /// </summary>
-        /// <param name="block">Der Wert, welches umgewandelt werden soll</param>
-        /// <returns>Die zum Block gehörende CSS-KLasse</returns>
+        /// <param name="block">The block button type to convert.</param>
+        /// <returns>The CSS class corresponding to the block button type.</returns>
         public static string ToClass(this TypeBlockButton block)
         {
             return block switch

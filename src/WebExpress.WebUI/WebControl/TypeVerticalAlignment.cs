@@ -1,29 +1,59 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Die Ausrichtung von Inline-Elementen
+    /// Specifies the vertical alignment of inline elements.
     /// </summary>
     public enum TypeVerticalAlignment
     {
+        /// <summary>
+        /// Default alignment.
+        /// </summary>
         Default = 0,
+
+        /// <summary>
+        /// Aligns with the baseline of the parent element.
+        /// </summary>
         Baseline = 1,
+
+        /// <summary>
+        /// Aligns with the top of the parent element.
+        /// </summary>
         Top = 2,
+
+        /// <summary>
+        /// Aligns with the middle of the parent element.
+        /// </summary>
         Middle = 3,
+
+        /// <summary>
+        /// Aligns with the bottom of the parent element.
+        /// </summary>
         Bottom = 4,
+
+        /// <summary>
+        /// Aligns with the top of the text.
+        /// </summary>
         TextTop = 5,
+
+        /// <summary>
+        /// Aligns with the bottom of the text.
+        /// </summary>
         TextBottom = 6
     }
 
+    /// <summary>
+    /// Provides extension methods for the <see cref="TypeVerticalAlignment"/> enum.
+    /// </summary>
     public static class TypeVerticalAlignmentExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the vertical alignment type to a corresponding CSS class.
         /// </summary>
-        /// <param name="color">Die Hintergrundfarbe, welches umgewandelt werden soll</param>
-        /// <returns>The CSS class belonging to the layout</returns>
-        public static string ToClass(this TypeVerticalAlignment color)
+        /// <param name="alignment">The vertical alignment type to convert.</param>
+        /// <returns>The CSS class corresponding to the vertical alignment type.</returns>
+        public static string ToClass(this TypeVerticalAlignment alignment)
         {
-            return color switch
+            return alignment switch
             {
                 TypeVerticalAlignment.Baseline => "align-baseline",
                 TypeVerticalAlignment.Top => "align-top",

@@ -1,5 +1,8 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Enumeration of different types of icons.
+    /// </summary>
     public enum TypeIcon
     {
         None,
@@ -112,15 +115,15 @@
     }
 
     /// <summary>
-    /// Erweiterung des Types
+    /// Provides extension methods for the <see cref="TypeIcon"/> enumeration.
     /// </summary>
     public static class TypeIconExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the specified <see cref="TypeIcon"/> to its corresponding CSS class string.
         /// </summary>
-        /// <param name="icon">Das Icon, welches umgewandelt werden soll</param>
-        /// <returns>Die zum Icon gehörende CSS-KLasse</returns>
+        /// <param name="icon">The icon to convert.</param>
+        /// <returns>The CSS class string corresponding to the specified icon.</returns>
         public static string ToClass(this TypeIcon icon)
         {
             return icon switch

@@ -1,20 +1,23 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a property for the color of a navbar.
+    /// </summary>
     public class PropertyColorNavbar : PropertyColor<TypeColorNavbar>
     {
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the class with a specified system color.
         /// </summary>
-        /// <param name="color">Die Farbe</param>
+        /// <param name="color">The system color.</param>
         public PropertyColorNavbar(TypeColorNavbar color)
         {
             SystemColor = color;
         }
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the class with a specified user color.
         /// </summary>
-        /// <param name="color">Die Farbe</param>
+        /// <param name="color">The user-defined color.</param>
         public PropertyColorNavbar(string color)
         {
             SystemColor = (TypeColorNavbar)TypeColor.User;
@@ -22,9 +25,9 @@
         }
 
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the color property to a CSS class.
         /// </summary>
-        /// <returns>Die zur Farbe gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class corresponding to the navbar color.</returns>
         public override string ToClass()
         {
             if ((TypeColor)SystemColor != TypeColor.Default && (TypeColor)SystemColor != TypeColor.User)
@@ -36,9 +39,9 @@
         }
 
         /// <summary>
-        /// Umwandlung in einen CSS-Style
+        /// Converts the color property to a CSS style.
         /// </summary>
-        /// <returns>Der zur Farbe gehörende CSS-Style</returns>
+        /// <returns>The CSS style corresponding to the navbar color.</returns>
         public override string ToStyle()
         {
             if ((TypeColor)SystemColor == TypeColor.User)

@@ -82,7 +82,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add child function of the panel split control.
+        /// Tests the add function of the panel split control.
         /// </summary>
         [Theory]
         [InlineData(typeof(ControlText), @"<div class=""d-flex split border""><div id=""-p1""><div></div></div><div id=""-p2""><div></div></div></div>")]

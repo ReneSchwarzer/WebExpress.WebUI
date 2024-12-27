@@ -1,20 +1,23 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a property color for progress elements.
+    /// </summary>
     public class PropertyColorProgress : PropertyColor<TypeColorProgress>
     {
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the class with the specified color.
         /// </summary>
-        /// <param name="color">Die Farbe</param>
+        /// <param name="color">The color to be used for the progress element.</param>
         public PropertyColorProgress(TypeColorProgress color)
         {
             SystemColor = color;
         }
 
         /// <summary>
-        /// Initializes a new instance of the class.
+        /// Initializes a new instance of the class with the specified color.
         /// </summary>
-        /// <param name="color">Die Farbe</param>
+        /// <param name="color">The color to be used for the progress element.</param>
         public PropertyColorProgress(string color)
         {
             SystemColor = (TypeColorProgress)TypeColor.User;
@@ -24,7 +27,7 @@
         /// <summary>
         /// Conversion to a CSS class.
         /// </summary>
-        /// <returns>Die zur Farbe gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class corresponding to the badge color.</returns>
         public override string ToClass()
         {
             if ((TypeColor)SystemColor != TypeColor.Default && (TypeColor)SystemColor != TypeColor.User)
@@ -36,17 +39,19 @@
         }
 
         /// <summary>
-        /// Umwandlung in einen CSS-Style
+        /// Conversion to a CSS style.
         /// </summary>
-        /// <returns>Der zur Farbe gehörende CSS-Style</returns>
+        /// <returns>The CSS style corresponding to the progress color.</returns>
         public override string ToStyle()
         {
-            if ((TypeColor)SystemColor == TypeColor.User)
             {
-                return "background:" + UserColor + ";";
-            }
+                if ((TypeColor)SystemColor == TypeColor.User)
+                {
+                    return "background:" + UserColor + ";";
+                }
 
-            return null;
+                return null;
+            }
         }
     }
 }
