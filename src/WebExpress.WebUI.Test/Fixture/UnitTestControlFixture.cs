@@ -13,7 +13,6 @@ using WebExpress.WebCore.WebMessage;
 using WebExpress.WebCore.WebPage;
 using WebExpress.WebCore.WebPlugin;
 using WebExpress.WebCore.WebUri;
-using WebExpress.WebUI.WebComponent;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.Fixture
@@ -59,7 +58,7 @@ namespace WebExpress.WebUI.Test.Fixture
         /// <returns>The component hub.</returns>
         public static ComponentHub CreateComponentHubMock()
         {
-            var ctorComponentHub = typeof(ComponentHubUI).GetConstructor
+            var ctorComponentHub = typeof(ComponentHub).GetConstructor
             (
                 BindingFlags.NonPublic | BindingFlags.Instance,
                 null,
@@ -70,7 +69,7 @@ namespace WebExpress.WebUI.Test.Fixture
             var componentHub = (ComponentHub)ctorComponentHub.Invoke([CreateHttpServerContextMock()]);
 
             // set static field in the webex class
-            var type = typeof(WebEx<IComponentHub>);
+            var type = typeof(WebEx);
             var field = type.GetField("_componentHub", BindingFlags.Static | BindingFlags.NonPublic);
 
             field.SetValue(null, componentHub);

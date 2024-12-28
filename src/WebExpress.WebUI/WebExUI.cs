@@ -1,25 +1,16 @@
 ﻿using System.Runtime.CompilerServices;
-using WebExpress.WebCore;
-using WebExpress.WebCore.WebComponent;
-using WebExpress.WebUI.WebComponent;
+using WebExpress.WebCore.WebAttribute;
 
+[assembly: SystemPlugin()]
 [assembly: InternalsVisibleTo("WebExpress.WebUI.Test")]
 
 namespace WebExpress.WebUI
 {
     /// <summary>
-    /// Represents the WebExpress UI component that extends the WebEx class with the IComponentHubUI interface.
+    /// Represents the WebExUI class which is a part of the WebExpress.WebUI namespace.
+    /// This class is internal and is intended for use within the WebExpress.WebUI assembly.
     /// </summary>
-    public class WebExUI : WebEx<IComponentHubUI>
+    internal class WebExUI
     {
-        /// <summary>
-        /// Creates and returns a new instance of <see cref="IComponentHubUI"/>.
-        /// </summary>
-        /// <param name="httpServerContext">The HTTP server context used to initialize the component manager.</param>
-        /// <returns>A new instance of <see cref="IComponentHubUI"/>.</returns>
-        protected override IComponentHubUI CreateComponentManager(IHttpServerContext httpServerContext)
-        {
-            return ComponentActivator.CreateInstance<ComponentHubUI>(httpServerContext);
-        }
     }
 }
