@@ -15,7 +15,7 @@ namespace WebExpress.WebUI.WebFragment
     /// Represents a fragment interface with a generic type parameter.
     /// </summary>
     /// <typeparam name="T">The type of control that implements the IControl interface.</typeparam>
-    public interface IFragmentControl<T> : IFragment<IRenderControlContext> where T : class, IControl
+    public interface IFragmentControl<T> : IFragment<IRenderControlContext>, IControl where T : class, IControl
     {
         /// <summary>
         /// Gets the context of the fragment.
