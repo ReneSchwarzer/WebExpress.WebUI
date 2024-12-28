@@ -1,126 +1,112 @@
-﻿//using System.Collections.Generic;
-//using System.Linq;
-//using WebExpress.WebCore.WebHtml;
-//using WebExpress.WebCore.WebPage;
+﻿using System.Collections.Generic;
+using System.Linq;
+using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
-//namespace WebExpress.WebUI.WebControl
-//{
-//    public class ControlMultipleProgressBar : Control
-//    {
-//        /// <summary>
-//        /// Returns or sets the format of the progress bar.
-//        /// </summary>
-//        public TypeFormatProgress Format { get; set; }
+namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Represents a control that displays multiple progress bars.
+    /// </summary>
+    public class ControlMultipleProgressBar : Control
+    {
+        private readonly List<ControlMultipleProgressBarItem> _items = [];
 
-//        /// <summary>
-//        /// Returns or sets the value.
-//        /// </summary>
-//        public List<ControlMultipleProgressBarItem> Items { get; private set; }
+        /// <summary>
+        /// Returns the items of the multiple progress bar.
+        /// </summary>
+        public IEnumerable<ControlMultipleProgressBarItem> Items => _items;
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        public ControlMultipleProgressBar(string id = null)
-//            : base(id)
-//        {
-//            Init();
-//        }
+        /// <summary>
+        /// Returns or sets the format of the progress bar.
+        /// </summary>
+        public TypeFormatProgress Format { get; set; }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        /// <param name="value">The value.</param>
-//        public ControlMultipleProgressBar(string id, params ControlMultipleProgressBarItem[] items)
-//            : this(id)
-//        {
-//            Items.AddRange(items);
-//        }
+        /// <summary>
+        /// Initializes a new instance of the class with the specified id and items.
+        /// </summary>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="items">The items to be added to the multiple progress bar.</param>
+        public ControlMultipleProgressBar(string id = null, params ControlMultipleProgressBarItem[] items)
+            : base(id)
+        {
+            _items.AddRange(items);
+        }
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext)
+        {
+            var barClass = new List<string>();
 
-//        /// <summary>
-//        /// Initialization
-//        /// </summary>
-//        private void Init()
-//        {
-//            Items = new List<ControlMultipleProgressBarItem>();
-//        }
+            switch (Format)
+            {
+                case TypeFormatProgress.Colored:
+                    barClass.Add("progress-bar");
+                    break;
 
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <returns>The control as html.</returns>
-//        public override IHtmlNode Render(IRenderContext context)
-//        {
-//            var barClass = new List<string>();
+                case TypeFormatProgress.Striped:
+                    barClass.Add("progress-bar");
+                    barClass.Add("progress-bar-striped");
+                    break;
 
-//            switch (Format)
-//            {
-//                case TypeFormatProgress.Colored:
-//                    barClass.Add("progress-bar");
-//                    break;
+                case TypeFormatProgress.Animated:
+                    barClass.Add("progress-bar");
+                    barClass.Add("progress-bar-striped");
+                    barClass.Add("progress-bar-animated");
+                    break;
 
-//                case TypeFormatProgress.Striped:
-//                    barClass.Add("progress-bar");
-//                    barClass.Add("progress-bar-striped");
-//                    break;
+                default:
+                    return new HtmlElementFormProgress(_items.Select(x => (int)x.Value).Sum() + "%")
+                    {
+                        Id = Id,
+                        Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                        Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
+                        Role = Role,
+                        Min = "0",
+                        Max = "100",
+                        Value = _items.Select(x => (int)x.Value).Sum().ToString()
+                    };
+            }
 
-//                case TypeFormatProgress.Animated:
-//                    barClass.Add("progress-bar");
-//                    barClass.Add("progress-bar-striped");
-//                    barClass.Add("progress-bar-animated");
-//                    break;
+            Classes.Add("progress");
 
-//                default:
-//                    return new HtmlElementFormProgress(Items.Select(x => x.Value).Sum() + "%")
-//                    {
-//                        Id = Id,
-//                        Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
-//                        Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
-//                        Role = Role,
-//                        Min = "0",
-//                        Max = "100",
-//                        Value = Items.Select(x => x.Value).Sum().ToString()
-//                    };
-//            }
+            var html = new HtmlElementTextContentDiv()
+            {
+                Id = Id,
+                Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
+                Role = Role
+            };
 
-//            Classes.Add("progress");
+            foreach (var v in _items)
+            {
+                var styles = new List<string>
+                {
+                    "width: " + v.Value + "%;"
+                };
 
-//            var html = new HtmlElementTextContentDiv()
-//            {
-//                Id = Id,
-//                Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
-//                Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
-//                Role = Role
-//            };
+                var c = new List<string>(barClass)
+                {
+                    v.BackgroundColor.ToClass(),
+                    v.Color.ToClass()
+                };
 
-//            foreach (var v in Items)
-//            {
-//                var styles = new List<string>
-//                {
-//                    "width: " + v.Value + "%;"
-//                };
+                var bar = new HtmlElementTextContentDiv(new HtmlText(I18N.Translate(renderContext.Request?.Culture, v.Text)))
+                {
+                    Id = Id,
+                    Class = string.Join(" ", c.Where(x => !string.IsNullOrWhiteSpace(x))),
+                    Style = string.Join(" ", styles.Where(x => !string.IsNullOrWhiteSpace(x))),
+                    Role = Role
+                };
 
-//                var c = new List<string>(barClass)
-//                {
-//                    v.BackgroundColor.ToClass()
-//                };
+                html.Add(bar);
+            }
 
-//                barClass.Add(v.Color.ToClass());
-
-//                var bar = new HtmlElementTextContentDiv(new HtmlText(v.Text))
-//                {
-//                    Id = Id,
-//                    Class = string.Join(" ", c.Where(x => !string.IsNullOrWhiteSpace(x))),
-//                    Style = string.Join(" ", styles.Where(x => !string.IsNullOrWhiteSpace(x))),
-//                    Role = Role
-//                };
-
-//                html.Elements.Add(bar);
-//            }
-
-//            return html;
-//        }
-//    }
-//}
+            return html;
+        }
+    }
+}

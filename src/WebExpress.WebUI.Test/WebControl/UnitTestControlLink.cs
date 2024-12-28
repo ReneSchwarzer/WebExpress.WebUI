@@ -28,7 +28,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // test execution
             var html = control.Render(context);
 
-            Assert.Equal(expected, html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // test execution
             var html = control.Render(context);
 
-            Assert.Equal(expected, html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // test execution
             var html = control.Render(context);
 
-            Assert.Equal(expected, html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // test execution
             var html = control.Render(context);
 
-            Assert.Equal(expected, html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // test execution
             var html = control.Render(context);
 
-            Assert.Equal(expected, html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // test execution
             var html = control.Render(context);
 
-            Assert.Equal(expected, html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>

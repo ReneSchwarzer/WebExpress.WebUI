@@ -213,9 +213,9 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the value property of the form progress bar control.
         /// </summary>
         [Theory]
-        [InlineData(0, @"<progress min=""0"" max=""100"" value=""0"">0%</progress>")]
-        [InlineData(100, @"<progress min=""0"" max=""100"" value=""100"">100%</progress>")]
-        public void Value(int value, string expected)
+        [InlineData(0u, @"<progress min=""0"" max=""100"" value=""0"">0%</progress>")]
+        [InlineData(100u, @"<progress min=""0"" max=""100"" value=""100"">100%</progress>")]
+        public void Value(uint value, string expected)
         {
             // preconditions
             UnitTestControlFixture.CreateAndRegisterComponentHubMock();

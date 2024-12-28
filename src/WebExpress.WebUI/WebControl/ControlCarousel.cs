@@ -1,115 +1,140 @@
-﻿//using System.Collections.Generic;
-//using WebExpress.WebCore.WebHtml;
-//using WebExpress.WebCore.WebPage;
+﻿using System.Collections.Generic;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
-//namespace WebExpress.WebUI.WebControl
-//{
-//    /// <summary>
-//    /// Creates a slideshow.
-//    /// </summary>
-//    public class ControlCarousel : Control
-//    {
-//        /// <summary>
-//        /// Returns or sets the content.
-//        /// </summary>
-//        public List<ControlCarouselItem> Items { get; private set; } = new List<ControlCarouselItem>();
+namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Represents a carousel control that can contain multiple carousel items.
+    /// </summary>
+    public class ControlCarousel : Control
+    {
+        private readonly List<ControlCarouselItem> _items = [];
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        public ControlCarousel(string id = null)
-//            : base(string.IsNullOrWhiteSpace(id) ? "carousel" : id)
-//        {
-//        }
+        /// <summary>
+        /// Returns the collection of carousel items.
+        /// </summary>
+        /// <value>
+        /// An <see cref="IEnumerable{ControlCarouselItem}"/> representing the carousel items.
+        /// </value>
+        public IEnumerable<ControlCarouselItem> Items => _items;
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="items">The contents of the slideshow.</param>
-//        public ControlCarousel(params ControlCarouselItem[] items)
-//            : this()
-//        {
-//            Items.AddRange(items);
-//        }
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="id">The id of the control.</param>
+        /// <param name="items">The carousel items to be added.</param>
+        public ControlCarousel(string id = null, params ControlCarouselItem[] items)
+            : base(string.IsNullOrWhiteSpace(id) ? "carousel" : id)
+        {
+            _items.AddRange(items);
+        }
 
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <returns>The control as html.</returns>
-//        public override IHtmlNode Render(IRenderContext context)
-//        {
-//            // indicators 
-//            var indicators = new HtmlElementTextContentUl() { Class = "carousel-indicators" };
-//            var index = 0;
+        /// <summary>
+        /// Adds one or more carousel items to the carousel.
+        /// </summary>
+        /// <param name="items">The carousel items to be added.</param>
+        public void Add(params ControlCarouselItem[] items)
+        {
+            _items.AddRange(items);
+        }
 
-//            foreach (var v in Items)
-//            {
-//                var i = new HtmlElementTextContentLi() { Class = index == 0 ? "active" : string.Empty };
-//                i.AddUserAttribute("data-bs-target", "#" + Id);
-//                i.AddUserAttribute("data-bs-slide-to", index.ToString());
+        /// <summary>
+        /// Adds one or more carousel items to the carousel.
+        /// </summary>
+        /// <param name="items">The carousel items to be added.</param>
+        public void Add(IEnumerable<ControlCarouselItem> items)
+        {
+            _items.AddRange(items);
+        }
 
-//                indicators.Elements.Add(i);
+        /// <summary>
+        /// Clears all carousel items from the carousel.
+        /// </summary>
+        public void Clear()
+        {
+            _items.Clear();
+        }
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext)
+        {
+            // indicators 
+            var indicators = new HtmlElementTextContentUl() { Class = "carousel-indicators" };
+            var index = 0;
 
-//                index++;
-//            }
+            foreach (var v in Items)
+            {
+                var i = new HtmlElementTextContentLi() { Class = index == 0 ? "active" : string.Empty };
+                i.AddUserAttribute("data-bs-target", "#" + Id);
+                i.AddUserAttribute("data-bs-slide-to", index.ToString());
 
-//            index = 0;
+                indicators.Add(i);
 
-//            // items
-//            var inner = new HtmlElementTextContentDiv() { Class = "carousel-inner" };
-//            foreach (var v in Items)
-//            {
-//                var i = new HtmlElementTextContentDiv(v?.Control.Render(context)) { Class = index == 0 ? "carousel-item active" : "carousel-item" };
+                index++;
+            }
 
-//                if (!string.IsNullOrWhiteSpace(v.Headline) || !string.IsNullOrWhiteSpace(v.Text))
-//                {
-//                    var caption = new HtmlElementTextContentDiv
-//                    (
-//                        new HtmlElementSectionH3() { Text = v.Headline },
-//                        new HtmlElementTextContentP() { Text = v.Text }
-//                    )
-//                    {
-//                        Class = "carousel-caption"
-//                    };
+            index = 0;
 
-//                    i.Elements.Add(caption);
-//                }
+            // items
+            var inner = new HtmlElementTextContentDiv() { Class = "carousel-inner" };
+            foreach (var v in Items)
+            {
+                var i = new HtmlElementTextContentDiv(v?.Control.Render(renderContext))
+                {
+                    Class = index == 0 ? "carousel-item active" : "carousel-item"
+                };
 
-//                inner.Elements.Add(i);
+                if (!string.IsNullOrWhiteSpace(v.Headline) || !string.IsNullOrWhiteSpace(v.Text))
+                {
+                    var caption = new HtmlElementTextContentDiv
+                    (
+                        new HtmlElementSectionH3() { Text = v.Headline },
+                        new HtmlElementTextContentP() { Text = v.Text }
+                    )
+                    {
+                        Class = "carousel-caption"
+                    };
 
-//                index++;
-//            }
+                    i.Add(caption);
+                }
 
-//            // navigation
-//            var navLeft = new HtmlElementTextSemanticsA(new HtmlElementTextSemanticsSpan() { Class = "carousel-control-prev-icon" })
-//            {
-//                Class = "carousel-control-prev",
-//                Href = "#" + Id
-//            };
-//            navLeft.AddUserAttribute("data-bs-slide", "prev");
+                inner.Add(i);
 
-//            var navRight = new HtmlElementTextSemanticsA(new HtmlElementTextSemanticsSpan() { Class = "carousel-control-next-icon" })
-//            {
-//                Class = "carousel-control-next",
-//                Href = "#" + Id
-//            };
-//            navRight.AddUserAttribute("data-bs-slide", "next");
+                index++;
+            }
 
-//            var html = new HtmlElementTextContentDiv
-//            (
-//                indicators, inner, navLeft, navRight
-//            )
-//            {
-//                Id = Id,
-//                Class = Css.Concatenate("carousel slide", GetClasses()),
-//                Style = GetStyles()
-//            };
+            // navigation
+            var navLeft = new HtmlElementTextSemanticsA(new HtmlElementTextSemanticsSpan() { Class = "carousel-control-prev-icon" })
+            {
+                Class = "carousel-control-prev",
+                Href = "#" + Id
+            };
+            navLeft.AddUserAttribute("data-bs-slide", "prev");
 
-//            html.AddUserAttribute("data-bs-ride", "carousel");
+            var navRight = new HtmlElementTextSemanticsA(new HtmlElementTextSemanticsSpan() { Class = "carousel-control-next-icon" })
+            {
+                Class = "carousel-control-next",
+                Href = "#" + Id
+            };
+            navRight.AddUserAttribute("data-bs-slide", "next");
 
-//            return html;
-//        }
-//    }
-//}
+            var html = new HtmlElementTextContentDiv
+            (
+                indicators, inner, navLeft, navRight
+            )
+            {
+                Id = Id,
+                Class = Css.Concatenate("carousel slide", GetClasses()),
+                Style = GetStyles()
+            };
+
+            html.AddUserAttribute("data-bs-ride", "carousel");
+
+            return html;
+        }
+    }
+}

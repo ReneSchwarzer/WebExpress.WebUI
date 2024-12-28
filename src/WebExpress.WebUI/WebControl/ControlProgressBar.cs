@@ -36,7 +36,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the value.
         /// </summary>
-        public int Value { get; set; }
+        public uint Value { get; set; } = 0;
 
         /// <summary>
         /// Returns or sets the minimum value.

@@ -1,91 +1,40 @@
-﻿//using System.Collections.Generic;
-//using WebExpress.WebCore.WebHtml;
-//using WebExpress.WebCore.WebPage;
+﻿using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
-//namespace WebExpress.WebUI.WebControl
-//{
-//    public class ControlCanvas : Control
-//    {
-//        /// <summary>
-//        /// Returns or sets the content.
-//        /// </summary>
-//        public List<Control> Content { get; private set; }
+namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Represents a canvas control that can contain other controls.
+    /// </summary>
+    /// <remarks>
+    /// The ControlCanvas class provides a container for other controls, allowing for the dynamic construction
+    /// of user interfaces. It supports adding, removing, and rendering child controls.
+    /// </remarks>
+    public class ControlCanvas : Control
+    {
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        public ControlCanvas(string id = null)
+            : base(id)
+        {
+        }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        public ControlCanvas(string id = null)
-//            : base(id)
-//        {
-//            Init();
-//        }
-
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="content">The content of the html element.</param>
-//        public ControlCanvas(params Control[] content)
-//            : this()
-//        {
-//            Content.AddRange(content);
-//        }
-
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id.</param>
-//        /// <param name="content">The content of the html element.</param>
-//        public ControlCanvas(string id, params Control[] content)
-//            : this(id)
-//        {
-//            Content.AddRange(content);
-//        }
-
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id.</param>
-//        /// <param name="content">The content of the html element.</param>
-//        public ControlCanvas(string id, IEnumerable<Control> content)
-//            : this(id)
-//        {
-//            Content.AddRange(content);
-//        }
-
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id.</param>
-//        /// <param name="content">The content of the html element.</param>
-//        public ControlCanvas(string id, List<Control> content)
-//            : base(id)
-//        {
-//            Content = content;
-//        }
-
-//        /// <summary>
-//        /// Initialization
-//        /// </summary>
-//        private void Init()
-//        {
-//            Content = new List<Control>();
-//        }
-
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <returns>The control as html.</returns>
-//        public override IHtmlNode Render(IRenderContext context)
-//        {
-//            return new HtmlElementScriptingCanvas()
-//            {
-//                Id = Id,
-//                Class = Css.Concatenate("", GetClasses()),
-//                Style = GetStyles(),
-//                Role = Role
-//            };
-//        }
-//    }
-//}
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext)
+        {
+            return new HtmlElementScriptingCanvas()
+            {
+                Id = Id,
+                Class = Css.Concatenate("", GetClasses()),
+                Style = GetStyles(),
+                Role = Role
+            };
+        }
+    }
+}

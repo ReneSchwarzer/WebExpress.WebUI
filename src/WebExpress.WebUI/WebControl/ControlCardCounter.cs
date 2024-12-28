@@ -1,99 +1,96 @@
-﻿//using WebExpress.WebCore.WebHtml;
-//using WebExpress.WebCore.WebPage;
+﻿using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
-//namespace WebExpress.WebUI.WebControl
-//{
-//    /// <summary>
-//    /// Informationszähler
-//    /// </summary>
-//    public class ControlCardCounter : ControlPanelCard
-//    {
-//        /// <summary>
-//        /// Returns or sets the icon.
-//        /// </summary>
-//        public PropertyIcon Icon { get; set; }
+namespace WebExpress.WebUI.WebControl
+{
+    /// <summary>
+    /// Represents a counter with an icon, value, progress, and text.
+    /// </summary>
+    public class ControlCardCounter : Control
+    {
+        /// <summary>
+        /// Returns or sets the icon.
+        /// </summary>
+        public PropertyIcon Icon { get; set; }
 
-//        /// <summary>
-//        /// Returns or sets the value. des Counters
-//        /// </summary>
-//        public string Value { get; set; }
+        /// <summary>
+        /// Returns or sets the counter value.
+        /// </summary>
+        public int? Value { get; set; }
 
-//        /// <summary>
-//        /// Returns or sets the value of the progrss.
-//        /// </summary>
-//        public int Progress { get; set; }
+        /// <summary>
+        /// Returns or sets the value of the progrss.
+        /// </summary>
+        public uint? Progress { get; set; }
 
-//        /// <summary>
-//        /// Returns or sets the text.
-//        /// </summary>
-//        public string Text { get; set; }
+        /// <summary>
+        /// Returns or sets the text.
+        /// </summary>
+        public string Text { get; set; }
 
-//        /// <summary>
-//        /// Initializes a new instance of the class.
-//        /// </summary>
-//        /// <param name="id">The id of the control.</param>
-//        public ControlCardCounter(string id = null)
-//            : base(id)
-//        {
-//            TextColor = new PropertyColorText(TypeColorText.Default);
-//            Init();
-//        }
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        /// <param name="id">The id of the control.</param>
+        public ControlCardCounter(string id = null)
+            : base(id)
+        {
+            TextColor = new PropertyColorText(TypeColorText.Default);
+        }
 
-//        /// <summary>
-//        /// Initialization
-//        /// </summary>
-//        private void Init()
-//        {
-//            Progress = -1;
-//        }
+        /// <summary>
+        /// Convert the control to HTML.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext)
+        {
+            var html = new HtmlElementTextSemanticsSpan()
+            {
+                Id = Id,
+                Class = Css.Concatenate("card-counter", GetClasses()),
+                Style = GetStyles(),
+                Role = Role
+            };
 
-//        /// <summary>
-//        /// Convert to html.
-//        /// </summary>
-//        /// <param name="context">The context in which the control is rendered.</param>
-//        /// <returns>The control as html.</returns>
-//        public override IHtmlNode Render(IRenderContext context)
-//        {
-//            Content.Clear();
+            if (Icon != null && Icon.HasIcon)
+            {
+                html.Add(new ControlIcon()
+                {
+                    Icon = Icon,
+                    TextColor = TextColor,
+                    HorizontalAlignment = TypeHorizontalAlignment.Right
+                }.Render(renderContext));
+            }
 
-//            if (Icon != null && Icon.HasIcon)
-//            {
-//                Content.Add(new ControlIcon()
-//                {
-//                    Icon = Icon,
-//                    TextColor = TextColor,
-//                    HorizontalAlignment = TypeHorizontalAlignment.Right
-//                });
-//            }
+            var text = new ControlText(string.IsNullOrWhiteSpace(Id) ? null : Id + "_header")
+            {
+                Text = Value.HasValue ? Value.Value.ToString() : null,
+                Format = TypeFormatText.H4
+            };
 
-//            var text = new ControlText(string.IsNullOrWhiteSpace(Id) ? null : Id + "_header")
-//            {
-//                Text = Value,
-//                Format = TypeFormatText.H4
-//            };
+            var info = new ControlText()
+            {
+                Text = Text,
+                Format = TypeFormatText.Span,
+                TextColor = new PropertyColorText(TypeColorText.Muted)
+            };
 
-//            var info = new ControlText()
-//            {
-//                Text = Text,
-//                Format = TypeFormatText.Span,
-//                TextColor = new PropertyColorText(TypeColorText.Muted)
-//            };
+            html.Add(new ControlPanel(null, text, info) { }.Render(renderContext));
 
-//            Content.Add(new ControlPanel(text, info) { });
+            if (Progress.HasValue)
+            {
+                html.Add(new ControlProgressBar()
+                {
+                    Value = Progress.Value,
+                    Format = TypeFormatProgress.Striped,
+                    BackgroundColor = BackgroundColor,
+                    //Color = Color,
+                    Size = TypeSizeProgress.Small
+                }.Render(renderContext));
+            }
 
-//            if (Progress > -1)
-//            {
-//                Content.Add(new ControlProgressBar()
-//                {
-//                    Value = Progress,
-//                    Format = TypeFormatProgress.Striped,
-//                    BackgroundColor = BackgroundColor,
-//                    //Color = Color,
-//                    Size = TypeSizeProgress.Small
-//                });
-//            }
-
-//            return base.Render(context);
-//        }
-//    }
-//}
+            return html;
+        }
+    }
+}
