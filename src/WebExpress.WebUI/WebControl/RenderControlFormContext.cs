@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using WebExpress.WebCore.WebEndpoint;
 using WebExpress.WebCore.WebMessage;
 using WebExpress.WebCore.WebPage;
 using WebExpress.WebUI.WebPage;
@@ -25,11 +26,12 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
+        /// <param name="endpoint">The endpoint where the control is rendered.</param>
         /// <param name="pageContext">The page context where the control is rendered.</param>
-        /// <param name="request">The request.</param>
+        /// <param name="request">The request associated with the rendering context.</param>
         /// <param name="form">The form in which the control is rendered.</param>
-        public RenderControlFormContext(IPageContext pageContext, Request request, IControlForm form)
-            : base(pageContext, request)
+        public RenderControlFormContext(IEndpoint endpoint, IPageContext pageContext, Request request, IControlForm form)
+            : base(endpoint, pageContext, request)
         {
             Form = form;
         }

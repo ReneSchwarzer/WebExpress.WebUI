@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebComponent;
 using WebExpress.WebCore.WebHtml;
 using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebUri;
 using WebExpress.WebUI.WebControl;
 
 namespace WebExpress.WebUI.WebPage
@@ -12,6 +14,7 @@ namespace WebExpress.WebUI.WebPage
     /// </summary>
     public class VisualTreeControl : IVisualTree
     {
+        private readonly IComponentHub _componentHub;
         private readonly List<Favicon> _favicons = [];
         private readonly List<string> _styles = [];
         private readonly List<string> _headerScriptLinks = [];
@@ -21,6 +24,11 @@ namespace WebExpress.WebUI.WebPage
         private readonly List<string> _cssLinks = [];
         private readonly Dictionary<string, string> _meta = [];
         private readonly List<IControl> _content = [];
+
+        /// <summary>
+        /// Returns the component hub.
+        /// </summary>
+        protected IComponentHub ComponentHub => _componentHub;
 
         /// <summary>
         /// Returns the title of the html document.
@@ -75,8 +83,50 @@ namespace WebExpress.WebUI.WebPage
         /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
-        public VisualTreeControl()
+        /// <param name="componentHub">The component hub.</param>
+        /// <param name="pageContext">The page context.</param>
+        public VisualTreeControl(IComponentHub componentHub, IPageContext pageContext)
         {
+            _componentHub = componentHub;
+
+            Title = pageContext?.PageTitle;
+
+            var contextPath = pageContext.ContextPath;
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/fontawesome.min.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/bootstrap.min.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/solid.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/summernote-bs5.min.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.expand.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.form.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.modalform.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.modalpage.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.more.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.move.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.pagination.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.search.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.selection.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.table.css"));
+            _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.toolpanel.css"));
+
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/jquery-3.7.1.min.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/popper.min.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/bootstrap.min.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/summernote-bs5.min.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.expand.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.form.progress.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalform.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalpage.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.more.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.move.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.pagination.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.search.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.selection.js"));
+            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.table.js"));
+
+            _meta.Add("charset", "UTF-8");
+            _meta.Add("viewport", "width=device-width, initial-scale=1");
         }
 
         /// <summary>
@@ -84,7 +134,7 @@ namespace WebExpress.WebUI.WebPage
         /// </summary>
         /// <param name="url">The URL of the favicon.</param>
         /// <param name="mediatype">The media type of the favicon.</param>
-        public void AddFavicon(string url, string mediatype)
+        public virtual void AddFavicon(string url, string mediatype)
         {
             _favicons.Add(new Favicon(url, mediatype));
         }
@@ -93,7 +143,7 @@ namespace WebExpress.WebUI.WebPage
         /// Removes a favicon from the web application.
         /// </summary>
         /// <param name="url">The URL of the favicon to remove.</param>
-        public void RemoveFavicon(string url)
+        public virtual void RemoveFavicon(string url)
         {
             _favicons.RemoveAll(x => x.Url.Equals(url));
         }
@@ -102,7 +152,7 @@ namespace WebExpress.WebUI.WebPage
         /// Adds one or more styles to the head.
         /// </summary>
         /// <param name="styles">The styles to add.</param>
-        public void AddStyle(params string[] styles)
+        public virtual void AddStyle(params string[] styles)
         {
             _styles.AddRange(styles);
         }
@@ -111,7 +161,7 @@ namespace WebExpress.WebUI.WebPage
         /// Removes a style from the head.
         /// </summary>
         /// <param name="style">The style to remove.</param>
-        public void RemoveStyle(string style)
+        public virtual void RemoveStyle(string style)
         {
             _styles.RemoveAll(x => x.Equals(style));
         }
@@ -120,7 +170,7 @@ namespace WebExpress.WebUI.WebPage
         /// Adds one or more URLs to the list of header script links.
         /// </summary>
         /// <param name="urls">The URLs of the script to add.</param>
-        public void AddHeaderScriptLink(params string[] urls)
+        public virtual void AddHeaderScriptLink(params string[] urls)
         {
             _headerScriptLinks.AddRange(urls);
         }
@@ -129,7 +179,7 @@ namespace WebExpress.WebUI.WebPage
         /// Removes a URL from the list of header script links.
         /// </summary>
         /// <param name="url">The URL of the script to remove.</param>
-        public void RemoveHeaderScriptLink(string url)
+        public virtual void RemoveHeaderScriptLink(string url)
         {
             _headerScriptLinks.RemoveAll(x => x.Equals(url));
         }
@@ -138,7 +188,7 @@ namespace WebExpress.WebUI.WebPage
         /// Adds one or more URLs to the list of script links.
         /// </summary>
         /// <param name="urls">The URLs of the script to add.</param>
-        public void AddScriptLink(params string[] urls)
+        public virtual void AddScriptLink(params string[] urls)
         {
             _scriptLinks.AddRange(urls);
         }
@@ -147,7 +197,7 @@ namespace WebExpress.WebUI.WebPage
         /// Removes a URL from the list of script links.
         /// </summary>
         /// <param name="url">The URL of the script to remove.</param>
-        public void RemoveScriptLink(string url)
+        public virtual void RemoveScriptLink(string url)
         {
             _scriptLinks.RemoveAll(x => x.Equals(url));
         }
@@ -156,7 +206,7 @@ namespace WebExpress.WebUI.WebPage
         /// Adds one or more URLs to the list of header scripts.
         /// </summary>
         /// <param name="urls">The URLs of the script to add.</param>
-        public void AddHeaderScript(params string[] urls)
+        public virtual void AddHeaderScript(params string[] urls)
         {
             _headerScripts.AddRange(urls);
         }
@@ -165,7 +215,7 @@ namespace WebExpress.WebUI.WebPage
         /// Removes a URL from the list of header scripts.
         /// </summary>
         /// <param name="url">The URL of the script to remove.</param>
-        public void RemoveHeaderScript(string url)
+        public virtual void RemoveHeaderScript(string url)
         {
             _headerScripts.RemoveAll(x => x.Equals(url));
         }
@@ -175,7 +225,7 @@ namespace WebExpress.WebUI.WebPage
         /// </summary>
         /// <param name="id">The identifier of the script.</param>
         /// <param name="script">The script content.</param>
-        public void AddScript(string id, string script)
+        public virtual void AddScript(string id, string script)
         {
             _scripts[id] = script;
         }
@@ -184,7 +234,7 @@ namespace WebExpress.WebUI.WebPage
         /// Removes a script from the collection.
         /// </summary>
         /// <param name="id">The identifier of the script to remove.</param>
-        public void RemoveScript(string id)
+        public virtual void RemoveScript(string id)
         {
             _scripts.Remove(id);
         }
@@ -193,7 +243,7 @@ namespace WebExpress.WebUI.WebPage
         /// Adds one or more URLs to the list of CSS links.
         /// </summary>
         /// <param name="urls">The URLs of the CSS file to add.</param>
-        public void AddCssLink(params string[] urls)
+        public virtual void AddCssLink(params string[] urls)
         {
             _cssLinks.AddRange(urls);
         }
@@ -202,7 +252,7 @@ namespace WebExpress.WebUI.WebPage
         /// Removes all CSS links that match the specified URL.
         /// </summary>
         /// <param name="url">The URL of the CSS link to remove.</param>
-        public void RemoveCssLink(string url)
+        public virtual void RemoveCssLink(string url)
         {
             _cssLinks.RemoveAll(x => x.Equals(url));
         }
@@ -212,7 +262,7 @@ namespace WebExpress.WebUI.WebPage
         /// </summary>
         /// <param name="name">The name of the meta tag.</param>
         /// <param name="content">The content of the meta tag.</param>
-        public void AddMeta(string name, string content)
+        public virtual void AddMeta(string name, string content)
         {
             _meta[name] = content;
         }
@@ -221,7 +271,7 @@ namespace WebExpress.WebUI.WebPage
         /// Removes a meta tag from the collection.
         /// </summary>
         /// <param name="name">The name of the meta tag to remove.</param>
-        public void RemoveMeta(string name)
+        public virtual void RemoveMeta(string name)
         {
             _meta.Remove(name);
         }
@@ -230,7 +280,7 @@ namespace WebExpress.WebUI.WebPage
         /// Adds one or more controls to the content of the page.
         /// </summary>
         /// <param name="controls">The controls to add to the content.</param>
-        public void AddContent(params IControl[] controls)
+        public virtual void AddContent(params IControl[] controls)
         {
             _content.AddRange(controls);
         }
@@ -239,7 +289,7 @@ namespace WebExpress.WebUI.WebPage
         /// Removes a control from the content of the page.
         /// </summary>
         /// <param name="control">The control to remove from the content.</param>
-        public void RemoveContent(IControl control)
+        public virtual void RemoveContent(IControl control)
         {
             _content.Remove(control);
         }

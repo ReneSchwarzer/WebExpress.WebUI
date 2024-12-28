@@ -32,56 +32,6 @@ namespace WebExpress.WebUI.WebPage
 
         }
 
-        ///// <summary>
-        ///// Initialization
-        ///// </summary>
-        ///// <param name="context">The context of the resource.</param>
-        //public override void Initialization(IResourceContext context)
-        //{
-        //    base.Initialization(context);
-
-        //    var module = ComponentManager.ModuleManager.GetModule(context?.ModuleContext?.ApplicationContext, typeof(Module));
-        //    if (module != null)
-        //    {
-        //        var contextPath = module.ContextPath;
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/fontawesome.min.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/bootstrap.min.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/solid.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/summernote-bs5.min.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.expand.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.form.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.modalform.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.modalpage.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.more.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.move.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.pagination.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.search.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.selection.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.table.css"));
-        //        CssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.toolpanel.css"));
-
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/jquery-3.7.1.min.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/popper.min.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/bootstrap.min.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/summernote-bs5.min.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.expand.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.form.progress.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalform.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalpage.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.more.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.move.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.pagination.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.search.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.selection.js"));
-        //        HeaderScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.table.js"));
-        //    }
-
-        //    Meta.Add(new KeyValuePair<string, string>("charset", "UTF-8"));
-        //    Meta.Add(new KeyValuePair<string, string>("viewport", "width=device-width, initial-scale=1"));
-        //}
-
         /// <summary>
         /// Processing of the page.
         /// </summary>

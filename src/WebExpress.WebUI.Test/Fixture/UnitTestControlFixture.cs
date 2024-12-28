@@ -194,7 +194,7 @@ namespace WebExpress.WebUI.Test.Fixture
         {
             var request = CrerateRequestMock();
 
-            return new RenderControlContext(CreratePageContextMock(applicationContext, scopes), request);
+            return new RenderControlContext(null, CreratePageContextMock(applicationContext, scopes), request);
         }
 
         /// <summary>

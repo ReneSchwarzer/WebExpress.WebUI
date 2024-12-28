@@ -1,4 +1,5 @@
-﻿using WebExpress.WebCore.WebMessage;
+﻿using WebExpress.WebCore.WebEndpoint;
+using WebExpress.WebCore.WebMessage;
 using WebExpress.WebCore.WebPage;
 
 namespace WebExpress.WebUI.WebPage
@@ -23,7 +24,6 @@ namespace WebExpress.WebUI.WebPage
         /// <param name="url">The link of the java script file.</param>
         void IRenderControlContext.AddScriptLink(string url)
         {
-
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace WebExpress.WebUI.WebPage
         /// </summary>
         /// <param name="renderContext">The render context.</param>
         public RenderControlContext(IRenderContext renderContext)
-            : base(renderContext?.PageContext, renderContext?.Request)
+            : base(renderContext?.Endpoint, renderContext?.PageContext, renderContext?.Request)
         {
         }
 
@@ -40,8 +40,8 @@ namespace WebExpress.WebUI.WebPage
         /// </summary>
         /// <param name="pageContext">>The page context.</param>
         /// <param name="request">The request associated with the rendering context.</param>
-        public RenderControlContext(IPageContext pageContext, Request request)
-            : base(pageContext, request)
+        public RenderControlContext(IEndpoint endpoint, IPageContext pageContext, Request request)
+            : base(endpoint, pageContext, request)
         {
         }
     }
