@@ -30,5 +30,6 @@ namespace WebExpress.WebUI.Test.WebPage
 
             Assert.Contains(id, page.Select(x => x.EndpointId?.ToString()));
         }
+
     }
 }

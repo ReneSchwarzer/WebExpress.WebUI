@@ -91,7 +91,7 @@ namespace WebExpress.WebUI.WebPage
 
             Title = pageContext?.PageTitle;
 
-            var contextPath = pageContext.ContextPath;
+            var contextPath = pageContext.ApplicationContext?.ContextPath;
             _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/fontawesome.min.css"));
             _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/bootstrap.min.css"));
             _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/solid.css"));
@@ -109,21 +109,21 @@ namespace WebExpress.WebUI.WebPage
             _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.table.css"));
             _cssLinks.Add(UriResource.Combine(contextPath, "/assets/css/webexpress.webui.toolpanel.css"));
 
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/jquery-3.7.1.min.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/popper.min.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/bootstrap.min.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/summernote-bs5.min.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.expand.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.form.progress.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalform.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalpage.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.more.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.move.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.pagination.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.search.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.selection.js"));
-            _headerScripts.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.table.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/jquery-3.7.1.min.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/popper.min.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/bootstrap.min.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/summernote-bs5.min.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.expand.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.form.progress.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalform.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.modalpage.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.more.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.move.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.pagination.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.search.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.selection.js"));
+            _headerScriptLinks.Add(UriResource.Combine(contextPath, "/assets/js/webexpress.webui.table.js"));
 
             _meta.Add("charset", "UTF-8");
             _meta.Add("viewport", "width=device-width, initial-scale=1");
@@ -315,7 +315,5 @@ namespace WebExpress.WebUI.WebPage
 
             return html;
         }
-
-
     }
 }
