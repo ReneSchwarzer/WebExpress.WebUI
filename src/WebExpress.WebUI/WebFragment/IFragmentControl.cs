@@ -5,9 +5,9 @@ using WebExpress.WebUI.WebPage;
 namespace WebExpress.WebUI.WebFragment
 {
     /// <summary>
-    /// Represents a fragment interface with a generic type parameter.
+    /// Represents a fragment control interface.
     /// </summary>
-    public interface IFragmentControl : IFragmentControl<IControl>
+    public interface IFragmentControl : IFragment<IRenderControlContext>, IControl
     {
     }
 
@@ -15,7 +15,7 @@ namespace WebExpress.WebUI.WebFragment
     /// Represents a fragment interface with a generic type parameter.
     /// </summary>
     /// <typeparam name="T">The type of control that implements the IControl interface.</typeparam>
-    public interface IFragmentControl<T> : IFragment<IRenderControlContext>, IControl where T : class, IControl
+    public interface IFragmentControl<T> : IFragmentControl where T : class, IControl
     {
         /// <summary>
         /// Gets the context of the fragment.

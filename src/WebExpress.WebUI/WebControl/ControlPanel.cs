@@ -107,6 +107,18 @@ namespace WebExpress.WebUI.WebControl
             _content.Remove(control);
         }
 
+
+        /// <summary>
+        /// Clears all controls from the content of the control panel.
+        /// </summary>
+        /// <remarks>
+        /// This method removes all controls from the <see cref="Content"/> collection of the control panel.
+        /// It is useful for resetting the panel's content to an empty state.
+        /// </remarks>
+        public virtual void Clear()
+        {
+            _content.Clear();
+        }
         /// <summary>
         /// Convert the control to HTML.
         /// </summary>
