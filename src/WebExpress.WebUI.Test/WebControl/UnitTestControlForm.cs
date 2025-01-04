@@ -1,5 +1,6 @@
 ﻿using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
 {
@@ -18,15 +19,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Id(string id, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlForm(id)
             {
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -46,15 +48,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void BackgroundColor(TypeColorBackground color, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlForm()
             {
                 BackgroundColor = new PropertyColorBackground(color)
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -68,16 +71,17 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Name(string name, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlForm()
             {
                 Name = name
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -91,16 +95,17 @@ namespace WebExpress.WebUI.Test.WebControl
         public void FormLayout(TypeLayoutForm formLayout, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlForm()
             {
                 FormLayout = formLayout
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -115,16 +120,17 @@ namespace WebExpress.WebUI.Test.WebControl
         public void ItemLayout(TypeLayoutFormItem itemLayout, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlForm()
             {
                 ItemLayout = itemLayout
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -136,11 +142,13 @@ namespace WebExpress.WebUI.Test.WebControl
         public void EmptyForm()
         {
             // preconditions
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlForm();
 
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             // test execution
             AssertExtensions.EqualWithPlaceholders(@"<form action=*", html.Trim());
@@ -153,115 +161,17 @@ namespace WebExpress.WebUI.Test.WebControl
         public void EmptyFormChangeSubmitText()
         {
             // preconditions
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlForm();
             control.AddPrimaryButton(new ControlFormItemButtonSubmit("") { Text = "sendbutton" });
 
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             // test execution
             Assert.Contains(@"sendbutton", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form with id.
-        /// </summary>
-        [Fact]
-        public void EmptyFormWithId()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlForm("form");
-
-            //var html = control.Render(context);
-
-            //// test execution
-            //Assert.StartsWith(@"<form id=""form""", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form.
-        /// The control elements are added during rendering.
-        /// </summary>
-        [Fact]
-        public void SimpleFormAtRender()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlForm();
-            //var item = new ControlFormItemInputTextBox() { };
-
-            //// test execution
-            //var html = control.Render(context, [item]);
-
-            //Assert.Contains(@"<input type=""text"" class=""form-control"">", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form.
-        /// The control elements are added when instantiating.
-        /// </summary>
-        [Fact]
-        public void SimpleFormAtInstancing()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var item = new ControlFormItemInputTextBox() { };
-            //var control = new ControlForm("form", item);
-
-            //// test execution
-            //var html = control.Render(context);
-
-            //Assert.Contains(@"<input type=""text"" class=""form-control"">", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form.
-        /// The control elements are added using add.
-        /// </summary>
-        [Fact]
-        public void SimpleFormAtAdd()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var item = new ControlFormItemInputTextBox() { };
-            //var control = new ControlForm("form");
-
-            //control.Add(item);
-
-            //// test execution
-            //var html = control.Render(context);
-            //var str = html.ToString();
-
-            //Assert.Contains(@"<input type=""text"" class=""form-control"">", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a complex form.
-        /// </summary>
-        [Fact]
-        public void ComplexForm()
-        {
-            //// preconditions
-            //var expectedResult = Fixture.GetEmbeddedResource("ComplexForm.txt");
-            //var context = Fixture.CrerateContext();
-            //var item1 = new ControlFormItemInputTextBox() { Label = "Label1", Help = "Help1", Placeholder = "Placeholder1" };
-            //var item2 = new ControlFormItemInputTextBox() { Label = "Label2", Help = "Help2", Placeholder = "Placeholder2" };
-            //var submitButton = new ControlFormItemButtonSubmit("Submit");
-            //var control = new ControlForm("form", item1, item2);
-            //control.AddPrimaryButton(submitButton);
-
-
-            //// test execution
-            //var html = control.Render(context);
-            //var str = html.ToString();
-
-            //// postconditions
-            //expectedResult = expectedResult.Replace("05c888e8-15f3-4be8-b765-0d7be63cc82b", control.FormId.Id);
-            //expectedResult = expectedResult.Replace("974c6159-98e3-4ede-8bb5-6bc4d52e1770", control.SubmitType.Id);
-
-            //Assert.Equal(expectedResult.Trim(), str.Trim());
         }
     }
 }

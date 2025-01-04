@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebUri;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -120,10 +121,10 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes the form element.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
-        public virtual void Initialize(IRenderControlContext renderContext)
+        protected virtual void Initialize(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var contextPath = renderContext?.PageContext?.ApplicationContext?.ContextPath;
-            //renderContext.AddHeaderScriptLink(UriResource.Combine(contextPath, "/assets/js/split.min.js"));
+            visualTree.AddHeaderScriptLink(UriResource.Combine(contextPath, "/assets/js/split.min.js"));
 
             Border = new PropertyBorder(true);
 
@@ -145,7 +146,7 @@ namespace WebExpress.WebUI.WebControl
                 init2 = 100 - Panel1InitialSize;
             }
 
-            renderContext.AddScript
+            visualTree.AddScript
             (
                 Id, @"Split(['#" + Id + "-p1', '#" + Id + @"-p2'], {
                     sizes: [" + init1 + "," + init2 + @"],
@@ -167,10 +168,11 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Initialize(renderContext);
+            Initialize(renderContext, visualTree);
 
             var html = new HtmlElementTextContentDiv()
             {
@@ -180,8 +182,8 @@ namespace WebExpress.WebUI.WebControl
                 Role = Role
             };
 
-            html.Add(new HtmlElementTextContentDiv(Panel1.Select(x => x.Render(renderContext)).ToArray()) { Id = $"{Id}-p1" });
-            html.Add(new HtmlElementTextContentDiv(Panel2.Select(x => x.Render(renderContext)).ToArray()) { Id = $"{Id}-p2" });
+            html.Add(new HtmlElementTextContentDiv(Panel1.Select(x => x.Render(renderContext, visualTree)).ToArray()) { Id = $"{Id}-p1" });
+            html.Add(new HtmlElementTextContentDiv(Panel2.Select(x => x.Render(renderContext, visualTree)).ToArray()) { Id = $"{Id}-p2" });
 
             return html;
         }

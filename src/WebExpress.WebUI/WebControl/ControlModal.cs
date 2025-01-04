@@ -116,8 +116,9 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var classes = Classes.ToList();
             classes.Add("modal");
@@ -144,7 +145,7 @@ namespace WebExpress.WebUI.WebControl
                 Class = "modal-header"
             };
 
-            var body = new HtmlElementTextContentDiv(Content.Select(x => x.Render(renderContext)).ToArray())
+            var body = new HtmlElementTextContentDiv(Content.Select(x => x.Render(renderContext, visualTree)).ToArray())
             {
                 Class = "modal-body"
             };
@@ -185,19 +186,19 @@ namespace WebExpress.WebUI.WebControl
             if (!string.IsNullOrWhiteSpace(OnShownCode))
             {
                 var shown = "$('#" + Id + "').on('shown.bs.modal', function(e) { " + OnShownCode + " });";
-                renderContext.AddScript(Id + "_shown", shown);
+                visualTree.AddScript(Id + "_shown", shown);
             }
 
             if (!string.IsNullOrWhiteSpace(OnHiddenCode))
             {
                 var hidden = "$('#" + Id + "').on('hidden.bs.modal', function() { " + OnHiddenCode + " });";
-                renderContext.AddScript(Id + "_hidden", hidden);
+                visualTree.AddScript(Id + "_hidden", hidden);
             }
 
             if (ShowIfCreated)
             {
                 var show = "$('#" + Id + "').modal('show');";
-                renderContext.AddScript(Id + "_showifcreated", show);
+                visualTree.AddScript(Id + "_showifcreated", show);
             }
 
             return html;

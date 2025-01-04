@@ -1,5 +1,6 @@
 ﻿using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
 {
@@ -18,14 +19,15 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Id(string id, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlCarousel(id)
             {
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -47,15 +49,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void TextColor(TypeColorText color, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlCarousel()
             {
                 TextColor = new PropertyColorText(color)
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -75,15 +78,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void BackgroundColor(TypeColorBackground backgroundColor, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlCarousel()
             {
                 BackgroundColor = new PropertyColorBackground(backgroundColor)
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -98,8 +102,9 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Add(Type child, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var childInstance = Activator.CreateInstance(child, [null]) as IControl;
             var item = new ControlCarouselItem(childInstance);
             var control = new ControlCarousel();
@@ -107,7 +112,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // test execution
             control.Add(item);
 
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }

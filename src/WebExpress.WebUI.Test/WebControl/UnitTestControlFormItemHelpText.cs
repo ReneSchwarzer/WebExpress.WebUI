@@ -1,5 +1,6 @@
 ﻿using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
 {
@@ -18,15 +19,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Id(string id, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlFormItemHelpText(id)
             {
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -41,16 +43,17 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Text(string text, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlFormItemHelpText()
             {
                 Text = text
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -67,16 +70,17 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Size(TypeSizeText size, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlFormItemHelpText()
             {
                 Size = new PropertySizeText(size)
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }

@@ -35,8 +35,9 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var text = I18N.Translate(Text);
 
@@ -64,7 +65,7 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None),
                     VerticalAlignment = Icon.IsUserIcon ? TypeVerticalAlignment.TextBottom : TypeVerticalAlignment.Default
-                }.Render(renderContext));
+                }.Render(renderContext, visualTree));
             }
 
             if (!string.IsNullOrWhiteSpace(text))
@@ -74,7 +75,7 @@ namespace WebExpress.WebUI.WebControl
 
             if (Content.Any())
             {
-                html.Add(Content.Select(x => x.Render(renderContext)).ToArray());
+                html.Add(Content.Select(x => x.Render(renderContext, visualTree)).ToArray());
             }
 
             if (Modal == null || Modal.Type == TypeModal.None)
@@ -96,7 +97,7 @@ namespace WebExpress.WebUI.WebControl
                 html.AddUserAttribute("data-bs-toggle", "modal");
                 html.AddUserAttribute("data-bs-target", "#" + Modal.Modal.Id);
 
-                return new HtmlList(html, Modal.Modal.Render(renderContext));
+                return new HtmlList(html, Modal.Modal.Render(renderContext, visualTree));
             }
 
             if (!string.IsNullOrWhiteSpace(Tooltip))

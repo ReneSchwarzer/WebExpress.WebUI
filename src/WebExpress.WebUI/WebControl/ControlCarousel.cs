@@ -59,8 +59,9 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             // indicators 
             var indicators = new HtmlElementTextContentUl() { Class = "carousel-indicators" };
@@ -83,7 +84,7 @@ namespace WebExpress.WebUI.WebControl
             var inner = new HtmlElementTextContentDiv() { Class = "carousel-inner" };
             foreach (var v in Items)
             {
-                var i = new HtmlElementTextContentDiv(v?.Control.Render(renderContext))
+                var i = new HtmlElementTextContentDiv(v?.Control.Render(renderContext, visualTree))
                 {
                     Class = index == 0 ? "carousel-item active" : "carousel-item"
                 };

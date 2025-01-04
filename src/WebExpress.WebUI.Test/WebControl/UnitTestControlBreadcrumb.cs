@@ -1,5 +1,7 @@
-﻿using WebExpress.WebUI.Test.Fixture;
+﻿using WebExpress.WebCore.WebUri;
+using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
 {
@@ -18,14 +20,15 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Id(string id, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlBreadcrumb(id)
             {
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -39,12 +42,13 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Uri(string uri, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlBreadcrumb { Uri = uri };
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
+            var control = new ControlBreadcrumb { Uri = new UriResource(uri) };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -58,12 +62,13 @@ namespace WebExpress.WebUI.Test.WebControl
         public void EmptyName(string emptyName, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlBreadcrumb { EmptyName = emptyName };
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
+            var control = new ControlBreadcrumb { EmptyName = emptyName, Uri = new UriResource("http://example.com") };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -78,12 +83,13 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Size(TypeSizeButton size, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlBreadcrumb { Size = size };
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
+            var control = new ControlBreadcrumb { Size = size, Uri = new UriResource("http://example.com") };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -93,16 +99,17 @@ namespace WebExpress.WebUI.Test.WebControl
         /// </summary>
         [Theory]
         [InlineData(null, @"<ol class=""breadcrumb bg-light ps-2 bg-light btn-sm""></ol>")]
-        [InlineData("Prefix", @"<ol class=""breadcrumb bg-light ps-2 bg-light btn-sm""></ol>")]
+        [InlineData("Prefix", @"<ol class=""breadcrumb bg-light ps-2 bg-light btn-sm""><li><div class=""me-2 text-muted"">Prefix</div></li></ol>")]
         public void Prefix(string prefix, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlBreadcrumb { Prefix = prefix };
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
+            var control = new ControlBreadcrumb { Prefix = prefix, Uri = new UriResource("http://example.com") };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -116,12 +123,46 @@ namespace WebExpress.WebUI.Test.WebControl
         public void TakeLast(ushort takeLast, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var control = new ControlBreadcrumb { TakeLast = takeLast };
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
+            var control = new ControlBreadcrumb { TakeLast = takeLast, Uri = new UriResource("http://example.com") };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
+        }
+
+        /// <summary>
+        /// Tests the render function of the breadcrumb control.
+        /// </summary>
+        [Theory]
+        [InlineData(null, @"<ol class=""breadcrumb bg-light ps-2 bg-light btn-sm""></ol>")]
+        [InlineData("http://localhost:80/app/page", @"<ol class=""breadcrumb bg-light ps-2 bg-light btn-sm""><li class=""breadcrumb-item""><a href=""http://localhost/app/page"" class=""link"">abc</a></li></ol>")]
+        public void Render(string uri, string expected)
+        {
+            // preconditions
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var application = componentHub.ApplicationManager.GetApplications(typeof(TestApplication)).FirstOrDefault();
+            var context = UnitTestControlFixture.CrerateRenderContextMock(application);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
+            var uriResource = new UriResource(uri);
+            var control = new ControlBreadcrumb()
+            {
+                Uri = uriResource
+            };
+
+            if (uriResource.PathSegments.LastOrDefault() != null)
+            {
+                uriResource.PathSegments.LastOrDefault().Display ??= "abc";
+            }
+
+            var uriProperty = context.Request.GetType().GetProperty("Uri");
+            uriProperty.SetValue(context.Request, uriResource);
+
+            // test execution
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }

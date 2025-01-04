@@ -28,11 +28,12 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var dropDown = Tools.Render(renderContext);
-            var content = new HtmlElementTextContentDiv(Content.Select(x => x.Render(renderContext)).ToArray());
+            var dropDown = Tools.Render(renderContext, visualTree);
+            var content = new HtmlElementTextContentDiv(Content.Select(x => x.Render(renderContext, visualTree)).ToArray());
 
             var html = new HtmlElementTextContentDiv(dropDown, content)
             {

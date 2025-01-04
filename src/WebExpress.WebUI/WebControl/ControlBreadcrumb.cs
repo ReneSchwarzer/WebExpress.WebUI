@@ -1,5 +1,7 @@
-﻿using WebExpress.WebCore.Internationalization;
+﻿using System;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebUri;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -13,7 +15,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Return or sets the uri.
         /// </summary>
-        public string Uri { get; set; }
+        public UriResource Uri { get; set; }
 
         /// <summary>
         /// Returns or sets the name to display when the breadcrumb is empty.
@@ -54,8 +56,9 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var html = new HtmlElementTextContentOl()
             {
@@ -66,7 +69,7 @@ namespace WebExpress.WebUI.WebControl
 
             if (!string.IsNullOrWhiteSpace(Prefix))
             {
-                html.Elements.Add
+                html.Add
                 (
                     new HtmlElementTextContentLi
                     (
@@ -81,24 +84,31 @@ namespace WebExpress.WebUI.WebControl
                 );
             }
 
-            foreach (var part in renderContext.Request?.Uri.PathSegments)
+            if (Uri == null)
             {
-                if (part.Display != null)
-                {
-                    var display = part.GetDisplay(renderContext.Request?.Culture);
-                    var href = part.ToString();
+                return html;
+            }
 
-                    html.Elements.Add
+            var takeLast = Math.Min(TakeLast, Uri.PathSegments.Count);
+            var from = Uri.PathSegments.Count - takeLast;
+
+            for (int i = from + 1; i < Uri.PathSegments.Count + 1; i++)
+            {
+                var path = Uri.Take(i);
+
+                if (path.Display != null)
+                {
+                    var display = I18N.Translate(renderContext.Request?.Culture, path.Display);
+                    var href = path.ToString();
+
+                    html.Add
                     (
                         new HtmlElementTextContentLi
                         (
-                            //new ControlIcon(Page)
-                            //{ 
-                            //    Icon = path.Icon
-                            //}.ToHtml(),
                             new HtmlElementTextSemanticsA(display)
                             {
-                                Href = href
+                                Href = href,
+                                Class = "link"
                             }
                         )
                         {
@@ -107,40 +117,6 @@ namespace WebExpress.WebUI.WebControl
                     );
                 }
             }
-
-            //var takeLast = Math.Min(TakeLast, resourceUri.Path.Count);
-            //var from = resourceUri.Path.Count - takeLast;
-
-            //for (int i = from + 1; i < resourceUri.Path.Count + 1; i++)
-            //{
-            //    var path = resourceUri.Take(i);
-
-            //    if (path.Display != null)
-            //    {
-            //        var display = I18N(context.Culture, path.Display);
-            //        var href = path.ToString();
-
-            //        html.Elements.Add
-            //        (
-            //            new HtmlElementTextContentLi
-            //            (
-            //                //new ControlIcon(Page)
-            //                //{ 
-            //                //    Icon = path.Icon
-            //                //}.ToHtml(),
-            //                new HtmlElementTextSemanticsA(display)
-            //                {
-            //                    Href = href,
-            //                    Class = "link"
-            //                }
-            //            )
-            //            {
-            //                Class = "breadcrumb-item"
-            //            }
-            //        );
-            //    }
-            //}
-            //}
 
             return html;
         }

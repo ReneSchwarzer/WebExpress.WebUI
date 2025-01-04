@@ -87,8 +87,9 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             if (Pill)
             {
@@ -139,8 +140,8 @@ namespace WebExpress.WebUI.WebControl
                         x == null ?
                         new HtmlElementTextContentLi() { Class = "dropdown-divider", Inline = true } :
                         x is ControlDropdownItemHeader ?
-                        x.Render(renderContext) :
-                        new HtmlElementTextContentLi(x.Render(renderContext).AddClass("dropdown-item")) { }
+                        x.Render(renderContext, visualTree) :
+                        new HtmlElementTextContentLi(x.Render(renderContext, visualTree).AddClass("dropdown-item")) { }
                     ).ToArray()
                 )
                 {

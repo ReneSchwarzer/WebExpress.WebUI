@@ -1,5 +1,6 @@
 ﻿using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
 {
@@ -18,14 +19,15 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Id(string id, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlButtonLink(id)
             {
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -39,15 +41,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Text(string text, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlButtonLink()
             {
                 Text = text
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -63,15 +66,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Tooltip(string tooltip, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlButtonLink()
             {
                 Tooltip = tooltip
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -86,15 +90,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Size(TypeSizeButton size, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlButtonLink()
             {
                 Size = size
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -112,15 +117,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void BackgroundColor(TypeColorButton color, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlButtonLink()
             {
                 BackgroundColor = new PropertyColorButton(color)
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -139,8 +145,9 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Outline(bool outline, TypeColorButton color, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlButtonLink()
             {
                 Outline = outline,
@@ -148,7 +155,7 @@ namespace WebExpress.WebUI.Test.WebControl
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -162,15 +169,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Block(TypeBlockButton block, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlButtonLink()
             {
                 Block = block
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -184,15 +192,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Icon(TypeIcon icon, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlButtonLink()
             {
                 Icon = new PropertyIcon(icon)
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -204,16 +213,17 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Content()
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control1 = new ControlButtonLink(null, new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
             var control2 = new ControlButtonLink(null, [new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
             var control3 = new ControlButtonLink(null, new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
 
             // test execution
-            var html1 = control1.Render(context);
-            var html2 = control2.Render(context);
-            var html3 = control2.Render(context);
+            var html1 = control1.Render(context, visualTree);
+            var html2 = control2.Render(context, visualTree);
+            var html3 = control3.Render(context, visualTree);
 
             Assert.Equal(@"<a class=""btn""><span class=""fas fa-star""></span></a>", html1.Trim());
             Assert.Equal(@"<a class=""btn""><span class=""fas fa-star""></span></a>", html2.Trim());

@@ -114,24 +114,26 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            return Render(renderContext, Form.Items);
+            return Render(renderContext, visualTree, Form.Items);
         }
 
         /// <summary>
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <param name="items">The form items.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public virtual IHtmlNode Render(IRenderControlContext renderContext, IEnumerable<ControlFormItem> items)
+        public virtual IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree, IEnumerable<ControlFormItem> items)
         {
             var fade = Fade;
             var classes = Classes.ToList();
 
-            var form = Form.Render(renderContext, items) as HtmlElementFormForm;
+            var form = Form.Render(renderContext, visualTree, items) as HtmlElementFormForm;
 
             classes.Add("modal");
 
@@ -171,11 +173,11 @@ namespace WebExpress.WebUI.WebControl
             var cancelFooterButton = new ControlButtonLink()
             {
                 Text = I18N.Translate(renderContext.Request?.Culture, "webexpress.webui:modal.close.label")
-            }.Render(renderContext) as HtmlElement;
+            }.Render(renderContext, visualTree) as HtmlElement;
 
             cancelFooterButton.AddUserAttribute("data-bs-dismiss", "modal");
 
-            footer = new HtmlElementTextContentDiv(submitFooterButton.Render(new RenderControlFormContext(renderContext, Form)), cancelFooterButton)
+            footer = new HtmlElementTextContentDiv(submitFooterButton.Render(new RenderControlFormContext(renderContext, Form), visualTree), cancelFooterButton)
             {
                 Class = "modal-footer d-flex justify-content-between"
             };
@@ -202,19 +204,19 @@ namespace WebExpress.WebUI.WebControl
             if (!string.IsNullOrWhiteSpace(OnShownCode))
             {
                 var shown = "$('#" + Id + "').on('shown.bs.modal', function(e) { " + OnShownCode + " });";
-                renderContext.AddScript(Id + "_shown", shown);
+                visualTree.AddScript(Id + "_shown", shown);
             }
 
             if (!string.IsNullOrWhiteSpace(OnHiddenCode))
             {
                 var hidden = "$('#" + Id + "').on('hidden.bs.modal', function() { " + OnHiddenCode + " });";
-                renderContext.AddScript(Id + "_hidden", hidden);
+                visualTree.AddScript(Id + "_hidden", hidden);
             }
 
             if (ShowIfCreated)
             {
                 var show = "$('#" + Id + "').modal('show');";
-                renderContext.AddScript(Id + "_showifcreated", show);
+                visualTree.AddScript(Id + "_showifcreated", show);
             }
 
             form.Clear();

@@ -70,6 +70,7 @@
 //        /// Convert to html.
 //        /// </summary>
 //        /// <param name="context">The context in which the control is rendered.</param>
+//        /// <param name="visualTree">The visual tree representing the control's structure.</param>
 //        /// <returns>The control as html.</returns>
 //        public override IHtmlNode Render(IRenderContext context)
 //        {

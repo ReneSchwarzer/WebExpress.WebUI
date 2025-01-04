@@ -42,8 +42,9 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var html = new HtmlElementTextSemanticsSpan()
             {
@@ -60,7 +61,7 @@ namespace WebExpress.WebUI.WebControl
                     Icon = Icon,
                     TextColor = TextColor,
                     HorizontalAlignment = TypeHorizontalAlignment.Right
-                }.Render(renderContext));
+                }.Render(renderContext, visualTree));
             }
 
             var text = new ControlText(string.IsNullOrWhiteSpace(Id) ? null : Id + "_header")
@@ -76,7 +77,7 @@ namespace WebExpress.WebUI.WebControl
                 TextColor = new PropertyColorText(TypeColorText.Muted)
             };
 
-            html.Add(new ControlPanel(null, text, info) { }.Render(renderContext));
+            html.Add(new ControlPanel(null, text, info) { }.Render(renderContext, visualTree));
 
             if (Progress.HasValue)
             {
@@ -87,7 +88,7 @@ namespace WebExpress.WebUI.WebControl
                     BackgroundColor = BackgroundColor,
                     //Color = Color,
                     Size = TypeSizeProgress.Small
-                }.Render(renderContext));
+                }.Render(renderContext, visualTree));
             }
 
             return html;

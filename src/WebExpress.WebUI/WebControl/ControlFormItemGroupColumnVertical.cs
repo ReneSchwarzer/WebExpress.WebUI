@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -37,8 +38,9 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlFormContext renderContext)
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
             var renderGroupContext = new RenderControlFormGroupContext(renderContext, this);
 
@@ -88,28 +90,28 @@ namespace WebExpress.WebUI.WebControl
                     if (icon.Icon != null)
                     {
                         icon.Classes.Add("me-2 pt-1");
-                        fieldset.Add(new HtmlElementTextSemanticsSpan(icon.Render(renderGroupContext), label.Render(renderGroupContext))
+                        fieldset.Add(new HtmlElementTextSemanticsSpan(icon.Render(renderGroupContext, visualTree), label.Render(renderGroupContext, visualTree))
                         {
                             Style = "display: flex;"
                         });
                     }
                     else
                     {
-                        fieldset.Add(label.Render(renderGroupContext));
+                        fieldset.Add(label.Render(renderGroupContext, visualTree));
                     }
 
-                    fieldset.Add(item.Render(renderGroupContext));
+                    fieldset.Add(item.Render(renderGroupContext, visualTree));
 
                     if (!string.IsNullOrWhiteSpace(input?.Help))
                     {
-                        fieldset.Add(help.Render(renderGroupContext));
+                        fieldset.Add(help.Render(renderGroupContext, visualTree));
                     }
 
                     div.Add(fieldset);
                 }
                 else
                 {
-                    div.Add(item.Render(renderGroupContext));
+                    div.Add(item.Render(renderGroupContext, visualTree));
                 }
 
                 html.Add(div);

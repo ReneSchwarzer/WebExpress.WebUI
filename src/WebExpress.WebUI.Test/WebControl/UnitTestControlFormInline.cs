@@ -40,7 +40,7 @@ namespace WebExpress.WebUI.Test.WebControl
             //var context = Fixture.CrerateContext();
             //var control = new ControlForm() { FormLayout = TypeLayoutForm.Inline };
 
-            //var html = control.Render(context);
+            //var html = control.Render(context, visualTree);
             //var str = html.ToString();
 
             //// test execution
@@ -58,7 +58,7 @@ namespace WebExpress.WebUI.Test.WebControl
             //var control = new ControlForm() { FormLayout = TypeLayoutForm.Inline };
             //control.AddPrimaryButton(new ControlFormItemButtonSubmit("") { Text = "sendbutton" });
 
-            //var html = control.Render(context);
+            //var html = control.Render(context, visualTree);
             //var str = html.ToString();
 
             //// test execution
@@ -75,7 +75,7 @@ namespace WebExpress.WebUI.Test.WebControl
             //var context = Fixture.CrerateContext();
             //var control = new ControlForm("form") { FormLayout = TypeLayoutForm.Inline };
 
-            //var html = control.Render(context);
+            //var html = control.Render(context, visualTree);
 
             //// test execution
             //Assert.StartsWith(@"<form id=""form""", html.Trim());
@@ -112,7 +112,7 @@ namespace WebExpress.WebUI.Test.WebControl
             //var control = new ControlForm("form", item) { FormLayout = TypeLayoutForm.Inline };
 
             //// test execution
-            //var html = control.Render(context);
+            //var html = control.Render(context, visualTree);
 
             //Assert.Contains(@"<input type=""text"" class=""form-control"">", html.Trim());
         }
@@ -132,7 +132,7 @@ namespace WebExpress.WebUI.Test.WebControl
             //control.Add(item);
 
             //// test execution
-            //var html = control.Render(context);
+            //var html = control.Render(context, visualTree);
             //var str = html.ToString();
 
             //Assert.Contains(@"<input type=""text"" class=""form-control"">", html.Trim());

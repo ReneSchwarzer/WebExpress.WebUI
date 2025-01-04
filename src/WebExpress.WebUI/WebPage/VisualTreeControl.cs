@@ -12,7 +12,7 @@ namespace WebExpress.WebUI.WebPage
     /// <summary>
     /// The content design of a page is realized by controls.
     /// </summary>
-    public class VisualTreeControl : IVisualTree
+    public class VisualTreeControl : IVisualTreeControl
     {
         private readonly IComponentHub _componentHub;
         private readonly List<Favicon> _favicons = [];
@@ -227,7 +227,10 @@ namespace WebExpress.WebUI.WebPage
         /// <param name="script">The script content.</param>
         public virtual void AddScript(string id, string script)
         {
-            _scripts[id] = script;
+            if (id != null)
+            {
+                _scripts[id] = script;
+            }
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -46,8 +47,9 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlFormContext renderContext)
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
             var renderGroupContext = new RenderControlFormGroupContext(renderContext, this);
 
@@ -100,28 +102,28 @@ namespace WebExpress.WebUI.WebControl
                     if (icon.Icon != null)
                     {
                         icon.Classes.Add("me-2 pt-1");
-                        row.Add(new HtmlElementTextContentDiv(icon.Render(renderContext), label.Render(renderGroupContext))
+                        row.Add(new HtmlElementTextContentDiv(icon.Render(renderContext, visualTree), label.Render(renderGroupContext, visualTree))
                         {
                             Style = "display: flex;"
                         });
                     }
                     else
                     {
-                        row.Add(new HtmlElementTextContentDiv(label.Render(renderGroupContext)));
+                        row.Add(new HtmlElementTextContentDiv(label.Render(renderGroupContext, visualTree)));
                     }
 
-                    row.Add(new HtmlElementTextContentDiv(item.Render(renderGroupContext)));
+                    row.Add(new HtmlElementTextContentDiv(item.Render(renderGroupContext, visualTree)));
 
                     if (!string.IsNullOrWhiteSpace(input?.Help))
                     {
-                        row.Add(new HtmlElementTextContentDiv(help.Render(renderGroupContext)));
+                        row.Add(new HtmlElementTextContentDiv(help.Render(renderGroupContext, visualTree)));
                     }
 
                     div.Add(table);
                 }
                 else
                 {
-                    div.Add(item.Render(renderGroupContext));
+                    div.Add(item.Render(renderGroupContext, visualTree));
                 }
 
                 html.Add(div);

@@ -1,6 +1,7 @@
 ﻿using WebExpress.WebCore.WebHtml;
 using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
 {
@@ -19,14 +20,15 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Id(string id, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlNavigationItemLink(id)
             {
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -41,15 +43,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Text(string text, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlNavigationItemLink()
             {
                 Text = text,
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -64,15 +67,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Uri(string uri, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlNavigationItemLink()
             {
                 Uri = uri,
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -87,15 +91,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Title(string title, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlNavigationItemLink()
             {
                 Title = title,
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -112,15 +117,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Target(TypeTarget target, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlNavigationItemLink()
             {
                 Target = target,
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -136,15 +142,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Tooltip(string tooltip, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlNavigationItemLink()
             {
                 Tooltip = tooltip
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -156,15 +163,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Icon()
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlNavigationItemLink()
             {
                 Icon = new PropertyIcon(TypeIcon.Star)
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(@"<a class=""link""><span class=""fas fa-star""></span></a>", html.Trim());
         }
@@ -178,15 +186,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void NoWrap(bool noWrap, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlNavigationItemLink()
             {
                 NoWrap = noWrap
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             Assert.Equal(expected, html.Trim());
         }
@@ -198,16 +207,17 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Content()
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control1 = new ControlNavigationItemLink(null, new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
             var control2 = new ControlNavigationItemLink(null, [new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
             var control3 = new ControlNavigationItemLink(null, new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
 
             // test execution
-            var html1 = control1.Render(context);
-            var html2 = control2.Render(context);
-            var html3 = control2.Render(context);
+            var html1 = control1.Render(context, visualTree);
+            var html2 = control2.Render(context, visualTree);
+            var html3 = control3.Render(context, visualTree);
 
             Assert.Equal(@"<a class=""link""><span class=""fas fa-star""></span></a>", html1.Trim());
             Assert.Equal(@"<a class=""link""><span class=""fas fa-star""></span></a>", html2.Trim());

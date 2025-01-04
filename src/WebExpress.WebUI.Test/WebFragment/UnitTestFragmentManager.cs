@@ -1,5 +1,6 @@
 ﻿using WebExpress.WebCore.WebScope;
 using WebExpress.WebUI.Test.Fixture;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebFragment
 {
@@ -50,6 +51,7 @@ namespace WebExpress.WebUI.Test.WebFragment
         [InlineData(typeof(TestApplication), typeof(TestSectionFragmentControlPanelTool), typeof(IScope), @"<div id=""webexpress.webui.test.testfragmentcontrolpaneltool"" class=""toolpanel border""><div class=""dropdown"">*<div><div>TestFragmentControlPanelTool</div></div></div>")]
         [InlineData(typeof(TestApplication), typeof(TestSectionFragmentControlSplitButtonItemLink), typeof(IScope), @"<a id=""webexpress.webui.test.testfragmentcontrolsplitbuttonitemlink"" class=""link"">TestFragmentControlSplitButtonItemLink</a>")]
         [InlineData(typeof(TestApplication), typeof(TestSectionFragmentControlTree), typeof(IScope), @"<ul id=""webexpress.webui.test.testfragmentcontroltree""><li></li></ul>")]
+        [InlineData(typeof(TestApplication), typeof(TestSectionFragmentControlForm), typeof(IScope), @"<form id=""webexpress.webui.test.testfragmentcontrolform"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
         [InlineData(typeof(TestApplication), typeof(TestSectionFragmentControlModalForm), typeof(IScope), @"<form id=""webexpress.webui.test.testfragmentcontrolmodalform"" *>*<a class=""btn"" data-bs-dismiss=""modal"">Close</a></div>*</form>")]
         public void Render(Type applicationType, Type sectionType, Type scopeType, string expected)
         {
@@ -57,9 +59,10 @@ namespace WebExpress.WebUI.Test.WebFragment
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var application = componentHub.ApplicationManager.GetApplications(applicationType).FirstOrDefault();
             var renderContext = UnitTestControlFixture.CrerateRenderContextMock(application, [scopeType]);
+            var visualTree = new VisualTreeControl(componentHub, renderContext.PageContext);
 
             // test execution
-            var html = componentHub.FragmentManager.Render(renderContext, sectionType);
+            var html = componentHub.FragmentManager.Render(renderContext, visualTree, sectionType);
 
             Assert.NotNull(html);
             Assert.NotEmpty(html);

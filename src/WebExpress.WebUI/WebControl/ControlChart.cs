@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebUri;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -78,10 +79,11 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes the control.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
-        public void Initialize(IRenderControlContext renderContext)
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        protected void Initialize(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            //renderContext.AddHeaderScriptLinks(UriResource.Combine(renderContext.PageContext?.ApplicationContext?.ContextPath, "/assets/js/Chart.min.js"));
-            //renderContext.AddCssLinks(UriResource.Combine(renderContext.PageContext?.ApplicationContext?.ContextPath, "/assets/css/Chart.min.css"));
+            visualTree.AddHeaderScriptLink(UriResource.Combine(renderContext.PageContext?.ApplicationContext?.ContextPath, "/assets/js/Chart.min.js"));
+            visualTree.AddCssLink(UriResource.Combine(renderContext.PageContext?.ApplicationContext?.ContextPath, "/assets/css/Chart.min.css"));
 
             var builder = new StringBuilder();
             var data = new List<StringBuilder>();
@@ -132,17 +134,18 @@ namespace WebExpress.WebUI.WebControl
 
             builder.AppendLine($"var chart_{Id} = new Chart(document.getElementById('{Id}').getContext('2d'), config_{Id});");
 
-            renderContext.AddScript($"chart_{Id}", builder.ToString());
+            visualTree.AddScript($"chart_{Id}", builder.ToString());
         }
 
         /// <summary>
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Initialize(renderContext);
+            Initialize(renderContext, visualTree);
 
             var html = new HtmlElementScriptingCanvas()
             {

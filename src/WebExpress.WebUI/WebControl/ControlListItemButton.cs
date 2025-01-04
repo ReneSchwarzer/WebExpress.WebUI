@@ -27,10 +27,11 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            return new HtmlElementFieldButton(Content.Select(x => x.Render(renderContext)).ToArray())
+            return new HtmlElementFieldButton(Content.Select(x => x.Render(renderContext, visualTree)).ToArray())
             {
                 Id = Id,
                 Class = Css.Concatenate("list-group-item-action", GetClasses()),

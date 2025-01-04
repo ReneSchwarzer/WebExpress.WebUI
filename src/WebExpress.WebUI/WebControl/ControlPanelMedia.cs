@@ -44,8 +44,9 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var img = new HtmlElementMultimediaImg()
             {
@@ -72,7 +73,7 @@ namespace WebExpress.WebUI.WebControl
                 Class = "media-body"
             };
 
-            body.Add(Content.Select(x => x.Render(renderContext)));
+            body.Add(Content.Select(x => x.Render(renderContext, visualTree)));
 
             var html = new HtmlElementTextContentDiv(img, body)
             {

@@ -297,19 +297,21 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            return Render(renderContext, Items);
+            return Render(renderContext, visualTree, Items);
         }
 
         /// <summary>
         /// Convert to html.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <param name="items">The form items.</param>
         /// <returns>The control as html.</returns>
-        public virtual IHtmlNode Render(IRenderControlContext renderContext, IEnumerable<ControlFormItem> items)
+        public virtual IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree, IEnumerable<ControlFormItem> items)
         {
             var renderFormContext = new RenderControlFormContext(renderContext, this);
             var fill = false;
@@ -382,8 +384,8 @@ namespace WebExpress.WebUI.WebControl
                 Enctype = TypeEnctype.None
             };
 
-            form.Add(FormId.Render(renderFormContext));
-            form.Add(SubmitType.Render(renderFormContext));
+            form.Add(FormId.Render(renderFormContext, visualTree));
+            form.Add(SubmitType.Render(renderFormContext, visualTree));
 
             var header = new HtmlElementSectionHeader();
             header.Add(new ControlProgressBar()
@@ -393,7 +395,7 @@ namespace WebExpress.WebUI.WebControl
                 Margin = new PropertySpacingMargin(PropertySpacing.Space.None, PropertySpacing.Space.None, PropertySpacing.Space.None, PropertySpacing.Space.Three),
                 Styles = { "height: 3px;", "display: none;" },
                 Value = 0
-            }.Render(renderFormContext));
+            }.Render(renderFormContext, visualTree));
 
             //header.Elements.AddRange(HeaderPreferences.SelectMany(x => x.CreateInstance<IControl>(context.Page, context.Request)).Select(x => x.Render(context)));
             //header.Elements.AddRange(HeaderPrimary.SelectMany(x => x.CreateInstance<IControl>(context.Page, context.Request)).Select(x => x.Render(context)));
@@ -419,12 +421,12 @@ namespace WebExpress.WebUI.WebControl
                     Text = I18N.Translate(renderContext.Request?.Culture, v.Text),
                     Dismissible = TypeDismissibleAlert.Dismissible,
                     Fade = TypeFade.FadeShow
-                }.Render(renderFormContext));
+                }.Render(renderFormContext, visualTree));
             }
 
             foreach (var item in items.Where(x => x is ControlFormItemInputHidden))
             {
-                form.Add(item.Render(renderFormContext));
+                form.Add(item.Render(renderFormContext, visualTree));
             }
 
             var main = new HtmlElementSectionMain();
@@ -443,10 +445,10 @@ namespace WebExpress.WebUI.WebControl
                 group.Items.Add(item);
             }
 
-            main.Add(group.Render(renderFormContext));
+            main.Add(group.Render(renderFormContext, visualTree));
 
             var buttonPannel = new HtmlElementTextContentDiv();
-            buttonPannel.Add(Buttons.Select(x => x.Render(renderFormContext)));
+            buttonPannel.Add(Buttons.Select(x => x.Render(renderFormContext, visualTree)));
 
             var footer = new HtmlElementSectionFooter();
             //footer.Elements.AddRange(FooterPreferences.SelectMany(x => x.CreateInstance<IControl>(context.Page, context.Request)).Select(x => x.Render(context)));

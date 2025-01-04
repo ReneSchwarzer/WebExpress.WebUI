@@ -78,10 +78,11 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var items = (from x in Nodes select x.Render(renderContext)).ToList();
+            var items = (from x in Nodes select x.Render(renderContext, visualTree)).ToList();
 
             switch (Layout)
             {
@@ -102,7 +103,7 @@ namespace WebExpress.WebUI.WebControl
 
             if (Layout == TypeLayoutTree.TreeView)
             {
-                renderContext.AddScript("treeview", @"var toggler = document.getElementsByClassName(""tree-treeview-angle"");
+                visualTree.AddScript("treeview", @"var toggler = document.getElementsByClassName(""tree-treeview-angle"");
                 for (var i = 0; i < toggler.length; i++)
                 {
                     toggler[i].addEventListener(""click"", function() {

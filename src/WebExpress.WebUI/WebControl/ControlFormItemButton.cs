@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -172,8 +173,9 @@ namespace WebExpress.WebUI.WebControl
         /// Convert to html.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(IRenderControlFormContext renderContext)
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
             var html = new HtmlElementFieldButton()
             {
@@ -201,7 +203,7 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None),
                     VerticalAlignment = Icon.IsUserIcon ? TypeVerticalAlignment.TextBottom : TypeVerticalAlignment.Default
-                }.Render(renderContext));
+                }.Render(renderContext, visualTree));
             }
 
             if (!string.IsNullOrWhiteSpace(Text))
@@ -211,7 +213,7 @@ namespace WebExpress.WebUI.WebControl
 
             if (_content.Count > 0)
             {
-                html.Add(Content.Select(x => x.Render(renderContext)));
+                html.Add(Content.Select(x => x.Render(renderContext, visualTree)));
             }
 
             return html;

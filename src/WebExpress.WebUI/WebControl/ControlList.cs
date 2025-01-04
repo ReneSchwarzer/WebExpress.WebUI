@@ -106,21 +106,23 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
-        /// 
-        public override IHtmlNode Render(IRenderControlContext renderContext)
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            return Render(renderContext, Items);
+            return Render(renderContext, visualTree, Items);
         }
 
         /// <summary>
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <param name="items">The list entries.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public virtual IHtmlNode Render(IRenderControlContext renderContext, IEnumerable<ControlListItem> items)
+        public virtual IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree, IEnumerable<ControlListItem> items)
         {
-            var li = items.Where(x => x.Enable).Select(x => x.Render(renderContext)).ToList();
+            var li = items.Where(x => x.Enable).Select(x => x.Render(renderContext, visualTree)).ToList();
             switch (Layout)
             {
                 case TypeLayoutList.Horizontal:

@@ -1,5 +1,6 @@
 ﻿using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
 {
@@ -18,14 +19,15 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Id(string id, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlListItemButton(id)
             {
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -39,15 +41,16 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Active(TypeActive active, string expected)
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlListItemButton(null)
             {
                 Active = active
             };
 
             // test execution
-            var html = control.Render(context);
+            var html = control.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
@@ -59,8 +62,9 @@ namespace WebExpress.WebUI.Test.WebControl
         public void Add()
         {
             // preconditions
-            UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control1 = new ControlListItemButton(null, new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
             var control2 = new ControlListItemButton(null, [new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
             var control3 = new ControlListItemButton(null, new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
@@ -73,12 +77,12 @@ namespace WebExpress.WebUI.Test.WebControl
             control5.Add([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
             control6.Add(new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
 
-            var html1 = control1.Render(context);
-            var html2 = control2.Render(context);
-            var html3 = control3.Render(context);
-            var html4 = control4.Render(context);
-            var html5 = control5.Render(context);
-            var html6 = control6.Render(context);
+            var html1 = control1.Render(context, visualTree);
+            var html2 = control2.Render(context, visualTree);
+            var html3 = control3.Render(context, visualTree);
+            var html4 = control4.Render(context, visualTree);
+            var html5 = control5.Render(context, visualTree);
+            var html6 = control6.Render(context, visualTree);
 
             AssertExtensions.EqualWithPlaceholders(@"<button class=""list-group-item-action""><span class=""fas fa-star""></span></button>", html1);
             AssertExtensions.EqualWithPlaceholders(@"<button class=""list-group-item-action""><span class=""fas fa-star""></span></button>", html2);

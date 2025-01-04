@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -74,8 +75,9 @@ namespace WebExpress.WebUI.WebControl
         /// Convert the control to HTML.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
-        public override IHtmlNode Render(IRenderControlFormContext renderContext)
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
             var classes = Classes.ToList();
 
@@ -100,7 +102,7 @@ namespace WebExpress.WebUI.WebControl
                 Style = GetStyles()
             };
 
-            renderContext.AddScript(Id, GetScript($"selection-move-{Id}", string.Join(" ", classes)));
+            visualTree.AddScript(Id, GetScript($"selection-move-{Id}", string.Join(" ", classes)));
 
             return html;
         }
