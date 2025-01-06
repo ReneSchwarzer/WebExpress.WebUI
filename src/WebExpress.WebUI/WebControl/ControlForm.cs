@@ -8,7 +8,9 @@ using WebExpress.WebCore.WebHtml;
 using WebExpress.WebCore.WebMessage;
 using WebExpress.WebCore.WebPage;
 using WebExpress.WebCore.WebScope;
+using WebExpress.WebUI.WebFragment;
 using WebExpress.WebUI.WebPage;
+using WebExpress.WebUI.WebSection;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -96,7 +98,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the hidden field that contains the submit method.
         /// </summary>
-        public ControlFormItemInputHidden SubmitType { get; } = new ControlFormItemInputHidden(Guid.NewGuid().ToString())
+        public ControlFormItemInputHidden SubmitHiddenField { get; } = new ControlFormItemInputHidden(Guid.NewGuid().ToString())
         {
             Name = "form-submit-type",
             Value = "update"
@@ -201,16 +203,6 @@ namespace WebExpress.WebUI.WebControl
             }
 
             FormId.Value = Id;
-
-            // header
-            //HeaderPreferences.AddRange(fm.GetCacheableFragments<IControl>(SectionControl.HeaderPreferences, context.Page, [GetType().FullName]));
-            //HeaderPrimary.AddRange(fm.GetCacheableFragments<IControl>(SectionControl.HeaderPrimary, context.Page, [GetType().FullName]));
-            //HeaderSecondary.AddRange(fm.GetCacheableFragments<IControl>(SectionControl.HeaderSecondary, context.Page, [GetType().FullName]));
-
-            //// footer
-            //FooterPreferences.AddRange(fm.GetCacheableFragments<IControl>(SectionControl.FooterPreferences, context.Page, [GetType().FullName]));
-            //FooterPrimary.AddRange(fm.GetCacheableFragments<IControl>(SectionControl.FooterPrimary, context.Page, [GetType().FullName]));
-            //FooterSecondary.AddRange(fm.GetCacheableFragments<IControl>(SectionControl.FooterSecondary, context.Page, [GetType().FullName]));
         }
 
         /// <summary>
@@ -385,7 +377,7 @@ namespace WebExpress.WebUI.WebControl
             };
 
             form.Add(FormId.Render(renderFormContext, visualTree));
-            form.Add(SubmitType.Render(renderFormContext, visualTree));
+            form.Add(SubmitHiddenField.Render(renderFormContext, visualTree));
 
             var header = new HtmlElementSectionHeader();
             header.Add(new ControlProgressBar()
@@ -397,9 +389,25 @@ namespace WebExpress.WebUI.WebControl
                 Value = 0
             }.Render(renderFormContext, visualTree));
 
-            //header.Elements.AddRange(HeaderPreferences.SelectMany(x => x.CreateInstance<IControl>(context.Page, context.Request)).Select(x => x.Render(context)));
-            //header.Elements.AddRange(HeaderPrimary.SelectMany(x => x.CreateInstance<IControl>(context.Page, context.Request)).Select(x => x.Render(context)));
-            //header.Elements.AddRange(HeaderSecondary.SelectMany(x => x.CreateInstance<IControl>(context.Page, context.Request)).Select(x => x.Render(context)));
+
+            var headerPreferences = WebEx.ComponentHub.FragmentManager.GetFragments<IFragmentControl, SectionFormHeaderPreferences>
+            (
+                renderContext?.PageContext?.ApplicationContext,
+                [GetType()]
+            );
+            var headerPrimary = WebEx.ComponentHub.FragmentManager.GetFragments<IFragmentControl, SectionFormHeaderPrimary>
+            (
+                renderContext?.PageContext?.ApplicationContext,
+                [GetType()]
+            );
+            var headerSecondary = WebEx.ComponentHub.FragmentManager.GetFragments<IFragmentControl, SectionFormHeaderSecondary>
+            (
+                renderContext?.PageContext?.ApplicationContext,
+                [GetType()]
+            );
+            header.Add(headerPreferences.Select(x => x.Render(renderFormContext, visualTree)));
+            header.Add(headerPrimary.Select(x => x.Render(renderFormContext, visualTree)));
+            header.Add(headerSecondary.Select(x => x.Render(renderFormContext, visualTree)));
 
             foreach (var v in renderFormContext.ValidationResults)
             {
@@ -447,21 +455,35 @@ namespace WebExpress.WebUI.WebControl
 
             main.Add(group.Render(renderFormContext, visualTree));
 
-            var buttonPannel = new HtmlElementTextContentDiv();
+            var buttonPannel = new HtmlElementTextContentDiv() { Class = FormLayout == TypeLayoutForm.Inline ? "ms-2" : "" };
             buttonPannel.Add(Buttons.Select(x => x.Render(renderFormContext, visualTree)));
 
             var footer = new HtmlElementSectionFooter();
-            //footer.Elements.AddRange(FooterPreferences.SelectMany(x => x.CreateInstance<IControl>(context.Page, context.Request)).Select(x => x.Render(context)));
-            //footer.Elements.AddRange(FooterPrimary.SelectMany(x => x.CreateInstance<IControl>(context.Page, context.Request)).Select(x => x.Render(context)));
-            //footer.Elements.AddRange(FooterSecondary.SelectMany(x => x.CreateInstance<IControl>(context.Page, context.Request)).Select(x => x.Render(context)));
+            var footerPreferences = WebEx.ComponentHub.FragmentManager.GetFragments<IFragmentControl, SectionFormFooterPreferences>
+            (
+                renderContext?.PageContext?.ApplicationContext,
+                [GetType()]
+            );
+            var footerPrimary = WebEx.ComponentHub.FragmentManager.GetFragments<IFragmentControl, SectionFormFooterPrimary>
+            (
+                renderContext?.PageContext?.ApplicationContext,
+                [GetType()]
+            );
+            var footerSecondary = WebEx.ComponentHub.FragmentManager.GetFragments<IFragmentControl, SectionFormFooterSecondary>
+            (
+                renderContext?.PageContext?.ApplicationContext,
+                [GetType()]
+            );
+            footer.Add(footerPreferences.Select(x => x.Render(renderFormContext, visualTree)));
+            footer.Add(footerPrimary.Select(x => x.Render(renderFormContext, visualTree)));
+            footer.Add(footerSecondary.Select(x => x.Render(renderFormContext, visualTree)));
 
             form.Add(header);
             form.Add(main);
             form.Add(buttonPannel);
             form.Add(footer);
 
-            //form.Add(renderFormContext.Scripts.Select(x => new HtmlElementScriptingScript(x.Value)));
-            //context.VisualTree.AddScript(Id, $"new webexpress.webui.form.progess('{Id}', '{Method.ToString()}');");
+            visualTree.AddScript(Id, $"new webexpress.webui.form.progess('{Id}', '{Method.ToString()}');");
 
             return form;
         }
@@ -538,6 +560,18 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="button">The form buttons.</param>
         public void AddPreferencesButton(params ControlFormItemButton[] buttons)
         {
+            foreach (var button in buttons)
+            {
+                if (button is ControlFormItemButtonSubmit submitButton)
+                {
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('submit');");
+                }
+                else if (button is ControlFormItemButtonReset resetButton)
+                {
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('reset');");
+                }
+            }
+
             _preferencesButtons.AddRange(buttons);
         }
 
@@ -556,6 +590,18 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="button">The form buttons.</param>
         public void AddPrimaryButton(params ControlFormItemButton[] buttons)
         {
+            foreach (var button in buttons)
+            {
+                if (button is ControlFormItemButtonSubmit submitButton)
+                {
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('submit');");
+                }
+                else if (button is ControlFormItemButtonReset resetButton)
+                {
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('reset');");
+                }
+            }
+
             _primaryButtons.AddRange(buttons);
         }
 
@@ -574,6 +620,18 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="button">The form buttons.</param>
         public void AddSecondaryButton(params ControlFormItemButton[] buttons)
         {
+            foreach (var button in buttons)
+            {
+                if (button is ControlFormItemButtonSubmit submitButton)
+                {
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('submit');");
+                }
+                else if (button is ControlFormItemButtonReset resetButton)
+                {
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('reset');");
+                }
+            }
+
             _secondaryButtons.AddRange(buttons);
         }
 

@@ -4,6 +4,7 @@ plugin.description=Provides basic components.
 
 form.empty.id=The form does not have an id!
 form.submit.label=Submit
+form.reset.label=Reset
 form.next.label=Next
 form.cancel.label=Cancel
 form.selectionmove.available=Available options

@@ -5,17 +5,17 @@ using WebExpress.WebUI.WebPage;
 namespace WebExpress.WebUI.Test.WebControl
 {
     /// <summary>
-    /// Tests the form submit button control.
+    /// Tests the form reset button control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlFormItemButtonSubmit
+    public class UnitTestControlFormItemButtonReset
     {
         /// <summary>
         /// Tests the id property of the form submit button control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<button type=""submit"" class=""btn me-2 btn-success""><span class=""me-2 fas fa-save""></span>Submit</button>")]
-        [InlineData("id", @"<button id=""id"" name=""id"" type=""submit"" class=""btn me-2 btn-success"">*</span>Submit</button>")]
+        [InlineData(null, @"<button type=""reset"" class=""btn me-2 btn-secondary""><span class=""me-2 fa-solid fa-rotate-left""></span>Reset</button>")]
+        [InlineData("id", @"<button id=""id"" name=""id"" type=""reset"" class=""btn me-2 btn-secondary""><span class=""me-2 fa-solid fa-rotate-left""></span>Reset</button>")]
         public void Id(string id, string expected)
         {
             // preconditions
@@ -23,7 +23,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlFormItemButtonSubmit(id)
+            var control = new ControlFormItemButtonReset(id)
             {
             };
 
@@ -34,11 +34,11 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the text property of the form submit button control.
+        /// Tests the text property of the form reset button control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<button type=""submit"" class=""btn me-2 btn-success""><span class=""fas fa-save""></span></button>")]
-        [InlineData("abc", @"<button type=""submit"" class=""btn me-2 btn-success""><span class=""me-2 fas fa-save""></span>abc</button>")]
+        [InlineData(null, @"<button type=""reset"" class=""btn me-2 btn-secondary""><span class=""fa-solid fa-rotate-left""></span></button>")]
+        [InlineData("abc", @"<button type=""reset"" class=""btn me-2 btn-secondary""><span class=""me-2 fa-solid fa-rotate-left""></span>abc</button>")]
         public void Text(string text, string expected)
         {
             // preconditions
@@ -46,7 +46,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlFormItemButtonSubmit()
+            var control = new ControlFormItemButtonReset()
             {
                 Text = text
             };
@@ -58,12 +58,12 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the size property of the form submit button control.
+        /// Tests the size property of the form reset button control.
         /// </summary>
         [Theory]
-        [InlineData(TypeSizeButton.Default, @"<button type=""submit"" class=""btn me-2 btn-success"">*</button>")]
-        [InlineData(TypeSizeButton.Small, @"<button type=""submit"" class=""btn me-2 btn-success btn-sm"">*</button>")]
-        [InlineData(TypeSizeButton.Large, @"<button type=""submit"" class=""btn me-2 btn-success btn-lg"">*</button>")]
+        [InlineData(TypeSizeButton.Default, @"<button type=""reset"" class=""btn me-2 btn-secondary"">*</button>")]
+        [InlineData(TypeSizeButton.Small, @"<button type=""reset"" class=""btn me-2 btn-secondary btn-sm"">*</button>")]
+        [InlineData(TypeSizeButton.Large, @"<button type=""reset"" class=""btn me-2 btn-secondary btn-lg"">*</button>")]
         public void Size(TypeSizeButton size, string expected)
         {
             // preconditions
@@ -71,7 +71,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlFormItemButtonSubmit()
+            var control = new ControlFormItemButtonReset()
             {
                 Size = size
             };
@@ -83,18 +83,18 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the backgroundcolor property of the form submit button control.
+        /// Tests the backgroundcolor property of the form reset button control.
         /// </summary>
         [Theory]
-        [InlineData(TypeColorBackground.Default, @"<button type=""submit"" class=""btn me-2 btn-success"">*</button>")]
-        [InlineData(TypeColorBackground.Primary, @"<button type=""submit"" class=""btn bg-primary *"">*</button>")]
-        [InlineData(TypeColorBackground.Secondary, @"<button type=""submit"" class=""btn bg-secondary *"">*</button>")]
-        [InlineData(TypeColorBackground.Warning, @"<button type=""submit"" class=""btn bg-warning *"">*</button>")]
-        [InlineData(TypeColorBackground.Danger, @"<button type=""submit"" class=""btn bg-danger *"">*</button>")]
-        [InlineData(TypeColorBackground.Dark, @"<button type=""submit"" class=""btn bg-dark *"">*</button>")]
-        [InlineData(TypeColorBackground.Light, @"<button type=""submit"" class=""btn bg-light *"">*</button>")]
-        [InlineData(TypeColorBackground.White, @"<button type=""submit"" class=""btn bg-white *"">*</button>")]
-        [InlineData(TypeColorBackground.Transparent, @"<button type=""submit"" class=""btn bg-transparent *"">*</button>")]
+        [InlineData(TypeColorBackground.Default, @"<button type=""reset"" class=""btn me-2 btn-secondary"">*</button>")]
+        [InlineData(TypeColorBackground.Primary, @"<button type=""reset"" class=""btn bg-primary *"">*</button>")]
+        [InlineData(TypeColorBackground.Secondary, @"<button type=""reset"" class=""btn bg-secondary *"">*</button>")]
+        [InlineData(TypeColorBackground.Warning, @"<button type=""reset"" class=""btn bg-warning *"">*</button>")]
+        [InlineData(TypeColorBackground.Danger, @"<button type=""reset"" class=""btn bg-danger *"">*</button>")]
+        [InlineData(TypeColorBackground.Dark, @"<button type=""reset"" class=""btn bg-dark *"">*</button>")]
+        [InlineData(TypeColorBackground.Light, @"<button type=""reset"" class=""btn bg-light *"">*</button>")]
+        [InlineData(TypeColorBackground.White, @"<button type=""reset"" class=""btn bg-white *"">*</button>")]
+        [InlineData(TypeColorBackground.Transparent, @"<button type=""reset"" class=""btn bg-transparent *"">*</button>")]
         public void BackgroundColor(TypeColorBackground color, string expected)
         {
             // preconditions
@@ -102,7 +102,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlFormItemButtonSubmit()
+            var control = new ControlFormItemButtonReset()
             {
                 BackgroundColor = new PropertyColorBackground(color)
             };
@@ -114,16 +114,16 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the color property of the form submit button control.
+        /// Tests the color property of the form reset button control.
         /// </summary>
         [Theory]
-        [InlineData(TypeColorButton.Default, @"<button type=""submit"" class=""btn me-2"">*</button>")]
-        [InlineData(TypeColorButton.Primary, @"<button type=""submit"" class=""btn me-2 btn-primary"">*</button>")]
-        [InlineData(TypeColorButton.Secondary, @"<button type=""submit"" class=""btn me-2 btn-secondary"">*</button>")]
-        [InlineData(TypeColorButton.Warning, @"<button type=""submit"" class=""btn me-2 btn-warning"">*</button>")]
-        [InlineData(TypeColorButton.Danger, @"<button type=""submit"" class=""btn me-2 btn-danger"">*</button>")]
-        [InlineData(TypeColorButton.Dark, @"<button type=""submit"" class=""btn me-2 btn-dark"">*</button>")]
-        [InlineData(TypeColorButton.Light, @"<button type=""submit"" class=""btn me-2 btn-light"">*</button>")]
+        [InlineData(TypeColorButton.Default, @"<button type=""reset"" class=""btn me-2"">*</button>")]
+        [InlineData(TypeColorButton.Primary, @"<button type=""reset"" class=""btn me-2 btn-primary"">*</button>")]
+        [InlineData(TypeColorButton.Secondary, @"<button type=""reset"" class=""btn me-2 btn-secondary"">*</button>")]
+        [InlineData(TypeColorButton.Warning, @"<button type=""reset"" class=""btn me-2 btn-warning"">*</button>")]
+        [InlineData(TypeColorButton.Danger, @"<button type=""reset"" class=""btn me-2 btn-danger"">*</button>")]
+        [InlineData(TypeColorButton.Dark, @"<button type=""reset"" class=""btn me-2 btn-dark"">*</button>")]
+        [InlineData(TypeColorButton.Light, @"<button type=""reset"" class=""btn me-2 btn-light"">*</button>")]
         public void Color(TypeColorButton color, string expected)
         {
             // preconditions
@@ -131,7 +131,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlFormItemButtonSubmit()
+            var control = new ControlFormItemButtonReset()
             {
                 Color = new PropertyColorButton(color)
             };
@@ -143,17 +143,17 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the outline property of the form submit button control.
+        /// Tests the outline property of the form reset button control.
         /// </summary>
         [Theory]
-        [InlineData(false, TypeColorButton.Default, @"<button type=""submit"" class=""btn me-2"">*</button>")]
-        [InlineData(true, TypeColorButton.Default, @"<button type=""submit"" class=""btn me-2"">*</button>")]
-        [InlineData(true, TypeColorButton.Primary, @"<button type=""submit"" class=""btn me-2 btn-outline-primary"">*</button>")]
-        [InlineData(true, TypeColorButton.Secondary, @"<button type=""submit"" class=""btn me-2 btn-outline-secondary"">*</button>")]
-        [InlineData(true, TypeColorButton.Warning, @"<button type=""submit"" class=""btn me-2 btn-outline-warning"">*</button>")]
-        [InlineData(true, TypeColorButton.Danger, @"<button type=""submit"" class=""btn me-2 btn-outline-danger"">*</button>")]
-        [InlineData(true, TypeColorButton.Dark, @"<button type=""submit"" class=""btn me-2 btn-outline-dark"">*</button>")]
-        [InlineData(true, TypeColorButton.Light, @"<button type=""submit"" class=""btn me-2"">*</button>")]
+        [InlineData(false, TypeColorButton.Default, @"<button type=""reset"" class=""btn me-2"">*</button>")]
+        [InlineData(true, TypeColorButton.Default, @"<button type=""reset"" class=""btn me-2"">*</button>")]
+        [InlineData(true, TypeColorButton.Primary, @"<button type=""reset"" class=""btn me-2 btn-outline-primary"">*</button>")]
+        [InlineData(true, TypeColorButton.Secondary, @"<button type=""reset"" class=""btn me-2 btn-outline-secondary"">*</button>")]
+        [InlineData(true, TypeColorButton.Warning, @"<button type=""reset"" class=""btn me-2 btn-outline-warning"">*</button>")]
+        [InlineData(true, TypeColorButton.Danger, @"<button type=""reset"" class=""btn me-2 btn-outline-danger"">*</button>")]
+        [InlineData(true, TypeColorButton.Dark, @"<button type=""reset"" class=""btn me-2 btn-outline-dark"">*</button>")]
+        [InlineData(true, TypeColorButton.Light, @"<button type=""reset"" class=""btn me-2"">*</button>")]
         public void Outline(bool outline, TypeColorButton color, string expected)
         {
             // preconditions
@@ -161,7 +161,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlFormItemButtonSubmit()
+            var control = new ControlFormItemButtonReset()
             {
                 Outline = outline,
                 Color = new PropertyColorButton(color)
@@ -174,11 +174,11 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the block property of the form submit button control.
+        /// Tests the block property of the form reset button control.
         /// </summary>
         [Theory]
-        [InlineData(TypeBlockButton.None, @"<button type=""submit"" class=""btn me-2 btn-success"">*</button>")]
-        [InlineData(TypeBlockButton.Block, @"<button type=""submit"" class=""btn me-2 btn-success btn-block"">*</button>")]
+        [InlineData(TypeBlockButton.None, @"<button type=""reset"" class=""btn me-2 btn-secondary"">*</button>")]
+        [InlineData(TypeBlockButton.Block, @"<button type=""reset"" class=""btn me-2 btn-secondary btn-block"">*</button>")]
         public void Block(TypeBlockButton block, string expected)
         {
             // preconditions
@@ -186,7 +186,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlFormItemButtonSubmit()
+            var control = new ControlFormItemButtonReset()
             {
                 Block = block
             };
@@ -198,11 +198,11 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the icon property of the form submit button control.
+        /// Tests the icon property of the form reset button control.
         /// </summary>
         [Theory]
-        [InlineData(TypeIcon.None, @"<button type=""submit"" class=""btn me-2 btn-success"">*</button>")]
-        [InlineData(TypeIcon.Star, @"<button type=""submit"" class=""btn me-2 btn-success""><span class=""me-2 fas fa-star""></span>Submit</button>")]
+        [InlineData(TypeIcon.None, @"<button type=""reset"" class=""btn me-2 btn-secondary"">*</button>")]
+        [InlineData(TypeIcon.Star, @"<button type=""reset"" class=""btn me-2 btn-secondary""><span class=""me-2 fas fa-star""></span>Reset</button>")]
         public void Icon(TypeIcon icon, string expected)
         {
             // preconditions
@@ -210,7 +210,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlFormItemButtonSubmit()
+            var control = new ControlFormItemButtonReset()
             {
                 Icon = new PropertyIcon(icon)
             };
@@ -222,7 +222,7 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the add function of the form submit button control.
+        /// Tests the add function of the form reset button control.
         /// </summary>
         [Fact]
         public void Add()
@@ -232,12 +232,12 @@ namespace WebExpress.WebUI.Test.WebControl
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control1 = new ControlFormItemButtonSubmit(null, new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
-            var control2 = new ControlFormItemButtonSubmit(null, [new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
-            var control3 = new ControlFormItemButtonSubmit(null, new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
-            var control4 = new ControlFormItemButtonSubmit(null);
-            var control5 = new ControlFormItemButtonSubmit(null);
-            var control6 = new ControlFormItemButtonSubmit(null);
+            var control1 = new ControlFormItemButtonReset(null, new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
+            var control2 = new ControlFormItemButtonReset(null, [new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
+            var control3 = new ControlFormItemButtonReset(null, new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
+            var control4 = new ControlFormItemButtonReset(null);
+            var control5 = new ControlFormItemButtonReset(null);
+            var control6 = new ControlFormItemButtonReset(null);
 
             // test execution
             control4.Add(new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
@@ -251,12 +251,12 @@ namespace WebExpress.WebUI.Test.WebControl
             var html5 = control5.Render(context, visualTree);
             var html6 = control6.Render(context, visualTree);
 
-            AssertExtensions.EqualWithPlaceholders(@"<button type=""submit"" class=""btn me-2 btn-success""><span class=""me-2 fas fa-save""></span>Submit<span class=""fas fa-star""></span></button>", html1.Trim());
-            AssertExtensions.EqualWithPlaceholders(@"<button type=""submit"" class=""btn me-2 btn-success""><span class=""me-2 fas fa-save""></span>Submit<span class=""fas fa-star""></span></button>", html2.Trim());
-            AssertExtensions.EqualWithPlaceholders(@"<button type=""submit"" class=""btn me-2 btn-success""><span class=""me-2 fas fa-save""></span>Submit<span class=""fas fa-star""></span></button>", html3.Trim());
-            AssertExtensions.EqualWithPlaceholders(@"<button type=""submit"" class=""btn me-2 btn-success""><span class=""me-2 fas fa-save""></span>Submit<span class=""fas fa-star""></span></button>", html4.Trim());
-            AssertExtensions.EqualWithPlaceholders(@"<button type=""submit"" class=""btn me-2 btn-success""><span class=""me-2 fas fa-save""></span>Submit<span class=""fas fa-star""></span></button>", html5.Trim());
-            AssertExtensions.EqualWithPlaceholders(@"<button type=""submit"" class=""btn me-2 btn-success""><span class=""me-2 fas fa-save""></span>Submit<span class=""fas fa-star""></span></button>", html6.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<button type=""reset"" class=""btn me-2 btn-secondary""><span class=""me-2 fa-solid fa-rotate-left""></span>Reset<span class=""fas fa-star""></span></button>", html1.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<button type=""reset"" class=""btn me-2 btn-secondary""><span class=""me-2 fa-solid fa-rotate-left""></span>Reset<span class=""fas fa-star""></span></button>", html2.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<button type=""reset"" class=""btn me-2 btn-secondary""><span class=""me-2 fa-solid fa-rotate-left""></span>Reset<span class=""fas fa-star""></span></button>", html3.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<button type=""reset"" class=""btn me-2 btn-secondary""><span class=""me-2 fa-solid fa-rotate-left""></span>Reset<span class=""fas fa-star""></span></button>", html4.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<button type=""reset"" class=""btn me-2 btn-secondary""><span class=""me-2 fa-solid fa-rotate-left""></span>Reset<span class=""fas fa-star""></span></button>", html5.Trim());
+            AssertExtensions.EqualWithPlaceholders(@"<button type=""reset"" class=""btn me-2 btn-secondary""><span class=""me-2 fa-solid fa-rotate-left""></span>Reset<span class=""fas fa-star""></span></button>", html6.Trim());
         }
     }
 }

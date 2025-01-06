@@ -87,7 +87,7 @@ namespace WebExpress.WebUI.WebControl
                     label.FormItem = item;
                     help.Text = I18N.Translate(renderGroupContext.Request?.Culture, input?.Help);
 
-                    if (icon.Icon != null)
+                    if (icon.Icon != null && !string.IsNullOrWhiteSpace(label.Text))
                     {
                         icon.Classes.Add("me-2 pt-1");
                         fieldset.Add(new HtmlElementTextSemanticsSpan(icon.Render(renderGroupContext, visualTree), label.Render(renderGroupContext, visualTree))
@@ -95,7 +95,7 @@ namespace WebExpress.WebUI.WebControl
                             Style = "display: flex;"
                         });
                     }
-                    else
+                    else if (!string.IsNullOrWhiteSpace(label.Text))
                     {
                         fieldset.Add(label.Render(renderGroupContext, visualTree));
                     }

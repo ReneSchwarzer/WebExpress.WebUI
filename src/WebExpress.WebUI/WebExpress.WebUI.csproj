@@ -28,13 +28,10 @@
 	<ItemGroup>
 		<Compile Remove="Assets\js\locales\**" />
 		<Compile Remove="WebResource\**" />
-		<Compile Remove="WebSection\**" />
 		<EmbeddedResource Remove="Assets\js\locales\**" />
 		<EmbeddedResource Remove="WebResource\**" />
-		<EmbeddedResource Remove="WebSection\**" />
 		<None Remove="Assets\js\locales\**" />
 		<None Remove="WebResource\**" />
-		<None Remove="WebSection\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -62,10 +59,14 @@
 		<None Remove="Assets\css\webexpress.webui.selection.css" />
 		<None Remove="Assets\css\webexpress.webui.table.css" />
 		<None Remove="Assets\css\webexpress.webui.toolpanel.css" />
-		<None Remove="Assets\fonts\fa-solid-900.eot" />
+		<None Remove="Assets\fonts\fa-brands-400.ttf" />
+		<None Remove="Assets\fonts\fa-brands-400.woff2" />
+		<None Remove="Assets\fonts\fa-regular-400.ttf" />
+		<None Remove="Assets\fonts\fa-regular-400.woff2" />
 		<None Remove="Assets\fonts\fa-solid-900.ttf" />
-		<None Remove="Assets\fonts\fa-solid-900.woff" />
 		<None Remove="Assets\fonts\fa-solid-900.woff2" />
+		<None Remove="Assets\fonts\fa-v4compatibility.ttf" />
+		<None Remove="Assets\fonts\fa-v4compatibility.woff2" />
 		<None Remove="Assets\fonts\summernote.eot" />
 		<None Remove="Assets\fonts\summernote.ttf" />
 		<None Remove="Assets\fonts\summernote.woff" />
@@ -231,10 +232,14 @@
 		</EmbeddedResource>
 		<EmbeddedResource Include="Assets\css\summernote-bs5.min.css" />
 		<EmbeddedResource Include="Assets\css\webexpress.webui.table.css" />
-		<EmbeddedResource Include="Assets\fonts\fa-solid-900.eot" />
+		<EmbeddedResource Include="Assets\fonts\fa-brands-400.ttf" />
+		<EmbeddedResource Include="Assets\fonts\fa-brands-400.woff2" />
+		<EmbeddedResource Include="Assets\fonts\fa-regular-400.ttf" />
+		<EmbeddedResource Include="Assets\fonts\fa-regular-400.woff2" />
 		<EmbeddedResource Include="Assets\fonts\fa-solid-900.ttf" />
-		<EmbeddedResource Include="Assets\fonts\fa-solid-900.woff" />
 		<EmbeddedResource Include="Assets\fonts\fa-solid-900.woff2" />
+		<EmbeddedResource Include="Assets\fonts\fa-v4compatibility.ttf" />
+		<EmbeddedResource Include="Assets\fonts\fa-v4compatibility.woff2" />
 		<EmbeddedResource Include="Assets\fonts\summernote.eot" />
 		<EmbeddedResource Include="Assets\fonts\summernote.ttf" />
 		<EmbeddedResource Include="Assets\fonts\summernote.woff" />

@@ -71,13 +71,13 @@ namespace WebExpress.WebUI.WebControl
                     help.Text = I18N.Translate(renderGroupContext.Request?.Culture, input?.Help);
                     help.Classes.Add("ms-2");
 
-                    if (icon.Icon != null)
+                    if (icon.Icon != null && !string.IsNullOrWhiteSpace(label.Text))
                     {
                         icon.Classes.Add("me-2 pt-1");
 
                         row.Add(new HtmlElementTextContentDiv(icon.Render(renderGroupContext, visualTree), label.Render(renderGroupContext, visualTree)) { });
                     }
-                    else
+                    else if (!string.IsNullOrWhiteSpace(label.Text))
                     {
                         row.Add(new HtmlElementTextContentDiv(label.Render(renderGroupContext, visualTree)) { });
                     }
