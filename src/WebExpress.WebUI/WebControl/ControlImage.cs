@@ -1,4 +1,5 @@
 ﻿using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebUri;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -11,7 +12,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the image source.
         /// </summary>
-        public string Uri { get; set; }
+        public UriResource Uri { get; set; }
 
         /// <summary>
         /// Returns or sets the width.
@@ -46,12 +47,10 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Classes.Add(HorizontalAlignment.ToClass());
-
             var html = new HtmlElementMultimediaImg()
             {
                 Id = Id,
-                Class = GetClasses(),
+                Class = Css.Concatenate(HorizontalAlignment.ToClass(), GetClasses()),
                 Style = GetStyles(),
                 Role = Role,
                 Alt = Tooltip,

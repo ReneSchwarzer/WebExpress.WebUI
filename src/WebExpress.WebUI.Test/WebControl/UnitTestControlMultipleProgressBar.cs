@@ -117,14 +117,14 @@ namespace WebExpress.WebUI.Test.WebControl
         /// </summary>
         [Theory]
         [InlineData(TypeColorText.Default, @"<div class=""progress""></div>")]
-        [InlineData(TypeColorText.Primary, @"<div class=""progress""></div>")]
-        [InlineData(TypeColorText.Secondary, @"<div class=""progress""></div>")]
-        [InlineData(TypeColorText.Info, @"<div class=""progress""></div>")]
-        [InlineData(TypeColorText.Warning, @"<div class=""progress""></div>")]
-        [InlineData(TypeColorText.Danger, @"<div class=""progress""></div>")]
-        [InlineData(TypeColorText.Light, @"<div class=""progress""></div>")]
-        [InlineData(TypeColorText.White, @"<div class=""progress""></div>")]
-        [InlineData(TypeColorText.Muted, @"<div class=""progress""></div>")]
+        [InlineData(TypeColorText.Primary, @"<div class=""progress text-primary""></div>")]
+        [InlineData(TypeColorText.Secondary, @"<div class=""progress text-secondary""></div>")]
+        [InlineData(TypeColorText.Info, @"<div class=""progress text-info""></div>")]
+        [InlineData(TypeColorText.Warning, @"<div class=""progress text-warning""></div>")]
+        [InlineData(TypeColorText.Danger, @"<div class=""progress text-danger""></div>")]
+        [InlineData(TypeColorText.Light, @"<div class=""progress text-light""></div>")]
+        [InlineData(TypeColorText.White, @"<div class=""progress text-white""></div>")]
+        [InlineData(TypeColorText.Muted, @"<div class=""progress text-muted""></div>")]
         public void TextColor(TypeColorText textColor, string expected)
         {
             // preconditions

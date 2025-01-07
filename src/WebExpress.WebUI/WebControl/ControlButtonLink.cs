@@ -28,7 +28,6 @@ namespace WebExpress.WebUI.WebControl
         public ControlButtonLink(string id = null, params IControl[] content)
             : base(id, content)
         {
-            Classes.Add("btn");
         }
 
         /// <summary>
@@ -44,7 +43,7 @@ namespace WebExpress.WebUI.WebControl
             var html = new HtmlElementTextSemanticsA()
             {
                 Id = Id,
-                Class = GetClasses(),
+                Class = Css.Concatenate("btn", GetClasses()),
                 Style = GetStyles(),
                 Role = Role,
                 Href = Uri?.ToString(),

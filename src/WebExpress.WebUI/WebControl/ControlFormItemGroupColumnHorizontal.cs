@@ -101,7 +101,7 @@ namespace WebExpress.WebUI.WebControl
 
                     if (icon.Icon != null && !string.IsNullOrWhiteSpace(label.Text))
                     {
-                        icon.Classes.Add("me-2 pt-1");
+                        icon.Classes = ["me-2", "pt-1"];
                         row.Add(new HtmlElementTextContentDiv(icon.Render(renderContext, visualTree), label.Render(renderGroupContext, visualTree))
                         {
                             Style = "display: flex;"

@@ -110,17 +110,17 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the css class.
         /// </summary>
-        public List<string> Classes { get; set; } = [];
+        public IEnumerable<string> Classes { get; set; } = [];
+
+        /// <summary>
+        /// Returns or sets the css style.
+        /// </summary>
+        public IEnumerable<string> Styles { get; set; } = [];
 
         /// <summary>
         /// Retruns or sets properties determined by enums.
         /// </summary>
         protected Dictionary<string, Tuple<object, Func<string>, Func<string>>> Propertys { get; private set; } = [];
-
-        /// <summary>
-        /// Returns or sets the css style.
-        /// </summary>
-        public List<string> Styles { get; set; } = [];
 
         /// <summary>
         /// Returns or sets the role.

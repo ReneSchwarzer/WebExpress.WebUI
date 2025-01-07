@@ -15,7 +15,7 @@
         public ControlToolbarItemButton(string id = null)
             : base(id)
         {
-            Classes.Add("nav-link");
+            Classes = ["nav-link"];
 
             //TextColor = LayoutSchema.ToolbarLink;
         }

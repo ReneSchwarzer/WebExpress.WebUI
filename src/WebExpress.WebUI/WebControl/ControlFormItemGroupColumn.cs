@@ -84,13 +84,13 @@ namespace WebExpress.WebUI.WebControl
 
                     label.Text = I18N.Translate(renderGroupContext.Request?.Culture, input?.Label);
                     label.FormItem = item;
-                    label.Classes.Add("me-2");
+                    label.Classes = ["me-2"];
                     help.Text = I18N.Translate(renderGroupContext.Request?.Culture, input?.Help);
-                    help.Classes.Add("ms-2");
+                    help.Classes = ["ms-2"];
 
                     if (icon.Icon != null && !string.IsNullOrWhiteSpace(label.Text))
                     {
-                        icon.Classes.Add("me-2 pt-1");
+                        icon.Classes = ["me-2", "pt-1"];
 
                         row.Add(new HtmlElementTextContentDiv(icon.Render(renderContext, visualTree), label.Render(renderContext, visualTree)) { });
                     }

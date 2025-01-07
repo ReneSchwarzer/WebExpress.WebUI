@@ -57,39 +57,24 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            switch (Layout)
+            var rowClass = Layout switch
             {
-                case TypesLayoutTableRow.Primary:
-                    Classes.Add("table-primary");
-                    break;
-                case TypesLayoutTableRow.Secondary:
-                    Classes.Add("table-secondary");
-                    break;
-                case TypesLayoutTableRow.Success:
-                    Classes.Add("table-success");
-                    break;
-                case TypesLayoutTableRow.Info:
-                    Classes.Add("table-info");
-                    break;
-                case TypesLayoutTableRow.Warning:
-                    Classes.Add("table-warning");
-                    break;
-                case TypesLayoutTableRow.Danger:
-                    Classes.Add("table-danger");
-                    break;
-                case TypesLayoutTableRow.Light:
-                    Classes.Add("table-light");
-                    break;
-                case TypesLayoutTableRow.Dark:
-                    Classes.Add("table-dark");
-                    break;
-            }
+                TypesLayoutTableRow.Primary => "table-primary",
+                TypesLayoutTableRow.Secondary => "table-secondary",
+                TypesLayoutTableRow.Success => "table-success",
+                TypesLayoutTableRow.Info => "table-info",
+                TypesLayoutTableRow.Warning => "table-warning",
+                TypesLayoutTableRow.Danger => "table-danger",
+                TypesLayoutTableRow.Light => "table-light",
+                TypesLayoutTableRow.Dark => "table-dark",
+                _ => ""
+            };
 
             return new HtmlElementTableTr(_cells.Select(c => new HtmlElementTableTd(c.Render(renderContext, visualTree))).ToArray())
             {
                 Id = Id,
-                Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
-                Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
+                Class = Css.Concatenate(rowClass, GetClasses()),
+                Style = GetStyles(),
                 Role = Role
             };
         }

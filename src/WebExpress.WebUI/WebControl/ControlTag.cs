@@ -91,23 +91,18 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            if (Pill)
-            {
-                Classes.Add("badge-pill");
-            }
+            var pillClass = Pill ? "badge-pill" : "";
 
             if (_items.Count == 0)
             {
                 return new HtmlElementTextSemanticsSpan(new HtmlText(I18N.Translate(renderContext.Request?.Culture, Text)))
                 {
                     Id = Id,
-                    Class = Css.Concatenate("badge", GetClasses()),
+                    Class = Css.Concatenate("badge", pillClass, GetClasses()),
                     Style = GetStyles(),
                     Role = Role
                 };
             }
-
-            Classes.Add("btn");
 
             var html = new HtmlElementTextSemanticsSpan()
             {
@@ -123,7 +118,7 @@ namespace WebExpress.WebUI.WebControl
                 }
             )
             {
-                Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                Class = Css.Concatenate("btn", pillClass, GetClasses()),
                 Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
                 Role = Role,
                 DataToggle = "dropdown"

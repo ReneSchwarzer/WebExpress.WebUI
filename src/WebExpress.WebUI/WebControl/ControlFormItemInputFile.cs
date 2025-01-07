@@ -81,15 +81,12 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
-            switch (ValidationResult)
+            var resultClasses = ValidationResult switch
             {
-                case TypesInputValidity.Warning:
-                    Classes.Add("input-warning");
-                    break;
-                case TypesInputValidity.Error:
-                    Classes.Add("input-error");
-                    break;
-            }
+                TypesInputValidity.Warning => "input-warning",
+                TypesInputValidity.Error => "input-error",
+                _ => ""
+            };
 
             var html = new HtmlElementFieldInput()
             {
@@ -97,7 +94,7 @@ namespace WebExpress.WebUI.WebControl
                 Value = Value,
                 Name = Name,
                 Type = "file",
-                Class = Css.Concatenate("form-control-file", GetClasses()),
+                Class = Css.Concatenate("form-control-file", resultClasses, GetClasses()),
                 Style = GetStyles(),
                 Role = Role,
                 Placeholder = Placeholder

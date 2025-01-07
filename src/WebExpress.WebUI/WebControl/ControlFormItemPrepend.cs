@@ -1,4 +1,5 @@
-﻿using WebExpress.WebCore.WebHtml;
+﻿using System.Linq;
+using WebExpress.WebCore.WebHtml;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -16,6 +17,7 @@ namespace WebExpress.WebUI.WebControl
         public ControlFormItemPrepend(string id = null, params Control[] content)
             : base(id, content)
         {
+            Classes = Classes.Append("input-group-prepend");
         }
 
         /// <summary>
@@ -26,7 +28,6 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
-            Classes.Add("input-group-prepend");
             var html = base.Render(renderContext, visualTree);
 
             return html;

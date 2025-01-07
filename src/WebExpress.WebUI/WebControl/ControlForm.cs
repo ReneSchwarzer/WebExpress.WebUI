@@ -160,6 +160,15 @@ namespace WebExpress.WebUI.WebControl
         public IEnumerable<ControlFormItemButton> Buttons => _preferencesButtons.Union(_primaryButtons).Union(_secondaryButtons);
 
         /// <summary>
+        /// Returns or sets the horizontal alignment of the items.
+        /// </summary>
+        public virtual TypeJustifiedFlexbox Justify
+        {
+            get => (TypeJustifiedFlexbox)GetProperty(TypeJustifiedFlexbox.Start);
+            set => SetProperty(value, () => value.ToClass());
+        }
+
+        /// <summary>
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
@@ -385,7 +394,7 @@ namespace WebExpress.WebUI.WebControl
                 Format = TypeFormatProgress.Animated,
                 Color = new PropertyColorProgress(TypeColorProgress.Success),
                 Margin = new PropertySpacingMargin(PropertySpacing.Space.None, PropertySpacing.Space.None, PropertySpacing.Space.None, PropertySpacing.Space.Three),
-                Styles = { "height: 3px;", "display: none;" },
+                Styles = ["height: 3px;", "display: none;"],
                 Value = 0
             }.Render(renderFormContext, visualTree));
 

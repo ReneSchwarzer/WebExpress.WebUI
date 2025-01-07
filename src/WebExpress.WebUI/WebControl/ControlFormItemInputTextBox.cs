@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
@@ -98,20 +99,22 @@ namespace WebExpress.WebUI.WebControl
         {
             var id = Id ?? Guid.NewGuid().ToString();
 
-            Classes.Add("form-control");
+            var classes = new List<string>(Classes);
+
+            classes.Add("form-control");
 
             if (Disabled)
             {
-                Classes.Add("disabled");
+                classes.Add("disabled");
             }
 
             switch (ValidationResult)
             {
                 case TypesInputValidity.Warning:
-                    Classes.Add("input-warning");
+                    classes.Add("input-warning");
                     break;
                 case TypesInputValidity.Error:
-                    Classes.Add("input-error");
+                    classes.Add("input-error");
                     break;
             }
 
@@ -131,7 +134,7 @@ namespace WebExpress.WebUI.WebControl
                     Id = Id,
                     Value = Value,
                     Name = Name,
-                    Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                    Class = string.Join(" ", classes.Where(x => !string.IsNullOrWhiteSpace(x))),
                     Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
                     Role = Role,
                     Placeholder = I18N.Translate(renderContext.Request?.Culture, Placeholder),
@@ -142,7 +145,7 @@ namespace WebExpress.WebUI.WebControl
                     Id = id,
                     Value = Value,
                     Name = Name,
-                    Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                    Class = string.Join(" ", classes.Where(x => !string.IsNullOrWhiteSpace(x))),
                     Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
                     Role = Role,
                     Placeholder = I18N.Translate(renderContext.Request?.Culture, Placeholder),
@@ -159,7 +162,7 @@ namespace WebExpress.WebUI.WebControl
                     Pattern = Pattern,
                     Type = "text",
                     Disabled = Disabled,
-                    Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                    Class = string.Join(" ", classes.Where(x => !string.IsNullOrWhiteSpace(x))),
                     Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
                     Role = Role,
                     Placeholder = I18N.Translate(renderContext.Request?.Culture, Placeholder)

@@ -67,11 +67,11 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the css class.
         /// </summary>
-        List<string> Classes { get; set; }
+        IEnumerable<string> Classes { get; set; }
 
         /// Returns or sets the css style.
         /// </summary>
-        List<string> Styles { get; set; }
+        IEnumerable<string> Styles { get; set; }
 
         /// <summary>
         /// Returns or sets the role.

@@ -73,12 +73,10 @@ namespace WebExpress.WebUI.WebControl
                     };
             }
 
-            Classes.Add("progress");
-
             var html = new HtmlElementTextContentDiv()
             {
                 Id = Id,
-                Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                Class = Css.Concatenate("progress", GetClasses()),
                 Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
                 Role = Role
             };

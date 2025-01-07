@@ -1,5 +1,6 @@
 ﻿using WebExpress.WebCore.WebAttribute;
 using WebExpress.WebCore.WebFragment;
+using WebExpress.WebCore.WebUri;
 using WebExpress.WebUI.WebFragment;
 
 namespace WebExpress.WebUI.Test
@@ -16,7 +17,7 @@ namespace WebExpress.WebUI.Test
         public TestFragmentControlImage(IFragmentContext fragmentContext)
             : base(fragmentContext)
         {
-            Uri = "/a/b/c";
+            Uri = new UriResource("/a/b/c");
         }
     }
 }
