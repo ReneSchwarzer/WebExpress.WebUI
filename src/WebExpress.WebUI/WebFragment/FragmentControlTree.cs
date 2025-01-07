@@ -1,6 +1,7 @@
-﻿using System;
-using WebExpress.WebCore.WebFragment;
+﻿using WebExpress.WebCore.WebFragment;
+using WebExpress.WebCore.WebHtml;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebFragment
 {
@@ -26,11 +27,19 @@ namespace WebExpress.WebUI.WebFragment
         }
 
         /// <summary>
-        /// Releases all resources used by the fragment.
+        /// Convert the fragment to HTML.
         /// </summary>
-        public virtual void Dispose()
+        /// <param name="renderContext">The context in which the fragment is rendered.</param>
+        /// <param name="visualTree">The visual tree used for rendering the fragment.</param>
+        /// <returns>An HTML node representing the rendered fragments. Can be null if no nodes are present.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            GC.SuppressFinalize(this);
+            if (!FragmentContext.Conditions.Check(renderContext?.Request))
+            {
+                return null;
+            }
+
+            return base.Render(renderContext, visualTree);
         }
     }
 }
