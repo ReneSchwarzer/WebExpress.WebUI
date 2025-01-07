@@ -13,7 +13,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Occurs when a virtual item needs to be retrieved.
         /// </summary>
-        public event EventHandler<RetrieveVirtualItemEventArgs> RetrieveVirtualItem;
+        public event EventHandler<RetrieveVirtualListItemEventArgs> RetrieveVirtualItem;
 
         /// <summary>
         /// Returns or sets the size of the virtual list.
@@ -40,15 +40,24 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Convert the control to HTML.
+        /// This method is called to retrieve a virtual item from the data source.
+        /// </summary>
+        /// <param name="eventArgument">An object containing event data.</param>
+        protected void OnRetrieveVirtualItem(RetrieveVirtualListItemEventArgs eventArgument)
+        {
+            RetrieveVirtualItem?.Invoke(this, eventArgument);
+        }
+
+        /// <summary>
+        /// Converts the control to an HTML representation.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
         /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var eventArgs = new RetrieveVirtualItemEventArgs(renderContext);
-            RetrieveVirtualItem?.Invoke(this, eventArgs);
+            var eventArgs = new RetrieveVirtualListItemEventArgs(renderContext);
+            OnRetrieveVirtualItem(eventArgs);
 
             var li = eventArgs.Items?.Where(x => x.Enable).Select(x => x.Render(renderContext, visualTree)).ToList() ?? [];
 

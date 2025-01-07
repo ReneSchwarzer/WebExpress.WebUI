@@ -56,24 +56,26 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Convert the control to HTML.
+        /// Converts the control to an HTML representation.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
         /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var html = new HtmlElementTextContentDiv()
+            var eventArgs = new RetrieveVirtualControlItemEventArgs(renderContext);
+            OnRetrieveVirtualItem(eventArgs);
+
+            return new HtmlElementTextContentDiv(Content
+                .Union(eventArgs.Items ?? [])
+                .Select(x => x.Render(renderContext, visualTree))
+                .ToArray())
             {
                 Id = Id,
                 Class = Css.Concatenate("", GetClasses()),
                 Style = GetStyles(),
                 Role = Role
             };
-
-            html.Add(Content.Select(x => x.Render(renderContext, visualTree)));
-
-            return html;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace WebExpress.WebUI.WebControl
     /// <summary>
     /// Provides data for the RetrieveVirtualItem event.
     /// </summary>
-    public class RetrieveVirtualItemEventArgs : EventArgs
+    public class RetrieveVirtualListItemEventArgs : EventArgs
     {
         /// <summary>
         /// Returns the context for rendering controls within a web page.
@@ -23,7 +23,7 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="renderContext">The context for rendering controls within a web page.</param>
-        public RetrieveVirtualItemEventArgs(IRenderControlContext renderContext)
+        public RetrieveVirtualListItemEventArgs(IRenderControlContext renderContext)
         {
             RenderContext = renderContext;
         }

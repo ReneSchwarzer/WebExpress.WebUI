@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.WebHtml;
 using WebExpress.WebUI.WebPage;
@@ -11,6 +12,11 @@ namespace WebExpress.WebUI.WebControl
     public class ControlPanel : Control
     {
         private readonly List<IControl> _content = [];
+
+        /// <summary>
+        /// Occurs when a virtual item needs to be retrieved.
+        /// </summary>
+        public event EventHandler<RetrieveVirtualControlItemEventArgs> RetrieveVirtualItem;
 
         /// <summary> 
         /// Returns the content of the panel. 
@@ -107,7 +113,6 @@ namespace WebExpress.WebUI.WebControl
             _content.Remove(control);
         }
 
-
         /// <summary>
         /// Clears all controls from the content of the control panel.
         /// </summary>
@@ -118,16 +123,28 @@ namespace WebExpress.WebUI.WebControl
         public virtual void Clear()
         {
             _content.Clear();
-        }
+        }
+
         /// <summary>
-        /// Convert the control to HTML.
+        /// This method is called to retrieve a virtual item from the data source.
+        /// </summary>
+        /// <param name="eventArgument">An object containing event data.</param>
+        protected void OnRetrieveVirtualItem(RetrieveVirtualControlItemEventArgs eventArgument)        {            RetrieveVirtualItem?.Invoke(this, eventArgument);        }
+        /// <summary>
+        /// Converts the control to an HTML representation.
         /// </summary>
         /// <param name="renderContext">The context in which the control is rendered.</param>
         /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            return new HtmlElementTextContentDiv(_content.Select(x => x.Render(renderContext, visualTree)).ToArray())
+            var eventArgs = new RetrieveVirtualControlItemEventArgs(renderContext);
+            OnRetrieveVirtualItem(eventArgs);
+
+            return new HtmlElementTextContentDiv(Content
+                .Union(eventArgs.Items ?? [])
+                .Select(x => x.Render(renderContext, visualTree))
+                .ToArray())
             {
                 Id = Id,
                 Class = GetClasses(),
