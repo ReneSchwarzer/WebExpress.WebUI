@@ -573,11 +573,11 @@ namespace WebExpress.WebUI.WebControl
             {
                 if (button is ControlFormItemButtonSubmit submitButton)
                 {
-                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('submit');");
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('submit');submit();");
                 }
                 else if (button is ControlFormItemButtonReset resetButton)
                 {
-                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('reset');");
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('reset');submit();");
                 }
             }
 
@@ -603,11 +603,11 @@ namespace WebExpress.WebUI.WebControl
             {
                 if (button is ControlFormItemButtonSubmit submitButton)
                 {
-                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('submit');");
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('submit');submit();");
                 }
                 else if (button is ControlFormItemButtonReset resetButton)
                 {
-                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('reset');");
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('reset');submit();");
                 }
             }
 
@@ -633,11 +633,11 @@ namespace WebExpress.WebUI.WebControl
             {
                 if (button is ControlFormItemButtonSubmit submitButton)
                 {
-                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('submit');");
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('submit');submit();");
                 }
                 else if (button is ControlFormItemButtonReset resetButton)
                 {
-                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('reset');");
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('reset');submit();");
                 }
             }
 
