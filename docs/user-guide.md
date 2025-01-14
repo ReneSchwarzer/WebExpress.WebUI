@@ -11,5 +11,7 @@ To get started with `WebExpress.WebUI`, use the following guides:
 - [Development Guide](https://github.com/ReneSchwarzer/WebExpress/blob/main/doc/development_guide.md)
 - [WebExpress.WebCore API Documentation](https://reneschwarzer.github.io/WebExpress.WebCore/) 
 - [WebExpress.WebUI API Documentation](https://reneschwarzer.github.io/WebExpress.WebUI/) 
+- [WebExpress.WebApp API Documentation](https://reneschwarzer.github.io/WebExpress.WebApp/) 
+- [WebExpress.WebIndex API Documentation](https://reneschwarzer.github.io/WebExpress.WebIndex/) 
 
 We hope you enjoy using `WebExpress.WebUI` and find it valuable for your projects. Happy coding!

@@ -133,6 +133,11 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
+            if (!Enable)
+            {
+                return null;
+            }
+
             var html = new HtmlElementSectionNav()
             {
                 Id = Id,
