@@ -43,10 +43,7 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="renderContext">The context in which the control is rendered.</param>
         public override void Initialize(IRenderControlFormContext renderContext)
         {
-            if (Group != null)
-            {
-                Group.Initialize(renderContext);
-            }
+            Group?.Initialize(renderContext);
         }
 
         /// <summary>
@@ -64,7 +61,7 @@ namespace WebExpress.WebUI.WebControl
         /// Checks the input element for correctness of the data.
         /// </summary>
         /// <param name="renderContext">The context in which the inputs are validated.</param>
-        public virtual void Validate(IRenderControlFormContext renderContext)
+        public override void Validate(IRenderControlFormContext renderContext)
         {
             if (Disabled)
             {

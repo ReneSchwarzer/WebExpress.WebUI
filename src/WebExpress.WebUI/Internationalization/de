@@ -2,6 +2,8 @@
 plugin.name=WebExpress.WebUI
 plugin.description=Stellt Basiskomponenten bereit.
 
+notificationmanager.initialization=Der Benachrichtigungsmanager wurde initialisiert.
+
 form.empty.id=Das Formular verfügt über keine Id!
 form.submit.label=Speichern
 form.reset.label=Zurücksetzen
