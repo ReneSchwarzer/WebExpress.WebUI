@@ -15,9 +15,9 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the id property of the toolbar control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<nav class=""bg-warning px-2 navbar-expand-sm""><ul class=""navbar-nav""></ul></nav>")]
-        [InlineData("id", @"<nav id=""id"" class=""bg-warning px-2 navbar-expand-sm""><ul class=""navbar-nav""></ul></nav>")]
-        [InlineData("03C6031F-04A9-451F-B817-EBD6D32F8B0C", @"<nav id=""03C6031F-04A9-451F-B817-EBD6D32F8B0C"" class=""bg-warning px-2 navbar-expand-sm""><ul class=""navbar-nav""></ul></nav>")]
+        [InlineData(null, @"<nav class=""px-2 navbar-expand-sm""><ul class=""navbar-nav""></ul></nav>")]
+        [InlineData("id", @"<nav id=""id"" class=""px-2 navbar-expand-sm""><ul class=""navbar-nav""></ul></nav>")]
+        [InlineData("03C6031F-04A9-451F-B817-EBD6D32F8B0C", @"<nav id=""03C6031F-04A9-451F-B817-EBD6D32F8B0C"" class=""px-2 navbar-expand-sm""><ul class=""navbar-nav""></ul></nav>")]
         public void Id(string id, string expected)
         {
             // preconditions
@@ -78,7 +78,7 @@ namespace WebExpress.WebUI.Test.WebControl
             // test execution
             var html = control.Render(context, visualTree);
 
-            AssertExtensions.EqualWithPlaceholders(@"<nav class=""bg-warning px-2 navbar-expand-sm""><ul class=""navbar-nav""><li class=""nav-item""><a class=""link nav-link"">abc</a></li></ul></nav>", html);
+            AssertExtensions.EqualWithPlaceholders(@"<nav class=""px-2 navbar-expand-sm""><ul class=""navbar-nav""><li class=""nav-item""><a class=""link nav-link"">abc</a></li></ul></nav>", html);
         }
     }
 }

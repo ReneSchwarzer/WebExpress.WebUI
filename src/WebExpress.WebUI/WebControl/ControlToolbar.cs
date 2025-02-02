@@ -18,7 +18,7 @@ namespace WebExpress.WebUI.WebControl
         /// <value>
         /// A list of <see cref="IControlToolbarItem"/> representing the items in the toolbar.
         /// </value>
-        public List<IControlToolbarItem> Items => _items;
+        public virtual IEnumerable<IControlToolbarItem> Items => _items;
 
         /// <summary>
         /// Returns or sets the orientation of the toolbar.
@@ -55,7 +55,6 @@ namespace WebExpress.WebUI.WebControl
         public ControlToolbar(string id = null, params IControlToolbarItem[] items)
             : base(id)
         {
-            BackgroundColor = new PropertyColorBackground(TypeColorBackground.Warning);
             Orientation = TypeOrientationToolBar.Default;
             Padding = new PropertySpacingPadding(PropertySpacing.Space.Two, PropertySpacing.Space.None);
 
@@ -133,6 +132,18 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
+            return Render(renderContext, visualTree, Items);
+        }
+
+        /// <summary>
+        /// Converts the control to an HTML representation.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <param name="items">The items to be included in the dropdown.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public virtual IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree, IEnumerable<IControlToolbarItem> items)
+        {
             if (!Enable)
             {
                 return null;
@@ -150,7 +161,7 @@ namespace WebExpress.WebUI.WebControl
             (
                 new HtmlElementTextContentUl
                 (
-                    Items.Select
+                    items.Select
                     (
                         x =>
                         x == null || x is ControlDropdownItemDivider || x is ControlLine ?

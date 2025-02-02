@@ -172,6 +172,18 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
+            return Render(renderContext, visualTree, Items);
+        }
+
+        /// <summary>
+        /// Converts the control to an HTML representation.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <param name="items">The items to be included in the dropdown.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public virtual IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree, IEnumerable<IControlDropdownItem> items)
+        {
             var html = new HtmlElementTextContentDiv()
             {
                 Id = Id,
@@ -243,7 +255,7 @@ namespace WebExpress.WebUI.WebControl
             (
                 new HtmlElementTextContentUl
                 (
-                    Items.Select
+                    items.Select
                     (
                         x =>
                         x == null || x is ControlDropdownItemDivider || x is ControlLine ?

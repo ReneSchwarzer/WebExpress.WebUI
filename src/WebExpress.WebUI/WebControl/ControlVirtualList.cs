@@ -16,11 +16,6 @@ namespace WebExpress.WebUI.WebControl
         public event EventHandler<RetrieveVirtualListItemEventArgs> RetrieveVirtualItem;
 
         /// <summary>
-        /// Returns or sets the size of the virtual list.
-        /// </summary>
-        public uint VirtualListSize { get; set; }
-
-        /// <summary>
         /// Returns or sets the layout.
         /// </summary>
         public TypeLayoutList Layout

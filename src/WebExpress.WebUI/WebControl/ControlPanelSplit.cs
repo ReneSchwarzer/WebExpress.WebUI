@@ -126,8 +126,6 @@ namespace WebExpress.WebUI.WebControl
             var contextPath = renderContext?.PageContext?.ApplicationContext?.ContextPath;
             visualTree.AddHeaderScriptLink(UriResource.Combine(contextPath, "/assets/js/split.min.js"));
 
-            Border = new PropertyBorder(true);
-
             var init1 = 0;
             var init2 = 0;
 
@@ -148,7 +146,7 @@ namespace WebExpress.WebUI.WebControl
 
             visualTree.AddScript
             (
-                Id, @"Split(['#" + Id + "-p1', '#" + Id + @"-p2'], {
+                Id, @"$(document).ready(function() { Split(['#" + Id + "-p1', '#" + Id + @"-p2'], {
                     sizes: [" + init1 + "," + init2 + @"],
                     minSize: [" + Panel1MinSize + "," + Panel2MinSize + @"],
                     direction: '" + Orientation.ToString().ToLower() + @"',
@@ -160,7 +158,7 @@ namespace WebExpress.WebUI.WebControl
                         return gutter;
                     },
                     gutterSize: " + SplitterSize + @",
-                });"
+                })});"
             );
         }
 
@@ -172,6 +170,22 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
+            var p1 = Panel1.Select(x => x.Render(renderContext, visualTree)).Where(x => x != null);
+            var p2 = Panel2.Select(x => x.Render(renderContext, visualTree)).Where(x => x != null);
+
+            if (p1.Any() && !p2.Any())
+            {
+                return new HtmlList(p1);
+            }
+            else if (!p1.Any() && p2.Any())
+            {
+                return new HtmlList(p2);
+            }
+            else if (!p1.Any() && !p2.Any())
+            {
+                return null;
+            }
+
             Initialize(renderContext, visualTree);
 
             var html = new HtmlElementTextContentDiv()
@@ -182,8 +196,8 @@ namespace WebExpress.WebUI.WebControl
                 Role = Role
             };
 
-            html.Add(new HtmlElementTextContentDiv(Panel1.Select(x => x.Render(renderContext, visualTree)).ToArray()) { Id = $"{Id}-p1" });
-            html.Add(new HtmlElementTextContentDiv(Panel2.Select(x => x.Render(renderContext, visualTree)).ToArray()) { Id = $"{Id}-p2" });
+            html.Add(new HtmlElementTextContentDiv([.. p1]) { Id = $"{Id}-p1" });
+            html.Add(new HtmlElementTextContentDiv([.. p2]) { Id = $"{Id}-p2" });
 
             return html;
         }

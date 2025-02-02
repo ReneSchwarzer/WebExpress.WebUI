@@ -134,29 +134,5 @@ namespace WebExpress.WebUI.Test.WebControl
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
-
-        /// <summary>
-        /// Tests the retrieve virtual item event of the navbar control.
-        /// </summary>
-        [Theory]
-        [InlineData(typeof(ControlText), @"<nav class=""navbar""><div></div></nav>")]
-        [InlineData(typeof(ControlLink), @"<nav class=""navbar""><a class=""link""></a></nav>")]
-        [InlineData(typeof(ControlImage), @"<nav class=""navbar""><img></nav>")]
-        public void RetrieveVirtualItem(Type child, string expected)
-        {
-            // preconditions
-            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var childInstance = Activator.CreateInstance(child, [null]) as IControl;
-            var control = new ControlPanelNavbar();
-
-            // test execution
-            control.RetrieveVirtualItem += (s, e) => e.Items = [childInstance];
-
-            var html = control.Render(context, visualTree);
-
-            AssertExtensions.EqualWithPlaceholders(expected, html);
-        }
     }
 }

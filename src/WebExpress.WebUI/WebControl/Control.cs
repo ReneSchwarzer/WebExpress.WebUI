@@ -143,7 +143,7 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="id">The control id.</param>
         public Control(string id = null)
         {
-            Id = id;
+            Id = id?.Replace('.', '-');
 
             HorizontalAlignment = TypeHorizontalAlignment.Default;
             BackgroundColor = new PropertyColorBackground(TypeColorBackground.Default);

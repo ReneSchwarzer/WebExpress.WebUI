@@ -46,11 +46,7 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var eventArgs = new RetrieveVirtualControlItemEventArgs(renderContext);
-            OnRetrieveVirtualItem(eventArgs);
-
             return new HtmlElementSectionHeader(Content
-                .Union(eventArgs.Items ?? [])
                 .Select(x => x.Render(renderContext, visualTree))
                 .ToArray())
             {

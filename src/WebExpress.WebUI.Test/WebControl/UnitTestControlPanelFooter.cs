@@ -105,29 +105,5 @@ namespace WebExpress.WebUI.Test.WebControl
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
-
-        /// <summary>
-        /// Tests the retrieve virtual item event of the panel footer control.
-        /// </summary>
-        [Theory]
-        [InlineData(typeof(ControlText), @"<footer><div></div></footer>")]
-        [InlineData(typeof(ControlLink), @"<footer><a class=""link""></a></footer>")]
-        [InlineData(typeof(ControlImage), @"<footer><img></footer>")]
-        public void RetrieveVirtualItem(Type child, string expected)
-        {
-            // preconditions
-            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
-            var context = UnitTestControlFixture.CrerateRenderContextMock();
-            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var childInstance = Activator.CreateInstance(child, [null]) as IControl;
-            var control = new ControlPanelFooter();
-
-            // test execution
-            control.RetrieveVirtualItem += (s, e) => e.Items = [childInstance];
-
-            var html = control.Render(context, visualTree);
-
-            AssertExtensions.EqualWithPlaceholders(expected, html);
-        }
     }
 }
