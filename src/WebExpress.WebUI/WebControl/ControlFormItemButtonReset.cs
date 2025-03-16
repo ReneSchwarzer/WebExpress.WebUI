@@ -1,4 +1,6 @@
-﻿namespace WebExpress.WebUI.WebControl
+﻿using WebExpress.WebUI.WebIcon;
+
+namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
     /// Represents a reset button form item control.
@@ -15,7 +17,7 @@
         {
             Name = Id;
             Text = "webexpress.webui:form.reset.label";
-            Icon = new PropertyIcon(TypeIcon.RotateLeft);
+            Icon = new IconRotateLeft();
             Color = new PropertyColorButton(TypeColorButton.Secondary);
             Type = TypeButton.Reset;
             Margin = new PropertySpacingMargin(PropertySpacing.Space.None, PropertySpacing.Space.Two, PropertySpacing.Space.None, PropertySpacing.Space.None);

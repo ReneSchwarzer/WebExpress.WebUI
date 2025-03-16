@@ -42,7 +42,7 @@ namespace WebExpress.WebUI.WebControl
                 OnClick = OnClick?.ToString()
             };
 
-            if (Icon != null && Icon.HasIcon)
+            if (Icon != null)
             {
                 html.Add(new ControlIcon()
                 {

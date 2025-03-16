@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WebExpress.WebCore.WebIcon;
 
 namespace WebExpress.WebUI.WebControl
 {
@@ -29,7 +30,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
         /// Returns or sets the label.

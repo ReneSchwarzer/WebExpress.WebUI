@@ -2,6 +2,7 @@
 using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebIcon;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -26,7 +27,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
         /// Returns or sets the name.
@@ -109,10 +110,7 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var icon = new HtmlElementTextSemanticsSpan()
-            {
-                Class = Icon?.ToClass()
-            };
+            var icon = Icon?.Render(renderContext, visualTree);
 
             var name = new HtmlElementTextSemanticsSpan(new HtmlText(I18N.Translate(Name)))
             {
@@ -122,7 +120,7 @@ namespace WebExpress.WebUI.WebControl
 
             var html = new HtmlElementTextContentDiv
             (
-                Icon != null && Icon.HasIcon ? icon : null,
+                Icon != null ? icon : null,
                 Name != null ? name : null
             )
             {

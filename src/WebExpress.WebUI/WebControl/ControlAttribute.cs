@@ -2,6 +2,7 @@
 using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebIcon;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -19,7 +20,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
         /// Returns or sets the name.
@@ -58,10 +59,7 @@ namespace WebExpress.WebUI.WebControl
                 return null;
             }
 
-            var icon = new HtmlElementTextSemanticsSpan()
-            {
-                Class = Icon?.ToClass()
-            };
+            var icon = Icon?.Render(renderContext, visualTree);
 
             var name = new HtmlElementTextSemanticsSpan(new HtmlText(I18N.Translate(renderContext.Request?.Culture, Name)))
             {
@@ -77,7 +75,7 @@ namespace WebExpress.WebUI.WebControl
 
             var html = new HtmlElementTextContentDiv
             (
-                Icon != null && Icon.HasIcon ? icon : null,
+                Icon != null ? icon : null,
                 name,
                 Uri != null ? new HtmlElementTextSemanticsA(value) { Href = Uri.ToString() } : value
             )

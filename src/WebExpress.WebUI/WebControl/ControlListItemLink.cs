@@ -2,6 +2,7 @@
 using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebIcon;
 using WebExpress.WebCore.WebMessage;
 using WebExpress.WebUI.WebPage;
 
@@ -40,7 +41,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
         /// Returns or sets the parameters that apply to the link.
@@ -109,7 +110,7 @@ namespace WebExpress.WebUI.WebControl
                 OnClick = OnClick?.ToString()
             };
 
-            if (Icon != null && Icon.HasIcon)
+            if (Icon != null)
             {
                 html.Add(new ControlIcon()
                 {
@@ -121,7 +122,7 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None,
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None),
-                    VerticalAlignment = Icon.IsUserIcon ? TypeVerticalAlignment.TextBottom : TypeVerticalAlignment.Default
+                    VerticalAlignment = TypeVerticalAlignment.Default
                 }.Render(renderContext, visualTree));
             }
 

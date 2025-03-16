@@ -1,4 +1,6 @@
-﻿namespace WebExpress.WebUI.WebControl
+﻿using WebExpress.WebUI.WebIcon;
+
+namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
     /// Represents a submit button form item control.
@@ -15,7 +17,7 @@
         {
             Name = Id;
             Text = "webexpress.webui:form.submit.label";
-            Icon = new PropertyIcon(TypeIcon.Save);
+            Icon = new IconSave();
             Color = new PropertyColorButton(TypeColorButton.Success);
             Type = TypeButton.Submit;
             Margin = new PropertySpacingMargin(PropertySpacing.Space.None, PropertySpacing.Space.Two, PropertySpacing.Space.None, PropertySpacing.Space.None);

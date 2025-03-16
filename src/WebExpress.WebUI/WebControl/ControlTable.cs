@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebIcon;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -63,7 +64,7 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="name">The header of the column.</param>
         /// <param name="icon">The icon of the column.</param>
         /// <param name="layout">The layout of the column.</param>
-        public virtual void AddColumn(string name, PropertyIcon icon = null, TypesLayoutTableRow layout = TypesLayoutTableRow.Default)
+        public virtual void AddColumn(string name, IIcon icon = null, TypesLayoutTableRow layout = TypesLayoutTableRow.Default)
         {
             _columns.Add(new ControlTableColumn(null)
             {

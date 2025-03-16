@@ -1,5 +1,7 @@
-﻿using WebExpress.WebUI.Test.Fixture;
+﻿using WebExpress.WebCore.WebIcon;
+using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebIcon;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
@@ -201,9 +203,9 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the icon property of the form button control.
         /// </summary>
         [Theory]
-        [InlineData(TypeIcon.None, @"<button type=""button"" class=""btn""></button>")]
-        [InlineData(TypeIcon.Star, @"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>")]
-        public void Icon(TypeIcon icon, string expected)
+        [InlineData(null, @"<button type=""button"" class=""btn""></button>")]
+        [InlineData(typeof(IconStar), @"<button type=""button"" class=""btn""><span class=""fas fa-star""></span></button>")]
+        public void Icon(Type icon, string expected)
         {
             // preconditions
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
@@ -212,7 +214,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlFormItemButton()
             {
-                Icon = new PropertyIcon(icon)
+                Icon = icon != null ? Activator.CreateInstance(icon) as IIcon : null
             };
 
             // test execution
@@ -232,17 +234,17 @@ namespace WebExpress.WebUI.Test.WebControl
             var form = new ControlForm();
             var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control1 = new ControlFormItemButton(null, new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
-            var control2 = new ControlFormItemButton(null, [new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
-            var control3 = new ControlFormItemButton(null, new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
+            var control1 = new ControlFormItemButton(null, new ControlIcon() { Icon = new IconStar() });
+            var control2 = new ControlFormItemButton(null, [new ControlIcon() { Icon = new IconStar() }]);
+            var control3 = new ControlFormItemButton(null, new List<ControlIcon>([new ControlIcon() { Icon = new IconStar() }]).ToArray());
             var control4 = new ControlFormItemButton(null);
             var control5 = new ControlFormItemButton(null);
             var control6 = new ControlFormItemButton(null);
 
             // test execution
-            control4.Add(new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
-            control5.Add([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
-            control6.Add(new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]));
+            control4.Add(new ControlIcon() { Icon = new IconStar() });
+            control5.Add([new ControlIcon() { Icon = new IconStar() }]);
+            control6.Add(new List<ControlIcon>([new ControlIcon() { Icon = new IconStar() }]));
 
             var html1 = control1.Render(context, visualTree);
             var html2 = control2.Render(context, visualTree);

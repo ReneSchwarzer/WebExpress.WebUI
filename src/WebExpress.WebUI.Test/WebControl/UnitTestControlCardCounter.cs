@@ -1,5 +1,7 @@
-﻿using WebExpress.WebUI.Test.Fixture;
+﻿using WebExpress.WebCore.WebIcon;
+using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebIcon;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
@@ -109,9 +111,9 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the icon property of the card counter control.
         /// </summary>
         [Theory]
-        [InlineData(TypeIcon.None, @"<span class=""card-counter""><div><h4></h4><span class=""text-muted""></span></div></span>")]
-        [InlineData(TypeIcon.Star, @"<span class=""card-counter""><span class=""float-right fas fa-star""></span><div><h4></h4><span class=""text-muted""></span></div></span>")]
-        public void Icon(TypeIcon icon, string expected)
+        [InlineData(null, @"<span class=""card-counter""><div><h4></h4><span class=""text-muted""></span></div></span>")]
+        [InlineData(typeof(IconStar), @"<span class=""card-counter""><span class=""fas fa-star float-right""></span><div><h4></h4><span class=""text-muted""></span></div></span>")]
+        public void Icon(Type icon, string expected)
         {
             // preconditions
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
@@ -119,7 +121,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlCardCounter()
             {
-                Icon = new PropertyIcon(icon)
+                Icon = icon != null ? Activator.CreateInstance(icon) as IIcon : null
             };
 
             // test execution

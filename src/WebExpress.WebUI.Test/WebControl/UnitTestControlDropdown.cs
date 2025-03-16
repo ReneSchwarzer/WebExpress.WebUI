@@ -1,5 +1,7 @@
-﻿using WebExpress.WebUI.Test.Fixture;
+﻿using WebExpress.WebCore.WebIcon;
+using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebIcon;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
@@ -231,9 +233,9 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the icon property of the dropdown control.
         /// </summary>
         [Theory]
-        [InlineData(TypeIcon.None, @"<div class=""dropdown""><button class=""btn"" data-bs-toggle=""dropdown"" aria-expanded=""false""></button><ul class=""dropdown-menu""></ul></div>")]
-        [InlineData(TypeIcon.Star, @"<div class=""dropdown""><button class=""btn"" data-bs-toggle=""dropdown"" aria-expanded=""false""><span class=""fas fa-star""></span></button><ul class=""dropdown-menu""></ul></div>")]
-        public void Icon(TypeIcon icon, string expected)
+        [InlineData(null, @"<div class=""dropdown""><button class=""btn"" data-bs-toggle=""dropdown"" aria-expanded=""false""></button><ul class=""dropdown-menu""></ul></div>")]
+        [InlineData(typeof(IconStar), @"<div class=""dropdown""><button class=""btn"" data-bs-toggle=""dropdown"" aria-expanded=""false""><span class=""fas fa-star""></span></button><ul class=""dropdown-menu""></ul></div>")]
+        public void Icon(Type icon, string expected)
         {
             // preconditions
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
@@ -241,7 +243,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlDropdown()
             {
-                Icon = new PropertyIcon(icon)
+                Icon = icon != null ? Activator.CreateInstance(icon) as IIcon : null
             };
 
             // test execution

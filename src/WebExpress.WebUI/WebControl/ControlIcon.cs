@@ -1,4 +1,5 @@
 ﻿using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebIcon;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -11,11 +12,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon
-        {
-            get => (PropertyIcon)GetPropertyObject();
-            set => SetProperty(value, () => value?.ToClass(), () => value?.ToStyle());
-        }
+        public IIcon Icon { get; set; }
 
         /// <summary>
         /// Returns or sets the title.
@@ -47,7 +44,6 @@ namespace WebExpress.WebUI.WebControl
         public ControlIcon(string id = null)
             : base(id)
         {
-            Icon = new PropertyIcon(TypeIcon.None);
         }
 
         /// <summary>
@@ -58,28 +54,7 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            if (Icon.IsUserIcon)
-            {
-                return new HtmlElementMultimediaImg()
-                {
-                    Id = Id,
-                    Src = Icon.UserIcon?.ToString(),
-                    Class = GetClasses(),
-                    Style = GetStyles(),
-                    Role = Role,
-                    Title = Title
-                };
-            }
-
-            var html = new HtmlElementTextSemanticsSpan()
-            {
-                Id = Id,
-                Class = GetClasses(),
-                Style = GetStyles(),
-                Role = Role
-            };
-
-            html.AddUserAttribute("title", Title);
+            var html = Icon?.Render(renderContext, visualTree, Id, Title, GetClasses(), GetStyles(), Role);
 
             return html;
         }

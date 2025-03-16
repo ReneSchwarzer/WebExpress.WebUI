@@ -1,5 +1,7 @@
-﻿using WebExpress.WebUI.Test.Fixture;
+﻿using WebExpress.WebCore.WebIcon;
+using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebIcon;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
@@ -162,9 +164,9 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the icon property of the split button link control.
         /// </summary>
         [Theory]
-        [InlineData(TypeIcon.None, @"<div class=""btn-group"" role=""button""><a class=""btn""></a>*</div>")]
-        [InlineData(TypeIcon.Star, @"<div class=""btn-group"" role=""button""><a class=""btn""><span class=""fas fa-star""></span>*</div>")]
-        public void Icon(TypeIcon icon, string expected)
+        [InlineData(null, @"<div class=""btn-group"" role=""button""><a class=""btn""></a>*</div>")]
+        [InlineData(typeof(IconStar), @"<div class=""btn-group"" role=""button""><a class=""btn""><span class=""fas fa-star""></span>*</div>")]
+        public void Icon(Type icon, string expected)
         {
             // preconditions
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
@@ -172,7 +174,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlSplitButtonLink()
             {
-                Icon = new PropertyIcon(icon)
+                Icon = icon != null ? Activator.CreateInstance(icon) as IIcon : null
             };
 
             // test execution

@@ -1,5 +1,6 @@
 ﻿using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebIcon;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
@@ -65,17 +66,17 @@ namespace WebExpress.WebUI.Test.WebControl
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control1 = new ControlListItemButton(null, new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
-            var control2 = new ControlListItemButton(null, [new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
-            var control3 = new ControlListItemButton(null, new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
+            var control1 = new ControlListItemButton(null, new ControlIcon() { Icon = new IconStar() });
+            var control2 = new ControlListItemButton(null, [new ControlIcon() { Icon = new IconStar() }]);
+            var control3 = new ControlListItemButton(null, new List<ControlIcon>([new ControlIcon() { Icon = new IconStar() }]).ToArray());
             var control4 = new ControlListItemButton(null);
             var control5 = new ControlListItemButton(null);
             var control6 = new ControlListItemButton(null);
 
             // test execution
-            control4.Add(new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) });
-            control5.Add([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]);
-            control6.Add(new List<ControlIcon>([new ControlIcon() { Icon = new PropertyIcon(TypeIcon.Star) }]).ToArray());
+            control4.Add(new ControlIcon() { Icon = new IconStar() });
+            control5.Add([new ControlIcon() { Icon = new IconStar() }]);
+            control6.Add(new List<ControlIcon>([new ControlIcon() { Icon = new IconStar() }]).ToArray());
 
             var html1 = control1.Render(context, visualTree);
             var html2 = control2.Render(context, visualTree);

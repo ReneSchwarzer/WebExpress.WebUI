@@ -1,4 +1,5 @@
 ﻿using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebIcon;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -11,7 +12,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
         /// Returns or sets the counter value.
@@ -54,7 +55,7 @@ namespace WebExpress.WebUI.WebControl
                 Role = Role
             };
 
-            if (Icon != null && Icon.HasIcon)
+            if (Icon != null)
             {
                 html.Add(new ControlIcon()
                 {

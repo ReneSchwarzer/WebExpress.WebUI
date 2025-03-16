@@ -51,7 +51,7 @@ namespace WebExpress.WebUI.WebControl
                 OnClick = OnClick?.ToString()
             };
 
-            if (Icon != null && Icon.HasIcon)
+            if (Icon != null)
             {
                 button.Add(new ControlIcon()
                 {
@@ -63,7 +63,7 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None,
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None),
-                    VerticalAlignment = Icon.IsUserIcon ? TypeVerticalAlignment.TextBottom : TypeVerticalAlignment.Default
+                    VerticalAlignment = TypeVerticalAlignment.Default
                 }.Render(renderContext, visualTree));
             }
 
