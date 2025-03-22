@@ -195,7 +195,7 @@ namespace WebExpress.WebUI.WebControl
         {
             var param = GetParams(renderContext?.Request);
 
-            var html = new HtmlElementTextSemanticsA(_controls.Select(x => x.Render(renderContext, visualTree)).ToArray())
+            var html = new HtmlElementTextSemanticsA([.. _controls.Select(x => x.Render(renderContext, visualTree))])
             {
                 Id = Id,
                 Class = Css.Concatenate("link", GetClasses()),
@@ -203,7 +203,7 @@ namespace WebExpress.WebUI.WebControl
                 Role = Role,
                 Href = Uri?.ToString() + (param.Length > 0 ? "?" + param : string.Empty),
                 Target = Target,
-                Title = string.IsNullOrEmpty(Title) ? I18N.Translate(renderContext.Request.Culture, Tooltip) : I18N.Translate(renderContext.Request.Culture, Title),
+                Title = string.IsNullOrEmpty(Title) ? I18N.Translate(renderContext.Request, Tooltip) : I18N.Translate(renderContext.Request, Title),
                 OnClick = OnClick?.ToString()
             };
 
@@ -224,7 +224,12 @@ namespace WebExpress.WebUI.WebControl
 
             if (!string.IsNullOrWhiteSpace(Text))
             {
-                html.Add(new HtmlText(I18N.Translate(renderContext.Request.Culture, Text)));
+                html.Add(new HtmlText(I18N.Translate(renderContext.Request, Text)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(Tooltip))
+            {
+                html.AddUserAttribute("data-bs-toggle", "tooltip");
             }
 
             if (Modal == null || Modal.Type == TypeModal.None)
@@ -233,12 +238,12 @@ namespace WebExpress.WebUI.WebControl
             }
             else if (Modal.Type == TypeModal.Form)
             {
-                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(renderContext.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(renderContext.Request, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Brwoser)
             {
-                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{I18N.Translate(renderContext.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{I18N.Translate(renderContext.Request, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Modal)
@@ -246,12 +251,7 @@ namespace WebExpress.WebUI.WebControl
                 html.AddUserAttribute("data-bs-toggle", "modal");
                 html.AddUserAttribute("data-bs-target", "#" + Modal.Modal.Id);
 
-                return new HtmlList(html, Modal.Modal.Render(renderContext, visualTree));
-            }
-
-            if (!string.IsNullOrWhiteSpace(Tooltip))
-            {
-                html.AddUserAttribute("data-bs-toggle", "tooltip");
+                return new HtmlElementTextContentDiv(html, Modal.Modal.Render(renderContext, visualTree));
             }
 
             return html;

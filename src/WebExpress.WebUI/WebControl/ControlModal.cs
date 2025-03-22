@@ -128,7 +128,7 @@ namespace WebExpress.WebUI.WebControl
                 classes.Add("fade");
             }
 
-            var headerText = new HtmlElementSectionH4(I18N.Translate(renderContext.Request.Culture, Header))
+            var headerText = new HtmlElementSectionH4(I18N.Translate(renderContext.Request, Header))
             {
                 Class = "modal-title"
             };
@@ -152,7 +152,7 @@ namespace WebExpress.WebUI.WebControl
 
             var footer = default(HtmlElementTextContentDiv);
 
-            var footerButton = new HtmlElementFieldButton(new HtmlText(I18N.Translate(renderContext.Request.Culture, "webexpress.webui:modal.close.label")))
+            var footerButton = new HtmlElementFieldButton(new HtmlText(I18N.Translate(renderContext.Request, "webexpress.webui:modal.close.label")))
             {
                 Type = "button",
                 Class = Css.Concatenate("btn", new PropertyColorButton(TypeColorButton.Primary).ToStyle())

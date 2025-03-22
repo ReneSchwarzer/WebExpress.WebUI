@@ -77,18 +77,23 @@ namespace WebExpress.WebUI.WebControl
                 html.Add(Content.Select(x => x.Render(renderContext, visualTree)).ToArray());
             }
 
+            if (!string.IsNullOrWhiteSpace(Tooltip))
+            {
+                html.AddUserAttribute("data-bs-toggle", "tooltip");
+            }
+
             if (Modal == null || Modal.Type == TypeModal.None)
             {
 
             }
             else if (Modal.Type == TypeModal.Form)
             {
-                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(renderContext.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(renderContext.Request, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Brwoser)
             {
-                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{I18N.Translate(renderContext.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{I18N.Translate(renderContext.Request, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Modal)
@@ -96,12 +101,7 @@ namespace WebExpress.WebUI.WebControl
                 html.AddUserAttribute("data-bs-toggle", "modal");
                 html.AddUserAttribute("data-bs-target", "#" + Modal.Modal.Id);
 
-                return new HtmlList(html, Modal.Modal.Render(renderContext, visualTree));
-            }
-
-            if (!string.IsNullOrWhiteSpace(Tooltip))
-            {
-                html.AddUserAttribute("data-bs-toggle", "tooltip");
+                return new HtmlElementTextContentDiv(html, Modal.Modal.Render(renderContext, visualTree));
             }
 
             return html;

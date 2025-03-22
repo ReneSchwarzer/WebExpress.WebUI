@@ -153,6 +153,7 @@ namespace WebExpress.WebUI.WebControl
                     gutter: function (index, direction) 
                     {
                         var gutter = document.createElement('div');
+                        gutter.id = '" + Id + @"-gutter';
                         gutter.className = 'splitter splitter-' + direction + ' " + SplitterColor.ToClass() + @"';
                         gutter.style = '" + SplitterColor.ToStyle() + @"';
                         return gutter;
@@ -170,18 +171,24 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var p1 = Panel1.Select(x => x.Render(renderContext, visualTree)).Where(x => x != null);
-            var p2 = Panel2.Select(x => x.Render(renderContext, visualTree)).Where(x => x != null);
+            var p1 = Panel1
+                .Select(x => x.Render(renderContext, visualTree))
+                .Where(x => x != null)
+                .ToList();
+            var p2 = Panel2
+                .Select(x => x.Render(renderContext, visualTree))
+                .Where(x => x != null)
+                .ToList();
 
-            if (p1.Any() && !p2.Any())
+            if (p1.Count != 0 && p2.Count == 0)
             {
                 return new HtmlList(p1);
             }
-            else if (!p1.Any() && p2.Any())
+            else if (p1.Count == 0 && p2.Count != 0)
             {
                 return new HtmlList(p2);
             }
-            else if (!p1.Any() && !p2.Any())
+            else if (p1.Count == 0 && p2.Count == 0)
             {
                 return null;
             }
@@ -191,7 +198,7 @@ namespace WebExpress.WebUI.WebControl
             var html = new HtmlElementTextContentDiv()
             {
                 Id = Id,
-                Class = Css.Concatenate(Orientation == TypeOrientationSplit.Horizontal ? "d-flex split" : "split", GetClasses()),
+                Class = Css.Concatenate(Orientation == TypeOrientationSplit.Horizontal ? "split-horizontal" : "split-vertical", GetClasses()),
                 Style = GetStyles(),
                 Role = Role
             };

@@ -487,12 +487,20 @@ namespace WebExpress.WebUI.WebControl
             footer.Add(footerPrimary.Select(x => x.Render(renderFormContext, visualTree)));
             footer.Add(footerSecondary.Select(x => x.Render(renderFormContext, visualTree)));
 
-            form.Add(header);
+            if (headerPreferences.Any() || headerPrimary.Any() || headerSecondary.Any())
+            {
+                form.Add(header);
+            }
+
             form.Add(main);
             form.Add(buttonPannel);
-            form.Add(footer);
 
-            visualTree.AddScript(Id, $"new webexpress.webui.form.progess('{Id}', '{Method.ToString()}');");
+            if (footerPreferences.Any() || footerPrimary.Any() || footerSecondary.Any())
+            {
+                form.Add(footer);
+            }
+
+            visualTree.AddScript(Id, $"new webexpress.webui.form.progess('{Id}', '{Method}');");
 
             return form;
         }

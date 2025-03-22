@@ -281,7 +281,9 @@ namespace WebExpress.WebUI.WebControl
                 .Where(x => x.Type == TypeModal.Modal)
                 .Select(x => x.Modal.Render(renderContext, visualTree));
 
-            return new HtmlList(html, modals);
+            html.Add(modals);
+
+            return html;
         }
     }
 }
