@@ -151,17 +151,17 @@ namespace WebExpress.WebUI.WebControl
             {
                 var expander = new HtmlElementTextSemanticsSpan
                 {
-                    Class = Css.Concatenate("tree-treeview-expander", _children.Count > 0 ? "tree-treeview-angle" : "tree-treeview-dot")
+                    Class = Css.Concatenate("wx-tree-treeview-expander", _children.Count > 0 ? "wx-tree-treeview-angle" : "wx-tree-treeview-dot")
                 };
 
                 if (_children.Count > 0 && Expand != TypeExpandTree.Collapse)
                 {
-                    expander.Class = Css.Concatenate("tree-treeview-angle-down", expander.Class);
+                    expander.Class = Css.Concatenate("wx-tree-treeview-angle-down", expander.Class);
                 }
 
                 container = new HtmlElementTextContentDiv(expander, content.Length > 1 ? new HtmlElementTextContentDiv(content) : content.FirstOrDefault())
                 {
-                    Class = Css.Concatenate("tree-treeview-container")
+                    Class = Css.Concatenate("wx-tree-treeview-container")
                 };
             }
             else
@@ -197,8 +197,8 @@ namespace WebExpress.WebUI.WebControl
                 {
                     Class = Css.Concatenate(Layout switch
                     {
-                        TypeLayoutTreeItem.TreeView => "tree-treeview-node",
-                        TypeLayoutTreeItem.Simple => "tree-simple-node",
+                        TypeLayoutTreeItem.TreeView => "wx-tree-treeview-node",
+                        TypeLayoutTreeItem.Simple => "wx-tree-simple-node",
                         _ => Layout.ToClass()
                     }, Expand.ToClass())
                 };

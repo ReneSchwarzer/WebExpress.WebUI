@@ -1,4 +1,5 @@
-﻿using WebExpress.WebUI.Test.Fixture;
+﻿using WebExpress.WebCore.WebMessage;
+using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
 using WebExpress.WebUI.WebPage;
 
@@ -67,7 +68,7 @@ namespace WebExpress.WebUI.Test.WebControl
         /// </summary>
         [Theory]
         [InlineData(null, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
-        [InlineData("abc", @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData("abc", @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"" name=""abc"">*</form>")]
         public void Name(string name, string expected)
         {
             // preconditions
@@ -86,12 +87,37 @@ namespace WebExpress.WebUI.Test.WebControl
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
+        // <summary>
+        /// Tests the method property of the form control.
+        /// </summary>
+        [Theory]
+        [InlineData(RequestMethod.NONE, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(RequestMethod.POST, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(RequestMethod.GET, @"<form action=""http://localhost:8080/"" method=""GET"" enctype=""multipart/form-data"">*</form>")]
+        public void Method(RequestMethod method, string expected)
+        {
+            // preconditions
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
+            var control = new ControlForm()
+            {
+                Method = method
+            };
+
+            // test execution
+            var html = control.Render(context, visualTree);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
+        }
+
         /// <summary>
         /// Tests the form layout property of the form control.
         /// </summary>
         [Theory]
         [InlineData(TypeLayoutForm.Default, @"<form action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
-        [InlineData(TypeLayoutForm.Inline, @"<form class=""form-inline"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(TypeLayoutForm.Inline, @"<form class=""wx-form-inline"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
         public void FormLayout(TypeLayoutForm formLayout, string expected)
         {
             // preconditions

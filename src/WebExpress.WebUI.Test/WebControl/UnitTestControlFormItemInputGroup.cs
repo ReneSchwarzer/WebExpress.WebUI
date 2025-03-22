@@ -14,8 +14,8 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the id property of the form label control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""form-group-column""></div>")]
-        [InlineData("id", @"<div class=""form-group-column""></div>")]
+        [InlineData(null, @"<div class=""wx-form-group-column""></div>")]
+        [InlineData("id", @"<div class=""wx-form-group-column""></div>")]
         public void Id(string id, string expected)
         {
             // preconditions
@@ -37,8 +37,8 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the name property of the form group control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""form-group-column""></div>")]
-        [InlineData("abc", @"<div class=""form-group-column""></div>")]
+        [InlineData(null, @"<div class=""wx-form-group-column""></div>")]
+        [InlineData("abc", @"<div class=""wx-form-group-column""></div>")]
         public void Name(string name, string expected)
         {
             // preconditions
@@ -61,8 +61,8 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the value property of the form group control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""form-group-column""></div>")]
-        [InlineData("abc", @"<div class=""form-group-column""></div>")]
+        [InlineData(null, @"<div class=""wx-form-group-column""></div>")]
+        [InlineData("abc", @"<div class=""wx-form-group-column""></div>")]
         public void Value(string value, string expected)
         {
             // preconditions

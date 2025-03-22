@@ -14,8 +14,8 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the id property of the avatar control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""profile""></div>")]
-        [InlineData("id", @"<div id=""id"" class=""profile""></div>")]
+        [InlineData(null, @"<div class=""wx-profile""></div>")]
+        [InlineData("id", @"<div id=""id"" class=""wx-profile""></div>")]
         public void Id(string id, string expected)
         {
             // preconditions
@@ -36,8 +36,8 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the user property of the avatar control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""profile""></div>")]
-        [InlineData("me", @"<div class=""profile""><b class=""bg-info text-light"">m</b>me</div>")]
+        [InlineData(null, @"<div class=""wx-profile""></div>")]
+        [InlineData("me", @"<div class=""wx-profile""><b class=""bg-info text-light"">m</b>me</div>")]
         public void User(string user, string expected)
         {
             // preconditions
@@ -59,8 +59,8 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the image property of the avatar control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""profile""></div>")]
-        [InlineData("http://example.com", @"<div class=""profile""><img src=""http://example.com/""></div>")]
+        [InlineData(null, @"<div class=""wx-profile""></div>")]
+        [InlineData("http://example.com", @"<div class=""wx-profile""><img src=""http://example.com/""></div>")]
         public void Image(string uri, string expected)
         {
             // preconditions
@@ -82,16 +82,16 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the text color property of the avatar control.
         /// </summary>
         [Theory]
-        [InlineData(TypeColorText.Default, @"<div class=""profile""></div>")]
-        [InlineData(TypeColorText.Primary, @"<div class=""profile text-primary""></div>")]
-        [InlineData(TypeColorText.Secondary, @"<div class=""profile text-secondary""></div>")]
-        [InlineData(TypeColorText.Info, @"<div class=""profile text-info""></div>")]
-        [InlineData(TypeColorText.Success, @"<div class=""profile text-success""></div>")]
-        [InlineData(TypeColorText.Warning, @"<div class=""profile text-warning""></div>")]
-        [InlineData(TypeColorText.Danger, @"<div class=""profile text-danger""></div>")]
-        [InlineData(TypeColorText.Light, @"<div class=""profile text-light""></div>")]
-        [InlineData(TypeColorText.Dark, @"<div class=""profile text-dark""></div>")]
-        [InlineData(TypeColorText.Muted, @"<div class=""profile text-muted""></div>")]
+        [InlineData(TypeColorText.Default, @"<div class=""wx-profile""></div>")]
+        [InlineData(TypeColorText.Primary, @"<div class=""wx-profile text-primary""></div>")]
+        [InlineData(TypeColorText.Secondary, @"<div class=""wx-profile text-secondary""></div>")]
+        [InlineData(TypeColorText.Info, @"<div class=""wx-profile text-info""></div>")]
+        [InlineData(TypeColorText.Success, @"<div class=""wx-profile text-success""></div>")]
+        [InlineData(TypeColorText.Warning, @"<div class=""wx-profile text-warning""></div>")]
+        [InlineData(TypeColorText.Danger, @"<div class=""wx-profile text-danger""></div>")]
+        [InlineData(TypeColorText.Light, @"<div class=""wx-profile text-light""></div>")]
+        [InlineData(TypeColorText.Dark, @"<div class=""wx-profile text-dark""></div>")]
+        [InlineData(TypeColorText.Muted, @"<div class=""wx-profile text-muted""></div>")]
         public void TextColor(TypeColorText color, string expected)
         {
             // preconditions
@@ -113,14 +113,14 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the background color property of the avatar control.
         /// </summary>
         [Theory]
-        [InlineData(TypeColorBackground.Default, @"<div class=""profile""></div>")]
-        [InlineData(TypeColorBackground.Primary, @"<div class=""profile bg-primary""></div>")]
-        [InlineData(TypeColorBackground.Secondary, @"<div class=""profile bg-secondary""></div>")]
-        [InlineData(TypeColorBackground.Warning, @"<div class=""profile bg-warning""></div>")]
-        [InlineData(TypeColorBackground.Danger, @"<div class=""profile bg-danger""></div>")]
-        [InlineData(TypeColorBackground.Dark, @"<div class=""profile bg-dark""></div>")]
-        [InlineData(TypeColorBackground.Light, @"<div class=""profile bg-light""></div>")]
-        [InlineData(TypeColorBackground.Transparent, @"<div class=""profile bg-transparent""></div>")]
+        [InlineData(TypeColorBackground.Default, @"<div class=""wx-profile""></div>")]
+        [InlineData(TypeColorBackground.Primary, @"<div class=""wx-profile bg-primary""></div>")]
+        [InlineData(TypeColorBackground.Secondary, @"<div class=""wx-profile bg-secondary""></div>")]
+        [InlineData(TypeColorBackground.Warning, @"<div class=""wx-profile bg-warning""></div>")]
+        [InlineData(TypeColorBackground.Danger, @"<div class=""wx-profile bg-danger""></div>")]
+        [InlineData(TypeColorBackground.Dark, @"<div class=""wx-profile bg-dark""></div>")]
+        [InlineData(TypeColorBackground.Light, @"<div class=""wx-profile bg-light""></div>")]
+        [InlineData(TypeColorBackground.Transparent, @"<div class=""wx-profile bg-transparent""></div>")]
         public void BackgroundColor(TypeColorBackground backgroundColor, string expected)
         {
             // preconditions

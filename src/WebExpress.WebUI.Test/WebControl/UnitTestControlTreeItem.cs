@@ -67,7 +67,7 @@ namespace WebExpress.WebUI.Test.WebControl
         [InlineData(TypeLayoutTreeItem.Horizontal, @"<li><div class=""list-group list-group-horizontal""></div></li>")]
         [InlineData(TypeLayoutTreeItem.Flat, @"<li><div class=""list-unstyled""></div></li>")]
         [InlineData(TypeLayoutTreeItem.Flush, @"<li><div class=""list-group list-group-flush""></div></li>")]
-        [InlineData(TypeLayoutTreeItem.TreeView, @"<li><div class=""tree-treeview-container"">*</div></li>")]
+        [InlineData(TypeLayoutTreeItem.TreeView, @"<li><div class=""wx-tree-treeview-container"">*</div></li>")]
         public void Layout(TypeLayoutTreeItem layout, string expected)
         {
             // preconditions

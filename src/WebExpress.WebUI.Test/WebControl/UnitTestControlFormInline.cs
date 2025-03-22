@@ -1,5 +1,7 @@
-﻿using WebExpress.WebUI.Test.Fixture;
-using Xunit.Abstractions;
+﻿using WebExpress.WebCore.WebMessage;
+using WebExpress.WebUI.Test.Fixture;
+using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.Test.WebControl
 {
@@ -7,135 +9,80 @@ namespace WebExpress.WebUI.Test.WebControl
     /// Tests the inline form control.
     /// </summary>
     [Collection("NonParallelTests")]
-    public class UnitTestControlFormInline : IClassFixture<UnitTestControlFixture>
+    public class UnitTestControlFormInline
     {
         /// <summary>
-        /// Returns the log.
+        /// Tests the id property of the pagination control.
         /// </summary>
-        protected ITestOutputHelper Output { get; private set; }
-
-        /// <summary>
-        /// Returns the test context.
-        /// </summary>
-        protected UnitTestControlFixture Fixture { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="fixture">The log.</param>
-        /// <param name="output">The test context.</param>
-        public UnitTestControlFormInline(UnitTestControlFixture fixture, ITestOutputHelper output)
+        [Theory]
+        [InlineData(null, @"<form class=""wx-form-inline"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData("id", @"<form id=""id"" class=""wx-form-inline"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        public void Id(string id, string expected)
         {
-            Fixture = fixture;
-            Output = output;
+            // preconditions
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
+            var control = new ControlForm(id)
+            {
+                FormLayout = TypeLayoutForm.Inline,
+            };
+
+            // test execution
+            var html = control.Render(context, visualTree);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
-        /// Tests a empty form.
+        /// Tests the name property of the form control.
         /// </summary>
-        [Fact]
-        public void EmptyForm()
+        [Theory]
+        [InlineData(null, @"<form class=""wx-form-inline"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData("abc", @"<form class=""wx-form-inline"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"" name=""abc"">*</form>")]
+        public void Name(string name, string expected)
         {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlForm() { FormLayout = TypeLayoutForm.Inline };
+            // preconditions
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
+            var control = new ControlForm()
+            {
+                FormLayout = TypeLayoutForm.Inline,
+                Name = name
+            };
 
-            //var html = control.Render(context, visualTree);
-            //var str = html.ToString();
+            // test execution
+            var html = control.Render(context, visualTree);
 
-            //// test execution
-            //Assert.StartsWith(@"<form class=""form-inline""", html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
 
         /// <summary>
-        /// Tests a empty form.
+        /// Tests the method property of the form control.
         /// </summary>
-        [Fact]
-        public void EmptyFormChangeSubmitText()
+        [Theory]
+        [InlineData(RequestMethod.NONE, @"<form class=""wx-form-inline"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(RequestMethod.POST, @"<form class=""wx-form-inline"" action=""http://localhost:8080/"" method=""POST"" enctype=""multipart/form-data"">*</form>")]
+        [InlineData(RequestMethod.GET, @"<form class=""wx-form-inline"" action=""http://localhost:8080/"" method=""GET"" enctype=""multipart/form-data"">*</form>")]
+        public void Method(RequestMethod method, string expected)
         {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlForm() { FormLayout = TypeLayoutForm.Inline };
-            //control.AddPrimaryButton(new ControlFormItemButtonSubmit("") { Text = "sendbutton" });
+            // preconditions
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var form = new ControlForm();
+            var context = new RenderControlFormContext(UnitTestControlFixture.CrerateRenderContextMock(), form);
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
+            var control = new ControlForm()
+            {
+                FormLayout = TypeLayoutForm.Inline,
+                Method = method
+            };
 
-            //var html = control.Render(context, visualTree);
-            //var str = html.ToString();
+            // test execution
+            var html = control.Render(context, visualTree);
 
-            //// test execution
-            //Assert.Contains(@"sendbutton", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form with id.
-        /// </summary>
-        [Fact]
-        public void EmptyFormWithId()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlForm("form") { FormLayout = TypeLayoutForm.Inline };
-
-            //var html = control.Render(context, visualTree);
-
-            //// test execution
-            //Assert.StartsWith(@"<form id=""form""", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form.
-        /// The control elements are added during rendering.
-        /// </summary>
-        [Fact]
-        public void SimpleFormAtRender()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var control = new ControlForm() { FormLayout = TypeLayoutForm.Inline };
-            //var item = new ControlFormItemInputTextBox() { };
-
-            //// test execution
-            //var html = control.Render(context, [item]);
-
-            //Assert.Contains(@"<input type=""text"" class=""form-control"">", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form.
-        /// The control elements are added when instantiating.
-        /// </summary>
-        [Fact]
-        public void SimpleFormAtInstancing()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var item = new ControlFormItemInputTextBox() { };
-            //var control = new ControlForm("form", item) { FormLayout = TypeLayoutForm.Inline };
-
-            //// test execution
-            //var html = control.Render(context, visualTree);
-
-            //Assert.Contains(@"<input type=""text"" class=""form-control"">", html.Trim());
-        }
-
-        /// <summary>
-        /// Tests a simple form.
-        /// The control elements are added using add.
-        /// </summary>
-        [Fact]
-        public void SimpleFormAtAdd()
-        {
-            //// preconditions
-            //var context = Fixture.CrerateContext();
-            //var item = new ControlFormItemInputTextBox() { };
-            //var control = new ControlForm("form") { FormLayout = TypeLayoutForm.Inline };
-
-            //control.Add(item);
-
-            //// test execution
-            //var html = control.Render(context, visualTree);
-            //var str = html.ToString();
-
-            //Assert.Contains(@"<input type=""text"" class=""form-control"">", html.Trim());
+            AssertExtensions.EqualWithPlaceholders(expected, html);
         }
     }
 }

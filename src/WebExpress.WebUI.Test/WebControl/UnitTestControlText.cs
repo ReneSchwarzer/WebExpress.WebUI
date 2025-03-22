@@ -88,5 +88,30 @@ namespace WebExpress.WebUI.Test.WebControl
 
             AssertExtensions.EqualWithPlaceholders(expected, html);
         }
+
+        /// <summary>
+        /// Tests the marging property of the attribute control.
+        /// </summary>
+        [Theory]
+        [InlineData(PropertySpacing.Space.Two, PropertySpacing.Space.Two, PropertySpacing.Space.Two, PropertySpacing.Space.Two, @"<div class=""m-2"">*</div>")]
+        [InlineData(PropertySpacing.Space.One, PropertySpacing.Space.Two, PropertySpacing.Space.Three, PropertySpacing.Space.Four, @"<div class=""ms-1 me-2 mt-3 mb-4"">*</div>")]
+        [InlineData(PropertySpacing.Space.One, PropertySpacing.Space.None, PropertySpacing.Space.None, PropertySpacing.Space.None, @"<div class=""ms-1"">*</div>")]
+        [InlineData(PropertySpacing.Space.Two, PropertySpacing.Space.Auto, PropertySpacing.Space.Two, PropertySpacing.Space.None, @"<div class=""ms-2 me-auto mt-2"">*</div>")]
+        public void Marging(PropertySpacing.Space spaceLeft, PropertySpacing.Space spaceRight, PropertySpacing.Space spaceTop, PropertySpacing.Space spaceBottom, string expected)
+        {
+            // preconditions
+            var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
+            var context = UnitTestControlFixture.CrerateRenderContextMock();
+            var visualTree = new VisualTreeControl(componentHub, context.PageContext);
+            var control = new ControlAttribute()
+            {
+                Margin = new PropertySpacingMargin(spaceLeft, spaceRight, spaceTop, spaceBottom)
+            };
+
+            // test execution
+            var html = control.Render(context, visualTree);
+
+            AssertExtensions.EqualWithPlaceholders(expected, html);
+        }
     }
 }

@@ -103,6 +103,15 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
+        /// Returns or sets the flex grow property of the control.
+        /// </summary>
+        public virtual TypeFlexGrow FlexGrow
+        {
+            get => (TypeFlexGrow)GetProperty(TypeFlexGrow.None);
+            set => SetProperty(value, () => value.ToClass());
+        }
+
+        /// <summary>
         /// Returns or sets the id of the control.
         /// </summary>
         public string Id { get; private set; }
@@ -118,7 +127,7 @@ namespace WebExpress.WebUI.WebControl
         public IEnumerable<string> Styles { get; set; } = [];
 
         /// <summary>
-        /// Retruns or sets properties determined by enums.
+        /// Returns or sets properties determined by enums.
         /// </summary>
         protected Dictionary<string, Tuple<object, Func<string>, Func<string>>> Propertys { get; private set; } = [];
 

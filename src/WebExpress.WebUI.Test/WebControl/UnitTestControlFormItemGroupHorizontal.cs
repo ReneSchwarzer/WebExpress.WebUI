@@ -14,8 +14,8 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the id property of the form item group horizontal control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""form-group-horizontal""><div></div></div>")]
-        [InlineData("id", @"<div id=""id"" class=""form-group-horizontal""><div></div></div>")]
+        [InlineData(null, @"<div class=""wx-form-group-horizontal""><div></div></div>")]
+        [InlineData("id", @"<div id=""id"" class=""wx-form-group-horizontal""><div></div></div>")]
         public void Id(string id, string expected)
         {
             // preconditions
@@ -37,8 +37,8 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the name property of the form item group horizontal control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""form-group-horizontal""><div></div></div>")]
-        [InlineData("abc", @"<div class=""form-group-horizontal""><div></div></div>")]
+        [InlineData(null, @"<div class=""wx-form-group-horizontal""><div></div></div>")]
+        [InlineData("abc", @"<div class=""wx-form-group-horizontal""><div></div></div>")]
         public void Name(string name, string expected)
         {
             // preconditions

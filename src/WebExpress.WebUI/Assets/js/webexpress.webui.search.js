@@ -4,7 +4,7 @@
  * - webexpress.webui.change.filter with parameter filter.
  */
 webexpress.webui.searchCtrl = class extends webexpress.webui.events {
-    _container = $("<span class='search form-control'>");
+    _container = $("<span class='wx-search form-control'>");
 
     /**
      * Constructor

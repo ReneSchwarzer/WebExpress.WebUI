@@ -77,7 +77,7 @@ namespace WebExpress.WebUI.WebControl
                 return new HtmlElementTextSemanticsA(new HtmlText(Value.ToString()))
                 {
                     Id = Id,
-                    Class = Css.Concatenate("badge", GetClasses()),
+                    Class = Css.Concatenate("wx-badge", GetClasses()),
                     Style = GetStyles(),
                     Href = Uri.ToString(),
                     Role = Role
@@ -87,7 +87,7 @@ namespace WebExpress.WebUI.WebControl
             return new HtmlElementTextSemanticsSpan(new HtmlText(Value.ToString()))
             {
                 Id = Id,
-                Class = Css.Concatenate("badge", GetClasses()),
+                Class = Css.Concatenate("wx-badge", GetClasses()),
                 Style = GetStyles(),
                 Role = Role
             };

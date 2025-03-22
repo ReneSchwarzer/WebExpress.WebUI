@@ -97,10 +97,10 @@ namespace WebExpress.WebUI.WebControl
         {
             var param = GetParams();
 
-            var link = new HtmlElementTextSemanticsA(Content.Select(x => x.Render(renderContext, visualTree)).ToArray())
+            var link = new HtmlElementTextSemanticsA([.. Content.Select(x => x.Render(renderContext, visualTree))])
             {
                 Id = Id,
-                Class = Css.Concatenate("link tree-link", Active == TypeActive.Active ? "tree-link-active" : ""),
+                Class = Css.Concatenate("link tree-link", Active == TypeActive.Active ? "wx-tree-link-active" : ""),
                 Role = Role,
                 Href = Uri?.ToString() + (param.Length > 0 ? "?" + param : string.Empty),
                 Target = Target,
@@ -136,16 +136,16 @@ namespace WebExpress.WebUI.WebControl
 
             var expander = new HtmlElementTextSemanticsSpan
             {
-                Class = Css.Concatenate("tree-treeview-expander", Children.Count() > 0 ? "tree-treeview-angle" : "tree-treeview-dot")
+                Class = Css.Concatenate("tree-treeview-expander", Children.Count() > 0 ? "wx-tree-treeview-angle" : "wx-tree-treeview-dot")
             };
 
             if (Children.Count() > 0 && Expand != TypeExpandTree.Collapse)
             {
-                expander.Class = Css.Concatenate("tree-treeview-angle-down", expander.Class);
+                expander.Class = Css.Concatenate("wx-tree-treeview-angle-down", expander.Class);
             }
             var container = new HtmlElementTextContentDiv(expander, link)
             {
-                Class = Css.Concatenate("tree-treeview-container")
+                Class = Css.Concatenate("wx-tree-treeview-container")
             };
 
             var html = new HtmlElementTextContentLi(Layout == TypeLayoutTreeItem.TreeView ? container : link)
@@ -156,22 +156,22 @@ namespace WebExpress.WebUI.WebControl
                     TypeLayoutTreeItem.Group => "list-group-item-action",
                     TypeLayoutTreeItem.Flush => "list-group-item-action",
                     TypeLayoutTreeItem.Horizontal => "list-group-item-action",
-                    TypeLayoutTreeItem.TreeView => "tree-item",
+                    TypeLayoutTreeItem.TreeView => "wx-tree-item",
                     _ => ""
                 }, Active.ToClass()),
                 Style = GetStyles(),
                 Role = Role
             };
 
-            if (Children.Count() > 0)
+            if (Children.Any())
             {
                 var items = (from x in Children select x.Render(renderContext, visualTree)).ToList();
                 var ul = new HtmlElementTextContentUl(items.ToArray())
                 {
                     Class = Css.Concatenate(Layout switch
                     {
-                        TypeLayoutTreeItem.TreeView => "tree-treeview-node",
-                        TypeLayoutTreeItem.Simple => "tree-simple-node",
+                        TypeLayoutTreeItem.TreeView => "wx-tree-treeview-node",
+                        TypeLayoutTreeItem.Simple => "wx-tree-simple-node",
                         _ => Layout.ToClass()
                     }, Expand.ToClass())
                 };

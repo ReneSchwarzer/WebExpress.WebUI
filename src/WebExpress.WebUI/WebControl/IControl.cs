@@ -20,6 +20,11 @@ namespace WebExpress.WebUI.WebControl
         TypeHorizontalAlignment HorizontalAlignment { get; set; }
 
         /// <summary>
+        /// Returns or sets the flex grow property of the control.
+        /// </summary>
+        TypeFlexGrow FlexGrow { get; set; }
+
+        /// <summary>
         /// Returns or sets the text color.
         /// </summary>
         PropertyColorText TextColor { get; set; }

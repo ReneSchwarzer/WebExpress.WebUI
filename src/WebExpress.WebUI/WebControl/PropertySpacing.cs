@@ -1,4 +1,6 @@
-﻿namespace WebExpress.WebUI.WebControl
+﻿using System.Collections.Generic;
+
+namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
     /// Represents the spacing properties for a web control.
@@ -104,85 +106,32 @@
             {
                 return null;
             }
+
+            string BuildClass(string position, Space size)
+                => $"{prefix}{position}-{ConvertSize(size)}";
+
             if (Top == Bottom && Top == Left && Top == Right)
             {
-                return prefix + "-" + ConvertSize(Top);
-            }
-            // 
-            else if (Top == Bottom && Left == Right && Top == Space.None && Left != Space.None)
-            {
-                return prefix + "x-" + ConvertSize(Left);
-            }
-            else if (Top == Bottom && Left == Right && Top != Space.None && Left == Space.None)
-            {
-                return prefix + "y-" + ConvertSize(Top);
-            }
-            else if (Top == Bottom && Left == Right && Top != Space.None && Left != Space.None)
-            {
-                return prefix + "x-" + ConvertSize(Left) + " " + prefix + "y-" + ConvertSize(Top);
-            }
-            //
-            else if (Top != Space.None && Bottom == Space.None && Left == Space.None && Right == Space.None)
-            {
-                return prefix + "t-" + ConvertSize(Top);
-            }
-            else if (Top != Space.None && Bottom != Space.None && Left == Space.None && Right == Space.None)
-            {
-                return prefix + "t -" + ConvertSize(Top) + " " + prefix + "b-" + ConvertSize(Bottom);
-            }
-            else if (Top != Space.None && Bottom == Space.None && Left != Space.None && Right == Space.None)
-            {
-                return prefix + "t-" + ConvertSize(Top) + " " + prefix + "s-" + ConvertSize(Left);
-            }
-            else if (Top != Space.None && Bottom == Space.None && Left == Space.None && Right != Space.None)
-            {
-                return prefix + "t-" + ConvertSize(Top) + " " + prefix + "e-" + ConvertSize(Right);
-            }
-            else if (Top != Space.None && Bottom != Space.None && Left != Space.None && Right == Space.None)
-            {
-                return prefix + "t-" + ConvertSize(Top) + " " + prefix + "b-" + ConvertSize(Bottom) + " " + prefix + "s-" + ConvertSize(Left);
-            }
-            else if (Top != Space.None && Bottom != Space.None && Left == Space.None && Right != Space.None)
-            {
-                return prefix + "t-" + ConvertSize(Top) + " " + prefix + "b-" + ConvertSize(Bottom) + " " + prefix + "e-" + ConvertSize(Right);
-            }
-            else if (Top != Space.None && Bottom != Space.None && Left != Space.None && Right != Space.None)
-            {
-                return prefix + "t-" + ConvertSize(Top) + " " + prefix + "b-" + ConvertSize(Bottom) + " " + prefix + "s-" + ConvertSize(Left) + " " + prefix + "e-" + ConvertSize(Right);
-            }
-            //
-            else if (Top == Space.None && Bottom != Space.None && Left == Space.None && Right == Space.None)
-            {
-                return prefix + "b-" + ConvertSize(Bottom);
-            }
-            else if (Top == Space.None && Bottom != Space.None && Left != Space.None && Right == Space.None)
-            {
-                return prefix + "b-" + ConvertSize(Bottom) + " " + prefix + "s-" + ConvertSize(Left);
-            }
-            else if (Top == Space.None && Bottom != Space.None && Left == Space.None && Right != Space.None)
-            {
-                return prefix + "b-" + ConvertSize(Bottom) + " " + prefix + "e-" + ConvertSize(Right);
-            }
-            else if (Top == Space.None && Bottom != Space.None && Left != Space.None && Right != Space.None)
-            {
-                return prefix + "b-" + ConvertSize(Bottom) + " " + prefix + "s-" + ConvertSize(Left) + " " + prefix + "e-" + ConvertSize(Right);
-            }
-            //
-            else if (Top == Space.None && Bottom == Space.None && Left != Space.None && Right == Space.None)
-            {
-                return prefix + "s-" + ConvertSize(Left);
-            }
-            else if (Top == Space.None && Bottom == Space.None && Left != Space.None && Right != Space.None)
-            {
-                return prefix + "s-" + ConvertSize(Left) + " " + prefix + "e-" + ConvertSize(Right);
-            }
-            //
-            else if (Top == Space.None && Bottom == Space.None && Left == Space.None && Right != Space.None)
-            {
-                return prefix + "e-" + ConvertSize(Right);
+                return BuildClass("", Top);
             }
 
-            return null;
+            if (Top == Bottom && Left == Right)
+            {
+                var vertical = Top != Space.None ? BuildClass("y", Top) : null;
+                var horizontal = Left != Space.None ? BuildClass("x", Left) : null;
+
+                return string.Join(" ", vertical, horizontal).Trim();
+            }
+
+            // Einzelne Positionen
+            var classes = new List<string>();
+
+            if (Left != Space.None) classes.Add(BuildClass("s", Left));
+            if (Right != Space.None) classes.Add(BuildClass("e", Right));
+            if (Top != Space.None) classes.Add(BuildClass("t", Top));
+            if (Bottom != Space.None) classes.Add(BuildClass("b", Bottom));
+
+            return string.Join(" ", classes);
         }
 
         /// <summary>

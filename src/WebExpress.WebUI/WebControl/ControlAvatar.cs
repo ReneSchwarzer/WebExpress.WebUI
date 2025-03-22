@@ -72,7 +72,7 @@ namespace WebExpress.WebUI.WebControl
             var html = new HtmlElementTextContentDiv(img, new HtmlText(User))
             {
                 Id = Id,
-                Class = Css.Concatenate("profile", GetClasses()),
+                Class = Css.Concatenate("wx-profile", GetClasses()),
                 Style = GetStyles(),
                 Role = Role
             };

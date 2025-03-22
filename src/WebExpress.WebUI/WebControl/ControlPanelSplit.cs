@@ -154,7 +154,7 @@ namespace WebExpress.WebUI.WebControl
                     {
                         var gutter = document.createElement('div');
                         gutter.id = '" + Id + @"-gutter';
-                        gutter.className = 'splitter splitter-' + direction + ' " + SplitterColor.ToClass() + @"';
+                        gutter.className = 'wx-splitter wx-splitter-' + direction + ' " + SplitterColor.ToClass() + @"';
                         gutter.style = '" + SplitterColor.ToStyle() + @"';
                         return gutter;
                     },
@@ -198,7 +198,7 @@ namespace WebExpress.WebUI.WebControl
             var html = new HtmlElementTextContentDiv()
             {
                 Id = Id,
-                Class = Css.Concatenate(Orientation == TypeOrientationSplit.Horizontal ? "split-horizontal" : "split-vertical", GetClasses()),
+                Class = Css.Concatenate(Orientation == TypeOrientationSplit.Horizontal ? "wx-split-horizontal" : "wx-split-vertical", GetClasses()),
                 Style = GetStyles(),
                 Role = Role
             };

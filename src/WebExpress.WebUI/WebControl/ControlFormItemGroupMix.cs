@@ -46,7 +46,7 @@ namespace WebExpress.WebUI.WebControl
             var html = new HtmlElementTextContentDiv()
             {
                 Id = Id,
-                Class = Css.Concatenate("form-group-mix", GetClasses()),
+                Class = Css.Concatenate("wx-form-group-mix", GetClasses()),
                 Style = GetStyles(),
             };
 

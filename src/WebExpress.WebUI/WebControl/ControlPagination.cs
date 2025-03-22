@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using WebExpress.WebCore.WebHtml;
 using WebExpress.WebCore.WebMessage;
+using WebExpress.WebUI.WebIcon;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -85,7 +86,8 @@ namespace WebExpress.WebUI.WebControl
                         new ControlLink()
                         {
                             Params = Parameter.Create(new Parameter("offset", (int)PageOffset - 1, ParameterScope.Parameter)),
-                            Classes = ["page-link", "fas fa-angle-left", "border-0"]
+                            Classes = ["page-link"],
+                            Icon = new IconAngleLeft()
                         }.Render(renderContext, visualTree)
                     )
                     {
@@ -102,7 +104,8 @@ namespace WebExpress.WebUI.WebControl
                         new ControlLink()
                         {
                             Params = Parameter.Create(),
-                            Classes = ["page-link", "fas fa-angle-left", "border-0"]
+                            Classes = ["page-link"],
+                            Icon = new IconAngleLeft()
                         }.Render(renderContext, visualTree)
                     )
                     {
@@ -147,7 +150,7 @@ namespace WebExpress.WebUI.WebControl
                                 Text = (v + 1).ToString(),
                                 BackgroundColor = BackgroundColor,
                                 Params = Parameter.Create(new Parameter("offset", v, ParameterScope.Parameter)),
-                                Classes = [Css.Concatenate("page-link border-0")],
+                                Classes = [Css.Concatenate("page-link")],
                                 Styles = [Style.Concatenate("", BackgroundColor.ToStyle())]
                             }.Render(renderContext, visualTree)
                         )
@@ -166,7 +169,7 @@ namespace WebExpress.WebUI.WebControl
                             {
                                 Text = (v + 1).ToString(),
                                 Params = Parameter.Create(new Parameter("offset", v, ParameterScope.Parameter)),
-                                Classes = ["page-link border-0"]
+                                Classes = ["page-link"]
                             }.Render(renderContext, visualTree)
                         )
                         {
@@ -185,7 +188,8 @@ namespace WebExpress.WebUI.WebControl
                         new ControlLink()
                         {
                             Params = Parameter.Create(new Parameter("offset", (int)PageOffset + 1, ParameterScope.Parameter)),
-                            Classes = ["page-link", "fas fa-angle-right", "border-0"]
+                            Classes = ["page-link"],
+                            Icon = new IconAngleRight()
                         }.Render(renderContext, visualTree)
                     )
                     {
@@ -202,7 +206,8 @@ namespace WebExpress.WebUI.WebControl
                         new ControlLink()
                         {
                             Params = Parameter.Create(),
-                            Classes = ["page-link", "fas fa-angle-right", "border-0"]
+                            Classes = ["page-link"],
+                            Icon = new IconAngleRight()
                         }.Render(renderContext, visualTree)
                     )
                     {

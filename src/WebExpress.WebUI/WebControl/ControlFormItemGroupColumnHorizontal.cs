@@ -56,7 +56,7 @@ namespace WebExpress.WebUI.WebControl
             var html = new HtmlElementTextContentDiv()
             {
                 Id = Id,
-                Class = Css.Concatenate("form-group-column-horizontal", GetClasses()),
+                Class = Css.Concatenate("wx-form-group-column-horizontal", GetClasses()),
                 Style = GetStyles(),
             };
 
@@ -89,8 +89,8 @@ namespace WebExpress.WebUI.WebControl
                     var help = new ControlFormItemHelpText(!string.IsNullOrEmpty(item.Id) ? item.Id + "_help" : string.Empty);
                     //var fieldset = new HtmlElementFormFieldset() { Class = "form-group" };
                     var row = new HtmlElementTextContentDiv() { Class = "" };
-                    var body = new HtmlElementTextContentDiv(row) { Class = "form-group" };
-                    var table = new HtmlElementTextContentDiv(body) { Class = "form-group-horizontal" };
+                    var body = new HtmlElementTextContentDiv(row) { Class = "wx-form-group" };
+                    var table = new HtmlElementTextContentDiv(body) { Class = "wx-form-group-horizontal" };
 
                     label.Initialize(renderGroupContext);
                     help.Initialize(renderGroupContext);

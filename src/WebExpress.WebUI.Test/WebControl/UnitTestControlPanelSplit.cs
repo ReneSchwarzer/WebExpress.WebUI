@@ -14,8 +14,8 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the id property of the panel split control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<div class=""d-flex split"">*</div>")]
-        [InlineData("id", @"<div id=""id"" class=""d-flex split"">*</div>")]
+        [InlineData(null, @"<div class=""wx-split-horizontal"">*</div>")]
+        [InlineData("id", @"<div id=""id"" class=""wx-split-horizontal"">*</div>")]
         public void Id(string id, string expected)
         {
             // preconditions
@@ -36,8 +36,8 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the orientation property of the panel split control.
         /// </summary>
         [Theory]
-        [InlineData(TypeOrientationSplit.Horizontal, @"<div class=""d-flex split"">*</div>")]
-        [InlineData(TypeOrientationSplit.Vertical, @"<div class=""split"">*</div>")]
+        [InlineData(TypeOrientationSplit.Horizontal, @"<div class=""wx-split-horizontal"">*</div>")]
+        [InlineData(TypeOrientationSplit.Vertical, @"<div class=""wx-split-vertical"">*</div>")]
         public void Orientation(TypeOrientationSplit orientation, string expected)
         {
             // preconditions
@@ -61,14 +61,14 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the splitter color property of the panel split control.
         /// </summary>
         [Theory]
-        [InlineData(TypeColorBackground.Default, @"<div class=""d-flex split"">*</div>")]
-        [InlineData(TypeColorBackground.Primary, @"<div class=""d-flex split"">*</div>")]
-        [InlineData(TypeColorBackground.Secondary, @"<div class=""d-flex split"">*</div>")]
-        [InlineData(TypeColorBackground.Warning, @"<div class=""d-flex split"">*</div>")]
-        [InlineData(TypeColorBackground.Danger, @"<div class=""d-flex split"">*</div>")]
-        [InlineData(TypeColorBackground.Dark, @"<div class=""d-flex split"">*</div>")]
-        [InlineData(TypeColorBackground.Light, @"<div class=""d-flex split"">*</div>")]
-        [InlineData(TypeColorBackground.Transparent, @"<div class=""d-flex split"">*</div>")]
+        [InlineData(TypeColorBackground.Default, @"<div class=""wx-split-horizontal"">*</div>")]
+        [InlineData(TypeColorBackground.Primary, @"<div class=""wx-split-horizontal"">*</div>")]
+        [InlineData(TypeColorBackground.Secondary, @"<div class=""wx-split-horizontal"">*</div>")]
+        [InlineData(TypeColorBackground.Warning, @"<div class=""wx-split-horizontal"">*</div>")]
+        [InlineData(TypeColorBackground.Danger, @"<div class=""wx-split-horizontal"">*</div>")]
+        [InlineData(TypeColorBackground.Dark, @"<div class=""wx-split-horizontal"">*</div>")]
+        [InlineData(TypeColorBackground.Light, @"<div class=""wx-split-horizontal"">*</div>")]
+        [InlineData(TypeColorBackground.Transparent, @"<div class=""wx-split-horizontal"">*</div>")]
         public void SplitterColor(TypeColorBackground splitterColor, string expected)
         {
             // preconditions
@@ -95,9 +95,9 @@ namespace WebExpress.WebUI.Test.WebControl
         [InlineData(null, null, null)]
         [InlineData(typeof(ControlText), null, @"<div></div>")]
         [InlineData(null, typeof(ControlText), @"<div></div>")]
-        [InlineData(typeof(ControlText), typeof(ControlText), @"<div class=""d-flex split""><div id=""-p1""><div></div></div><div id=""-p2""><div></div></div></div>")]
-        [InlineData(typeof(ControlLink), typeof(ControlLink), @"<div class=""d-flex split""><div id=""-p1""><a class=""link""></a></div><div id=""-p2""><a class=""link""></a></div></div>")]
-        [InlineData(typeof(ControlImage), typeof(ControlImage), @"<div class=""d-flex split""><div id=""-p1""><img></div><div id=""-p2""><img></div></div>")]
+        [InlineData(typeof(ControlText), typeof(ControlText), @"<div class=""wx-split-horizontal""><div id=""-p1""><div></div></div><div id=""-p2""><div></div></div></div>")]
+        [InlineData(typeof(ControlLink), typeof(ControlLink), @"<div class=""wx-split-horizontal""><div id=""-p1""><a class=""link""></a></div><div id=""-p2""><a class=""link""></a></div></div>")]
+        [InlineData(typeof(ControlImage), typeof(ControlImage), @"<div class=""wx-split-horizontal""><div id=""-p1""><img></div><div id=""-p2""><img></div></div>")]
         public void Add(Type child1, Type child2, string expected)
         {
             // preconditions

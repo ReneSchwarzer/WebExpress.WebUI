@@ -103,7 +103,7 @@ namespace WebExpress.WebUI.WebControl
 
             var dropdownElements = new HtmlElementTextContentUl
                 (
-                    Items.Select
+                    [.. Items.Select
                     (
                         x =>
                         x == null || x is ControlDropdownItemDivider || x is ControlLine ?
@@ -111,7 +111,7 @@ namespace WebExpress.WebUI.WebControl
                         x is ControlDropdownItemHeader ?
                         x.Render(renderContext, visualTree) :
                         new HtmlElementTextContentLi(x.Render(renderContext, visualTree)) { Class = "dropdown-item" }
-                    ).ToArray()
+                    )]
                 )
             {
                 Class = HorizontalAlignment == TypeHorizontalAlignment.Right ? "dropdown-menu dropdown-menu-right" : "dropdown-menu"

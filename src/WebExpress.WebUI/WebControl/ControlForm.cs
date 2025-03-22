@@ -377,12 +377,13 @@ namespace WebExpress.WebUI.WebControl
             var form = new HtmlElementFormForm()
             {
                 Id = Id,
-                Class = FormLayout == TypeLayoutForm.Inline ? Css.Concatenate("form-inline", GetClasses()) : GetClasses(),
+                Class = FormLayout == TypeLayoutForm.Inline ? Css.Concatenate("wx-form-inline", GetClasses()) : GetClasses(),
                 Style = GetStyles(),
                 Role = Role,
                 Action = Uri?.ToString() ?? renderFormContext.Uri?.ToString(),
-                Method = Method.ToString(),
-                Enctype = TypeEnctype.None
+                Method = (Method == RequestMethod.NONE ? RequestMethod.POST : Method).ToString(),
+                Enctype = TypeEnctype.None,
+                Name = Name
             };
 
             form.Add(FormId.Render(renderFormContext, visualTree));
