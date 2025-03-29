@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using WebExpress.WebCore.WebEndpoint;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebUri;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -82,8 +82,8 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="visualTree">The visual tree representing the control's structure.</param>
         protected void Initialize(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            visualTree.AddHeaderScriptLink(UriResource.Combine(renderContext.PageContext?.ApplicationContext?.ContextPath, "/assets/js/Chart.min.js"));
-            visualTree.AddCssLink(UriResource.Combine(renderContext.PageContext?.ApplicationContext?.ContextPath, "/assets/css/Chart.min.css"));
+            visualTree.AddHeaderScriptLink(RouteEndpoint.Combine(renderContext.PageContext?.ApplicationContext?.ContextPath, "/assets/js/Chart.min.js"));
+            visualTree.AddCssLink(RouteEndpoint.Combine(renderContext.PageContext?.ApplicationContext?.ContextPath, "/assets/css/Chart.min.css"));
 
             var builder = new StringBuilder();
             var data = new List<StringBuilder>();

@@ -1,4 +1,4 @@
-﻿using WebExpress.WebCore.WebUri;
+﻿using WebExpress.WebCore.WebEndpoint;
 using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
 using WebExpress.WebUI.WebPage;
@@ -34,13 +34,13 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests the uri property of the image control.
+        /// Tests the route property of the image control.
         /// </summary>
         [Theory]
         [InlineData(null, @"<img>")]
         [InlineData("/a", @"<img src=""/a"">")]
         [InlineData("/a/b", @"<img src=""/a/b"">")]
-        public void Uri(string uri, string expected)
+        public void Route(string uri, string expected)
         {
             // preconditions
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
@@ -48,7 +48,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlImage()
             {
-                Uri = uri != null ? new UriResource(uri) : null,
+                Route = uri != null ? new RouteEndpoint(uri) : null,
             };
 
             // test execution

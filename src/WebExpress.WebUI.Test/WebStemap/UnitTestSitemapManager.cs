@@ -13,7 +13,7 @@ namespace WebExpress.WebUI.Test.WebStemap
         /// Test the SearchResource function of the sitemap.
         /// </summary>
         [Theory]
-        [InlineData("http://localhost:8080/server/app/page", "webexpress.webui.test.testpage")]
+        [InlineData("http://localhost:8080/server/app/test", "webexpress.webui.test.testpage")]
         public void SearchResource(string uri, string id)
         {
             // preconditions

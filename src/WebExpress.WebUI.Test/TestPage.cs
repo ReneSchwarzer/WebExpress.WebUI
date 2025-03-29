@@ -9,8 +9,6 @@ namespace WebExpress.WebUI.Test
     /// A dummy class for testing purposes.
     /// </summary>
     [Title("webindex:pagea.label")]
-    [Segment("page", "webindex:homepage.label")]
-    [ContextPath(null)]
     public sealed class TestPage : IPage<VisualTreeControl>
     {
         /// <summary>

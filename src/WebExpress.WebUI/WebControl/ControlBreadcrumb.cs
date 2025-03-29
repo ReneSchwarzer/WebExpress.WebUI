@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
 using WebExpress.WebCore.WebUri;
@@ -15,7 +16,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Return or sets the uri.
         /// </summary>
-        public UriResource Uri { get; set; }
+        public IUri Uri { get; set; }
 
         /// <summary>
         /// Returns or sets the name to display when the breadcrumb is empty.
@@ -89,10 +90,10 @@ namespace WebExpress.WebUI.WebControl
                 return html;
             }
 
-            var takeLast = Math.Min(TakeLast, Uri.PathSegments.Count);
-            var from = Uri.PathSegments.Count - takeLast;
+            var takeLast = Math.Min(TakeLast, Uri.PathSegments.Count());
+            var from = Uri.PathSegments.Count() - takeLast;
 
-            for (int i = from + 1; i < Uri.PathSegments.Count + 1; i++)
+            for (int i = from + 1; i < Uri.PathSegments.Count() + 1; i++)
             {
                 var path = Uri.Take(i);
 

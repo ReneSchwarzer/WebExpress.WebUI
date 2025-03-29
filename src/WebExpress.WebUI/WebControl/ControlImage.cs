@@ -1,5 +1,5 @@
-﻿using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebUri;
+﻿using WebExpress.WebCore.WebEndpoint;
+using WebExpress.WebCore.WebHtml;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -12,7 +12,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the image source.
         /// </summary>
-        public UriResource Uri { get; set; }
+        public IRoute Route { get; set; }
 
         /// <summary>
         /// Returns or sets the width.
@@ -54,7 +54,7 @@ namespace WebExpress.WebUI.WebControl
                 Style = GetStyles(),
                 Role = Role,
                 Alt = Tooltip,
-                Src = Uri?.ToString(),
+                Src = Route?.ToString(),
             };
 
             if (!string.IsNullOrWhiteSpace(Tooltip))

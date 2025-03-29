@@ -45,7 +45,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlBreadcrumb { Uri = new UriResource(uri) };
+            var control = new ControlBreadcrumb { Uri = new UriEndpoint(uri) };
 
             // test execution
             var html = control.Render(context, visualTree);
@@ -65,7 +65,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlBreadcrumb { EmptyName = emptyName, Uri = new UriResource("http://example.com") };
+            var control = new ControlBreadcrumb { EmptyName = emptyName, Uri = new UriEndpoint("http://example.com") };
 
             // test execution
             var html = control.Render(context, visualTree);
@@ -86,7 +86,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlBreadcrumb { Size = size, Uri = new UriResource("http://example.com") };
+            var control = new ControlBreadcrumb { Size = size, Uri = new UriEndpoint("http://example.com") };
 
             // test execution
             var html = control.Render(context, visualTree);
@@ -106,7 +106,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlBreadcrumb { Prefix = prefix, Uri = new UriResource("http://example.com") };
+            var control = new ControlBreadcrumb { Prefix = prefix, Uri = new UriEndpoint("http://example.com") };
 
             // test execution
             var html = control.Render(context, visualTree);
@@ -126,7 +126,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
             var context = UnitTestControlFixture.CrerateRenderContextMock();
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var control = new ControlBreadcrumb { TakeLast = takeLast, Uri = new UriResource("http://example.com") };
+            var control = new ControlBreadcrumb { TakeLast = takeLast, Uri = new UriEndpoint("http://example.com") };
 
             // test execution
             var html = control.Render(context, visualTree);
@@ -138,7 +138,7 @@ namespace WebExpress.WebUI.Test.WebControl
         /// Tests the render function of the breadcrumb control.
         /// </summary>
         [Theory]
-        [InlineData(null, @"<ol class=""breadcrumb bg-light ps-2 bg-light btn-sm""></ol>")]
+        [InlineData(null, @"<ol class=""breadcrumb bg-light ps-2 bg-light btn-sm"">*</ol>")]
         [InlineData("http://localhost:80/app/page", @"<ol class=""breadcrumb bg-light ps-2 bg-light btn-sm""><li class=""breadcrumb-item""><a href=""http://localhost/app/page"" class=""link"">abc</a></li></ol>")]
         public void Render(string uri, string expected)
         {
@@ -147,7 +147,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var application = componentHub.ApplicationManager.GetApplications(typeof(TestApplication)).FirstOrDefault();
             var context = UnitTestControlFixture.CrerateRenderContextMock(application);
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
-            var uriResource = new UriResource(uri);
+            var uriResource = new UriEndpoint(uri);
             var control = new ControlBreadcrumb()
             {
                 Uri = uriResource
