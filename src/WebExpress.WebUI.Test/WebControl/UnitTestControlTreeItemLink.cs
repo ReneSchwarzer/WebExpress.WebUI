@@ -1,5 +1,6 @@
 ﻿using WebExpress.WebCore.WebHtml;
 using WebExpress.WebCore.WebIcon;
+using WebExpress.WebCore.WebUri;
 using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
 using WebExpress.WebUI.WebIcon;
@@ -74,7 +75,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlTreeItemLink()
             {
-                Uri = uri,
+                Uri = uri != null ? new UriEndpoint(uri) : null
             };
 
             // test execution

@@ -4,6 +4,7 @@ using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
 using WebExpress.WebCore.WebIcon;
 using WebExpress.WebCore.WebMessage;
+using WebExpress.WebCore.WebUri;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -16,7 +17,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the target uri.
         /// </summary>
-        public string Uri { get; set; }
+        public IUri Uri { get; set; }
 
         /// <summary>
         /// Returns or sets the text.

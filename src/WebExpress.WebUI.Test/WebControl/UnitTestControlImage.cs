@@ -1,4 +1,4 @@
-﻿using WebExpress.WebCore.WebEndpoint;
+﻿using WebExpress.WebCore.WebUri;
 using WebExpress.WebUI.Test.Fixture;
 using WebExpress.WebUI.WebControl;
 using WebExpress.WebUI.WebPage;
@@ -48,7 +48,7 @@ namespace WebExpress.WebUI.Test.WebControl
             var visualTree = new VisualTreeControl(componentHub, context.PageContext);
             var control = new ControlImage()
             {
-                Route = uri != null ? new RouteEndpoint(uri) : null,
+                Uri = uri != null ? new UriEndpoint(uri) : null,
             };
 
             // test execution
