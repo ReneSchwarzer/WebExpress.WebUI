@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebUri;
 using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
@@ -19,7 +20,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the uri.
         /// </summary>
-        public string Uri { get; set; }
+        public IUri Uri { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the class.
