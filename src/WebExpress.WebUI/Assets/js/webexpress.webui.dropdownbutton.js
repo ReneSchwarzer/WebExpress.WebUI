@@ -1,7 +1,7 @@
 /**
- * A dropdown that offers advanced features (links).
+ * A dropdown button that offers advanced features (links).
  */
-webexpress.webui.moreCtrl = class {
+webexpress.webui.dropDownButtonCtrl = class {
     _container = $("<div class='dropdown'/>");
 
     /**

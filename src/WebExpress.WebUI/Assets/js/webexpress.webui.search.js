@@ -16,33 +16,38 @@ webexpress.webui.searchCtrl = class extends webexpress.webui.events {
      */
     constructor(settings) {
         super();
-        
-        let id = settings.id;
-        let css = settings.css;
-        let placeholder = settings.placeholder != null ? settings.placeholder : "";
-        let icon = settings.icon != null ? settings.icon : "fas fa-search";
 
-        let searchicon = $("<label><i class='" + icon + "'/></label>");
-        let searchinput = $("<input type='text' placeholder='" + placeholder + "' aria-label='" + placeholder + "'/>");
-        let searchappend = $("<span><i class='fas fa-times'/><span>");
+        const id = settings.id;
+        const css = settings.css;
+        const placeholder = settings.placeholder ?? "";
+        const icon = settings.icon ?? "fas fa-search";
 
-        this._container.attr("id", id ?? "");
+        const searchIcon = $("<label><i class='" + icon + "'/></label>");
+        const searchInput = $("<input type='text' placeholder='" + placeholder + "' aria-label='" + placeholder + "'/>");
+        const searchClear = $("<span><i class='fas fa-times'/><span>");
+
+        this._container.attr("id", id || "");
         
-        searchinput.keyup(function () { 
-            this.trigger('webexpress.webui.change.filter', searchinput.val());
-            
-        }.bind(this));
+        // Trigger filter change event on keyup
+        searchInput.keyup(() => { 
+            this.trigger('webexpress.webui.change.filter', searchInput.val());
+        });
         
-        searchappend.click(function () {
-            searchinput.val('');
+        // Clear the input and trigger filter change event on click
+        searchClear.click(() => {
+            searchInput.val('');
             this.trigger('webexpress.webui.change.filter', '');
-        }.bind(this));
+        });
 
-        this._container.addClass(css);
+        // Add CSS classes if provided
+        if (css) {
+            this._container.addClass(css);
+        }
         
-        this._container.append(searchicon);
-        this._container.append(searchinput);
-        this._container.append(searchappend);
+        // Append elements to the container
+        this._container.append(searchIcon);
+        this._container.append(searchInput);
+        this._container.append(searchClear);
     }
 
     /**

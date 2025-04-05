@@ -1,8 +1,25 @@
 ﻿- name: Home
   href: index.md
-- name: API Documentation
-  href: api/WebExpress.WebUI.html
 - name: User Guide
   href: user-guide.md
+- name: API Documentation
+  href: api/WebExpress.WebUI.html
+- name: JavaScript UI API Documentation
+  href: javascript_ui_api.md
+  children:
+    - name: ButtonCtrl
+      href: jsui-api/buttonCtrl.md
+    - name: DropDownButtonCtrl
+      href: jsui-api/dropDownButtonCtrl.md
+    - name: ExpandCtrl
+      href: jsui-api/expandCtrl.md
+    - name: MoveCtrl
+      href: jsui-api/moveCtrl.md
+    - name: SearchCtrl
+      href: jsui-api/searchCtrl.md
+    - name: SelectionCtrl
+      href: jsui-api/selectionCtrl.md
+    - name: TreeCtrl
+      href: jsui-api/treeCtrl.md
 - name: Tutorials
   href: tutorials.md
