@@ -32,7 +32,6 @@ The development of modern web applications requires effective and efficient hand
 ║                             ├──────────────────────┤                                 ║
 ║                             │  - Manages Containers│                                 ║
 ║                             │  - Monitors DOM      │                                 ║
-║                             │  - Registers Events  │                                 ║
 ║                             └──────────┬───────────┘                                 ║
 ║                                        │                                             ║
 ║                        ┌───────────────┴──────────────┐                              ║
@@ -56,27 +55,19 @@ The development of modern web applications requires effective and efficient hand
 ║             └──────────┬───────────┘       └──────────┬───────────┘                  ║
 ║                        │                              │                              ║
 ║                        v                              v                              ║
-║             ┌──────────────────────┐       ┌──────────────────────┐                  ║
-║             │      Event-Bus       │<─────>│      Event-Bus       │                  ║
-║             ├──────────────────────┤       ├──────────────────────┤                  ║
-║             │  - Pub/Sub System    │       │  - Pub/Sub System    │                  ║
-║             │  - Manages Events    │       │  - Manages Events    │                  ║
-║             │  - Decouples Logic   │       │  - Decouples Logic   │                  ║
-║             └──────────────────────┘       └──────────────────────┘                  ║
+║             ┌─────────────────────────────────────────────────────┐                  ║
+║             │               jquery event system                   │                  ║
+║             └─────────────────────────────────────────────────────┘                  ║
 ╚══════════════════════════════════════════════════════════════════════════════════════╝
 ```
 
 The controller module is a central component for managing all containers and their associated instances. It registers containers during initialization and detects dynamic changes, for example through the use of the `MutationObserver`.
 
-The `MutationObserver` is a powerful tool for monitoring DOM changes in real-time. It allows developers to respond to changes in the DOM structure, such as adding or removing elements, changing attributes, or text content. This is achieved by registering an observer that listens for specific mutations and executes corresponding callback functions when they occur.
-
 Containers are defined in the HTML DOM structure and implemented with semantic HTML such as `section` or `article` instead of `div`. This structure is provided by the server-side controls in `WebExpress`. Data attributes like data-* can be used to store specific configurations, and accessibility is ensured through aria-* attributes.
 
 Each JavaScript UI instance represents the logic and behavior of a container and includes methods for interactions. The instances are separated from the presentation, enabling a clear separation of logic and DOM.
 
-The Event-Bus is a lightweight pub/sub system that facilitates message passing between containers and instances. Through the Event-Bus, communication is optimized, direct dependencies are reduced, and debugging is simplified. A concrete example of using the Event-Bus is notifying multiple containers about a status change. For example, if a form is submitted in Container 1, an event can be triggered to inform Container 2 to update its display accordingly. This reduces direct dependencies between containers and promotes loose coupling.
-
-Persistent data is stored and synchronized as needed in `localStorage`, `sessionStorage`, or via a REST API. JSON schemas define the structure of the data. Changes to the data are tracked in real-time and automatically saved if necessary.
+The jQuery event system functions in the context of WebExpress as a lightweight pub/sub model that efficiently enables message passing between different containers and instances. By utilizing jQuery events, communication is optimized, direct dependencies are minimized, and debugging is simplified. A concrete example from WebExpress: when a form is submitted in Container 1, a custom event can be triggered using jQuery to signal Container 2 to update its display accordingly. This decoupling of components promotes a loosely coupled architecture, where modules can operate independently.
 
 # Example Code
 The following example demonstrates how the separation of logic and presentation, the modularity of JavaScript classes, and the central control by the controller are implemented in `WebExpress`. First, the HTML structure is defined:
@@ -120,7 +111,7 @@ $(document).ready(function() {
 
         init() {
             this.button.on('click', () => {
-                EventBus.publish('buttonClicked', 'Button in Container 1 was clicked');
+                $(document).trigger('buttonClicked', ['Button in Container 1 was clicked']);
             });
         }
     }
@@ -134,9 +125,9 @@ $(document).ready(function() {
         }
 
         init() {
-            EventBus.subscribe('buttonClicked', (data) => {
+            $(document).on('buttonClicked', function(event, data) {
                 this.message.text(data);
-            });
+            }););
         }
     }
 
@@ -182,30 +173,14 @@ $(document).ready(function() {
         }
     }
 
-    // EventBus for communication between containers
-    const EventBus = {
-        events: {},
-        subscribe(event, callback) {
-            if (!this.events[event]) {
-                this.events[event] = [];
-            }
-            this.events[event].push(callback);
-        },
-        publish(event, data) {
-            if (this.events[event]) {
-                this.events[event].forEach(callback => callback(data));
-            }
-        }
-    };
-
     // Initialize the Controller
     controller.init();
 });
 ```
 
-In this simple example, the architecture of `WebExpress` is demonstrated by creating two containers (Container1 and Container2), each with its own logic, and communicating via the `EventBus`. The `Controller` manages the initialization and registration of the containers.
+In this simple example, the architecture of `WebExpress` is demonstrated by creating two containers (Container1 and Container2), each with its own logic, and communicating via the jquery event system. The `Controller` manages the initialization and registration of the containers.
 
-`Container1` contains a button that triggers an event (`buttonClicked`) on the EventBus when clicked.
+`Container1` contains a button that triggers an event (`buttonClicked`) on the jquery event system when clicked.
 `Container2` listens for the `buttonClicked` event and updates the text content of a paragraph to display the message.
 
 This example shows how the separation of logic and presentation, the modularity of JavaScript classes, and the central control by the controller are implemented in `WebExpress`.
