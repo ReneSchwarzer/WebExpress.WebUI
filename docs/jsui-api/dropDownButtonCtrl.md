@@ -45,7 +45,7 @@ The following code demonstrates how to create a dropdown button with various opt
 
 ```javascript
 const options = [
-    { label: "Settings", css: "dropdown-header", label: "Settings" },
+    { label: "Settings", css: "dropdown-header" },
     { label: "Home", url: "#home", icon: "fas fa-home", color: "text-primary", onclick: "console.log('Home clicked')" },
     { label: "Profile", url: "#profile", icon: "fas fa-user", color: "text-success" },
     { css: "dropdown-divider" },
