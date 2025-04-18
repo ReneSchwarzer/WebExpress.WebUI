@@ -203,8 +203,6 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="context">The context in which the control is rendered.</param>
         public virtual void Initialize(RenderControlFormContext context)
         {
-            var fm = WebEx.ComponentHub.FragmentManager;
-
             // check id 
             if (string.IsNullOrWhiteSpace(Id))
             {

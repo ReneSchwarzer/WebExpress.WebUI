@@ -159,25 +159,23 @@ namespace WebExpress.WebUI.WebControl
                 Class = "modal-header"
             };
 
-            var formElements = form.Elements.Where(x => !(x is HtmlElementSectionFooter));
+            var formElements = form.Elements.Where(x => x is not HtmlElementSectionFooter && x is not HtmlElementTextContentDiv);
 
-            var body = new HtmlElementTextContentDiv(formElements.ToArray())
+            var body = new HtmlElementTextContentDiv([.. formElements])
             {
                 Class = "modal-body"
             };
 
             var footer = default(HtmlElementTextContentDiv);
-
-            var submitFooterButton = new ControlFormItemButton();
-
             var cancelFooterButton = new ControlButtonLink()
             {
                 Text = I18N.Translate(renderContext.Request?.Culture, "webexpress.webui:modal.close.label")
             }.Render(renderContext, visualTree) as HtmlElement;
-
             cancelFooterButton.AddUserAttribute("data-bs-dismiss", "modal");
 
-            footer = new HtmlElementTextContentDiv(submitFooterButton.Render(new RenderControlFormContext(renderContext, Form), visualTree), cancelFooterButton)
+            var buttons = Form.Buttons.Select(x => x.Render(new RenderControlFormContext(renderContext, Form), visualTree));
+
+            footer = new HtmlElementTextContentDiv([.. buttons.Concat([cancelFooterButton])])
             {
                 Class = "modal-footer d-flex justify-content-between"
             };

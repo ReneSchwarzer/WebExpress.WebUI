@@ -12,7 +12,7 @@ webexpress.webui.form.progess = class {
      */
     constructor(formId, method) {
 
-        const form = $('#' + formId);
+       /* const form = $('#' + formId);
         const progress = form.find('.progress');
         const progressBar = progress.children('.progress-bar');
 
@@ -39,6 +39,6 @@ webexpress.webui.form.progess = class {
             };
 
             xhr.send(new FormData(form.get(0)));
-        });
+        });*/
     }
 }
