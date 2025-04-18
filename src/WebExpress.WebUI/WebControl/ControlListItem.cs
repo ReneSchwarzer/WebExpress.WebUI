@@ -1,16 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a list item control that can contain other controls as its content.
+    /// </summary>
     public class ControlListItem : Control
     {
+        private readonly List<IControl> _content = [];
+
         /// <summary>
-        /// Returns or sets the content.
+        /// Returns the content.
         /// </summary>
-        public List<Control> Content { get; private set; } = new List<Control>();
+        public IEnumerable<IControl> Content => _content;
 
         /// <summary>
         /// Returns or sets the ativity state of the list item.
@@ -22,73 +27,81 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlListItem(string id = null)
+        public ControlListItem(string id = null, params IControl[] content)
             : base(id)
         {
-            Init();
+            _content.AddRange(content);
+        }
+
+        /// <summary> 
+        /// Adds one or more controls to the content of the list item.
+        /// </summary> 
+        /// <param name="controls">The controls to add to the content.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of 
+        /// the list item. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the content. 
+        /// Example usage: 
+        /// <code> 
+        /// var item = new ControlListItem(); 
+        /// var text1 = new ControlText { Text = "A" };
+        /// var text2 = new ControlText { Text = "B" };
+        /// item.Add(text1, text2);
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public virtual void Add(params IControl[] controls)
+        {
+            _content.AddRange(controls);
+        }
+
+        /// <summary> 
+        /// Adds one or more controls to the content of the list item.
+        /// </summary> 
+        /// <param name="controls">The controls to add to the content.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of 
+        /// the list item. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the content. 
+        /// Example usage: 
+        /// <code> 
+        /// var item = new ControlListItem(); 
+        /// var text1 = new ControlText { Text = "A" };
+        /// var text2 = new ControlText { Text = "B" };
+        /// item.Add(new List<IControl>([text1, text2]));
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public virtual void Add(IEnumerable<IControl> controls)
+        {
+            _content.AddRange(controls);
         }
 
         /// <summary>
-        /// Constructor
+        /// Removes a control from the content of the list item.
         /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlListItem(string id, params Control[] content)
-            : this(id)
+        /// <param name="control">The control to remove from the content.</param>
+        /// <remarks>
+        /// This method allows removing a specific control from the <see cref="Content"/> collection of 
+        /// the list item.
+        /// </remarks>
+        public virtual void Remove(IControl control)
         {
-            Content.AddRange(content);
+            _content.Remove(control);
         }
 
         /// <summary>
-        /// Constructor
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlListItem(params Control[] content)
-            : this(null, content)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlListItem(string id, List<Control> content)
-            : base(id)
-        {
-            Content = content;
-
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlListItem(List<Control> content)
-            : this(null, content)
-        {
-            Content = content;
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            return new HtmlElementTextContentLi(Content.Where(x => x.Enable).Select(x => x.Render(context)))
+            return new HtmlElementTextContentLi(Content.Where(x => x.Enable).Select(x => x.Render(renderContext, visualTree)).ToArray())
             {
                 Id = Id,
                 Class = GetClasses(),

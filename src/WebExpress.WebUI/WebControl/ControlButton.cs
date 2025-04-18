@@ -2,12 +2,26 @@
 using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebIcon;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a button control.
+    /// </summary>
     public class ControlButton : Control, IControlButton
     {
+        private readonly List<IControl> _content = [];
+
+        /// <summary>
+        /// Returns the content of the control.
+        /// </summary>
+        /// <value>
+        /// An enumerable collection of child controls.
+        /// </value>
+        public IEnumerable<IControl> Content => _content;
+
         /// <summary>
         /// Returns or sets the color.
         /// </summary>
@@ -41,11 +55,6 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Returns or sets the content.
-        /// </summary>
-        public List<Control> Content { get; private set; }
-
-        /// <summary>
         /// Returns or sets the text.
         /// </summary>
         public string Text { get; set; }
@@ -63,7 +72,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
         /// Returns or sets the activation status of the button.
@@ -75,33 +84,72 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlButton(string id = null)
+        /// <param name="content">The child controls to be added to the button.</param>
+        public ControlButton(string id = null, params IControl[] content)
             : base(id)
         {
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
             Size = TypeSizeButton.Default;
-            Content = new List<Control>();
+            _content.AddRange(content);
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Adds one or more controls to the content.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="controls">The controls to add to the content.</param>
+        /// <remarks>
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of the control panel. 
+        /// It is useful for dynamically constructing the user interface by appending various controls to the panel's content.
+        /// 
+        /// Example usage:
+        /// <code>
+        /// var button = new ControlButton();
+        /// var text1 = new ControlText { Text = "A" };
+        /// var text2 = new ControlText { Text = "B" };
+        /// button.Add(text1, text2);
+        /// </code>
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public void Add(params IControl[] items)
+        {
+            _content.AddRange(items);
+        }
+
+        /// <summary>
+        /// Adds one or more controls to the content.
+        /// </summary>
+        /// <param name="controls">The controls to add to the content.</param>
+        /// <remarks>
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of the control panel. 
+        /// It is useful for dynamically constructing the user interface by appending various controls to the panel's content.
+        /// 
+        /// Example usage:
+        /// <code>
+        /// var button = new ControlButton();
+        /// var text1 = new ControlText { Text = "A" };
+        /// var text2 = new ControlText { Text = "B" };
+        /// button.Add(new List<IControl>([text1, text2]));
+        /// </code>
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public void Add(IEnumerable<IControl> items)
+        {
+            _content.AddRange(items);
+        }
+
+        /// <summary>
+        /// Converts the control to an HTML representation.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var html = new HtmlElementFieldButton()
             {
+                Id = Id,
                 Type = "button",
                 Value = Value,
                 Class = Css.Concatenate("btn", GetClasses()),
@@ -110,9 +158,9 @@ namespace WebExpress.WebUI.WebControl
                 Disabled = Active == TypeActive.Disabled
             };
 
-            if (Icon != null && Icon.HasIcon)
+            if (Icon != null)
             {
-                html.Elements.Add(new ControlIcon()
+                html.Add(new ControlIcon()
                 {
                     Icon = Icon,
                     Margin = !string.IsNullOrWhiteSpace(Text) ? new PropertySpacingMargin
@@ -122,13 +170,13 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None,
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None),
-                    VerticalAlignment = Icon.IsUserIcon ? TypeVerticalAlignment.TextBottom : TypeVerticalAlignment.Default
-                }.Render(context));
+                    VerticalAlignment = TypeVerticalAlignment.Default
+                }.Render(renderContext, visualTree));
             }
 
             if (!string.IsNullOrWhiteSpace(Text))
             {
-                html.Elements.Add(new HtmlText(InternationalizationManager.I18N(context.Culture, Text)));
+                html.Add(new HtmlText(I18N.Translate(renderContext.Request.Culture, Text)));
             }
 
             if (!string.IsNullOrWhiteSpace(OnClick?.ToString()))
@@ -136,29 +184,29 @@ namespace WebExpress.WebUI.WebControl
                 html.AddUserAttribute("onclick", OnClick?.ToString());
             }
 
-            if (Content.Count > 0)
+            if (_content.Count != 0)
             {
-                html.Elements.AddRange(Content.Select(x => x.Render(context)));
+                html.Add(_content.Select(x => x.Render(renderContext, visualTree)).ToArray());
             }
 
             if (Modal == null || Modal.Type == TypeModal.None)
             {
 
             }
-            else if (Modal.Type == TypeModal.Formular)
+            else if (Modal.Type == TypeModal.Form)
             {
-                html.OnClick = $"new webexpress.webui.modalFormularCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(renderContext.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
             }
             else if (Modal.Type == TypeModal.Brwoser)
             {
-                html.OnClick = $"new webexpress.WebUI.modalPageCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.WebUI.modalPageCtrl({{ close: '{I18N.Translate(renderContext.Request.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
             }
             else if (Modal.Type == TypeModal.Modal)
             {
                 html.AddUserAttribute("data-bs-toggle", "modal");
                 html.AddUserAttribute("data-bs-target", "#" + Modal.Modal.Id);
 
-                return new HtmlList(html, Modal.Modal.Render(context));
+                return new HtmlList(html, Modal.Modal.Render(renderContext, visualTree));
             }
 
             return html;

@@ -1,9 +1,14 @@
-﻿using WebExpress.WebUI.WebControl;
-using WebExpress.WebCore.WebPage;
+﻿using WebExpress.WebCore.WebFragment;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebControl;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebFragment
 {
-    public class FragmentControlPanelTool : ControlPanelTool, IFragment
+    /// <summary>
+    /// Represents a control panel tool that is part of a fragment and implements the IFragmentControl interface.
+    /// </summary>
+    public class FragmentControlPanelTool : ControlPanelTool, IFragmentControl<ControlPanelTool>
     {
         /// <summary>
         /// Returns the context of the fragment.
@@ -11,22 +16,29 @@ namespace WebExpress.WebUI.WebFragment
         public IFragmentContext FragmentContext { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="id">The id of the fragment or null.</param>
-        public FragmentControlPanelTool(string id = null)
-            : base(id)
+        /// <param name="fragmentContext">The context of the fragment.</param>
+        public FragmentControlPanelTool(IFragmentContext fragmentContext)
+            : base(fragmentContext?.FragmentId?.ToString())
         {
+            FragmentContext = fragmentContext;
         }
 
         /// <summary>
-        /// Initialization
+        /// Convert the fragment to HTML.
         /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="page">The page where the fragment is active.</param>
-        public virtual void Initialization(IFragmentContext context, IPage page)
+        /// <param name="renderContext">The context in which the fragment is rendered.</param>
+        /// <param name="visualTree">The visual tree used for rendering the fragment.</param>
+        /// <returns>An HTML node representing the rendered fragments. Can be null if no nodes are present.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            FragmentContext = context;
+            if (!FragmentContext.Conditions.Check(renderContext?.Request))
+            {
+                return null;
+            }
+
+            return base.Render(renderContext, visualTree);
         }
     }
 }

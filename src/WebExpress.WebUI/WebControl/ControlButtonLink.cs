@@ -1,64 +1,60 @@
 ﻿using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebUri;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a link button control.
+    /// </summary>
     public class ControlButtonLink : ControlButton
     {
         /// <summary>
         /// Returns or sets the target uri.
         /// </summary>
-        public string Uri { get; set; }
+        public IUri Uri { get; set; }
 
         /// <summary>
         /// Returns or sets the tooltip.
         /// </summary>
-        public string Title { get; set; }
+        public string Tooltip { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlButtonLink(string id = null)
-            : base(id)
+        /// <param name="content">The child controls to be added to the button.</param>
+        public ControlButtonLink(string id = null, params IControl[] content)
+            : base(id, content)
         {
-            Init();
         }
 
         /// <summary>
-        /// Initialization
+        /// Converts the control to an HTML representation.
         /// </summary>
-        private void Init()
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Size = TypeSizeButton.Default;
-            Classes.Add("btn");
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            var text = InternationalizationManager.I18N(context.Culture, Text);
+            var text = I18N.Translate(Text);
 
             var html = new HtmlElementTextSemanticsA()
             {
                 Id = Id,
-                Class = Css.Concatenate(GetClasses(), Size.ToClass()),
+                Class = Css.Concatenate("btn", GetClasses()),
                 Style = GetStyles(),
                 Role = Role,
                 Href = Uri?.ToString(),
-                Title = Title,
+                Title = Tooltip,
                 OnClick = OnClick?.ToString()
             };
 
-            if (Icon != null && Icon.HasIcon)
+            if (Icon != null)
             {
-                html.Elements.Add(new ControlIcon()
+                html.Add(new ControlIcon()
                 {
                     Icon = Icon,
                     Margin = !string.IsNullOrWhiteSpace(Text) ? new PropertySpacingMargin
@@ -68,32 +64,37 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None,
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None),
-                    VerticalAlignment = Icon.IsUserIcon ? TypeVerticalAlignment.TextBottom : TypeVerticalAlignment.Default
-                }.Render(context));
+                    VerticalAlignment = TypeVerticalAlignment.Default
+                }.Render(renderContext, visualTree));
             }
 
             if (!string.IsNullOrWhiteSpace(text))
             {
-                html.Elements.Add(new HtmlText(text));
+                html.Add(new HtmlText(text));
             }
 
-            if (Content.Count > 0)
+            if (Content.Any())
             {
-                html.Elements.AddRange(Content.Select(x => x.Render(context)));
+                html.Add(Content.Select(x => x.Render(renderContext, visualTree)).ToArray());
+            }
+
+            if (!string.IsNullOrWhiteSpace(Tooltip))
+            {
+                html.AddUserAttribute("data-bs-toggle", "tooltip");
             }
 
             if (Modal == null || Modal.Type == TypeModal.None)
             {
 
             }
-            else if (Modal.Type == TypeModal.Formular)
+            else if (Modal.Type == TypeModal.Form)
             {
-                html.OnClick = $"new webexpress.webui.modalFormularCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(renderContext.Request, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Brwoser)
             {
-                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{I18N.Translate(renderContext.Request, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Modal)
@@ -101,7 +102,7 @@ namespace WebExpress.WebUI.WebControl
                 html.AddUserAttribute("data-bs-toggle", "modal");
                 html.AddUserAttribute("data-bs-target", "#" + Modal.Modal.Id);
 
-                return new HtmlList(html, Modal.Modal.Render(context));
+                return new HtmlElementTextContentDiv(html, Modal.Modal.Render(renderContext, visualTree));
             }
 
             return html;

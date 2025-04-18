@@ -1,10 +1,20 @@
 ﻿using System.Collections.Generic;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a form item input control for file uploads.
+    /// </summary>
+    /// <remarks>
+    /// This control allows users to select files to upload. It supports setting descriptions, placeholders, 
+    /// required fields, and accepted file types. It also provides validation and rendering functionalities.
+    /// </remarks>
     public class ControlFormItemInputFile : ControlFormItemInput
     {
+        private readonly List<string> _acceptFile = [];
+
         /// <summary>
         /// Returns or sets the description.
         /// </summary>
@@ -23,10 +33,10 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the accepted files.
         /// </summary>
-        public ICollection<string> AcceptFile { get; set; } = new List<string>();
+        public IEnumerable<string> AcceptFile => _acceptFile;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemInputFile(string id = null)
@@ -37,41 +47,46 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Adds one or more accepted file types to the control.
         /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="name">The name.</param>
-        public ControlFormItemInputFile(string id, string name)
-            : base(!string.IsNullOrWhiteSpace(id) ? id : "file")
+        /// <param name="controls">The file types to add.</param>
+        public void AddAcceptFile(params string[] controls)
         {
-            Name = name;
+            _acceptFile.AddRange(controls);
+        }
+
+        /// <summary>
+        /// Removes an accepted file type from the control.
+        /// </summary>
+        /// <param name="control">The file type to remove.</param>
+        public void RemoveAcceptFile(string control)
+        {
+            _acceptFile.Remove(control);
         }
 
         /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
         {
-            Value = context?.Request.GetParameter(Name)?.Value;
+            Value = renderContext?.Request.GetParameter(Name)?.Value;
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
-            switch (ValidationResult)
+            var resultClasses = ValidationResult switch
             {
-                case TypesInputValidity.Warning:
-                    Classes.Add("input-warning");
-                    break;
-                case TypesInputValidity.Error:
-                    Classes.Add("input-error");
-                    break;
-            }
+                TypesInputValidity.Warning => "input-warning",
+                TypesInputValidity.Error => "input-error",
+                _ => ""
+            };
 
             var html = new HtmlElementFieldInput()
             {
@@ -79,7 +94,7 @@ namespace WebExpress.WebUI.WebControl
                 Value = Value,
                 Name = Name,
                 Type = "file",
-                Class = Css.Concatenate("form-control-file", GetClasses()),
+                Class = Css.Concatenate("form-control-file", resultClasses, GetClasses()),
                 Style = GetStyles(),
                 Role = Role,
                 Placeholder = Placeholder
@@ -93,8 +108,8 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Checks the input element for correctness of the data.
         /// </summary>
-        /// <param name="context">The context in which the inputs are validated.</param>
-        public override void Validate(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the inputs are validated.</param>
+        public override void Validate(IRenderControlFormContext renderContext)
         {
             if (Disabled)
             {
@@ -103,12 +118,12 @@ namespace WebExpress.WebUI.WebControl
 
             if (Required && string.IsNullOrWhiteSpace(base.Value))
             {
-                ValidationResults.Add(new ValidationResult(TypesInputValidity.Error, "webexpress.webui:form.inputfile.validation.required"));
+                AddValidationResult(new ValidationResult(TypesInputValidity.Error, "webexpress.webui:form.inputfile.validation.required"));
 
                 return;
             }
 
-            base.Validate(context);
+            base.Validate(renderContext);
         }
     }
 }

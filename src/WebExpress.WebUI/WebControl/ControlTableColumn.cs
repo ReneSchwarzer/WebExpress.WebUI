@@ -1,12 +1,13 @@
 ﻿using System.Linq;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
-using static WebExpress.WebCore.Internationalization.InternationalizationManager;
+using WebExpress.WebCore.WebIcon;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Zeile der Tabelle
+    /// Represents a table column control.
     /// </summary>
     public class ControlTableColumn : Control
     {
@@ -23,24 +24,25 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlTableColumn(string id)
+        public ControlTableColumn(string id = null)
             : base(id)
         {
 
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var classes = Classes.ToList();
 
@@ -80,9 +82,9 @@ namespace WebExpress.WebUI.WebControl
                 Role = Role
             };
 
-            if (Icon != null && Icon.HasIcon)
+            if (Icon != null)
             {
-                html.Elements.Add(new ControlIcon()
+                html.Add(new ControlIcon()
                 {
                     Icon = Icon,
                     Margin = !string.IsNullOrWhiteSpace(Text) ? new PropertySpacingMargin
@@ -92,13 +94,13 @@ namespace WebExpress.WebUI.WebControl
                        PropertySpacing.Space.None,
                        PropertySpacing.Space.None
                    ) : new PropertySpacingMargin(PropertySpacing.Space.None),
-                    VerticalAlignment = Icon.IsUserIcon ? TypeVerticalAlignment.TextBottom : TypeVerticalAlignment.Default
-                }.Render(context));
+                    VerticalAlignment = TypeVerticalAlignment.Default
+                }.Render(renderContext, visualTree));
             }
 
             if (!string.IsNullOrWhiteSpace(Text))
             {
-                html.Elements.Add(new HtmlText(I18N(context.Culture, Text)));
+                html.Add(new HtmlText(I18N.Translate(renderContext.Request?.Culture, Text)));
             }
 
             return new HtmlElementTableTh(html)

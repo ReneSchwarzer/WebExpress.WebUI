@@ -1,44 +1,67 @@
 ﻿using System.Collections.Generic;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Creates a slideshow.
+    /// Represents a carousel control that can contain multiple carousel items.
     /// </summary>
     public class ControlCarousel : Control
     {
-        /// <summary>
-        /// Returns or sets the content.
-        /// </summary>
-        public List<ControlCarouselItem> Items { get; private set; } = new List<ControlCarouselItem>();
+        private readonly List<ControlCarouselItem> _items = [];
 
         /// <summary>
-        /// Constructor
+        /// Returns the collection of carousel items.
+        /// </summary>
+        /// <value>
+        /// An <see cref="IEnumerable{ControlCarouselItem}"/> representing the carousel items.
+        /// </value>
+        public IEnumerable<ControlCarouselItem> Items => _items;
+
+        /// <summary>
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlCarousel(string id = null)
+        /// <param name="items">The carousel items to be added.</param>
+        public ControlCarousel(string id = null, params ControlCarouselItem[] items)
             : base(string.IsNullOrWhiteSpace(id) ? "carousel" : id)
         {
+            _items.AddRange(items);
         }
 
         /// <summary>
-        /// Constructor
+        /// Adds one or more carousel items to the carousel.
         /// </summary>
-        /// <param name="items">The contents of the slideshow.</param>
-        public ControlCarousel(params ControlCarouselItem[] items)
-            : this()
+        /// <param name="items">The carousel items to be added.</param>
+        public void Add(params ControlCarouselItem[] items)
         {
-            Items.AddRange(items);
+            _items.AddRange(items);
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Adds one or more carousel items to the carousel.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="items">The carousel items to be added.</param>
+        public void Add(IEnumerable<ControlCarouselItem> items)
+        {
+            _items.AddRange(items);
+        }
+
+        /// <summary>
+        /// Clears all carousel items from the carousel.
+        /// </summary>
+        public void Clear()
+        {
+            _items.Clear();
+        }
+        /// <summary>
+        /// Converts the control to an HTML representation.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             // indicators 
             var indicators = new HtmlElementTextContentUl() { Class = "carousel-indicators" };
@@ -50,7 +73,7 @@ namespace WebExpress.WebUI.WebControl
                 i.AddUserAttribute("data-bs-target", "#" + Id);
                 i.AddUserAttribute("data-bs-slide-to", index.ToString());
 
-                indicators.Elements.Add(i);
+                indicators.Add(i);
 
                 index++;
             }
@@ -61,7 +84,10 @@ namespace WebExpress.WebUI.WebControl
             var inner = new HtmlElementTextContentDiv() { Class = "carousel-inner" };
             foreach (var v in Items)
             {
-                var i = new HtmlElementTextContentDiv(v?.Control.Render(context)) { Class = index == 0 ? "carousel-item active" : "carousel-item" };
+                var i = new HtmlElementTextContentDiv(v?.Control.Render(renderContext, visualTree))
+                {
+                    Class = index == 0 ? "carousel-item active" : "carousel-item"
+                };
 
                 if (!string.IsNullOrWhiteSpace(v.Headline) || !string.IsNullOrWhiteSpace(v.Text))
                 {
@@ -74,10 +100,10 @@ namespace WebExpress.WebUI.WebControl
                         Class = "carousel-caption"
                     };
 
-                    i.Elements.Add(caption);
+                    i.Add(caption);
                 }
 
-                inner.Elements.Add(i);
+                inner.Add(i);
 
                 index++;
             }

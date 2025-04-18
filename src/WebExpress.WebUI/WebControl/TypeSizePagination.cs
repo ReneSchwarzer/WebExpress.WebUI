@@ -1,22 +1,36 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Die Größenmöglichkeiten
+    /// The size options for pagination.
     /// </summary>
     public enum TypeSizePagination
     {
+        /// <summary>
+        /// The default size.
+        /// </summary>
         Default,
+
+        /// <summary>
+        /// The small size.
+        /// </summary>
         Small,
+
+        /// <summary>
+        /// The large size.
+        /// </summary>
         Large
     }
 
+    /// <summary>
+    /// Extension methods for the <see cref="TypeSizePagination"/> enum.
+    /// </summary>
     public static class TypeSizePaginationExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the size to a corresponding CSS class.
         /// </summary>
-        /// <param name="size">Die Größe, welches umgewandelt werden soll</param>
-        /// <returns>The CSS class belonging to the layout</returns>
+        /// <param name="size">The size to be converted.</param>
+        /// <returns>The CSS class corresponding to the size.</returns>
         public static string ToClass(this TypeSizePagination size)
         {
             return size switch

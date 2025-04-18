@@ -1,19 +1,36 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents the type of a button.
+    /// </summary>
     public enum TypeButton
     {
+        /// <summary>
+        /// Default button type.
+        /// </summary>
         Default = 0, // Button
+
+        /// <summary>
+        /// Submit button type.
+        /// </summary>
         Submit = 1,
+
+        /// <summary>
+        /// Reset button type.
+        /// </summary>
         Reset = 2
     }
 
+    /// <summary>
+    /// Provides extension methods for the <see cref="TypeButton"/> enum.
+    /// </summary>
     public static class TypeButtonExtensions
     {
         /// <summary>
-        /// Conversion to string.
+        /// Converts the button type to its corresponding string representation.
         /// </summary>
-        /// <param name="type">Der Typ</param>
-        /// <returns>Der String</returns>
+        /// <param name="type">The button type.</param>
+        /// <returns>The string representation of the button type.</returns>
         public static string ToTypeString(this TypeButton type)
         {
             switch (type)
@@ -21,7 +38,7 @@
                 case TypeButton.Submit:
                     return "submit";
                 case TypeButton.Reset:
-                    return "submit";
+                    return "reset";
             }
 
             return "button";

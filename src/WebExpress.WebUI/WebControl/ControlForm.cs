@@ -1,20 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WebExpress.WebCore;
 using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebFragment;
 using WebExpress.WebCore.WebHtml;
 using WebExpress.WebCore.WebMessage;
 using WebExpress.WebCore.WebPage;
-using static WebExpress.WebCore.Internationalization.InternationalizationManager;
+using WebExpress.WebCore.WebScope;
+using WebExpress.WebUI.WebFragment;
+using WebExpress.WebUI.WebPage;
+using WebExpress.WebUI.WebSection;
 
 namespace WebExpress.WebUI.WebControl
 {
-    public class ControlForm : Control, IControlForm
+    /// <summary>
+    /// Represents a form with various input fields and controls.
+    /// </summary>
+    public class ControlForm : Control, IControlForm, IScope
     {
-        /// <summary>
-        /// Returns or sets the layout.
-        /// </summary>
-        public virtual TypeLayoutForm Layout { get; set; } = TypeLayoutForm.Vertical;
+        private readonly List<ControlFormItem> _items = [];
+        private readonly List<ControlFormItemButton> _preferencesButtons = [];
+        private readonly List<ControlFormItemButton> _primaryButtons = [];
+        private readonly List<ControlFormItemButton> _secondaryButtons = [];
+        private readonly List<ControlFormItem> _preferencesControls = [];
+        private readonly List<ControlFormItem> _primaryControls = [];
+        private readonly List<ControlFormItem> _secondaryControls = [];
 
         /// <summary>
         /// Event to validate the input values.
@@ -29,22 +40,27 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Event is raised when the form has been initialized.
         /// </summary>
-        public event EventHandler<FormularEventArgs> InitializeFormular;
+        public event EventHandler<FormEventArgs> InitializeForm;
 
         /// <summary>
         /// Event is raised when the form's data needs to be determined.
         /// </summary>
-        public event EventHandler<FormularEventArgs> FillFormular;
+        public event EventHandler<FormEventArgs> FillForm;
 
         /// <summary>
         /// Event is raised when the form is about to be processed.
         /// </summary>
-        public event EventHandler<FormularEventArgs> ProcessFormular;
+        public event EventHandler<FormEventArgs> ProcessForm;
 
         /// <summary>
         /// Event is raised when the form is to be processed and the next data is to be loaded.
         /// </summary>
-        public event EventHandler<FormularEventArgs> ProcessAndNextFormular;
+        public event EventHandler<FormEventArgs> ProcessAndNextForm;
+
+        /// <summary>
+        /// Returns the form items.
+        /// </summary>
+        public IEnumerable<ControlFormItem> Items => _items;
 
         /// <summary>
         /// Returns or sets the name of the form.
@@ -62,65 +78,118 @@ namespace WebExpress.WebUI.WebControl
         public string RedirectUri { get; set; }
 
         /// <summary>
+        /// Returns or sets the form layout.
+        /// </summary>
+        public virtual TypeLayoutForm FormLayout { get; set; } = TypeLayoutForm.Default;
+
+        /// <summary>
+        /// Returns or sets the item layout.
+        /// </summary>
+        public virtual TypeLayoutFormItem ItemLayout { get; set; } = TypeLayoutFormItem.Vertical;
+
+        /// <summary>
         /// Returns or sets the hidden field that contains the id.
         /// </summary>
-        public ControlFormItemInputHidden FormularId { get; } = new ControlFormItemInputHidden(Guid.NewGuid().ToString())
+        public ControlFormItemInputHidden FormId { get; } = new ControlFormItemInputHidden(Guid.NewGuid().ToString())
         {
-            Name = "formular-id"
+            Name = "form-id"
         };
 
         /// <summary>
         /// Returns or sets the hidden field that contains the submit method.
         /// </summary>
-        public ControlFormItemInputHidden SubmitType { get; } = new ControlFormItemInputHidden(Guid.NewGuid().ToString())
+        public ControlFormItemInputHidden SubmitHiddenField { get; } = new ControlFormItemInputHidden(Guid.NewGuid().ToString())
         {
-            Name = "formular-submit-type",
+            Name = "form-submit-type",
             Value = "update"
         };
 
         /// <summary>
-        /// Returns or sets the submit button.
+        /// Returns or sets the request method.
         /// </summary>
-        public ControlFormItemButton SubmitButton { get; } = new ControlFormItemButton()
+        public RequestMethod Method { get; set; } = RequestMethod.POST;
+
+        /// <summary>
+        /// Returns or sets the header preferences section.
+        /// </summary>
+        protected List<IFragmentContext> HeaderPreferences { get; } = [];
+
+        /// <summary>
+        /// Returns or sets the header primary section.
+        /// </summary>
+        protected List<IFragmentContext> HeaderPrimary { get; } = [];
+
+        /// <summary>
+        /// Returns or sets the header secondary section.
+        /// </summary>
+        protected List<IFragmentContext> HeaderSecondary { get; } = [];
+
+        /// <summary>
+        /// Returns or sets the button panel preferences section.
+        /// </summary>
+        protected List<IFragmentContext> ButtonPanelPreferences { get; } = [];
+
+        /// <summary>
+        /// Returns or sets the button panel primary section.
+        /// </summary>
+        protected List<IFragmentContext> ButtonPanelPrimary { get; } = [];
+
+        /// <summary>
+        /// Returns or sets the button panel secondary section.
+        /// </summary>
+        protected List<IFragmentContext> ButtonPanelSecondary { get; } = [];
+
+        /// <summary>
+        /// Returns or sets the footer preferences section.
+        /// </summary>
+        protected List<IFragmentContext> FooterPreferences { get; } = [];
+
+        /// <summary>
+        /// Returns or sets the footer primary section.
+        /// </summary>
+        protected List<IFragmentContext> FooterPrimary { get; } = [];
+
+        /// <summary>
+        /// Returns or sets the footer secondary section.
+        /// </summary>
+        protected List<IFragmentContext> FooterSecondary { get; } = [];
+
+        /// <summary>
+        /// Returns the form buttons.
+        /// </summary>
+        public IEnumerable<ControlFormItemButton> Buttons => _preferencesButtons.Union(_primaryButtons).Union(_secondaryButtons);
+
+        /// <summary>
+        /// Returns or sets the horizontal alignment of the items.
+        /// </summary>
+        public virtual TypeJustifiedFlexbox Justify
         {
-            Icon = new PropertyIcon(TypeIcon.Save),
-            Color = new PropertyColorButton(TypeColorButton.Success),
-            Type = TypeButton.Submit,
-            Margin = new PropertySpacingMargin(PropertySpacing.Space.None, PropertySpacing.Space.Two, PropertySpacing.Space.None, PropertySpacing.Space.None),
-        };
+            get => (TypeJustifiedFlexbox)GetProperty(TypeJustifiedFlexbox.Start);
+            set => SetProperty(value, () => value.ToClass());
+        }
 
         /// <summary>
-        /// Returns or sets the form items.
-        /// </summary>
-        public IList<ControlFormItem> Items { get; } = new List<ControlFormItem>();
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlForm(string id = null)
             : base(id)
         {
-            SubmitButton.Name = SubmitButton.Id;
-            SubmitButton.OnClick = new PropertyOnClick($"$('#{SubmitType.Id}').val('submit');");
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="items">The controls that are associated with the form.</param>
         public ControlForm(string id, params ControlFormItem[] items)
             : this(id)
         {
-            if (items != null)
-            {
-                (Items as List<ControlFormItem>).AddRange(items);
-            }
+            _items.AddRange(items);
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="items">The controls that are associated with the form.</param>
         public ControlForm(params ControlFormItem[] items)
@@ -132,48 +201,39 @@ namespace WebExpress.WebUI.WebControl
         /// Initializes the form.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        public virtual void Initialize(RenderContextFormular context)
+        public virtual void Initialize(RenderControlFormContext context)
         {
-            // Id überprüfen
+            // check id 
             if (string.IsNullOrWhiteSpace(Id))
             {
-                context.Host.Log.Warning(I18N("webexpress.webui:form.empty.id"));
+                //context.ApplicationContext?.PluginContext.Host.Log.Warning(I18N.Translate("webexpress.webui:form.empty.id"));
             }
 
-            FormularId.Value = Id;
-
-            if (string.IsNullOrWhiteSpace(SubmitButton.Text))
-            {
-                SubmitButton.Text = context.I18N("webexpress.webui", "form.submit.label");
-            }
-            else
-            {
-                SubmitButton.Text = context.I18N(SubmitButton.Text);
-            }
+            FormId.Value = Id;
         }
 
         /// <summary>
         /// Filling the form.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public virtual void Fill(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public virtual void Fill(IRenderControlFormContext renderContext)
         {
-            OnFill(context);
+            OnFill(renderContext);
         }
 
         /// <summary>
         /// Checks the input element for correctness of the data.
         /// </summary>
-        /// <param name="context">The context in which the inputs are validated.</param>
+        /// <param name="renderContext">The context in which the inputs are validated.</param>
         /// <returns>True if all form items are valid, false otherwise.</returns>
-        public virtual bool Validate(RenderContextFormular context)
+        public virtual bool Validate(IRenderControlFormContext renderContext)
         {
             var valid = true;
-            var validationResults = context.ValidationResults as List<ValidationResult>;
+            var validationResults = renderContext.ValidationResults as List<ValidationResult>;
 
-            foreach (var v in Items.Where(x => x is IFormularValidation).Select(x => x as IFormularValidation))
+            foreach (var v in Items.Where(x => x is IFormValidation).Select(x => x as IFormValidation))
             {
-                v.Validate(context);
+                v.Validate(renderContext);
 
                 if (v.ValidationResult == TypesInputValidity.Error)
                 {
@@ -183,7 +243,7 @@ namespace WebExpress.WebUI.WebControl
                 validationResults.AddRange(v.ValidationResults);
             }
 
-            var args = new ValidationEventArgs() { Value = null, Context = context };
+            var args = new ValidationEventArgs() { Value = null, Context = renderContext };
             OnValidation(args);
 
             validationResults.AddRange(args.Results);
@@ -202,7 +262,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Instructs to reload the initial formular data.
+        /// Instructs to reload the initial form data.
         /// </summary>
         public void Reset()
         {
@@ -213,40 +273,53 @@ namespace WebExpress.WebUI.WebControl
         /// Pre-processing of the form.
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        public virtual void PreProcess(RenderContextFormular context)
+        public virtual void PreProcess(IRenderControlFormContext renderContext)
         {
 
         }
 
         /// <summary>
-        /// Processing of the resource. des Formulars
+        /// Processing of the form. 
         /// </summary>
         /// <param name="context">The context in which the control is rendered.</param>
-        public virtual void Process(RenderContextFormular context)
+        public virtual void Process(IRenderControlFormContext renderContext)
         {
-            OnProcess(context);
+            OnProcess(renderContext);
 
             if (!string.IsNullOrWhiteSpace(RedirectUri?.ToString()))
             {
-                context.Page.Redirecting(RedirectUri);
+                throw new RedirectException(RedirectUri);
             }
+        }
+
+        /// <summary>
+        /// Converts the control to an HTML representation.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
+        {
+            return Render(renderContext, visualTree, Items);
         }
 
         /// <summary>
         /// Convert to html.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <param name="items">The form items.</param>
         /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        public virtual IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree, IEnumerable<ControlFormItem> items)
         {
-            var renderContext = new RenderContextFormular(context, this);
+            var renderFormContext = new RenderControlFormContext(renderContext, this);
             var fill = false;
             var process = false;
 
-            // Prüfe ob und wie das Formular abgeschickt wurde 
-            if (context.Request.GetParameter("formular-id")?.Value == Id && context.Request.HasParameter("formular-submit-type"))
+            // check if and how the form was submitted
+            if (renderContext.Request.GetParameter("form-id")?.Value == Id && renderContext.Request.HasParameter("form-submit-type"))
             {
-                var value = context.Request.GetParameter("formular-submit-type")?.Value;
+                var value = renderContext.Request.GetParameter("form-submit-type")?.Value;
                 switch (value)
                 {
                     case "submit":
@@ -270,53 +343,81 @@ namespace WebExpress.WebUI.WebControl
             }
 
             // initialization
-            Initialize(renderContext);
-            (Items as List<ControlFormItem>).ForEach(x => x?.Initialize(renderContext));
-            OnInitialize(renderContext);
-            SubmitButton.Initialize(renderContext);
+            Initialize(renderFormContext);
+
+            foreach (var item in items)
+            {
+                item.Initialize(renderFormContext);
+            }
+            foreach (var item in Buttons)
+            {
+                item.Initialize(renderFormContext);
+            }
+
+            OnInitialize(renderFormContext);
 
             // fill the form with data
             if (fill)
             {
-                Fill(renderContext);
+                Fill(renderFormContext);
             }
 
             // preprocessing
-            PreProcess(renderContext);
+            PreProcess(renderFormContext);
 
             // process form (e.g. save form data)
-            if (process && Validate(renderContext))
+            if (process && Validate(renderFormContext))
             {
-                Process(renderContext);
+                Process(renderFormContext);
             }
 
             // generate html
-            var button = SubmitButton.Render(renderContext);
-
             var form = new HtmlElementFormForm()
             {
                 Id = Id,
-                Class = GetClasses(),
+                Class = FormLayout == TypeLayoutForm.Inline ? Css.Concatenate("wx-form-inline", GetClasses()) : GetClasses(),
                 Style = GetStyles(),
                 Role = Role,
-                Action = Uri?.ToString() ?? renderContext.Uri?.ToString(),
-                Method = RequestMethod.POST.ToString(),
-                Enctype = TypeEnctype.None
+                Action = Uri?.ToString() ?? renderFormContext.Uri?.ToString(),
+                Method = (Method == RequestMethod.NONE ? RequestMethod.POST : Method).ToString(),
+                Enctype = TypeEnctype.None,
+                Name = Name
             };
 
-            form.Elements.Add(FormularId.Render(renderContext));
-            form.Elements.Add(SubmitType.Render(renderContext));
+            form.Add(FormId.Render(renderFormContext, visualTree));
+            form.Add(SubmitHiddenField.Render(renderFormContext, visualTree));
+
             var header = new HtmlElementSectionHeader();
-            header.Elements.Add(new ControlProgressBar()
+            header.Add(new ControlProgressBar()
             {
                 Format = TypeFormatProgress.Animated,
                 Color = new PropertyColorProgress(TypeColorProgress.Success),
                 Margin = new PropertySpacingMargin(PropertySpacing.Space.None, PropertySpacing.Space.None, PropertySpacing.Space.None, PropertySpacing.Space.Three),
-                Styles = { "height: 3px;", "display: none;" },
+                Styles = ["height: 3px;", "display: none;"],
                 Value = 0
-            }.Render(renderContext));
+            }.Render(renderFormContext, visualTree));
 
-            foreach (var v in renderContext.ValidationResults)
+
+            var headerPreferences = WebEx.ComponentHub.FragmentManager.GetFragments<IFragmentControl, SectionFormHeaderPreferences>
+            (
+                renderContext?.PageContext?.ApplicationContext,
+                [GetType()]
+            );
+            var headerPrimary = WebEx.ComponentHub.FragmentManager.GetFragments<IFragmentControl, SectionFormHeaderPrimary>
+            (
+                renderContext?.PageContext?.ApplicationContext,
+                [GetType()]
+            );
+            var headerSecondary = WebEx.ComponentHub.FragmentManager.GetFragments<IFragmentControl, SectionFormHeaderSecondary>
+            (
+                renderContext?.PageContext?.ApplicationContext,
+                [GetType()]
+            );
+            header.Add(headerPreferences.Select(x => x.Render(renderFormContext, visualTree)));
+            header.Add(headerPrimary.Select(x => x.Render(renderFormContext, visualTree)));
+            header.Add(headerSecondary.Select(x => x.Render(renderFormContext, visualTree)));
+
+            foreach (var v in renderFormContext.ValidationResults)
             {
                 var bgColor = new PropertyColorBackgroundAlert(TypeColorBackground.Default);
 
@@ -330,95 +431,271 @@ namespace WebExpress.WebUI.WebControl
                         break;
                 }
 
-                header.Elements.Add(new ControlAlert()
+                header.Add(new ControlAlert()
                 {
                     BackgroundColor = bgColor,
-                    Text = I18N(context.Culture, v.Text),
+                    Text = I18N.Translate(renderContext.Request?.Culture, v.Text),
                     Dismissible = TypeDismissibleAlert.Dismissible,
                     Fade = TypeFade.FadeShow
-                }.Render(renderContext));
+                }.Render(renderFormContext, visualTree));
             }
 
-            foreach (var item in Items.Where(x => x is ControlFormItemInputHidden))
+            foreach (var item in items.Where(x => x is ControlFormItemInputHidden))
             {
-                form.Elements.Add(item.Render(renderContext));
+                form.Add(item.Render(renderFormContext, visualTree));
             }
 
             var main = new HtmlElementSectionMain();
 
             var group = default(ControlFormItemGroup);
 
-            group = Layout switch
+            group = ItemLayout switch
             {
-                TypeLayoutForm.Horizontal => new ControlFormItemGroupHorizontal(),
-                TypeLayoutForm.Mix => new ControlFormItemGroupMix(),
+                TypeLayoutFormItem.Horizontal => new ControlFormItemGroupHorizontal(),
+                TypeLayoutFormItem.Mix => new ControlFormItemGroupMix(),
                 _ => new ControlFormItemGroupVertical(),
             };
 
-            foreach (var item in Items.Where(x => x is not ControlFormItemInputHidden))
+            foreach (var item in items.Where(x => x is not ControlFormItemInputHidden))
             {
                 group.Items.Add(item);
             }
 
-            main.Elements.Add(group.Render(renderContext));
+            main.Add(group.Render(renderFormContext, visualTree));
+
+            var buttonPannel = new HtmlElementTextContentDiv() { Class = FormLayout == TypeLayoutForm.Inline ? "ms-2" : "" };
+            buttonPannel.Add(Buttons.Select(x => x.Render(renderFormContext, visualTree)));
 
             var footer = new HtmlElementSectionFooter();
+            var footerPreferences = WebEx.ComponentHub.FragmentManager.GetFragments<IFragmentControl, SectionFormFooterPreferences>
+            (
+                renderContext?.PageContext?.ApplicationContext,
+                [GetType()]
+            );
+            var footerPrimary = WebEx.ComponentHub.FragmentManager.GetFragments<IFragmentControl, SectionFormFooterPrimary>
+            (
+                renderContext?.PageContext?.ApplicationContext,
+                [GetType()]
+            );
+            var footerSecondary = WebEx.ComponentHub.FragmentManager.GetFragments<IFragmentControl, SectionFormFooterSecondary>
+            (
+                renderContext?.PageContext?.ApplicationContext,
+                [GetType()]
+            );
+            footer.Add(footerPreferences.Select(x => x.Render(renderFormContext, visualTree)));
+            footer.Add(footerPrimary.Select(x => x.Render(renderFormContext, visualTree)));
+            footer.Add(footerSecondary.Select(x => x.Render(renderFormContext, visualTree)));
 
-            footer.Elements.Add(button);
-            form.Elements.Add(header);
-            form.Elements.Add(main);
-            form.Elements.Add(footer);
+            if (headerPreferences.Any() || headerPrimary.Any() || headerSecondary.Any())
+            {
+                form.Add(header);
+            }
 
-            form.Elements.AddRange(renderContext.Scripts.Select(x => new HtmlElementScriptingScript(x.Value)));
+            form.Add(main);
+            form.Add(buttonPannel);
 
-            context.VisualTree.AddScript(Id, $"new webexpress.webui.form.progess('{Id}', '{RequestMethod.POST.ToString()}');");
+            if (footerPreferences.Any() || footerPrimary.Any() || footerSecondary.Any())
+            {
+                form.Add(footer);
+            }
+
+            visualTree.AddScript(Id, $"new webexpress.webui.form.progess('{Id}', '{Method}');");
 
             return form;
         }
 
-        /// <summary>
-        /// Adds a form control.
-        /// </summary>
-        /// <param name="item">The form item.</param>
-        public void Add(params ControlFormItem[] item)
+        /// <summary> 
+        /// Adds one or more form items to the content of the form.
+        /// </summary> 
+        /// <param name="controls">The form items to add to the form.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple form items to the <see cref="ControlFormItem"/> collection of 
+        /// the form. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the form's content. 
+        /// Example usage: 
+        /// <code> 
+        /// var form = new ControlForm(); 
+        /// var button1 = new ControlButton { Text = "Save" };
+        /// var button2 = new ControlButton { Text = "Cancel" };
+        /// form.Add(button1, button2);
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="ControlFormItem"/> interface.
+        /// </remarks>
+        public void Add(params ControlFormItem[] items)
         {
-            (Items as List<ControlFormItem>).AddRange(item);
+            _items.AddRange(items);
+        }
+
+        /// <summary> 
+        /// Adds one or more form items to the content of the form.
+        /// </summary> 
+        /// <param name="controls">The form items to add to the form.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple form items to the <see cref="ControlFormItem"/> collection of 
+        /// the form. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the form's content. 
+        /// Example usage: 
+        /// <code> 
+        /// var form = new ControlForm(); 
+        /// var button1 = new ControlButton { Text = "Save" };
+        /// var button2 = new ControlButton { Text = "Cancel" };
+        /// form.Add(button1, button2);
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="ControlFormItem"/> interface.
+        /// </remarks>
+        public void Add(IEnumerable<ControlFormItem> items)
+        {
+            _items.AddRange(items);
+        }
+
+        /// <summary>
+        /// Removes a form item from the content of the form.
+        /// </summary>
+        /// <param name="item">The form item to remove from the form.</param>
+        /// <remarks>
+        /// This method allows removing a specific form item from the <see cref="Items"/> collection of 
+        /// the form.
+        /// </remarks>
+        public virtual void Remove(ControlFormItem item)
+        {
+            _items.Remove(item);
+        }
+
+        /// <summary>
+        /// Adds a preferences control.
+        /// </summary>
+        /// <param name="controls">The controls.</param>
+        public void AddPreferencesControl(params ControlFormItem[] controls)
+        {
+            _preferencesControls.AddRange(controls);
+        }
+
+        /// <summary>
+        /// Adds a preferences form control button.
+        /// </summary>
+        /// <param name="button">The form buttons.</param>
+        public void AddPreferencesButton(params ControlFormItemButton[] buttons)
+        {
+            foreach (var button in buttons)
+            {
+                if (button is ControlFormItemButtonSubmit submitButton)
+                {
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('submit');submit();");
+                }
+                else if (button is ControlFormItemButtonReset resetButton)
+                {
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('reset');submit();");
+                }
+            }
+
+            _preferencesButtons.AddRange(buttons);
+        }
+
+        /// <summary>
+        /// Adds a primary control.
+        /// </summary>
+        /// <param name="controls">The controls.</param>
+        public void AddPrimaryControl(params ControlFormItem[] controls)
+        {
+            _primaryControls.AddRange(controls);
+        }
+
+        /// <summary>
+        /// Adds a primary form control button.
+        /// </summary>
+        /// <param name="button">The form buttons.</param>
+        public void AddPrimaryButton(params ControlFormItemButton[] buttons)
+        {
+            foreach (var button in buttons)
+            {
+                if (button is ControlFormItemButtonSubmit submitButton)
+                {
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('submit');submit();");
+                }
+                else if (button is ControlFormItemButtonReset resetButton)
+                {
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('reset');submit();");
+                }
+            }
+
+            _primaryButtons.AddRange(buttons);
+        }
+
+        /// <summary>
+        /// Adds a secondary control.
+        /// </summary>
+        /// <param name="controls">The controls.</param>
+        public void AddSecondaryControl(params ControlFormItem[] controls)
+        {
+            _secondaryControls.AddRange(controls);
+        }
+
+        /// <summary>
+        /// Adds a secondary form control button.
+        /// </summary>
+        /// <param name="button">The form buttons.</param>
+        public void AddSecondaryButton(params ControlFormItemButton[] buttons)
+        {
+            foreach (var button in buttons)
+            {
+                if (button is ControlFormItemButtonSubmit submitButton)
+                {
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('submit');submit();");
+                }
+                else if (button is ControlFormItemButtonReset resetButton)
+                {
+                    button.OnClick = new PropertyOnClick($"$('#{SubmitHiddenField?.Id}').val('reset');submit();");
+                }
+            }
+
+            _secondaryButtons.AddRange(buttons);
+        }
+
+        /// <summary>
+        /// Removes a form control button from the form.
+        /// </summary>
+        /// <param name="button">The form button.</param>
+        public void RemoveButton(ControlFormItemButton button)
+        {
+            _preferencesButtons.Remove(button);
+            _primaryButtons.Remove(button);
+            _secondaryButtons.Remove(button);
         }
 
         /// <summary>
         /// Raises the process event.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        protected virtual void OnProcess(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        protected virtual void OnProcess(IRenderControlFormContext renderContext)
         {
-            ProcessFormular?.Invoke(this, new FormularEventArgs() { Context = context });
+            ProcessForm?.Invoke(this, new FormEventArgs() { Context = renderContext });
         }
 
         /// <summary>
         /// Raises the process event.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        protected virtual void OnProcessAndNextFormular(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        protected virtual void OnProcessAndNextForm(IRenderControlFormContext renderContext)
         {
-            ProcessAndNextFormular?.Invoke(this, new FormularEventArgs() { Context = context });
+            ProcessAndNextForm?.Invoke(this, new FormEventArgs() { Context = renderContext });
         }
 
         /// <summary>
         /// Raises the Initializations event.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        protected virtual void OnInitialize(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        protected virtual void OnInitialize(IRenderControlFormContext renderContext)
         {
-            InitializeFormular?.Invoke(this, new FormularEventArgs() { Context = context });
+            InitializeForm?.Invoke(this, new FormEventArgs() { Context = renderContext });
         }
 
         /// <summary>
         /// Raises the data delivery event.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        protected virtual void OnFill(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        protected virtual void OnFill(IRenderControlFormContext renderContext)
         {
-            FillFormular?.Invoke(this, new FormularEventArgs() { Context = context });
+            FillForm?.Invoke(this, new FormEventArgs() { Context = renderContext });
         }
 
         /// <summary>

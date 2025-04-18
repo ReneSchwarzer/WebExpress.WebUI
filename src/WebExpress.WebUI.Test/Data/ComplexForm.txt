@@ -1,0 +1,30 @@
+﻿<form id="form" action="http://localhost:8080/" method="POST" enctype="multipart/form-data">
+ <input id="05c888e8-15f3-4be8-b765-0d7be63cc82b" value="form" name="form-id" type="hidden">
+ <input id="974c6159-98e3-4ede-8bb5-6bc4d52e1770" value="update" name="form-submit-type" type="hidden">
+ <header>
+  <div class="progress mb-3" style="height: 3px; display: none;">
+   <div role="progressbar" class="progress-bar bg-success progress-bar progress-bar-striped progress-bar-animated" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+  <p>FragmentHeaderPrimary</p>
+ </header>
+ <main>
+  <div>
+   <fieldset class="form-group">
+    <label>Label1</label>
+    <input type="text" class="form-control" placeholder="Placeholder1">
+    <small class="text-muted">Help1</small>
+   </fieldset>
+   <fieldset class="form-group">
+    <label>Label2</label>
+    <input type="text" class="form-control" placeholder="Placeholder2">
+    <small class="text-muted">Help2</small>
+   </fieldset>
+  </div>
+ </main>
+ <div>
+  <button id="Submit" name="Submit" type="submit" class="btn me-2 btn-success" onclick="$('#Submit').val('submit');">
+   <span class="me-2 fas fa-save"></span>webexpress.webui
+  </button>
+ </div>
+ <footer></footer>
+</form>

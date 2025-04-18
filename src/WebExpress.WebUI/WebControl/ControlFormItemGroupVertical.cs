@@ -1,63 +1,47 @@
 ﻿using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Grouping of controls.
+    /// Grouping of controls in a vertical layout.
     /// </summary>
     public class ControlFormItemGroupVertical : ControlFormItemGroup
     {
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlFormItemGroupVertical(string id = null)
-            : base(id)
-        {
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         ///<param name="items">The form controls.</param> 
-        public ControlFormItemGroupVertical(string id, params ControlFormItem[] items)
+        public ControlFormItemGroupVertical(string id = null, params ControlFormItem[] items)
             : base(id, items)
-        {
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        ///<param name="items">The form controls.</param> 
-        public ControlFormItemGroupVertical(params ControlFormItem[] items)
-            : base(null, items)
         {
         }
 
         /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
         {
-            var grpupContex = new RenderContextFormularGroup(context, this);
+            var renderGroupContext = new RenderControlFormGroupContext(renderContext, this);
 
             foreach (var item in Items)
             {
-                item.Initialize(grpupContex);
+                item.Initialize(renderGroupContext);
             }
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
-            var renderContext = new RenderContextFormularGroup(context, this);
+            var renderGroupContext = new RenderControlFormGroupContext(renderContext, this);
 
             var html = new HtmlElementTextContentDiv()
             {
@@ -73,40 +57,40 @@ namespace WebExpress.WebUI.WebControl
                     var icon = new ControlIcon() { Icon = input?.Icon };
                     var label = new ControlFormItemLabel(!string.IsNullOrEmpty(item.Id) ? item.Id + "_label" : string.Empty);
                     var help = new ControlFormItemHelpText(!string.IsNullOrEmpty(item.Id) ? item.Id + "_help" : string.Empty);
-                    var fieldset = new HtmlElementFormFieldset() { Class = "form-group" };
+                    var fieldset = new HtmlElementFormFieldset() { Class = "wx-form-group" };
 
-                    label.Initialize(renderContext);
-                    help.Initialize(renderContext);
+                    label.Initialize(renderGroupContext);
+                    help.Initialize(renderGroupContext);
 
-                    label.Text = context.I18N(input?.Label);
-                    label.FormularItem = item;
-                    help.Text = context.I18N(input?.Help);
+                    label.Text = I18N.Translate(renderGroupContext.Request?.Culture, input?.Label);
+                    label.FormItem = item;
+                    help.Text = I18N.Translate(renderGroupContext.Request?.Culture, input?.Help);
 
-                    if (icon.Icon != null)
+                    if (icon.Icon != null && !string.IsNullOrWhiteSpace(label.Text))
                     {
-                        icon.Classes.Add("me-2 pt-1");
-                        fieldset.Elements.Add(new HtmlElementTextSemanticsSpan(icon.Render(renderContext), label.Render(renderContext))
+                        icon.Classes = ["me-2", "pt-1"];
+                        fieldset.Add(new HtmlElementTextSemanticsSpan(icon.Render(renderGroupContext, visualTree), label.Render(renderGroupContext, visualTree))
                         {
                             Style = "display: flex;"
                         });
                     }
-                    else
+                    else if (!string.IsNullOrWhiteSpace(label.Text))
                     {
-                        fieldset.Elements.Add(label.Render(renderContext));
+                        fieldset.Add(label.Render(renderGroupContext, visualTree));
                     }
 
-                    fieldset.Elements.Add(item.Render(renderContext));
+                    fieldset.Add(item.Render(renderGroupContext, visualTree));
 
                     if (!string.IsNullOrWhiteSpace(input?.Help))
                     {
-                        fieldset.Elements.Add(help.Render(renderContext));
+                        fieldset.Add(help.Render(renderGroupContext, visualTree));
                     }
 
-                    html.Elements.Add(fieldset);
+                    html.Add(fieldset);
                 }
                 else
                 {
-                    html.Elements.Add(item?.Render(context));
+                    html.Add(item?.Render(renderGroupContext, visualTree));
                 }
             }
 

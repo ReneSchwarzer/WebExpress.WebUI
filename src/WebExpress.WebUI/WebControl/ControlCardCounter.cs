@@ -1,27 +1,28 @@
 ﻿using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebIcon;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Informationszähler
+    /// Represents a counter with an icon, value, progress, and text.
     /// </summary>
-    public class ControlCardCounter : ControlPanelCard
+    public class ControlCardCounter : Control
     {
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
-        /// Returns or sets the value. des Counters
+        /// Returns or sets the counter value.
         /// </summary>
-        public string Value { get; set; }
+        public int? Value { get; set; }
 
         /// <summary>
         /// Returns or sets the value of the progrss.
         /// </summary>
-        public int Progress { get; set; }
+        public uint? Progress { get; set; }
 
         /// <summary>
         /// Returns or sets the text.
@@ -29,46 +30,44 @@ namespace WebExpress.WebUI.WebControl
         public string Text { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlCardCounter(string id = null)
             : base(id)
         {
             TextColor = new PropertyColorText(TypeColorText.Default);
-            Init();
         }
 
         /// <summary>
-        /// Initialization
+        /// Converts the control to an HTML representation.
         /// </summary>
-        private void Init()
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Progress = -1;
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            Content.Clear();
-
-            if (Icon != null && Icon.HasIcon)
+            var html = new HtmlElementTextSemanticsSpan()
             {
-                Content.Add(new ControlIcon()
+                Id = Id,
+                Class = Css.Concatenate("card-counter", GetClasses()),
+                Style = GetStyles(),
+                Role = Role
+            };
+
+            if (Icon != null)
+            {
+                html.Add(new ControlIcon()
                 {
                     Icon = Icon,
                     TextColor = TextColor,
                     HorizontalAlignment = TypeHorizontalAlignment.Right
-                });
+                }.Render(renderContext, visualTree));
             }
 
             var text = new ControlText(string.IsNullOrWhiteSpace(Id) ? null : Id + "_header")
             {
-                Text = Value,
+                Text = Value.HasValue ? Value.Value.ToString() : null,
                 Format = TypeFormatText.H4
             };
 
@@ -79,21 +78,21 @@ namespace WebExpress.WebUI.WebControl
                 TextColor = new PropertyColorText(TypeColorText.Muted)
             };
 
-            Content.Add(new ControlPanel(text, info) { });
+            html.Add(new ControlPanel(null, text, info) { }.Render(renderContext, visualTree));
 
-            if (Progress > -1)
+            if (Progress.HasValue)
             {
-                Content.Add(new ControlProgressBar()
+                html.Add(new ControlProgressBar()
                 {
-                    Value = Progress,
+                    Value = Progress.Value,
                     Format = TypeFormatProgress.Striped,
                     BackgroundColor = BackgroundColor,
                     //Color = Color,
                     Size = TypeSizeProgress.Small
-                });
+                }.Render(renderContext, visualTree));
             }
 
-            return base.Render(context);
+            return html;
         }
     }
 }

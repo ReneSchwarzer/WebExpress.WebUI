@@ -1,15 +1,19 @@
 ﻿using System.Linq;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a media control panel that can display an image and a title.
+    /// </summary>
     public class ControlPanelMedia : ControlPanel
     {
         /// <summary>
         /// Returns or sets the title.
         /// </summary>
-        public Control Title { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Returns or sets the uri to the image.
@@ -19,43 +23,30 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the width of the image in pixel.
         /// </summary>
-        public int ImageWidth { get; set; } = -1;
+        public uint? ImageWidth { get; set; }
 
         /// <summary>
         /// Returns or sets the height of the image in pixel.
         /// </summary>
-        public int ImageHeight { get; set; } = -1;
+        public uint? ImageHeight { get; set; }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlPanelMedia(string id = null)
-            : base(id)
-        {
-
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="title">The headline.</param>
-        public ControlPanelMedia(string id, string title)
-            : this(id)
+        public ControlPanelMedia(string id = null)
+            : base(id)
         {
-            Title = new ControlText(string.IsNullOrWhiteSpace(id) ? null : id + "_header")
-            {
-                Text = title
-            };
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var img = new HtmlElementMultimediaImg()
             {
@@ -63,26 +54,26 @@ namespace WebExpress.WebUI.WebControl
                 Class = "me-3 mt-3 " // rounded-circle
             };
 
-            if (ImageWidth > -1)
+            if (ImageWidth.HasValue)
             {
-                img.Width = ImageWidth;
+                img.Width = (int)ImageWidth;
             }
 
-            if (ImageHeight > -1)
+            if (ImageHeight.HasValue)
             {
-                img.Height = ImageHeight;
+                img.Height = (int)ImageHeight;
             }
 
-            var heading = new HtmlElementSectionH4(Title?.Render(context))
-            {
-            };
+            var heading = !string.IsNullOrWhiteSpace(Title)
+                ? new HtmlElementSectionH4(new HtmlText(I18N.Translate(renderContext.Request?.Culture, Title)))
+                : null;
 
-            var body = new HtmlElementTextContentDiv(Title != null ? heading : null)
+            var body = new HtmlElementTextContentDiv(heading)
             {
                 Class = "media-body"
             };
 
-            body.Elements.AddRange(from x in Content select x.Render(context));
+            body.Add(Content.Select(x => x.Render(renderContext, visualTree)));
 
             var html = new HtmlElementTextContentDiv(img, body)
             {

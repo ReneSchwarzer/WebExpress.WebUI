@@ -1,17 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebCore.WebComponent;
+using WebExpress.WebCore.WebEndpoint;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
-using WebExpress.WebCore.WebUri;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Two panels that can be resized by a variable splitter.
+    /// Represents a control that splits the available space into two resizable panels.
     /// </summary>
     public class ControlPanelSplit : Control
     {
+        private readonly List<IControl> _panel1 = [];
+        private readonly List<IControl> _panel2 = [];
+
+        /// <summary>
+        /// Returns the left or top panel in the ControlPanelSplit.
+        /// </summary>
+        public IEnumerable<IControl> Panel1 => _panel1;
+
+        /// <summary>
+        /// Returns the right or bottom pane in the ControlPanelSplit.
+        /// </summary>
+        public IEnumerable<IControl> Panel2 => _panel2;
+
         /// <summary>
         /// Returns or sets whether the splitter is horziontal or vertically oriented.
         /// </summary>
@@ -28,11 +40,6 @@ namespace WebExpress.WebUI.WebControl
         public int SplitterSize { get; set; } = 6;
 
         /// <summary>
-        /// Returns the left or top panel in the ControlPanelSplit.
-        /// </summary>
-        public List<IControl> Panel1 { get; } = new List<IControl>();
-
-        /// <summary>
         /// Returns or sets the minimum size of the left or top area in the ControlPanelSplit.
         /// </summary>
         public int Panel1MinSize { get; set; }
@@ -41,11 +48,6 @@ namespace WebExpress.WebUI.WebControl
         /// Returns or sets the initial size of the left or top area in the ControlPanelSplit in %.
         /// </summary>
         public int Panel1InitialSize { get; set; } = -1;
-
-        /// <summary>
-        /// Returns the right or bottom pane in the ControlPanelSplit.
-        /// </summary>
-        public List<IControl> Panel2 { get; } = new List<IControl>();
 
         /// <summary>
         /// Returns or sets the minimum size of the right or bottom area in the ControlPanelSplit.
@@ -58,7 +60,7 @@ namespace WebExpress.WebUI.WebControl
         public int Panel2InitialSize { get; set; } = -1;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlPanelSplit(string id = null)
@@ -67,41 +69,62 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="panel1">Left or top panel controls.</param>
         /// <param name="panel2">Right or bottom panel controls.</param>
-        public ControlPanelSplit(string id, Control[] panel1, Control[] panel2)
+        public ControlPanelSplit(string id, IControl[] panel1, IControl[] panel2)
             : base(id)
         {
-            Panel1.AddRange(panel1);
-            Panel2.AddRange(panel2);
+            _panel1.AddRange(panel1);
+            _panel2.AddRange(panel2);
         }
 
         /// <summary>
-        /// Constructor
+        /// Adds controls to the left or top panel.
         /// </summary>
-        /// <param name="panel1">Left or top panel controls.</param>
-        /// <param name="panel2">Right or bottom panel controls.</param>
-        public ControlPanelSplit(Control[] panel1, Control[] panel2)
-            : this(null, panel1, panel2)
+        /// <param name="controls">The controls to add.</param>
+        public void AddPanel1(params IControl[] controls)
         {
+            _panel1.AddRange(controls);
+        }
+
+        /// <summary>
+        /// Removes a control from the left or top panel.
+        /// </summary>
+        /// <param name="control">The control to remove.</param>
+        public void RemovePanel1(IControl control)
+        {
+            _panel1.Remove(control);
+        }
+
+        /// <summary>
+        /// Adds controls to the right or bottom panel.
+        /// </summary>
+        /// <param name="controls">The controls to add.</param>
+        public void AddPanel2(params IControl[] controls)
+        {
+            _panel2.AddRange(controls);
+        }
+
+        /// <summary>
+        /// Removes a control from the right or bottom panel.
+        /// </summary>
+        /// <param name="control">The control to remove.</param>
+        public void RemovePanel2(IControl control)
+        {
+            _panel2.Remove(control);
         }
 
         /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public void Initialize(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        protected virtual void Initialize(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var module = ComponentManager.ModuleManager.GetModule(context.ApplicationContext, typeof(Module));
-            if (module != null)
-            {
-                context.VisualTree.HeaderScriptLinks.Add(UriResource.Combine(module.ContextPath, "/assets/js/split.min.js"));
-            }
-
-            Border = new PropertyBorder(true);
+            var contextPath = renderContext?.PageContext?.ApplicationContext?.ContextPath;
+            visualTree.AddHeaderScriptLink(RouteEndpoint.Combine(contextPath, "/assets/js/split.min.js"));
 
             var init1 = 0;
             var init2 = 0;
@@ -121,43 +144,67 @@ namespace WebExpress.WebUI.WebControl
                 init2 = 100 - Panel1InitialSize;
             }
 
-            context.VisualTree.AddScript
+            visualTree.AddScript
             (
-                Id, @"Split(['#" + Id + "-p1', '#" + Id + @"-p2'], {
+                Id, @"$(document).ready(function() { Split(['#" + Id + "-p1', '#" + Id + @"-p2'], {
                     sizes: [" + init1 + "," + init2 + @"],
                     minSize: [" + Panel1MinSize + "," + Panel2MinSize + @"],
                     direction: '" + Orientation.ToString().ToLower() + @"',
                     gutter: function (index, direction) 
                     {
                         var gutter = document.createElement('div');
-                        gutter.className = 'splitter splitter-' + direction + ' " + SplitterColor.ToClass() + @"';
+                        gutter.id = '" + Id + @"-gutter';
+                        gutter.className = 'wx-splitter wx-splitter-' + direction + ' " + SplitterColor.ToClass() + @"';
                         gutter.style = '" + SplitterColor.ToStyle() + @"';
                         return gutter;
                     },
                     gutterSize: " + SplitterSize + @",
-                });"
+                })});"
             );
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Initialize(context);
+            var p1 = Panel1
+                .Select(x => x.Render(renderContext, visualTree))
+                .Where(x => x != null)
+                .ToList();
+            var p2 = Panel2
+                .Select(x => x.Render(renderContext, visualTree))
+                .Where(x => x != null)
+                .ToList();
+
+            if (p1.Count != 0 && p2.Count == 0)
+            {
+                return new HtmlList(p1);
+            }
+            else if (p1.Count == 0 && p2.Count != 0)
+            {
+                return new HtmlList(p2);
+            }
+            else if (p1.Count == 0 && p2.Count == 0)
+            {
+                return null;
+            }
+
+            Initialize(renderContext, visualTree);
 
             var html = new HtmlElementTextContentDiv()
             {
                 Id = Id,
-                Class = Css.Concatenate(Orientation == TypeOrientationSplit.Horizontal ? "d-flex split" : "split", GetClasses()),
+                Class = Css.Concatenate(Orientation == TypeOrientationSplit.Horizontal ? "wx-split-horizontal" : "wx-split-vertical", GetClasses()),
                 Style = GetStyles(),
                 Role = Role
             };
 
-            html.Elements.Add(new HtmlElementTextContentDiv(Panel1.Select(x => x.Render(context))) { Id = $"{Id}-p1" });
-            html.Elements.Add(new HtmlElementTextContentDiv(Panel2.Select(x => x.Render(context))) { Id = $"{Id}-p2" });
+            html.Add(new HtmlElementTextContentDiv([.. p1]) { Id = $"{Id}-p1" });
+            html.Add(new HtmlElementTextContentDiv([.. p2]) { Id = $"{Id}-p2" });
 
             return html;
         }

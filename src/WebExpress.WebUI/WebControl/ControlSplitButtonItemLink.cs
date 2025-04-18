@@ -1,35 +1,31 @@
 ﻿using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a link item within a split button control.
+    /// </summary>
     public class ControlSplitButtonItemLink : ControlLink, IControlSplitButtonItem
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlSplitButtonItemLink(string id = null)
             : base(id)
         {
-            Init();
         }
 
         /// <summary>
-        /// Initialization
+        /// Converts the control to an HTML representation.
         /// </summary>
-        private void Init()
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            return base.Render(context);
+            return base.Render(renderContext, visualTree);
         }
     }
 }

@@ -2,6 +2,9 @@
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents an item in a selection input form.
+    /// </summary>
     public class ControlFormItemInputSelectionItem
     {
         /// <summary>

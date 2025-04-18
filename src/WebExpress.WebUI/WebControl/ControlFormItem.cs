@@ -1,8 +1,15 @@
 ﻿using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Abstract base class for form items.
+    /// </summary>
+    /// <remarks>
+    /// This class provides the base functionality for form items, including properties for the name of the input field,
+    /// initialization, and rendering to HTML.
+    /// </remarks>
     public abstract class ControlFormItem : Control
     {
         /// <summary>
@@ -11,7 +18,7 @@ namespace WebExpress.WebUI.WebControl
         public string Name { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItem(string id = null)
@@ -22,26 +29,28 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public abstract void Initialize(RenderContextFormular context);
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public abstract void Initialize(IRenderControlFormContext renderContext);
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public abstract IHtmlNode Render(RenderContextFormular context);
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public abstract IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree);
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            if (context is RenderContextFormular formContext)
+            if (renderContext is IRenderControlFormContext formContext)
             {
-                return Render(formContext);
+                return Render(formContext, visualTree);
             }
 
             return null;

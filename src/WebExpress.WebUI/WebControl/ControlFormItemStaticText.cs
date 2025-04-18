@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using static WebExpress.WebCore.Internationalization.InternationalizationManager;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a static text form item control.
+    /// </summary>
     public class ControlFormItemStaticText : ControlFormItem, IControlFormLabel
     {
         /// <summary>
@@ -17,7 +21,7 @@ namespace WebExpress.WebUI.WebControl
         public string Text { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemStaticText(string id = null)
@@ -28,17 +32,18 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
         {
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
             var c = new List<string>
             {
@@ -47,7 +52,8 @@ namespace WebExpress.WebUI.WebControl
 
             var html = new HtmlElementTextContentP()
             {
-                Text = I18N(context.Culture, Text),
+                Id = Id,
+                Text = I18N.Translate(renderContext.Request?.Culture, Text),
                 Class = Css.Concatenate(GetClasses()),
                 Style = Style.Concatenate(GetStyles()),
                 Role = Role

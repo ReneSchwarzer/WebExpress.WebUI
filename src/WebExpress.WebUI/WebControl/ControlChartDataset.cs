@@ -2,6 +2,9 @@
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a dataset for a chart control.
+    /// </summary>
     public class ControlChartDataset
     {
         /// <summary>
@@ -17,12 +20,12 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the background color.
         /// </summary>
-        public List<PropertyColorChart> BackgroundColor { get; set; } = new List<PropertyColorChart> { new PropertyColorChart(TypeColorChart.Primary) };
+        public List<PropertyColorChart> BackgroundColor { get; set; } = [new PropertyColorChart(TypeColorChart.Primary)];
 
         /// <summary>
         /// Returns or sets the frame color.
         /// </summary>
-        public List<PropertyColorChart> BorderColor { get; set; } = new List<PropertyColorChart> { new PropertyColorChart(TypeColorChart.Primary) };
+        public List<PropertyColorChart> BorderColor { get; set; } = [new PropertyColorChart(TypeColorChart.Primary)];
 
         /// <summary>
         /// Returns or sets how the data series are populated.
@@ -35,7 +38,7 @@ namespace WebExpress.WebUI.WebControl
         public TypePointChart Point { get; set; } = TypePointChart.Circle;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public ControlChartDataset()
         {

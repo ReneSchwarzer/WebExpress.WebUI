@@ -1,9 +1,13 @@
 ﻿using System;
-using WebExpress.WebCore.WebHtml;
 using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a checkbox input form item control.
+    /// </summary>
     public class ControlFormItemInputCheckbox : ControlFormItemInput
     {
         /// <summary>
@@ -22,7 +26,7 @@ namespace WebExpress.WebUI.WebControl
         public string Pattern { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id.</param>
         public ControlFormItemInputCheckbox(string id = null)
@@ -34,20 +38,21 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
         {
-            var value = context.Request.GetParameter(Name)?.Value;
+            var value = renderContext.Request.GetParameter(Name)?.Value;
 
             Value = string.IsNullOrWhiteSpace(value) || !value.Equals("on", StringComparison.OrdinalIgnoreCase) ? "false" : "true";
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
             var html = new HtmlElementTextContentDiv
             (
@@ -62,12 +67,18 @@ namespace WebExpress.WebUI.WebControl
                         //Role = Role,
                         Checked = Value.Equals("true")
                     },
-                    new HtmlText(string.IsNullOrWhiteSpace(Description) ? string.Empty : "&nbsp;" + context.I18N(Description))
+                    new HtmlText
+                    (
+                        string.IsNullOrWhiteSpace(Description) ?
+                        string.Empty :
+                        "&nbsp;" + I18N.Translate(renderContext.Request?.Culture, Description)
+                    )
                 )
                 {
                 }
             )
             {
+                Id = Id,
                 Class = Css.Concatenate("checkbox", GetClasses()),
                 Style = GetStyles(),
             };
@@ -78,10 +89,10 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Checks the input element for correctness of the data.
         /// </summary>
-        /// <param name="context">The context in which the inputs are validated.</param>
-        public override void Validate(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the inputs are validated.</param>
+        public override void Validate(IRenderControlFormContext renderContext)
         {
-            base.Validate(context);
+            base.Validate(renderContext);
         }
     }
 }

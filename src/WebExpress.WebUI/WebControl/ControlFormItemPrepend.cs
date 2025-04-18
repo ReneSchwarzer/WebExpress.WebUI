@@ -1,70 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
-    public class ControlFormItemPrepend : ControlPanel
+    /// <summary>
+    /// Represents a form item that is prepended to an input group.
+    /// </summary>
+    public class ControlFormItemPrepend : ControlFormItemPanel
     {
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlFormItemPrepend(string id)
-            : base(id)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
-        public ControlFormItemPrepend(string id, params Control[] content)
+        public ControlFormItemPrepend(string id = null, params Control[] content)
             : base(id, content)
         {
-            Init();
+            Classes = Classes.Append("input-group-prepend");
         }
 
         /// <summary>
-        /// Constructor
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlFormItemPrepend(string id, IEnumerable<Control> content)
-            : base(id, content)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
-            Init();
-        }
+            var html = base.Render(renderContext, visualTree);
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlFormItemPrepend(string id, List<Control> content)
-            : base(id, content)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            Classes.Add("input-group-prepend");
-            var html = base.Render(context);
             return html;
         }
     }

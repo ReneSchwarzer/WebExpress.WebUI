@@ -1,19 +1,36 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Specifies the orientation of the toolbar.
+    /// </summary>
     public enum TypeOrientationToolBar
     {
+        /// <summary>
+        /// The default orientation.
+        /// </summary>
         Default,
+
+        /// <summary>
+        /// The horizontal orientation.
+        /// </summary>
         Horizontal,
+
+        /// <summary>
+        /// The vertical orientation.
+        /// </summary>
         Vertical
     }
 
+    /// <summary>
+    /// Provides extension methods for the <see cref="TypeOrientationToolBar"/> enum.
+    /// </summary>
     public static class TypeOrientationToolBarExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the layout to a CSS class.
         /// </summary>
-        /// <param name="layout">The layout to be converted</param>
-        /// <returns>The CSS class belonging to the layout</returns>
+        /// <param name="layout">The layout to be converted.</param>
+        /// <returns>The CSS class corresponding to the layout.</returns>
         public static string ToClass(this TypeOrientationToolBar layout)
         {
             return layout switch

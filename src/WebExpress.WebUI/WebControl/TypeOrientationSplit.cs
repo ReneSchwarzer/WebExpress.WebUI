@@ -1,25 +1,38 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Specifies the orientation of a split layout.
+    /// </summary>
     public enum TypeOrientationSplit
     {
+        /// <summary>
+        /// The layout is split horizontally.
+        /// </summary>
         Horizontal,
+
+        /// <summary>
+        /// The layout is split vertically.
+        /// </summary>
         Vertical
     }
 
-    //public static class TypeOrientationSplitExtensions
-    //{
-    //    /// <summary>
-    //    /// Conversion to a CSS class.
-    //    /// </summary>
-    //    /// <param name="layout">The layout to be converted</param>
-    //    /// <returns>The CSS class belonging to the layout</returns>
-    //    public static string ToClass(this TypeOrientationTab layout)
-    //    {
-    //        return layout switch
-    //        {
-    //            TypeOrientationTab.Vertical => "flex-column",
-    //            _ => string.Empty,
-    //        };
-    //    }
-    //}
+    /// <summary>
+    /// Provides extension methods for the <see cref="TypeOrientationSplit"/> enumeration.
+    /// </summary>
+    public static class TypeOrientationSplitExtensions
+    {
+        /// <summary>
+        /// Converts the <see cref="TypeOrientationSplit"/> value to a corresponding CSS class.
+        /// </summary>
+        /// <param name="layout">The layout to be converted.</param>
+        /// <returns>The CSS class corresponding to the layout.</returns>
+        public static string ToClass(this TypeOrientationSplit layout)
+        {
+            return layout switch
+            {
+                TypeOrientationSplit.Vertical => "flex-column",
+                _ => string.Empty,
+            };
+        }
+    }
 }

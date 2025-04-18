@@ -1,18 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a form item input control for selection.
+    /// </summary>
+    /// <remarks>
+    /// This control allows users to select one or more options from a predefined list.
+    /// </remarks>
     public class ControlFormItemInputSelection : ControlFormItemInput
     {
+        private readonly List<ControlFormItemInputSelectionItem> _options = [];
+
         /// <summary>
         /// Returns the entries.
         /// </summary>
-        public ICollection<ControlFormItemInputSelectionItem> Options { get; } = [];
+        public IEnumerable<ControlFormItemInputSelectionItem> Options => _options;
 
         /// <summary>
         /// Returns or sets the label of the selected options.
@@ -37,47 +45,56 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the value.
         /// </summary>
-        public virtual ICollection<string> Values => base.Value != null ? base.Value.Split(';', System.StringSplitOptions.RemoveEmptyEntries) : [];
+        public virtual IEnumerable<string> Values => base.Value != null ? base.Value.Split(';', System.StringSplitOptions.RemoveEmptyEntries) : [];
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlFormItemInputSelection(string id = null)
-            : base(id ?? Guid.NewGuid().ToString())
-        {
-            Name = Id;
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="items">The entries.</param>
-        public ControlFormItemInputSelection(string id, params ControlFormItemInputSelectionItem[] items)
-            : this(id)
+        public ControlFormItemInputSelection(string id = null, params ControlFormItemInputSelectionItem[] items)
+            : base(id)
         {
-            (Options as List<ControlFormItemInputSelectionItem>).AddRange(items);
+            _options.AddRange(items);
+        }
+
+        /// <summary>
+        /// Adds one or more items to the selection options.
+        /// </summary>
+        /// <param name="items">The items to add to the selection options.</param>
+        public void Add(params ControlFormItemInputSelectionItem[] items)
+        {
+            _options.AddRange(items);
+        }
+
+        /// <summary>
+        /// Removes an item from the selection options.
+        /// </summary>
+        /// <param name="item">The item to remove from the selection options.</param>
+        public void Remove(ControlFormItemInputSelectionItem item)
+        {
+            _options.Remove(item);
         }
 
         /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
         {
-            if (context.Request.HasParameter(Name))
+            if (renderContext.Request.HasParameter(Name))
             {
-                Value = context?.Request.GetParameter(Name)?.Value;
+                Value = renderContext?.Request.GetParameter(Name)?.Value;
             }
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
             var classes = Classes.ToList();
 
@@ -102,7 +119,7 @@ namespace WebExpress.WebUI.WebControl
                 Style = GetStyles()
             };
 
-            context.AddScript(Id, GetScript(context, Id, string.Join(" ", classes)));
+            visualTree.AddScript(Id, GetScript(Id, string.Join(" ", classes)));
 
             return html;
         }
@@ -110,20 +127,19 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Checks the input element for correctness of the data.
         /// </summary>
-        /// <param name="context">The context in which the inputs are validated.</param>
-        public override void Validate(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the inputs are validated.</param>
+        public override void Validate(IRenderControlFormContext renderContext)
         {
-            base.Validate(context);
+            base.Validate(renderContext);
         }
 
         /// <summary>
         /// Generates the javascript to control the control.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
         /// <param name="id">The ID of the control.</param>
         /// <param name="css">The CSS classes that are assigned to the control.</param>
         /// <returns>The javascript code.</returns>
-        protected virtual string GetScript(RenderContextFormular context, string id, string css)
+        protected virtual string GetScript(string id, string css)
         {
             var settings = new
             {

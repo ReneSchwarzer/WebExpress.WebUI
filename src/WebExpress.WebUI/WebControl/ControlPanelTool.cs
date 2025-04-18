@@ -1,75 +1,39 @@
 ﻿using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Box with superimposed tools.
+    /// Represents a control panel tool that can contain multiple tools.
     /// </summary>
     public class ControlPanelTool : ControlPanel
     {
         /// <summary>
-        /// Returns or sets the tools
+        /// Returns the tools.
         /// </summary>
         public ControlDropdown Tools { get; } = new ControlDropdown();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlPanelTool(string id = null)
-            : base(id)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlPanelTool(string id, params Control[] items)
+        public ControlPanelTool(string id = null, params Control[] items)
             : base(id, items)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlPanelTool(params Control[] items)
-            : base(items)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
         {
             Border = new PropertyBorder(true);
         }
 
         /// <summary>
-        /// Adds controls to the panel.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="items">The controls to insert.</param>
-        public void Add(params Control[] items)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Content.AddRange(items);
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            var dropDown = Tools.Render(context);
-            var content = new HtmlElementTextContentDiv(Content.Select(x => x.Render(context)));
+            var dropDown = Tools.Render(renderContext, visualTree);
+            var content = new HtmlElementTextContentDiv(Content.Select(x => x.Render(renderContext, visualTree)).ToArray());
 
             var html = new HtmlElementTextContentDiv(dropDown, content)
             {

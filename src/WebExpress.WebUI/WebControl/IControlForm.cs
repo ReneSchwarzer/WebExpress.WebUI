@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using WebExpress.WebCore.WebMessage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Interface for a form control, extending the base control interface.
+    /// </summary>
     public interface IControlForm : IControl
     {
         /// <summary>
@@ -13,22 +17,22 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Event is raised when the form has been initialized.
         /// </summary>
-        event EventHandler<FormularEventArgs> InitializeFormular;
+        event EventHandler<FormEventArgs> InitializeForm;
 
         /// <summary>
         /// Event is raised when the form's data needs to be determined.
         /// </summary>
-        event EventHandler<FormularEventArgs> FillFormular;
+        event EventHandler<FormEventArgs> FillForm;
 
         /// <summary>
         /// Event is raised when the form is about to be processed.
         /// </summary>
-        event EventHandler<FormularEventArgs> ProcessFormular;
+        event EventHandler<FormEventArgs> ProcessForm;
 
         /// <summary>
         /// Event is raised when the form is to be processed and the next data is to be loaded.
         /// </summary>
-        event EventHandler<FormularEventArgs> ProcessAndNextFormular;
+        event EventHandler<FormEventArgs> ProcessAndNextForm;
 
         /// <summary>
         /// Returns or sets the name of the form.
@@ -46,38 +50,57 @@ namespace WebExpress.WebUI.WebControl
         string RedirectUri { get; set; }
 
         /// <summary>
-        /// Returns or sets the submit button.
-        /// </summary>
-        ControlFormItemButton SubmitButton { get; }
-
-        /// <summary>
         /// Returns or sets the form items.
         /// </summary>
-        IList<ControlFormItem> Items { get; }
+        IEnumerable<ControlFormItem> Items { get; }
 
         /// <summary>
-        /// Initializes the form.
+        /// Returns or sets the request method.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        void Initialize(RenderContextFormular context);
+        RequestMethod Method { get; set; }
+
+        ///// <summary>
+        ///// Initializes the form.
+        ///// </summary>
+        ///// <param name="renderContext">The context in which the control is rendered.</param>
+        //void Initialize(RenderContextForm renderContext);
+
+        ///// <summary>
+        ///// Pre-processes the form.
+        ///// </summary>
+        ///// <param name="renderContext">The context in which the control is rendered.</param>
+        //void PreProcess(RenderContextForm renderContext);
 
         /// <summary>
-        /// Vorverarbeitung des Formulars
+        /// Adds one or more form control items to the form.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        void PreProcess(RenderContextFormular context);
-
-        /// <summary>
-        /// Fügt Formularsteuerelement dem Formular hinzu
-        /// </summary>
-        /// <param name="item">Die Formularelemente</param>
+        /// <param name="items">The form control items to add to the form.</param>
+        /// <remarks>
+        /// This method allows adding one or multiple form control items to the form, enabling dynamic construction and 
+        /// management of form elements. It appends the specified controls to the form's content, making it flexible for 
+        /// runtime modifications.
+        /// Example usage:
+        /// <code>
+        /// var form = new FormControl();
+        /// var textBox = new ControlFormItemInputTextBox { Name = "TextBox1", Label = "Enter Text" };
+        /// var checkBox = new ControlFormItem { Name = "CheckBox1", Label = "Accept Terms" };
+        /// form.Add(textBox, checkBox);
+        /// </code>
+        /// This method accepts any item that derives from <see cref="ControlFormItem"/>.
+        /// </remarks>
         void Add(params ControlFormItem[] item);
 
         /// <summary>
-        /// Prüft die Eingabeelemente auf Korrektheit der Daten
+        /// Removes a form control item from the form.
         /// </summary>
-        /// <param name="context">The context in which the inputs are validated.</param>
+        /// <param name="formItem">The form item.</param>
+        void Remove(ControlFormItem formItem);
+
+        /// <summary>
+        /// Validates the input elements for correctness of the data.
+        /// </summary>
+        /// <param name="renderContext">The render context in which the inputs are validated.</param>
         /// <returns>True if all form items are valid, false otherwise.</returns>
-        bool Validate(RenderContextFormular context);
+        bool Validate(IRenderControlFormContext renderContext);
     }
 }

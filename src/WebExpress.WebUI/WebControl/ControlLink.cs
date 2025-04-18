@@ -2,13 +2,28 @@
 using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebIcon;
 using WebExpress.WebCore.WebMessage;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebUri;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a hyperlink control.
+    /// </summary>
     public class ControlLink : Control, IControlLink
     {
+        private readonly List<IControl> _controls = [];
+
+        /// <summary>
+        /// Returns the content of the control.
+        /// </summary>
+        /// <value>
+        /// An enumerable collection of child controls.
+        /// </value>
+        public IEnumerable<IControl> Controls => _controls;
+
         /// <summary>
         /// Returns or sets whether the link is active or not.
         /// </summary>
@@ -33,14 +48,14 @@ namespace WebExpress.WebUI.WebControl
         public string Text { get; set; }
 
         /// <summary>
-        /// Returns or sets the tooltip.
+        /// Returns or sets the title.
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
         /// Returns or sets the target uri.
         /// </summary>
-        public string Uri { get; set; }
+        public IUri Uri { get; set; }
 
         /// <summary>
         /// Returns or sets the target.
@@ -53,24 +68,19 @@ namespace WebExpress.WebUI.WebControl
         public PropertyModal Modal { get; set; } = new PropertyModal();
 
         /// <summary>
-        /// Returns or sets the content.
-        /// </summary>
-        public List<Control> Content { get; private set; }
-
-        /// <summary>
-        /// Returns or sets the parameters that apply to the link.
-        /// </summary>
-        public List<Parameter> Params { get; set; }
-
-        /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
         /// Returns or sets a tooltip text.
         /// </summary>
         public string Tooltip { get; set; }
+
+        /// <summary>
+        /// Returns or sets the parameters that apply to the link.
+        /// </summary>
+        public List<Parameter> Params { get; set; } = [];
 
         /// <summary>
         /// Return or specifies the vertical orientation..
@@ -91,78 +101,70 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlLink(string id = null)
+        /// <param name="content">The content of the html element.</param>
+        public ControlLink(string id = null, params IControl[] content)
             : base(id)
         {
-            Init();
+            _controls.AddRange(content);
         }
 
         /// <summary>
-        /// Constructor
+        /// Adds one or more controls to the content.
         /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="text">The content of the html element.</param>
-        public ControlLink(string id, string text)
-            : this(id)
+        /// <param name="controls">The controls to add to the content.</param>
+        /// <remarks>
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of the control panel. 
+        /// It is useful for dynamically constructing the user interface by appending various controls to the panel's content.
+        /// 
+        /// Example usage:
+        /// <code>
+        /// var link = new ControlLink();
+        /// var text1 = new ControlText { Text = "A" };
+        /// var text2 = new ControlText { Text = "B" };
+        /// link.Add(text1, text2);
+        /// </code>
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public void Add(params IControl[] controls)
         {
-            Text = text;
+            _controls.AddRange(controls);
         }
 
         /// <summary>
-        /// Constructor
+        /// Adds one or more controls to the content.
         /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlLink(params Control[] content)
-            : this((string)null)
+        /// <param name="controls">The controls to add to the content.</param>
+        /// <remarks>
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of the control panel. 
+        /// It is useful for dynamically constructing the user interface by appending various controls to the panel's content.
+        /// 
+        /// Example usage:
+        /// <code>
+        /// var link = new ControlLink();
+        /// var text1 = new ControlText { Text = "A" };
+        /// var text2 = new ControlText { Text = "B" };
+        /// link.Add(new List<IControl>([text1, text2]));
+        /// </code>
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public void Add(IEnumerable<IControl> controls)
         {
-            Content.AddRange(content);
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlLink(string id, params Control[] content)
-            : this(id)
-        {
-            Content.AddRange(content);
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlLink(string id, List<Control> content)
-            : base(id)
-        {
-            Content = content;
-            Params = new List<Parameter>();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-            Content = new List<Control>();
-            Params = new List<Parameter>();
+            _controls.AddRange(controls);
         }
 
         /// <summary>
         /// Returns all local and temporary parameters.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The parameters.</returns>
-        public string GetParams(IPage page)
+        /// <param name="request">The context in which the control is rendered.</param>
+        /// <returns>The parameters as a query string.</returns>
+        private string GetParams(Request request)
         {
             var dict = new Dictionary<string, Parameter>();
 
-            // Übernahme der Parameter des Link
+            // transfer of the parameters from the request.
             if (Params != null)
             {
                 foreach (var v in Params)
@@ -185,15 +187,16 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var param = GetParams(context?.Page);
+            var param = GetParams(renderContext?.Request);
 
-            var html = new HtmlElementTextSemanticsA(from x in Content select x.Render(context))
+            var html = new HtmlElementTextSemanticsA([.. _controls.Select(x => x.Render(renderContext, visualTree))])
             {
                 Id = Id,
                 Class = Css.Concatenate("link", GetClasses()),
@@ -201,13 +204,13 @@ namespace WebExpress.WebUI.WebControl
                 Role = Role,
                 Href = Uri?.ToString() + (param.Length > 0 ? "?" + param : string.Empty),
                 Target = Target,
-                Title = InternationalizationManager.I18N(context.Culture, Title),
+                Title = string.IsNullOrEmpty(Title) ? I18N.Translate(renderContext.Request, Tooltip) : I18N.Translate(renderContext.Request, Title),
                 OnClick = OnClick?.ToString()
             };
 
-            if (Icon != null && Icon.HasIcon)
+            if (Icon != null)
             {
-                html.Elements.Add(new ControlIcon()
+                html.Add(new ControlIcon()
                 {
                     Icon = Icon,
                     Margin = !string.IsNullOrWhiteSpace(Text) ? new PropertySpacingMargin
@@ -217,26 +220,31 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None,
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None)
-                }.Render(context));
+                }.Render(renderContext, visualTree));
             }
 
             if (!string.IsNullOrWhiteSpace(Text))
             {
-                html.Elements.Add(new HtmlText(InternationalizationManager.I18N(context.Culture, Text)));
+                html.Add(new HtmlText(I18N.Translate(renderContext.Request, Text)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(Tooltip))
+            {
+                html.AddUserAttribute("data-bs-toggle", "tooltip");
             }
 
             if (Modal == null || Modal.Type == TypeModal.None)
             {
 
             }
-            else if (Modal.Type == TypeModal.Formular)
+            else if (Modal.Type == TypeModal.Form)
             {
-                html.OnClick = $"new webexpress.webui.modalFormularCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(renderContext.Request, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Brwoser)
             {
-                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                html.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{I18N.Translate(renderContext.Request, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? html.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 html.Href = "#";
             }
             else if (Modal.Type == TypeModal.Modal)
@@ -244,12 +252,7 @@ namespace WebExpress.WebUI.WebControl
                 html.AddUserAttribute("data-bs-toggle", "modal");
                 html.AddUserAttribute("data-bs-target", "#" + Modal.Modal.Id);
 
-                return new HtmlList(html, Modal.Modal.Render(context));
-            }
-
-            if (!string.IsNullOrWhiteSpace(Tooltip))
-            {
-                html.AddUserAttribute("data-bs-toggle", "tooltip");
+                return new HtmlElementTextContentDiv(html, Modal.Modal.Render(renderContext, visualTree));
             }
 
             return html;

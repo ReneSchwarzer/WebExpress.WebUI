@@ -2,12 +2,18 @@
 using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebIcon;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a split button control that can contain multiple items.
+    /// </summary>
     public class ControlSplitButton : Control, IControlButton
     {
+        private readonly List<IControlSplitButtonItem> _items = [];
+
         /// <summary>
         /// Returns or sets the background color.
         /// </summary>
@@ -53,7 +59,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
         /// Returns or sets the activation status of the button.
@@ -72,83 +78,61 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the content.
         /// </summary>
-        protected List<IControlSplitButtonItem> Items { get; private set; } = new List<IControlSplitButtonItem>();
+        public IEnumerable<IControlSplitButtonItem> Items => _items;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlSplitButton(string id = null)
+        /// <param name="items">The content of the html element.</param>
+        public ControlSplitButton(string id = null, params IControlSplitButtonItem[] items)
             : base(id)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="items">The content of the html element.</param>
-        public ControlSplitButton(params IControlSplitButtonItem[] items)
-            : base(null)
-        {
-            Items.AddRange(items);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="items">The content of the html element.</param>
-        public ControlSplitButton(string id, params IControlSplitButtonItem[] items)
-            : base(id)
-        {
-            Items.AddRange(items);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="items">The content of the html element.</param>
-        public ControlSplitButton(string id, IEnumerable<IControlSplitButtonItem> items)
-            : base(id)
-        {
-            Items.AddRange(items);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="items">The content of the html element.</param>
-        public ControlSplitButton(IEnumerable<IControlSplitButtonItem> items)
-            : base(null)
-        {
-            Items.AddRange(items);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
         {
             Size = TypeSizeButton.Default;
-            //BackgroundColor = LayoutSchema.ButtonBackground;
+            _items.AddRange(items);
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Adds one or more items to the split button.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="items">The items to add to the split button.</param>
+        public void Add(params IControlSplitButtonItem[] items)
+        {
+            _items.AddRange(items);
+        }
+
+        /// <summary>
+        /// Adds one or more items to the split button.
+        /// </summary>
+        /// <param name="items">The items to add to the split button.</param>
+        public void Add(IEnumerable<IControlSplitButtonItem> items)
+        {
+            _items.AddRange(items);
+        }
+
+        /// <summary>
+        /// Adds a divider to the split button.
+        /// </summary>
+        public void AddDivider()
+        {
+            _items.Add(null);
+        }
+
+        /// <summary>
+        /// Adds a header item to the split button.
+        /// </summary>
+        /// <param name="text">The text of the header item.</param>
+        public void AddHeader(string text)
+        {
+            _items.Add(new ControlSplitButtonItemHeader() { Text = text });
+        }
+
+        /// <summary>
+        /// Converts the control to an HTML representation.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var button = new HtmlElementFieldButton()
             {
@@ -157,9 +141,9 @@ namespace WebExpress.WebUI.WebControl
                 Style = GetStyles()
             };
 
-            if (Icon != null && Icon.HasIcon)
+            if (Icon != null)
             {
-                button.Elements.Add(new ControlIcon()
+                button.Add(new ControlIcon()
                 {
                     Icon = Icon,
                     Margin = !string.IsNullOrWhiteSpace(Text) ? new PropertySpacingMargin
@@ -169,26 +153,26 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None,
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None),
-                    VerticalAlignment = Icon.IsUserIcon ? TypeVerticalAlignment.TextBottom : TypeVerticalAlignment.Default
-                }.Render(context));
+                    VerticalAlignment = TypeVerticalAlignment.Default
+                }.Render(renderContext, visualTree));
             }
 
             if (!string.IsNullOrWhiteSpace(Text))
             {
-                button.Elements.Add(new HtmlText(Text));
+                button.Add(new HtmlText(Text));
             }
 
             if (Modal == null || Modal.Type == TypeModal.None)
             {
 
             }
-            else if (Modal.Type == TypeModal.Formular)
+            else if (Modal.Type == TypeModal.Form)
             {
-                button.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                button.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(renderContext.Request?.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
             }
             else if (Modal.Type == TypeModal.Brwoser)
             {
-                button.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                button.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{I18N.Translate(renderContext.Request?.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
             }
             else if (Modal.Type == TypeModal.Modal)
             {
@@ -198,7 +182,7 @@ namespace WebExpress.WebUI.WebControl
 
             var dropdownButton = new HtmlElementFieldButton(new HtmlElementTextSemanticsSpan() { Class = "caret" })
             {
-                Id = string.IsNullOrWhiteSpace(Id) ? "" : Id + "_btn",
+                Id = string.IsNullOrWhiteSpace(Id) ? "" : Id + "_toggle",
                 Class = Css.Concatenate("btn dropdown-toggle dropdown-toggle-split", Css.Remove(GetClasses(), "btn-block", Margin.ToClass())),
                 Style = GetStyles(),
                 DataToggle = "dropdown"
@@ -214,9 +198,9 @@ namespace WebExpress.WebUI.WebControl
                         x == null || x is ControlDropdownItemDivider || x is ControlLine ?
                         new HtmlElementTextContentLi() { Class = "dropdown-divider", Inline = true } :
                         x is ControlDropdownItemHeader ?
-                        x.Render(context) :
-                        new HtmlElementTextContentLi(x.Render(context)) { Class = "dropdown-item" }
-                    )
+                        x.Render(renderContext, visualTree) :
+                        new HtmlElementTextContentLi(x.Render(renderContext, visualTree)) { Class = "dropdown-item" }
+                    ).ToArray()
                 )
             {
                 Class = HorizontalAlignment == TypeHorizontalAlignment.Right ? "dropdown-menu dropdown-menu-right" : "dropdown-menu"
@@ -224,14 +208,15 @@ namespace WebExpress.WebUI.WebControl
 
             var html = new HtmlElementTextContentDiv
             (
-                Modal != null && Modal.Type == TypeModal.Modal ? new HtmlList(button, Modal.Modal.Render(context)) : button,
+                Modal != null && Modal.Type == TypeModal.Modal ? new HtmlList(button, Modal.Modal.Render(renderContext, visualTree)) : button,
                 dropdownButton,
                 dropdownElements
             )
             {
+                Id = Id,
                 Class = Css.Concatenate
                 (
-                    "btn-group ",
+                    "btn-group",
                     Margin.ToClass(),
                     (Block == TypeBlockButton.Block ? "btn-block" : "")
                 ),

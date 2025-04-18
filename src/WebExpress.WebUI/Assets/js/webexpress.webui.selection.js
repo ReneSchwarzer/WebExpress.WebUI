@@ -5,7 +5,7 @@
  * - webexpress.webui.change.value with parameter value.
  */
 webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
-    _container = $("<span class='selection form-control' />");
+    _container = $("<span class='wx-selection form-control' />");
     _selection = $("<ul/>");
     _hidden = $("<input type='hidden'/>");
     _dropdownmenu = $("<div class='dropdown-menu'/>");
@@ -16,7 +16,7 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
     _placeholder = null;
     _hidedescription = false;
     _multiselect = false;
-    _optionfilter = function (x, y) { return x?.toLowerCase().startsWith(y?.toLowerCase()); };
+    _optionfilter = (x, y) => x?.toLowerCase().startsWith(y?.toLowerCase());
 
     /**
      * Constructor
@@ -28,17 +28,17 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
      *        - multiselect Allows you to select multiple items.
      */
     constructor(settings) {
-        let id = settings.id;
-        let name = settings.name;
-        let css = settings.css;
-        let hidedescription = settings.hidedescription;
-        let multiselect = settings.multiselect;
-        let placeholder = settings.placeholder !== undefined ? settings.placeholder : null;
-                
-        let dropdown = $("<span data-bs-toggle='dropdown' aria-expanded='false'/>");
-        let expand = $("<a class='fas fa-angle-down' href='#'/>");
-
         super();
+
+        const id = settings.id;
+        const name = settings.name;
+        const css = settings.css;
+        const hidedescription = settings.hidedescription;
+        const multiselect = settings.multiselect;
+        const placeholder = settings.placeholder !== undefined ? settings.placeholder : null;
+
+        const dropdown = $("<span data-bs-toggle='dropdown' aria-expanded='false'/>");
+        const expand = $("<a class='fas fa-angle-down' href='#'/>");
 
         this._container.attr("id", id ?? "");
 
@@ -58,25 +58,25 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
             this._multiselect = multiselect;
         }
 
-        this._container.on('show.bs.dropdown', function () {
-            let width = this._container.width();
+        this._container.on('show.bs.dropdown', () => {
+            const width = this._container.width();
             this._dropdownmenu.width(width);
-        }.bind(this));
+        });
 
-        this._container.on('shown.bs.dropdown', function () {
+        this._container.on('shown.bs.dropdown', () => {
             this._filter.focus();
             this.update();
-        }.bind(this));
-        
-        this._filter.keyup(function (e) {
-            let filter = this._filter.val();
+        });
+
+        this._filter.keyup((e) => {
+            const filter = this._filter.val();
             e.stopPropagation();
             this.trigger('webexpress.webui.change.filter', filter !== undefined || filter != null ? filter : "");
             this.update();
             if (this._dropdownmenu.is(":hidden")) {
                 dropdown.dropdown('toggle');
             }
-        }.bind(this));
+        });
 
         this._placeholder = placeholder;
 
@@ -99,82 +99,82 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
     update() {
         this._dropdownoptions.children().remove();
 
-        this._options.forEach(function (option) {
-            let id = option.id ?? null;
-            let label = option.label ?? null;
+        this._options.forEach((option) => {
+            const id = option.id ?? null;
+            const label = option.label ?? null;
             if (!this._values.includes(id)) {
                 if (id == null && (label == null || label == '-')) {
-                    let li = $("<li class='dropdown-divider'/>");
+                    const li = $("<li class='dropdown-divider'/>");
                     this._dropdownoptions.append(li);
                 } else if (id == null && label != null) {
-                    let li = $("<li class='dropdown-header'>" + label + "</li>");
+                    const li = $("<li class='dropdown-header'>" + label + "</li>");
                     this._dropdownoptions.append(li);
                 } else {
-                    let description = option.description != null && option.description.length > 0 ? option.description : null;
-                    let image = option.image ?? null;
-                    let color = option.color ?? 'text-dark';
-                    let instruction = option.instruction != null ? "<small>(" + option.instruction + ")</small>": "";
-                    let li = $("<li class='dropdown-item'/>");
-                    let a = $("<a class='link " + color + "' href='javascript:void(0)'>" + option.label + "</a>" + instruction);
-                    let p = $("<p class='small text-muted'>" + description + "</p>");
+                    const description = option.description != null && option.description.length > 0 ? option.description : null;
+                    const image = option.image ?? null;
+                    const color = option.color ?? 'text-dark';
+                    const instruction = option.instruction != null ? "<small>(" + option.instruction + ")</small>": "";
+                    const li = $("<li class='dropdown-item'/>");
+                    const a = $("<a class='link " + color + "' href='javascript:void(0)'>" + option.label + "</a>" + instruction);
+                    const p = $("<p class='small text-muted'>" + description + "</p>");
 
                     if (image != null) {
-                        let box = $("<span/>");
-                        let span = $("<span/>");
-                        let img = $("<img src='" + image + "' alt=''/>");
+                        const box = $("<span/>");
+                        const span = $("<span/>");
+                        const img = $("<img src='" + image + "' alt=''/>");
 
                         box.append(img);
                         box.append(a);
                         span.append(box);
-                        if (this._hidedescription == false && description != null) {
+                        if (!this._hidedescription && description != null) {
                             span.append(p);
                         }
                         li.append(span);
                     } else {
                         li.append(a);
-                        if (this._hidedescription && description != null) {
+                        if (!this._hidedescription && description != null) {
                             li.append(p);
                         }
                     }
 
-                    li.click(function () {
+                    li.click(() => {
                         if (!this._multiselect) {
                             this.value = [];
                         }
 
                         if (!this._values.includes(option.id)) {
-                            let value = this.value.slice();
+                            const value = this.value.slice();
                             value.push(option.id);
                             this.value = value;
                             this._filter.val("");
                         }
                         this.update();
-                    }.bind(this));
+                    });
 
                     if (this._optionfilter(option.label, this._filter.val())) {
                         this._dropdownoptions.append(li);
                     }
                 }
             }
-        }.bind(this));
+        });
 
         this._selection.children("li").remove();
-        this._values.forEach(function (value) {
-            let option = this._options.find(elem => elem.id == value);
+        this._values.forEach((value) => {
+            const option = this._options.find(elem => elem.id == value);
             if (option != null) {
-                let label = option.label ?? null;
-                let image = option.image ?? null;
-                let color = option.color ?? 'text-dark';
-                let a = $("<a class='link " + color + "' href='javascript:void(0)'>" + option.label + "</a>");
-                let close = $("<a class='fas fa-times' href='#'/>");
-                let li = $("<li/>");
+                const label = option.label ?? null;
+                const image = option.image ?? null;
+                const color = option.color ?? 'text-dark';
+                const a = $("<a class='link " + color + "' href='javascript:void(0)'>" + option.label + "</a>");
+                const close = $("<a class='fas fa-times' href='#'/>");
+                const li = $("<li/>");
 
-                close.click(function () {
+                close.click(() => {
                     this.value = this._values.filter(item => item !== value);
-                }.bind(this));
+                });
 
                 if (image != null) {
-                    let img = $("<img src='" + image + "' alt=''/>");
+                    const img = $("<img src='" + image + "' alt=''/>");
                     li.append(img);
                     li.append(a);
                     li.append(close);
@@ -185,7 +185,7 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
                     this._selection.append(li);
                 }
             }
-        }.bind(this));       
+        });
     }
 
     /**
@@ -204,7 +204,7 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
             // determine selected options
             let selectedOptions = this.selectedOptions;
             // remove the selected options if they are included in the new options
-            selectedOptions = selectedOptions.filter(elem => !options.some(o => o.Id === elem.id));
+            selectedOptions = selectedOptions.filter(elem => !options.some(o => o.id === elem.id));
             // join the selected and the new options
             this._options = [...new Set([...options, ...selectedOptions])];
         } else {
@@ -233,12 +233,9 @@ webexpress.webui.selectionCtrl = class extends webexpress.webui.events {
      */
     set value(values) {
         if (this._values != values) {
-
             this._values = values;
-
             this.update();
-            this._hidden.val(this._values.map(element => element).join(';'));
-
+            this._hidden.val(this._values.join(';'));
             this.trigger('webexpress.webui.change.value', values);
         }
     }

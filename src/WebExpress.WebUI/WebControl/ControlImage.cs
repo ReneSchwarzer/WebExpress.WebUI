@@ -1,14 +1,18 @@
 ﻿using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebUri;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents an image control that can be rendered as HTML.
+    /// </summary>
     public class ControlImage : Control
     {
         /// <summary>
         /// Returns or sets the image source.
         /// </summary>
-        public string Uri { get; set; }
+        public IUri Uri { get; set; }
 
         /// <summary>
         /// Returns or sets the width.
@@ -26,38 +30,27 @@ namespace WebExpress.WebUI.WebControl
         public string Tooltip { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
+        /// <param name="uri">The image source.</param>
         public ControlImage(string id = null)
             : base(id)
         {
         }
 
         /// <summary>
-        /// Constructor
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="source">The image source.</param>
-        public ControlImage(string id, string source)
-            : base(id)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Uri = source;
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            Classes.Add(HorizontalAlignment.ToClass());
-
             var html = new HtmlElementMultimediaImg()
             {
                 Id = Id,
-                Class = GetClasses(),
+                Class = Css.Concatenate(HorizontalAlignment.ToClass(), GetClasses()),
                 Style = GetStyles(),
                 Role = Role,
                 Alt = Tooltip,

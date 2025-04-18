@@ -1,23 +1,41 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Die horizontale Anordnung
+    /// Specifies the horizontal alignment.
     /// </summary>
     public enum TypeHorizontalAlignmentTab
     {
+        /// <summary>
+        /// Default alignment.
+        /// </summary>
         Default,
+
+        /// <summary>
+        /// Align to the left.
+        /// </summary>
         Left,
+
+        /// <summary>
+        /// Align to the center.
+        /// </summary>
         Center,
+
+        /// <summary>
+        /// Align to the right.
+        /// </summary>
         Right
     }
 
+    /// <summary>
+    /// Provides extension methods for the <see cref="TypeHorizontalAlignmentTab"/> enum.
+    /// </summary>
     public static class TypeHorizontalAlignmentTabExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the alignment to a CSS class.
         /// </summary>
-        /// <param name="alignment">Die Ausrichtung, welches umgewandelt werden soll</param>
-        /// <returns>The CSS class belonging to the layout</returns>
+        /// <param name="alignment">The alignment to be converted.</param>
+        /// <returns>The CSS class corresponding to the alignment.</returns>
         public static string ToClass(this TypeHorizontalAlignmentTab alignment)
         {
             return alignment switch

@@ -1,23 +1,21 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
-    public class ControlToolBarItemButton : ControlLink, IControlToolBarItem
+    /// <summary>
+    /// Represents a toolbar item button control.
+    /// </summary>
+    /// <remarks>
+    /// This class is used to create a button within a toolbar.
+    /// </remarks>
+    public class ControlToolbarItemButton : ControlLink, IControlToolbarItem
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlToolBarItemButton(string id = null)
+        public ControlToolbarItemButton(string id = null)
             : base(id)
         {
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-            Classes.Add("nav-link");
+            Classes = ["nav-link"];
 
             //TextColor = LayoutSchema.ToolbarLink;
         }

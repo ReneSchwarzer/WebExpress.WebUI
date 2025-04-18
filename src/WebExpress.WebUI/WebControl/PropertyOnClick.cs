@@ -1,30 +1,33 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a property that handles the OnClick event.
+    /// </summary>
     public class PropertyOnClick
     {
         /// <summary>
-        /// Der System-Wert
+        /// Returns the system value.
         /// </summary>
         public TypeOnChange SystemValue { get; protected set; }
 
         /// <summary>
-        /// Der benutzerdefinierte Wert
+        /// Returns the user-defined value.
         /// </summary>
         public string Value { get; protected set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="value">Der benutzerdefinierte Wert</param>
+        /// <param name="value">The user-defined value.</param>
         public PropertyOnClick(string value)
         {
             Value = value;
         }
 
         /// <summary>
-        /// Conversion to string.
+        /// Returns a string that represents the current object.
         /// </summary>
-        /// <returns>Die Stringrepräsentation</returns>
+        /// <returns>A string that represents the current object.</returns>
         public override string ToString()
         {
             return Value;

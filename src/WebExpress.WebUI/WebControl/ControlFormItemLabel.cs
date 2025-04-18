@@ -1,8 +1,12 @@
-﻿using WebExpress.WebCore.WebHtml;
-using static WebExpress.WebCore.Internationalization.InternationalizationManager;
+﻿using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a label for a form item control.
+    /// </summary>
     public class ControlFormItemLabel : ControlFormItem
     {
         /// <summary>
@@ -13,53 +17,44 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the associated form field.
         /// </summary>
-        public ControlFormItem FormularItem { get; set; }
+        public ControlFormItem FormItem { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlFormItemLabel(string id)
+        public ControlFormItemLabel(string id = null)
             : base(id)
         {
         }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="text">The text.</param>
-        public ControlFormItemLabel(string id, string text)
-            : this(id)
-        {
-            Text = text;
-        }
-
-        /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
         {
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
             return new HtmlElementFieldLabel()
             {
-                Text = I18N(context.Culture, Text),
+                Id = Id,
+                Text = I18N.Translate(renderContext.Request?.Culture, Text),
                 Class = GetClasses(),
                 Style = GetStyles(),
                 Role = Role,
-                For = FormularItem != null ?
-                    string.IsNullOrWhiteSpace(FormularItem.Id) ?
-                    FormularItem.Name :
-                    FormularItem.Id :
+                For = FormItem != null ?
+                    string.IsNullOrWhiteSpace(FormItem.Id) ?
+                    FormItem.Name :
+                    FormItem.Id :
                     null
             };
         }

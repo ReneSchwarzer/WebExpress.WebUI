@@ -1,8 +1,12 @@
-﻿using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+﻿using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a progress bar control.
+    /// </summary>
     public class ControlProgressBar : Control
     {
         /// <summary>
@@ -32,17 +36,17 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the value.
         /// </summary>
-        public int Value { get; set; }
+        public uint Value { get; set; } = 0;
 
         /// <summary>
         /// Returns or sets the minimum value.
         /// </summary>
-        public int Min { get; set; }
+        public uint Min { get; set; } = 0;
 
         /// <summary>
         /// Returns or sets the maximum value.
         /// </summary>
-        public int Max { get; set; }
+        public uint Max { get; set; } = 100;
 
         /// <summary>
         /// Returns or sets the text.
@@ -50,55 +54,22 @@ namespace WebExpress.WebUI.WebControl
         public string Text { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlProgressBar(string id = null)
             : base(id)
         {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="value">The value.</param>
-        public ControlProgressBar(string id, int value)
-            : this(id)
-        {
-            Value = value;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="value">The value.</param>
-        public ControlProgressBar(string id, int value, int min = 0, int max = 100)
-            : this(id)
-        {
-            Value = value;
-            Min = min;
-            Max = max;
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-            Min = 0;
-            Max = 100;
             BackgroundColor = new PropertyColorBackground(TypeColorBackground.Default);
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             if (Format == TypeFormatProgress.Default)
             {
@@ -114,7 +85,7 @@ namespace WebExpress.WebUI.WebControl
                 };
             }
 
-            var bar = new HtmlElementTextContentDiv(new HtmlText(Text))
+            var bar = new HtmlElementTextContentDiv(new HtmlText(I18N.Translate(renderContext.Request?.Culture, Text)))
             {
                 Role = "progressbar",
                 Class = Css.Concatenate
@@ -148,7 +119,6 @@ namespace WebExpress.WebUI.WebControl
             };
 
             return html;
-
         }
     }
 }

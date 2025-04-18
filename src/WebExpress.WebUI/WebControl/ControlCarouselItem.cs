@@ -1,7 +1,7 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Creates a slideshow element.
+    /// Represents an slideshow element in a carousel control.
     /// </summary>
     public class ControlCarouselItem
     {
@@ -21,11 +21,12 @@
         public IControl Control { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class with an optional control.
         /// </summary>
-        public ControlCarouselItem()
+        /// <param name="control">The control to be used in the carousel item. If null, no control is set.</param>
+        public ControlCarouselItem(IControl control = null)
         {
+            Control = control;
         }
-
     }
 }

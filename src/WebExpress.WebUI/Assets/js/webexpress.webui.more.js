@@ -15,86 +15,87 @@ webexpress.webui.moreCtrl = class {
      *        - icon The Icon class of the control.
      */
     constructor(options, settings) {
-        let id = settings.id;
-        let css = settings.css;
-        let menuCSS = settings.menucss;
-        let label = settings.label != null ? settings.label : "";
-        let icon = settings.icon != null ? settings.icon : "fas fa-ellipsis-h";
+        const id = settings.id;
+        const css = settings.css;
+        const menuCSS = settings.menucss;
+        const label = settings.label || "";
+        const icon = settings.icon || "fas fa-ellipsis-h";
 
-        let button = $("<button class='btn' type='button' data-bs-toggle='dropdown' aria-expanded='false'><i class='" + icon + " " + (label != "" ? "me-2" : "") + "'></i><span>" + label + "</span></button>");
-        let ul = $("<ul class='dropdown-menu'/>");
+        const button = $("<button class='btn' type='button' data-bs-toggle='dropdown' aria-expanded='false'><i class='" + icon + " " + (label ? "me-2" : "") + "'></i><span>" + label + "</span></button>");
+        const ul = $("<ul class='dropdown-menu'/>");
 
-        if (menuCSS != null) {
+        if (menuCSS) {
             ul.addClass(menuCSS);
         }
 
-        options.forEach(function (option) {
-            let label = option.label;
-            let css = option.css ?? "dropdown-item";
-            let icon = option.icon;
-            let color = option.color;
-            let item = option.item;
-            let disabled = option.disabled ?? "return false";
-            
-            let url = option.url != null ? option.url : "#";
-            let onclick = option.onclick;
+        for (const option of options) {
+            const label = option.label;
+            const css = option.css || "dropdown-item";
+            const icon = option.icon;
+            const color = option.color;
+            const item = option.item;
+            const disabled = option.disabled ?? false;
+            const url = option.url || "#";
+            const onclick = option.onclick;
 
-            let disabledFunction = Function("item", disabled == true ? "return true;" : disabled == false ? "return false" : disabled);
-            disabled = disabledFunction(item) ?? false;
-
-            let li = $("<li/>");
-
-            li.addClass(css);
-
-            if (css == "dropdown-item") {
-                if (disabled == false) {
-                    let a = $("<a class='link " + color + "' href='#'/>");
-                    if (icon != null) {
-                        let span = $("<span class='me-2 " + icon + "'/>");
-                        a.append(span);
-                    }
-                    if (css != null) {
-                        li.addClass(css);
-                    }
-                    if (onclick != null) {
-                        let func = Function("option", "item", onclick);
-                        a.click(function (e) { func(option, item); });
-                    }
-                    a.append($("<span href='" + url + "'>" + label + "</span>"));
-                    li.append(a);
-                } else {
-                    let p = $("<span class='text-muted'/>");
-                    if (icon != null) {
-                        let span = $("<span class='me-2 " + icon + "'/>");
-                        p.append(span);
-                    }
-                    p.append(label);
-                    li.append(p);
-                    li.addClass("disabled")
-                }
-            }
-            else if (css == "dropdown-header") {
-                if (icon != null) {
-                    let span = $("<span class='me-2 " + icon + "'/>");
-                    li.append(span);
-                }
-
-                li.append($("<span>" + label + "</span>"));
-            }
-            else if (css == "dropdown-divider") {
-
-            }
-
+            const li = this.createMenuItem(option, css, icon, color, item, disabled, url, onclick);
             ul.append(li);
-        });
+        }
 
-        this._container.attr("id", id ?? "");
-        if (css != null) {
+        this._container.attr("id", id || "");
+        if (css) {
             this._container.addClass(css);
         }
 
         this._container.append(button);
         this._container.append(ul);
+    }
+    
+    /**
+     * Creates a menu item.
+     * @param {Object} option - The option for the menu item.
+     * @param {string} css - The CSS class of the menu item.
+     * @param {string} icon - The icon class of the menu item.
+     * @param {string} color - The color of the menu item.
+     * @param {Object} item - The associated element.
+     * @param {boolean} disabled - Indicates whether the menu item is disabled.
+     * @param {string} url - The URL of the menu item.
+     * @param {Function} onclick - The click event handler.
+     * @returns {jQuery} The created menu item.
+     */
+    createMenuItem(option, css, icon, color, item, disabled, url, onclick) {
+        const li = $("<li/>").addClass(css);
+
+        if (css === "dropdown-item") {
+            if (!disabled) {
+                const a = $("<a class='link " + color + "' href='#'/>");
+                if (icon) {
+                    a.append($("<span class='me-2 " + icon + "'/>"));
+                }
+                if (onclick) {
+                    const func = Function("option", "item", onclick);
+                    a.click((e) => { func(option, item); });
+                }
+                a.append($("<span href='" + url + "'>" + option.label + "</span>"));
+                li.append(a);
+            } else {
+                const p = $("<span class='text-muted'/>");
+                if (icon) {
+                    p.append($("<span class='me-2 " + icon + "'/>"));
+                }
+                p.append(option.label);
+                li.append(p).addClass("disabled");
+            }
+        } else if (css === "dropdown-header") {
+            if (icon) {
+                li.append($("<span class='me-2 " + icon + "'/>"));
+            }
+            li.append($("<span>" + option.label + "</span>"));
+        } else if (css === "dropdown-divider") {
+            // Divider
+        }
+
+        return li;
     }
 
     /**

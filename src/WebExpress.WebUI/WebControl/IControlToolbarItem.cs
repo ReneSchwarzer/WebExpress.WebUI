@@ -1,6 +1,9 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
-    public interface IControlToolBarItem : IControl
+    /// <summary>
+    /// Interface for a toolbar item control.
+    /// </summary>
+    public interface IControlToolbarItem : IControl
     {
     }
 }

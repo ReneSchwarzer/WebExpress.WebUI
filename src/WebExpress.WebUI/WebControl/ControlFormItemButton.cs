@@ -1,13 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using static WebExpress.WebCore.Internationalization.InternationalizationManager;
+using WebExpress.WebCore.WebIcon;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a button form item control.
+    /// </summary>
     public class ControlFormItemButton : ControlFormItem
     {
+        private readonly List<IControl> _content = [];
+
+        /// <summary>
+        /// Returns or sets the content.
+        /// </summary>
+        public IEnumerable<IControl> Content => _content;
+
         /// <summary>
         /// Returns or sets the color of the button.
         /// </summary>
@@ -46,14 +58,9 @@ namespace WebExpress.WebUI.WebControl
         public bool Disabled { get; set; }
 
         /// <summary>
-        /// Returns or sets the content.
-        /// </summary>
-        public List<Control> Content { get; private set; } = new List<Control>();
-
-        /// <summary>
         /// Event is triggered when the button is clicked.
         /// </summary>
-        public EventHandler<FormularEventArgs> Click;
+        public EventHandler<FormEventArgs> Click;
 
         /// <summary>
         /// Returns or sets the text.
@@ -73,33 +80,92 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlFormItemButton(string id = null)
+        /// <param name="content">The child controls to be added to the button.</param>
+        public ControlFormItemButton(string id = null, params IControl[] content)
             : base(id)
         {
+            _content.AddRange(content);
+        }
+
+        /// <summary>
+        /// Adds one or more controls to the content.
+        /// </summary>
+        /// <param name="controls">The controls to add to the content.</param>
+        /// <remarks>
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of the control panel. 
+        /// It is useful for dynamically constructing the user interface by appending various controls to the panel's content.
+        /// 
+        /// Example usage:
+        /// <code>
+        /// var button = new ControlFormItemButton();
+        /// var text1 = new ControlText { Text = "Save" };
+        /// var text2 = new ControlText { Text = "Cancel" };
+        /// button.Add(text1, text2);
+        /// </code>
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public virtual void Add(params IControl[] controls)
+        {
+            _content.AddRange(controls);
+        }
+
+        /// <summary>
+        /// Adds one or more controls to the content.
+        /// </summary>
+        /// <param name="controls">The controls to add to the content.</param>
+        /// <remarks>
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of the control panel. 
+        /// It is useful for dynamically constructing the user interface by appending various controls to the panel's content.
+        /// 
+        /// Example usage:
+        /// <code>
+        /// var button = new ControlFormItemButton();
+        /// var text1 = new ControlText { Text = "Save" };
+        /// var text2 = new ControlText { Text = "Cancel" };
+        /// button.Add(new List<IControl>([text1, text2]));
+        /// </code>
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public void Add(IEnumerable<IControl> controls)
+        {
+            _content.AddRange(controls);
+        }
+
+        /// <summary>
+        /// Removes a control from the content of the control panel.
+        /// </summary>
+        /// <param name="control">The control to remove from the content.</param>
+        /// <remarks>
+        /// This method allows removing a specific control from the <see cref="Content"/> collection of 
+        /// the control panel.
+        /// </remarks>
+        public void Remove(IControl control)
+        {
+            _content.Remove(control);
         }
 
         /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
         {
             Disabled = false;
             Size = TypeSizeButton.Default;
 
-            if (context.Request.HasParameter(Name))
+            if (renderContext.Request.HasParameter(Name))
             {
-                var value = context.Request.GetParameter(Name)?.Value;
+                var value = renderContext.Request.GetParameter(Name)?.Value;
 
                 if (!string.IsNullOrWhiteSpace(Value) && value == Value)
                 {
-                    OnClickEvent(new FormularEventArgs() { Context = context });
+                    OnClickEvent(new FormEventArgs() { Context = renderContext });
                 }
             }
         }
@@ -107,9 +173,10 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Convert to html.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
         /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
             var html = new HtmlElementFieldButton()
             {
@@ -124,9 +191,9 @@ namespace WebExpress.WebUI.WebControl
                 OnClick = OnClick?.ToString()
             };
 
-            if (Icon != null && Icon.HasIcon)
+            if (Icon != null)
             {
-                html.Elements.Add(new ControlIcon()
+                html.Add(new ControlIcon()
                 {
                     Icon = Icon,
                     Margin = !string.IsNullOrWhiteSpace(Text) ? new PropertySpacingMargin
@@ -136,18 +203,18 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None,
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None),
-                    VerticalAlignment = Icon.IsUserIcon ? TypeVerticalAlignment.TextBottom : TypeVerticalAlignment.Default
-                }.Render(context));
+                    VerticalAlignment = TypeVerticalAlignment.Default
+                }.Render(renderContext, visualTree));
             }
 
             if (!string.IsNullOrWhiteSpace(Text))
             {
-                html.Elements.Add(new HtmlText(I18N(context.Culture, Text)));
+                html.Add(new HtmlText(I18N.Translate(renderContext.Request?.Culture, Text)));
             }
 
-            if (Content.Count > 0)
+            if (_content.Count > 0)
             {
-                html.Elements.AddRange(Content.Select(x => x.Render(context)));
+                html.Add(Content.Select(x => x.Render(renderContext, visualTree)));
             }
 
             return html;
@@ -157,7 +224,7 @@ namespace WebExpress.WebUI.WebControl
         /// Triggers the click event.
         /// </summary>
         /// <param name="e">The event argument.</param>
-        protected virtual void OnClickEvent(FormularEventArgs e)
+        protected virtual void OnClickEvent(FormEventArgs e)
         {
             Click?.Invoke(this, e);
         }

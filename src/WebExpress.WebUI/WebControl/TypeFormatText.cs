@@ -1,128 +1,163 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Die Textformate
+    /// The text formats
     /// </summary>
     public enum TypeFormatText
     {
-        Default,
         /// <summary>
-        /// Markiert den Inhalt als Absatz.
+        /// The default text format.
+        /// </summary>
+        Default,
+
+        /// <summary>
+        /// Marks the content as a paragraph.
         /// </summary>
         Paragraph,
+
         /// <summary>
-        /// Steht für einen Textabschnitt, der vom übrigen Inhalt abgesetzt und üblicherweise kursiv dargestellt wird, ohne für eine spezielle Betonung oder Wichtigkeit zu stehen. Dies kann beispielsweise eine taxonomische Bezeichnung, ein technischer Begriff, ein idiomatischer Ausdruck, ein Gedanke oder der Name eines Schiffes sein.
+        /// Represents a section of text that is set off from the rest of the content and typically displayed in italic type, without conveying any special importance or emphasis. This could be a taxonomic designation, a technical term, an idiomatic expression, a thought, or the name of a ship.
         /// </summary>
         Italic,
+
         /// <summary>
-        /// Steht für einen Textabschnitt, der vom übrigen Inhalt abgesetzt und üblicherweise fettgedruckt dargestellt wird, ohne für eine spezielle Betonung oder Wichtigkeit zu stehen. Dies kann beispielsweise ein Schlüsselwort oder ein Produktname in einer Produktbewertung sein.
+        /// Represents a section of text that is set off from the rest of the content and typically displayed in bold type, without conveying any special importance or emphasis. This could be a keyword or product name in a product review.
         /// </summary>
         Bold,
+
         /// <summary>
-        /// Steht für einen Textabschnitt, der vom übrigen Inhalt abgesetzt und üblicherweise unterstrichen dargestellt wird, ohne für eine spezielle Betonung oder Wichtigkeit zu stehen. Dies könnte beispielsweise ein Eigenname auf in chinesischer Sprache sein oder ein Textabschnitt, der häufig falsch buchstabiert wird.
+        /// Represents a section of text that is set off from the rest of the content and typically displayed with an underline, without conveying any special importance or emphasis. This could be a proper name in Chinese or a section of text that is often misspelled.
         /// </summary>
         Underline,
+
         /// <summary>
-        /// Wird für Inhalte verwendet, dienicht länger relevant oder akkurat sind. Wird meist durchgestrichen dargestellt.
+        /// Used for content that is no longer accurate or relevant. Typically displayed with a strikethrough.
         /// </summary>
         StruckOut,
+
         /// <summary>
-        /// Markiert den Titel eines Werks.
+        /// Marks the title of a work.
         /// </summary>
         Cite,
+
         /// <summary>
-        /// Markiert eine Überschrift der obersten Ebene
+        /// Marks a top-level heading.
         /// </summary>
         H1,
+
         /// <summary>
-        /// Markiert eine Überschrift der zweiten Ebene
+        /// Marks a second-level heading.
         /// </summary>
         H2,
+
         /// <summary>
-        /// Markiert eine Überschrift der dritten Ebene
+        /// Marks a third-level heading.
         /// </summary>
         H3,
+
         /// <summary>
-        /// Markiert eine Überschrift der vierten Ebene
+        /// Marks a fourth-level heading.
         /// </summary>
         H4,
+
         /// <summary>
-        /// Markiert eine Überschrift der fünften Ebene
+        /// Marks a fifth-level heading.
         /// </summary>
         H5,
+
         /// <summary>
-        /// Markiert eine Überschrift der untersten Ebene
+        /// Marks a sixth-level heading.
         /// </summary>
         H6,
+
         /// <summary>
-        /// Markiert einen allgemeinen Textabschnitt.
+        /// Marks a general section of text.
         /// </summary>
         Span,
+
         /// <summary>
-        /// Steht für das "Kleingedruckte" eines Dokuments, wie Ausschlussklauseln, Copyright-Hinweise oder andere Dinge, die für das Verständnis des Dokuments nicht unbedingt nötig sind.
+        /// Represents the "fine print" of a document, such as disclaimers, copyright notices, or other things that are not essential to understanding the document.
         /// </summary>
         Small,
+
         /// <summary>
-        /// Markiert einen besonders wichtigen (stark hervorgehobenen) Text.
+        /// Marks a particularly important (strongly emphasized) text.
         /// </summary>
         Strong,
-        Center,
+
         /// <summary>
-        /// Markiert ein Programmiercode.
+        /// Centers the text.
+        /// </summary>
+        Center,
+
+        /// <summary>
+        /// Marks a piece of programming code.
         /// </summary>
         Code,
+
         /// <summary>
-        /// Markiert die Ausgabe eines Programms oder eines Computers.
+        /// Marks the output of a program or computer.
         /// </summary>
         Output,
+
         /// <summary>
-        /// Markiert einen Wert, der Datum und Uhrzeit angibt
+        /// Marks a value that specifies a date and time.
         /// </summary>
         Time,
+
         /// <summary>
-        /// Markiert einen tiefgestellten Text.
+        /// Marks subscript text.
         /// </summary>
         Sub,
+
         /// <summary>
-        /// Markiert einen hochgestellten Text.
+        /// Marks superscript text.
         /// </summary>
         Sup,
+
         /// <summary>
-        /// Steht für Text, der aus Referenzgründen hervorgehoben wird, d.h. der in anderem Kontext von Bedeutung ist.
+        /// Represents text that is highlighted for reference purposes, i.e., text that is relevant in another context.
         /// </summary>
         Mark,
+
         /// <summary>
-        /// Markiert einen hervorgehobenen Text. 
+        /// Marks highlighted text.
         /// </summary>
         Highlight,
+
         /// <summary>
-        /// Steht für einen Begriff, dessen Definition im nächstgelegenen Nachkommen-Element enthalten ist.
+        /// Represents a term whose definition is contained in the nearest ancestor element.
         /// </summary>
         Definition,
+
         /// <summary>
-        /// Markiert eine Abkürzung oder ein Akronym.
+        /// Marks an abbreviation or acronym.
         /// </summary>
         Abbreviation,
+
         /// <summary>
-        /// Markiert eine Benutzereingabe.
+        /// Marks user input.
         /// </summary>
         Input,
+
         /// <summary>
-        /// Markiert ein Zitat.
+        /// Marks a quotation.
         /// </summary>
         Blockquote,
+
         /// <summary>
-        /// Markiert die Beschriftung einer Abbildung.
+        /// Marks the caption of a figure.
         /// </summary>
         Figcaption,
+
         /// <summary>
-        /// Markiert den Inhalt dieses Elements als vorformatiert und das dieses Format erhalten bleiben soll.
+        /// Marks content as preformatted, meaning that the formatting should be preserved.
         /// </summary>
         Preformatted,
+
         /// <summary>
-        /// Markiert den Text als Markdown, welcher in HTML umgewandelt wird
+        /// Marks text as Markdown, which is converted to HTML.
         /// </summary>
         Markdown
-
     }
 }

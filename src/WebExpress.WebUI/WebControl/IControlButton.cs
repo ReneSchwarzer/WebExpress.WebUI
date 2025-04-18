@@ -1,11 +1,16 @@
-﻿namespace WebExpress.WebUI.WebControl
+﻿using WebExpress.WebCore.WebIcon;
+
+namespace WebExpress.WebUI.WebControl
 {
+    // <summary>
+    // Interface for a control button.
+    // </summary>
     public interface IControlButton : IControl
     {
         /// <summary>
         /// Returns or sets the color. der Schaltfläche
         /// </summary>
-        PropertyColorButton BackgroundColor { get; set; }
+        new PropertyColorButton BackgroundColor { get; set; }
 
         /// <summary>
         /// Returns or sets the size.
@@ -35,7 +40,7 @@
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        PropertyIcon Icon { get; set; }
+        IIcon Icon { get; set; }
 
         /// <summary>
         /// Returns or sets the activation status of the button.

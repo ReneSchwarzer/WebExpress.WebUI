@@ -2,31 +2,34 @@
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a property for text size, which can be either a predefined system size or a custom user-defined size.
+    /// </summary>
     public class PropertySizeText : IProperty
     {
         /// <summary>
-        /// Die System-Größe
+        /// Returns the system-defined size.
         /// </summary>
         public TypeSizeText SystemSize { get; protected set; }
 
         /// <summary>
-        /// Die benutzerdefinierte Größe
+        /// Returns the user-defined size in REM.
         /// </summary>
         public float? UserSize { get; protected set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class with a system-defined size.
         /// </summary>
-        /// <param name="size">Die System-Größe</param>
+        /// <param name="size">The system-defined size.</param>
         public PropertySizeText(TypeSizeText size)
         {
             SystemSize = size;
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class with a user-defined size in REM.
         /// </summary>
-        /// <param name="icon">Das benutzerdefinierte Größe in REM</param>
+        /// <param name="size">The user-defined size in REM.</param>
         public PropertySizeText(float size)
         {
             SystemSize = TypeSizeText.Default;
@@ -34,9 +37,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the property to a CSS class.
         /// </summary>
-        /// <returns>Die zur Farbe gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class corresponding to the size.</returns>
         public virtual string ToClass()
         {
             if (SystemSize != TypeSizeText.Default)
@@ -48,9 +51,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Umwandlung in einen CSS-Style
+        /// Converts the property to a CSS style.
         /// </summary>
-        /// <returns>Das zur Farbe gehörende CSS-Style</returns>
+        /// <returns>The CSS style corresponding to the size.</returns>
         public virtual string ToStyle()
         {
             if (SystemSize != TypeSizeText.Default)
@@ -66,15 +69,15 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Prüft ob ein Icon gesetzt ist
+        /// Gets a value indicating whether a size is set.
         /// </summary>
-        /// <returns>True wenn ein Icon gesetzt ist, false sonst</returns>
+        /// <returns>True if a size is set, false otherwise.</returns>
         public virtual bool HasSize => SystemSize != TypeSizeText.Default || UserSize.HasValue;
 
         /// <summary>
-        /// Prüft ob ein benutzerdefiniertes Icon gesetzt ist
+        /// Gets a value indicating whether a user-defined size is set.
         /// </summary>
-        /// <returns>True wenn ein benutzerdefiniertes Icon gesetzt ist, false sonst</returns>
+        /// <returns>True if a user-defined size is set, false otherwise.</returns>
         public virtual bool IsUserSize => SystemSize == TypeSizeText.Default && UserSize.HasValue;
     }
 }

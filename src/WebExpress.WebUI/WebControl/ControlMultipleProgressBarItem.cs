@@ -1,21 +1,24 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents an item in a multiple progress bar control.
+    /// </summary>
     public class ControlMultipleProgressBarItem
     {
         /// <summary>
-        /// Returns or sets the text.farbe
+        /// Returns or sets the text color.
         /// </summary>
-        public PropertyColorText Color { get; set; }
+        public PropertyColorText Color { get; set; } = new PropertyColorText(TypeColorText.Default);
 
         /// <summary>
-        /// Returns or set the background color.
+        /// Returns or sets the background color.
         /// </summary>
-        public PropertyColorBackground BackgroundColor { get; set; }
+        public PropertyColorBackground BackgroundColor { get; set; } = new PropertyColorBackground(TypeColorBackground.Default);
 
         /// <summary>
         /// Returns or sets the value.
         /// </summary>
-        public int Value { get; set; }
+        public uint Value { get; set; }
 
         /// <summary>
         /// Returns or sets the text.

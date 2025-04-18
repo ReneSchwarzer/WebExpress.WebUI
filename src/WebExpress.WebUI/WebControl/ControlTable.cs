@@ -1,97 +1,72 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebIcon;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a table control.
+    /// </summary>
     public class ControlTable : Control
     {
+        private readonly List<ControlTableColumn> _columns = [];
+        private readonly List<ControlTableRow> _rows = [];
+
         /// <summary>
-        /// Returns or sets the layout. der Spaltenüberschrift
+        /// Returns the columns of the table.
+        /// </summary>
+        public IEnumerable<ControlTableColumn> Columns => _columns;
+
+        /// <summary>
+        /// Returns the rows of the table.
+        /// </summary>
+        public IEnumerable<ControlTableRow> Rows => _rows;
+
+        /// <summary>
+        /// Returns or sets the layout of the column header.
         /// </summary>
         public TypesLayoutTableRow ColumnLayout { get; set; }
 
         /// <summary>
-        /// Returns or sets the columns.
-        /// </summary>
-        public List<ControlTableColumn> Columns { get; private set; }
-
-        /// <summary>
-        /// Returns or sets the rows.
-        /// </summary>
-        public List<ControlTableRow> Rows { get; private set; }
-
-        /// <summary>
-        /// Returns or sets the responsive property.
+        /// Returns or sets a value indicating whether the table is responsive.
         /// </summary>
         public bool Responsive { get; set; }
 
         /// <summary>
-        /// Returns or sets the striped property.
+        /// Returns or sets a value indicating whether the table is striped.
         /// </summary>
         public bool Striped { get; set; }
 
         /// <summary>
-        /// Returns or sets the table to be rotated.
+        /// Returns or sets a value indicating whether the table should reflow.
         /// </summary>
         public bool Reflow { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlTable(string id = null)
+        /// <param name="columns">The columns to add to the table.</param>
+        /// <param name="rows">The rows to add to the table.</param>
+        public ControlTable(string id = null, ControlTableColumn[] columns = null, params ControlTableRow[] rows)
             : base(id)
         {
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
             Striped = true;
-            Columns = new List<ControlTableColumn>();
-            Rows = new List<ControlTableRow>();
+            _columns.AddRange(columns ?? []);
+            _rows.AddRange(rows);
         }
 
         /// <summary>
-        /// Adds a column.
-        /// </summary>
-        /// <param name="name">The header of the column.</param>
-        public virtual void AddColumn(string name)
-        {
-            Columns.Add(new ControlTableColumn(null)
-            {
-                Text = name
-            });
-        }
-
-        /// <summary>
-        /// Adds a column.
-        /// </summary>
-        /// <param name="name">The header of the column.</param>
-        /// <param name="icon">The icon of the column.</param>
-        public virtual void AddColumn(string name, PropertyIcon icon)
-        {
-            Columns.Add(new ControlTableColumn(null)
-            {
-                Text = name,
-                Icon = icon
-            });
-        }
-
-        /// <summary>
-        /// Adds a column.
+        /// Adds a column to the table.
         /// </summary>
         /// <param name="name">The header of the column.</param>
         /// <param name="icon">The icon of the column.</param>
         /// <param name="layout">The layout of the column.</param>
-        public virtual void AddColumn(string name, PropertyIcon icon, TypesLayoutTableRow layout)
+        public virtual void AddColumn(string name, IIcon icon = null, TypesLayoutTableRow layout = TypesLayoutTableRow.Default)
         {
-            Columns.Add(new ControlTableColumn(null)
+            _columns.Add(new ControlTableColumn(null)
             {
                 Text = name,
                 Icon = icon,
@@ -100,52 +75,61 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Adds a row.
+        /// Adds one or more columns to the table.
         /// </summary>
-        /// <param name="cells">The cells of the row.</param>
-        public void AddRow(params Control[] cells)
+        /// <param name="columns">The columns to add.</param>
+        public virtual void AddColumns(params ControlTableColumn[] columns)
         {
-            var r = new ControlTableRow(null);
-            r.Cells.AddRange(cells);
-
-            Rows.Add(r);
+            _columns.AddRange(columns);
         }
 
         /// <summary>
-        /// Adds a row.
+        /// Adds one or more columns to the table.
         /// </summary>
-        /// <param name="cells">The cells of the row.</param>
-        /// <param name="cssClass">The css class.</param>
-        public void AddRow(Control[] cells, string cssClass = null)
+        /// <param name="columns">The columns to add.</param>
+        public virtual void AddColumns(IEnumerable<ControlTableColumn> columns)
         {
-            var r = new ControlTableRow(null) { Classes = new List<string>(new[] { cssClass }) };
-            r.Cells.AddRange(cells);
-
-            Rows.Add(r);
+            _columns.AddRange(columns);
         }
 
         /// <summary>
-        /// Adds a row.
+        /// Adds a row to the table.
         /// </summary>
         /// <param name="cells">The cells of the row.</param>
-        /// <param name="layout">The layout.</param>
-        /// <param name="cssClass">The css class.</param>
-        public void AddRow(Control[] cells, TypesLayoutTableRow layout, string cssClass = null)
+        public void AddRow(params IControl[] cells)
         {
-            var r = new ControlTableRow(null) { Classes = new List<string>(new[] { cssClass }), Layout = layout };
-            r.Cells.AddRange(cells);
+            var r = new ControlTableRow(null, cells);
 
-            Rows.Add(r);
+            _rows.Add(r);
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Adds one or more rows to the table.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="rows">The rows to add.</param>
+        public void AddRows(params ControlTableRow[] rows)
         {
-            Columns.ForEach(x => x.Layout = ColumnLayout);
+            _rows.AddRange(rows);
+        }
+
+        /// <summary>
+        /// Adds one or more rows to the table.
+        /// </summary>
+        /// <param name="rows">The rows to add.</param>
+        public void AddRows(IEnumerable<ControlTableRow> rows)
+        {
+            _rows.AddRange(rows);
+        }
+
+        /// <summary>
+        /// Converts the control to an HTML representation.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
+        {
+            _columns.ForEach(x => x.Layout = ColumnLayout);
             var classes = Classes.ToList();
             classes.Add("table");
 
@@ -172,8 +156,8 @@ namespace WebExpress.WebUI.WebControl
                 Role = Role
             };
 
-            html.Columns = new HtmlElementTableTr(Columns.Select(x => x.Render(context)));
-            html.Rows.AddRange(from x in Rows select x.Render(context) as HtmlElementTableTr);
+            html.Columns = new HtmlElementTableTr(Columns.Select(x => x.Render(renderContext, visualTree)).ToArray());
+            html.Rows.AddRange(from x in Rows select x.Render(renderContext, visualTree) as HtmlElementTableTr);
 
             return html;
         }

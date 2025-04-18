@@ -1,40 +1,34 @@
 ﻿using System.Collections.Generic;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Grouping of controls.
+    /// Represents a column group of form items.
     /// </summary>
     public class ControlFormItemGroupColumn : ControlFormItemGroup
     {
+        private readonly List<int> _distribution = [];
+
         /// <summary>
         /// Returns the percentage distribution of the columns.
         /// </summary>
-        public ICollection<int> Distribution { get; set; } = new List<int>();
+        public IEnumerable<int> Distribution => _distribution;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlFormItemGroupColumn(string id = null)
-            : base(id)
-        {
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         ///<param name="items">The form controls.</param> 
-        public ControlFormItemGroupColumn(string id, params ControlFormItem[] items)
+        public ControlFormItemGroupColumn(string id = null, params ControlFormItem[] items)
             : base(id, items)
         {
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         ///<param name="items">The form controls.</param> 
         public ControlFormItemGroupColumn(params ControlFormItem[] items)
@@ -45,10 +39,10 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
         {
-            var grpupContex = new RenderContextFormularGroup(context, this);
+            var grpupContex = new RenderControlFormGroupContext(renderContext, this);
 
             foreach (var item in Items)
             {
@@ -57,18 +51,19 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
-            var renderContext = new RenderContextFormularGroup(context, this);
+            var renderGroupContext = new RenderControlFormGroupContext(renderContext, this);
 
             var html = new HtmlElementTextContentDiv()
             {
                 Id = Id,
-                Class = Css.Concatenate("form-group-horizontal", GetClasses()),
+                Class = Css.Concatenate("wx-form-group-horizontal", GetClasses()),
                 Style = GetStyles(),
             };
 
@@ -87,41 +82,41 @@ namespace WebExpress.WebUI.WebControl
                     label.Initialize(renderContext);
                     help.Initialize(renderContext);
 
-                    label.Text = context.I18N(input?.Label);
-                    label.FormularItem = item;
-                    label.Classes.Add("me-2");
-                    help.Text = context.I18N(input?.Help);
-                    help.Classes.Add("ms-2");
+                    label.Text = I18N.Translate(renderGroupContext.Request?.Culture, input?.Label);
+                    label.FormItem = item;
+                    label.Classes = ["me-2"];
+                    help.Text = I18N.Translate(renderGroupContext.Request?.Culture, input?.Help);
+                    help.Classes = ["ms-2"];
 
-                    if (icon.Icon != null)
+                    if (icon.Icon != null && !string.IsNullOrWhiteSpace(label.Text))
                     {
-                        icon.Classes.Add("me-2 pt-1");
+                        icon.Classes = ["me-2", "pt-1"];
 
-                        row.Elements.Add(new HtmlElementTextContentDiv(icon.Render(renderContext), label.Render(renderContext)) { });
+                        row.Add(new HtmlElementTextContentDiv(icon.Render(renderContext, visualTree), label.Render(renderContext, visualTree)) { });
                     }
-                    else
+                    else if (!string.IsNullOrWhiteSpace(label.Text))
                     {
-                        row.Elements.Add(new HtmlElementTextContentDiv(label.Render(renderContext)));
+                        row.Add(new HtmlElementTextContentDiv(label.Render(renderContext, visualTree)));
                     }
 
-                    row.Elements.Add(new HtmlElementTextContentDiv(item.Render(renderContext)) { });
+                    row.Add(new HtmlElementTextContentDiv(item.Render(renderContext, visualTree)) { });
 
                     if (input != null)
                     {
-                        row.Elements.Add(new HtmlElementTextContentDiv(help.Render(renderContext)));
+                        row.Add(new HtmlElementTextContentDiv(help.Render(renderContext, visualTree)));
                     }
                 }
                 else
                 {
-                    row.Elements.Add(new HtmlElementTextContentDiv());
-                    row.Elements.Add(item.Render(context));
-                    row.Elements.Add(new HtmlElementTextContentDiv());
+                    row.Add(new HtmlElementTextContentDiv());
+                    row.Add(item.Render(renderGroupContext, visualTree));
+                    row.Add(new HtmlElementTextContentDiv());
                 }
 
-                body.Elements.Add(row);
+                body.Add(row);
             }
 
-            html.Elements.Add(body);
+            html.Add(body);
 
             return html;
         }

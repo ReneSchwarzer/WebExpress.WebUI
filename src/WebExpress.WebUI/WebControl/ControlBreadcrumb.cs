@@ -1,18 +1,25 @@
-﻿using WebExpress.WebCore.Internationalization;
+﻿using System;
+using System.Linq;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebUri;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a breadcrumb control that displays a list of links indicating the current 
+    /// page's location within a navigational hierarchy.
+    /// </summary>
     public class ControlBreadcrumb : Control
     {
         /// <summary>
         /// Return or sets the uri.
         /// </summary>
-        public string Uri { get; set; }
+        public IUri Uri { get; set; }
 
         /// <summary>
-        /// Return or sets the root element.
+        /// Returns or sets the name to display when the breadcrumb is empty.
         /// </summary>
         public string EmptyName { get; set; }
 
@@ -36,57 +43,40 @@ namespace WebExpress.WebUI.WebControl
         public ushort TakeLast { get; set; } = ushort.MaxValue;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlBreadcrumb(string id = null)
             : base(id)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="uri">Der Verzeichnispfad</param>
-        public ControlBreadcrumb(string id, string uri)
-            : base(id)
-        {
-            Uri = uri;
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
         {
             Size = TypeSizeButton.Small;
             BackgroundColor = new PropertyColorBackground(TypeColorBackground.Light);
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var html = new HtmlElementTextContentOl()
             {
+                Id = Id,
                 Class = Css.Concatenate("breadcrumb bg-light ps-2", GetClasses()),
                 Style = GetStyles(),
             };
 
             if (!string.IsNullOrWhiteSpace(Prefix))
             {
-                html.Elements.Add
+                html.Add
                 (
                     new HtmlElementTextContentLi
                     (
                         new HtmlElementTextContentDiv
                         (
-                            new HtmlText(InternationalizationManager.I18N(context.Culture, Prefix))
+                            new HtmlText(I18N.Translate(renderContext.Request?.Culture, Prefix))
                         )
                         {
                             Class = "me-2 text-muted"
@@ -95,24 +85,31 @@ namespace WebExpress.WebUI.WebControl
                 );
             }
 
-            foreach (var part in context.Uri.PathSegments)
+            if (Uri == null)
             {
-                if (part.Display != null)
-                {
-                    var display = part.GetDisplay(context.Culture);
-                    var href = part.ToString();
+                return html;
+            }
 
-                    html.Elements.Add
+            var takeLast = Math.Min(TakeLast, Uri.PathSegments.Count());
+            var from = Uri.PathSegments.Count() - takeLast;
+
+            for (int i = from + 1; i < Uri.PathSegments.Count() + 1; i++)
+            {
+                var path = Uri.Take(i);
+
+                if (path.Display != null)
+                {
+                    var display = I18N.Translate(renderContext.Request?.Culture, path.Display);
+                    var href = path.ToString();
+
+                    html.Add
                     (
                         new HtmlElementTextContentLi
                         (
-                            //new ControlIcon(Page)
-                            //{ 
-                            //    Icon = path.Icon
-                            //}.ToHtml(),
                             new HtmlElementTextSemanticsA(display)
                             {
-                                Href = href
+                                Href = href,
+                                Class = "link"
                             }
                         )
                         {
@@ -121,40 +118,6 @@ namespace WebExpress.WebUI.WebControl
                     );
                 }
             }
-
-            //var takeLast = Math.Min(TakeLast, resourceUri.Path.Count);
-            //var from = resourceUri.Path.Count - takeLast;
-
-            //for (int i = from + 1; i < resourceUri.Path.Count + 1; i++)
-            //{
-            //    var path = resourceUri.Take(i);
-
-            //    if (path.Display != null)
-            //    {
-            //        var display = I18N(context.Culture, path.Display);
-            //        var href = path.ToString();
-
-            //        html.Elements.Add
-            //        (
-            //            new HtmlElementTextContentLi
-            //            (
-            //                //new ControlIcon(Page)
-            //                //{ 
-            //                //    Icon = path.Icon
-            //                //}.ToHtml(),
-            //                new HtmlElementTextSemanticsA(display)
-            //                {
-            //                    Href = href,
-            //                    Class = "link"
-            //                }
-            //            )
-            //            {
-            //                Class = "breadcrumb-item"
-            //            }
-            //        );
-            //    }
-            //}
-            //}
 
             return html;
         }

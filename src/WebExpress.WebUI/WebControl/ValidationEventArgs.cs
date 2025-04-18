@@ -3,22 +3,22 @@
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Eventargument zum Validieren von Formulareingaben
+    /// Event argument for validating form inputs.
     /// </summary>
-    public class ValidationEventArgs : FormularEventArgs
+    public class ValidationEventArgs : FormEventArgs
     {
         /// <summary>
-        /// Liefert oder setzt sen zu überprüfenden Wert
+        /// Returns or sets the value to be checked.
         /// </summary>
         public string Value { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die Validierungsnachrichten
+        /// Returns or sets the validation results.
         /// </summary>
         public List<ValidationResult> Results { get; } = new List<ValidationResult>();
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         public ValidationEventArgs()
         {

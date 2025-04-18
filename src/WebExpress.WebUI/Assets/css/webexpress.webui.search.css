@@ -1,4 +1,4 @@
-.search {
+.wx-search {
     position: relative;
     border-radius: 4px;
     display: flex !important;
@@ -7,23 +7,23 @@
     align-items: center;
 }
 
-    .search > label {
+    .wx-search > label {
         margin-right: 0.5em;
         color: #cccccc;
     }
 
-    .search > input {
+    .wx-search > input {
         border: 0px;
         outline: none;
         flex-grow: 1 !important;
     }
 
-    .search > span {
+    .wx-search > span {
         margin-left: 0.5em;
         cursor: pointer;
         color: #cccccc;
     }
 
-        .search > span:hover {
+        .wx-search > span:hover {
             color: #aaaaaa;
         }

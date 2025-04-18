@@ -1,25 +1,66 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents the different types of color charts.
+    /// </summary>
     public enum TypeColorChart
     {
+        /// <summary>
+        /// Default color.
+        /// </summary>
         Default = 0,
+
+        /// <summary>
+        /// Primary color.
+        /// </summary>
         Primary = 1,
+
+        /// <summary>
+        /// Secondary color.
+        /// </summary>
         Secondary = 2,
+
+        /// <summary>
+        /// Success color.
+        /// </summary>
         Success = 3,
+
+        /// <summary>
+        /// Info color.
+        /// </summary>
         Info = 4,
+
+        /// <summary>
+        /// Warning color.
+        /// </summary>
         Warning = 5,
+
+        /// <summary>
+        /// Danger color.
+        /// </summary>
         Danger = 6,
+
+        /// <summary>
+        /// Dark color.
+        /// </summary>
         Dark = 7,
+
+        /// <summary>
+        /// Light color.
+        /// </summary>
         Light = 8
     }
 
+    /// <summary>
+    /// Provides extension methods for the <see cref="TypeColorChart"/> enum.
+    /// </summary>
     public static class TypeColorChartExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the color to a CSS class.
         /// </summary>
-        /// <param name="color">Die Farbe, welches umgewandelt werden soll</param>
-        /// <returns>The CSS class belonging to the layout</returns>
+        /// <param name="color">The color to be converted.</param>
+        /// <returns>The CSS class corresponding to the color.</returns>
         public static string ToChartColor(this TypeColorChart color)
         {
             switch (color)

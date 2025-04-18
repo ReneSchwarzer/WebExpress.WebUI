@@ -1,36 +1,36 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Aufzähliung der unterstützten Gerätetypen
+    /// Enumeration of supported device types
     /// </summary>
     public enum TypeDevice
     {
         /// <summary>
-        /// Keine Auswahl
+        /// No selection
         /// </summary>
         None,
         /// <summary>
-        /// Automatische Anpassung
+        /// Automatic adjustment
         /// </summary>
         Auto,
         /// <summary>
-        /// Für Telepfone geeignet < 576px
+        /// Suitable for phones < 576px
         /// </summary>
         ExtraSmall,
         /// <summary>
-        /// Für Tablets geeignet >= 576px
+        /// Suitable for tablets >= 576px
         /// </summary>
         Small,
         /// <summary>
-        /// Für kleine Laptops geeignet >= 768px
+        /// Suitable for small laptops >= 768px
         /// </summary>
         Medium,
         /// <summary>
-        /// Für Laptops & Desktops geeignet >= 992px
+        /// Suitable for laptops & desktops >= 992px
         /// </summary>
         Large,
         /// <summary>
-        /// Für Laptops & Desktops geeignet >= 1200px
+        /// Suitable for laptops & desktops >= 1200px
         /// </summary>
         ExtraLarge
     }

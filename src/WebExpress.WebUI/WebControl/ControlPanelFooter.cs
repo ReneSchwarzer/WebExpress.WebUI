@@ -1,60 +1,36 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a footer control panel that can contain multiple child controls and 
+    /// manage their layout and rendering.
+    /// </summary>
     public class ControlPanelFooter : ControlPanel
     {
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlPanelFooter(string id = null)
-            : base(id)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
-        public ControlPanelFooter(string id, params Control[] content)
+        public ControlPanelFooter(string id = null, params IControl[] content)
             : base(id, content)
         {
-            Init();
         }
 
         /// <summary>
-        /// Constructor
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlPanelFooter(string id, List<Control> content)
-            : base(id, content)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-            Content.Add(new ControlPanel(new ControlLine()));
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            return new HtmlElementSectionFooter(from x in Content select x.Render(context))
+            return new HtmlElementSectionFooter(Content
+                .Select(x => x.Render(renderContext, visualTree))
+                .ToArray())
             {
                 Id = Id,
                 Class = GetClasses(),

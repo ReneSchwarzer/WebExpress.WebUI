@@ -1,79 +1,37 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a button control within a list item.
+    /// </summary>
+    /// <remarks>
+    /// This control is used to create a button element within a list item, 
+    /// allowing for interactive list items.
+    /// </remarks>
     public class ControlListItemButton : ControlListItem
     {
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlListItemButton(string id = null)
-            : base(id)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
-        public ControlListItemButton(string id, params Control[] content)
+        public ControlListItemButton(string id = null, params IControl[] content)
             : base(id, content)
         {
-            Init();
         }
 
         /// <summary>
-        /// Constructor
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlListItemButton(params Control[] content)
-            : base(content)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlListItemButton(string id, List<Control> content)
-            : base(id, content)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlListItemButton(List<Control> content)
-            : base(content)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            return new HtmlElementFieldButton(from x in Content select x.Render(context))
+            return new HtmlElementFieldButton(Content.Select(x => x.Render(renderContext, visualTree)).ToArray())
             {
                 Id = Id,
                 Class = Css.Concatenate("list-group-item-action", GetClasses()),

@@ -1,17 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebCore.WebIcon;
 using WebExpress.WebCore.WebMessage;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebUri;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a tree item link control that can contain other controls and tree items.
+    /// </summary>
     public class ControlTreeItemLink : ControlTreeItem
     {
         /// <summary>
         /// Returns or sets the target uri.
         /// </summary>
-        public string Uri { get; set; }
+        public IUri Uri { get; set; }
 
         /// <summary>
         /// Returns or sets the text.
@@ -36,79 +41,28 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
-        /// Liefert oder setzt die für den Link gültigen Parameter
+        /// Returns or sets the parameters for the control.
         /// </summary>
         public List<Parameter> Params { get; set; }
 
-
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlTreeItemLink(string id = null)
-            : base(id)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
-        public ControlTreeItemLink(string id, params Control[] content)
+        public ControlTreeItemLink(string id = null, params Control[] content)
             : base(id, content)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlTreeItemLink(params Control[] content)
-            : base(content)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlTreeItemLink(string id, List<Control> content)
-            : base(id, content)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlTreeItemLink(List<Control> content)
-            : base(content)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
         {
         }
 
         /// <summary>
         /// Returns all local and temporary parameters.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
         /// <returns>The parameters.</returns>
-        public string GetParams(IPage page)
+        public string GetParams()
         {
             var dict = new Dictionary<string, Parameter>();
 
@@ -131,22 +85,23 @@ namespace WebExpress.WebUI.WebControl
                 }
             }
 
-            return string.Join("&amp;", from x in dict where !string.IsNullOrWhiteSpace(x.Value.Value) select x.Value.ToString());
+            return string.Join("&amp;", dict.Where(x => !string.IsNullOrWhiteSpace(x.Value.Value)).Select(x => x.Value.ToString()));
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var param = GetParams(context?.Page);
+            var param = GetParams();
 
-            var link = new HtmlElementTextSemanticsA(from x in Content select x.Render(context))
+            var link = new HtmlElementTextSemanticsA([.. Content.Select(x => x.Render(renderContext, visualTree))])
             {
                 Id = Id,
-                Class = Css.Concatenate("link tree-link", Active == TypeActive.Active ? "tree-link-active" : ""),
+                Class = Css.Concatenate("link tree-link", Active == TypeActive.Active ? "wx-tree-link-active" : ""),
                 Role = Role,
                 Href = Uri?.ToString() + (param.Length > 0 ? "?" + param : string.Empty),
                 Target = Target,
@@ -154,9 +109,9 @@ namespace WebExpress.WebUI.WebControl
                 OnClick = OnClick?.ToString()
             };
 
-            if (Icon != null && Icon.HasIcon)
+            if (Icon != null)
             {
-                link.Elements.Add(new ControlIcon()
+                link.Add(new ControlIcon()
                 {
                     Icon = Icon,
                     Margin = !string.IsNullOrWhiteSpace(Text) ? new PropertySpacingMargin
@@ -166,13 +121,13 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None,
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None),
-                    VerticalAlignment = Icon.IsUserIcon ? TypeVerticalAlignment.TextBottom : TypeVerticalAlignment.Default
-                }.Render(context));
+                    VerticalAlignment = TypeVerticalAlignment.Default
+                }.Render(renderContext, visualTree));
             }
 
             if (!string.IsNullOrWhiteSpace(Text))
             {
-                link.Elements.Add(new HtmlText(Text));
+                link.Add(new HtmlText(Text));
             }
 
             if (!string.IsNullOrWhiteSpace(Tooltip))
@@ -182,16 +137,16 @@ namespace WebExpress.WebUI.WebControl
 
             var expander = new HtmlElementTextSemanticsSpan
             {
-                Class = Css.Concatenate("tree-treeview-expander", Children.Count > 0 ? "tree-treeview-angle" : "tree-treeview-dot")
+                Class = Css.Concatenate("tree-treeview-expander", Children.Count() > 0 ? "wx-tree-treeview-angle" : "wx-tree-treeview-dot")
             };
 
-            if (Children.Count > 0 && Expand != TypeExpandTree.Collapse)
+            if (Children.Count() > 0 && Expand != TypeExpandTree.Collapse)
             {
-                expander.Class = Css.Concatenate("tree-treeview-angle-down", expander.Class);
+                expander.Class = Css.Concatenate("wx-tree-treeview-angle-down", expander.Class);
             }
             var container = new HtmlElementTextContentDiv(expander, link)
             {
-                Class = Css.Concatenate("tree-treeview-container")
+                Class = Css.Concatenate("wx-tree-treeview-container")
             };
 
             var html = new HtmlElementTextContentLi(Layout == TypeLayoutTreeItem.TreeView ? container : link)
@@ -202,22 +157,22 @@ namespace WebExpress.WebUI.WebControl
                     TypeLayoutTreeItem.Group => "list-group-item-action",
                     TypeLayoutTreeItem.Flush => "list-group-item-action",
                     TypeLayoutTreeItem.Horizontal => "list-group-item-action",
-                    TypeLayoutTreeItem.TreeView => "tree-item",
+                    TypeLayoutTreeItem.TreeView => "wx-tree-item",
                     _ => ""
                 }, Active.ToClass()),
                 Style = GetStyles(),
                 Role = Role
             };
 
-            if (Children.Count > 0)
+            if (Children.Any())
             {
-                var items = (from x in Children select x.Render(context)).ToList();
-                var ul = new HtmlElementTextContentUl(items)
+                var items = (from x in Children select x.Render(renderContext, visualTree)).ToList();
+                var ul = new HtmlElementTextContentUl(items.ToArray())
                 {
                     Class = Css.Concatenate(Layout switch
                     {
-                        TypeLayoutTreeItem.TreeView => "tree-treeview-node",
-                        TypeLayoutTreeItem.Simple => "tree-simple-node",
+                        TypeLayoutTreeItem.TreeView => "wx-tree-treeview-node",
+                        TypeLayoutTreeItem.Simple => "wx-tree-simple-node",
                         _ => Layout.ToClass()
                     }, Expand.ToClass())
                 };
@@ -231,7 +186,7 @@ namespace WebExpress.WebUI.WebControl
                         break;
                 }
 
-                html.Elements.Add(ul);
+                html.Add(ul);
             }
 
             return html;

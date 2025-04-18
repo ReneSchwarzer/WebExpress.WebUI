@@ -1,13 +1,16 @@
 ﻿using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a callout panel control that can contain multiple child controls.
+    /// </summary>
     public class ControlPanelCallout : ControlPanel
     {
         /// <summary>
-        /// Delivers or sets the title.
+        /// Returns or sets the title.
         /// </summary>
         public string Title { get; set; }
 
@@ -21,41 +24,22 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlPanelCallout(string id = null)
-            : base(id)
-        {
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlPanelCallout(params Control[] content)
-            : this()
-        {
-            Content.AddRange(content);
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
-        public ControlPanelCallout(string id, params Control[] content)
-            : this(id)
+        public ControlPanelCallout(string id = null, params IControl[] content)
+            : base(id, content)
         {
-            Content.AddRange(content);
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var html = new HtmlElementTextContentDiv()
             {
@@ -67,13 +51,13 @@ namespace WebExpress.WebUI.WebControl
 
             if (Title != null)
             {
-                html.Elements.Add(new HtmlElementTextSemanticsSpan(new HtmlText(Title))
+                html.Add(new HtmlElementTextSemanticsSpan(new HtmlText(Title))
                 {
                     Class = "callout-title"
                 });
             }
 
-            html.Elements.Add(new HtmlElementTextContentDiv(from x in Content select x.Render(context))
+            html.Add(new HtmlElementTextContentDiv(Content.Select(x => x.Render(renderContext, visualTree)).ToArray())
             {
                 Class = "callout-body"
             });

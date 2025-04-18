@@ -1,22 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
-using static WebExpress.WebCore.Internationalization.InternationalizationManager;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a modal control that can display content in a modal dialog.
+    /// </summary>
     public class ControlModal : Control
     {
+        private readonly List<IControl> _content = [];
+
         /// <summary>
-        /// Returns or sets the content.
+        /// Returns the content.
         /// </summary>
-        public List<Control> Content { get; private set; }
+        public IEnumerable<IControl> Content => _content;
 
         /// <summary>
         /// Returns or sets whether the fader effect should be used.
         /// </summary>
-        public bool Fade { get; set; }
+        public bool Fade { get; set; } = true;
 
         /// <summary>
         /// Returns or sets the header.
@@ -39,81 +44,81 @@ namespace WebExpress.WebUI.WebControl
         public string OnHiddenCode { get; set; }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlModal(string id)
-            : base(!string.IsNullOrWhiteSpace(id) ? id : "modal")
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="header">The headline.</param>
-        public ControlModal(string id, string header)
-            : this(id)
-        {
-            Header = header;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="header">The headline.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlModal(string id, string header, params Control[] content)
-            : this(id, header)
-        {
-            if (content != null)
-            {
-                Content.AddRange(content);
-            }
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="text">The text.</param>
         /// <param name="content">The content of the html element.</param>
-        public ControlModal(string id, string text, IEnumerable<Control> content)
-            : this(id, text)
+        public ControlModal(string id = null, params IControl[] content)
+            : base(id)
         {
-            Content.AddRange(content);
+            _content.AddRange(content);
+        }
+
+        /// <summary> 
+        /// Adds one or more controls to the content of the modal.
+        /// </summary> 
+        /// <param name="controls">The controls to add to the modal.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of 
+        /// the modal. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the panel's content. 
+        /// Example usage: 
+        /// <code> 
+        /// var modal = new ControlModal(); 
+        /// var text1 = new ControlText { Text = "Save" };
+        /// var text2 = new ControlText { Text = "Cancel" };
+        /// modal.Add(text1, text2);
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public virtual void Add(params IControl[] controls)
+        {
+            _content.AddRange(controls);
+        }
+
+        /// <summary> 
+        /// Adds one or more controls to the content of the modal.
+        /// </summary> 
+        /// <param name="controls">The controls to add to the v.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple controls to the <see cref="Content"/> collection of 
+        /// the modal. It is useful for dynamically constructing the user interface by appending 
+        /// various controls to the panel's content. 
+        /// Example usage: 
+        /// <code> 
+        /// var modal = new ControlModal(); 
+        /// var text1 = new ControlText { Text = "Save" };
+        /// var text2 = new ControlText { Text = "Cancel" };
+        /// modal.Add(new List<IControl>([text1, text2]));
+        /// </code> 
+        /// This method accepts any control that implements the <see cref="IControl"/> interface.
+        /// </remarks>
+        public virtual void Add(IEnumerable<IControl> controls)
+        {
+            _content.AddRange(controls);
         }
 
         /// <summary>
-        /// Constructor
+        /// Removes a control from the content of the modal.
         /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="text">The text.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlModal(string id = null, params Control[] content)
-            : this(id, string.Empty)
+        /// <param name="control">The control to remove from the content.</param>
+        /// <remarks>
+        /// This method allows removing a specific control from the <see cref="Content"/> collection of 
+        /// the modal.
+        /// </remarks>
+        public virtual void Remove(IControl control)
         {
-            Content.AddRange(content);
+            _content.Remove(control);
         }
 
         /// <summary>
-        /// Initialization
+        /// Converts the control to an HTML representation.
         /// </summary>
-        private void Init()
-        {
-            //Id = !string.IsNullOrWhiteSpace(Id) ? Id : "modal";
-            Content = new List<Control>();
-            Fade = true;
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var classes = Classes.ToList();
             classes.Add("modal");
@@ -123,7 +128,7 @@ namespace WebExpress.WebUI.WebControl
                 classes.Add("fade");
             }
 
-            var headerText = new HtmlElementSectionH4(I18N(context.Culture, Header))
+            var headerText = new HtmlElementSectionH4(I18N.Translate(renderContext.Request, Header))
             {
                 Class = "modal-title"
             };
@@ -140,14 +145,14 @@ namespace WebExpress.WebUI.WebControl
                 Class = "modal-header"
             };
 
-            var body = new HtmlElementTextContentDiv(from x in Content select x.Render(context))
+            var body = new HtmlElementTextContentDiv(Content.Select(x => x.Render(renderContext, visualTree)).ToArray())
             {
                 Class = "modal-body"
             };
 
             var footer = default(HtmlElementTextContentDiv);
 
-            var footerButton = new HtmlElementFieldButton(new HtmlText(I18N(context.Culture, "webexpress.webui:modal.close.label")))
+            var footerButton = new HtmlElementFieldButton(new HtmlText(I18N.Translate(renderContext.Request, "webexpress.webui:modal.close.label")))
             {
                 Type = "button",
                 Class = Css.Concatenate("btn", new PropertyColorButton(TypeColorButton.Primary).ToStyle())
@@ -181,19 +186,19 @@ namespace WebExpress.WebUI.WebControl
             if (!string.IsNullOrWhiteSpace(OnShownCode))
             {
                 var shown = "$('#" + Id + "').on('shown.bs.modal', function(e) { " + OnShownCode + " });";
-                context.VisualTree.AddScript(Id + "_shown", shown);
+                visualTree.AddScript(Id + "_shown", shown);
             }
 
             if (!string.IsNullOrWhiteSpace(OnHiddenCode))
             {
                 var hidden = "$('#" + Id + "').on('hidden.bs.modal', function() { " + OnHiddenCode + " });";
-                context.VisualTree.AddScript(Id + "_hidden", hidden);
+                visualTree.AddScript(Id + "_hidden", hidden);
             }
 
             if (ShowIfCreated)
             {
                 var show = "$('#" + Id + "').modal('show');";
-                context.VisualTree.AddScript(Id + "_showifcreated", show);
+                visualTree.AddScript(Id + "_showifcreated", show);
             }
 
             return html;

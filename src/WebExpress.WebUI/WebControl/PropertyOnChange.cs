@@ -1,30 +1,33 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a property that changes based on system or user-defined values.
+    /// </summary>
     public class PropertyOnChange
     {
         /// <summary>
-        /// Der System-Wert
+        /// Returns the system value.
         /// </summary>
         public TypeOnChange SystemValue { get; protected set; }
 
         /// <summary>
-        /// Der benutzerdefinierte Wert
+        /// Returns the user-defined value.
         /// </summary>
         public string UserValue { get; protected set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class with a system value.
         /// </summary>
-        /// <param name="value">Der System-Wert</param>
+        /// <param name="value">The system value.</param>
         public PropertyOnChange(TypeOnChange value)
         {
             SystemValue = value;
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class with a user-defined value.
         /// </summary>
-        /// <param name="value">Der benutzerdefinierte Wert</param>
+        /// <param name="value">The user-defined value.</param>
         public PropertyOnChange(string value)
         {
             SystemValue = TypeOnChange.None;
@@ -32,9 +35,9 @@
         }
 
         /// <summary>
-        /// Conversion to string.
+        /// Converts the value to its string representation.
         /// </summary>
-        /// <returns>Die Stringrepräsentation</returns>
+        /// <returns>The string representation of the value.</returns>
         public override string ToString()
         {
             if (SystemValue != TypeOnChange.None)

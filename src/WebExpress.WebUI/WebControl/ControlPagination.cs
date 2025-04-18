@@ -2,31 +2,35 @@
 using System.Collections.Generic;
 using WebExpress.WebCore.WebHtml;
 using WebExpress.WebCore.WebMessage;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebIcon;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a pagination control that allows navigation through pages of content.
+    /// </summary>
     public class ControlPagination : Control
     {
         /// <summary>
         /// Returns or sets the number of pages.
         /// </summary>
-        public int PageCount { get; set; }
+        public uint PageCount { get; set; }
 
         /// <summary>
         /// Returns or sets the page size.
         /// </summary>
-        public int PageSize { get; set; }
+        public uint PageSize { get; set; }
 
         /// <summary>
         /// Returns or sets the current page.
         /// </summary>
-        public int PageOffset { get; set; }
+        public uint PageOffset { get; set; }
 
         /// <summary>
         /// Returns or sets the maximum number of side buttons.
         /// </summary>
-        public int MaxDisplayCount { get; set; }
+        public uint MaxDisplayCount { get; set; }
 
         /// <summary>
         /// Returns or sets the size.
@@ -38,7 +42,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlPagination(string id = null)
@@ -48,14 +52,16 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var html = new HtmlElementTextContentUl()
             {
+                Id = Id,
                 Class = Css.Concatenate("pagination", Css.Remove(GetClasses(), BackgroundColor?.ToClass(), BorderColor?.ToClass())),
                 Style = Style.Remove(GetStyles(), BackgroundColor.ToStyle()),
                 Role = Role
@@ -73,15 +79,16 @@ namespace WebExpress.WebUI.WebControl
 
             if (PageOffset > 0 && PageCount > 1)
             {
-                html.Elements.Add
+                html.Add
                 (
                     new HtmlElementTextContentLi
                     (
                         new ControlLink()
                         {
-                            Params = Parameter.Create(new Parameter("offset", PageOffset - 1, ParameterScope.Parameter)),
-                            Classes = new List<string>(new[] { "page-link", "fas fa-angle-left", "border-0" })
-                        }.Render(context)
+                            Params = Parameter.Create(new Parameter("offset", (int)PageOffset - 1, ParameterScope.Parameter)),
+                            Classes = ["page-link"],
+                            Icon = new IconAngleLeft()
+                        }.Render(renderContext, visualTree)
                     )
                     {
                         Class = "page-item"
@@ -90,15 +97,16 @@ namespace WebExpress.WebUI.WebControl
             }
             else
             {
-                html.Elements.Add
+                html.Add
                 (
                     new HtmlElementTextContentLi
                     (
                         new ControlLink()
                         {
                             Params = Parameter.Create(),
-                            Classes = new List<string>(new[] { "page-link", "fas fa-angle-left", "border-0" })
-                        }.Render(context)
+                            Classes = ["page-link"],
+                            Icon = new IconAngleLeft()
+                        }.Render(renderContext, visualTree)
                     )
                     {
                         Class = "page-item disabled"
@@ -106,24 +114,24 @@ namespace WebExpress.WebUI.WebControl
                 );
             }
 
-            var buf = new List<int>(MaxDisplayCount);
+            var buf = new List<int>((int)MaxDisplayCount);
 
             var j = 0;
             var k = 0;
 
-            buf.Add(PageOffset);
+            buf.Add((int)PageOffset);
             while (buf.Count < Math.Min(PageCount, MaxDisplayCount))
             {
                 if (PageOffset + j + 1 < PageCount)
                 {
                     j += 1;
-                    buf.Add(PageOffset + j);
+                    buf.Add((int)PageOffset + j);
                 }
 
                 if (PageOffset - k - 1 >= 0)
                 {
                     k += 1;
-                    buf.Add(PageOffset - k);
+                    buf.Add((int)PageOffset - k);
                 }
             }
 
@@ -133,17 +141,18 @@ namespace WebExpress.WebUI.WebControl
             {
                 if (v == PageOffset)
                 {
-                    html.Elements.Add
+                    html.Add
                     (
                         new HtmlElementTextContentLi
                         (
-                            new ControlLink(null, (v + 1).ToString())
+                            new ControlLink()
                             {
+                                Text = (v + 1).ToString(),
                                 BackgroundColor = BackgroundColor,
                                 Params = Parameter.Create(new Parameter("offset", v, ParameterScope.Parameter)),
-                                Classes = new List<string>() { Css.Concatenate("page-link border-0") },
-                                Styles = new List<string>() { Style.Concatenate("", BackgroundColor.ToStyle()) }
-                            }.Render(context)
+                                Classes = [Css.Concatenate("page-link")],
+                                Styles = [Style.Concatenate("", BackgroundColor.ToStyle())]
+                            }.Render(renderContext, visualTree)
                         )
                         {
                             Class = "page-item active"
@@ -152,15 +161,16 @@ namespace WebExpress.WebUI.WebControl
                 }
                 else
                 {
-                    html.Elements.Add
+                    html.Add
                     (
                         new HtmlElementTextContentLi
                         (
-                            new ControlLink(null, (v + 1).ToString())
+                            new ControlLink()
                             {
+                                Text = (v + 1).ToString(),
                                 Params = Parameter.Create(new Parameter("offset", v, ParameterScope.Parameter)),
-                                Classes = new List<string>(new[] { "page-link border-0" })
-                            }.Render(context)
+                                Classes = ["page-link"]
+                            }.Render(renderContext, visualTree)
                         )
                         {
                             Class = "page-item"
@@ -171,15 +181,16 @@ namespace WebExpress.WebUI.WebControl
 
             if (PageOffset < PageCount - 1)
             {
-                html.Elements.Add
+                html.Add
                 (
                     new HtmlElementTextContentLi
                     (
                         new ControlLink()
                         {
-                            Params = Parameter.Create(new Parameter("offset", PageOffset + 1, ParameterScope.Parameter)),
-                            Classes = new List<string>(new[] { "page-link", "fas fa-angle-right", "border-0" })
-                        }.Render(context)
+                            Params = Parameter.Create(new Parameter("offset", (int)PageOffset + 1, ParameterScope.Parameter)),
+                            Classes = ["page-link"],
+                            Icon = new IconAngleRight()
+                        }.Render(renderContext, visualTree)
                     )
                     {
                         Class = "page-item"
@@ -188,15 +199,16 @@ namespace WebExpress.WebUI.WebControl
             }
             else
             {
-                html.Elements.Add
+                html.Add
                 (
                     new HtmlElementTextContentLi
                     (
                         new ControlLink()
                         {
                             Params = Parameter.Create(),
-                            Classes = new List<string>(new[] { "page-link", "fas fa-angle-right", "border-0" })
-                        }.Render(context)
+                            Classes = ["page-link"],
+                            Icon = new IconAngleRight()
+                        }.Render(renderContext, visualTree)
                     )
                     {
                         Class = "page-item disabled"

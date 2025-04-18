@@ -1,12 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a tree control that can display hierarchical data.
+    /// </summary>
     public class ControlTree : Control
     {
+        private readonly List<ControlTreeItem> _nodes = [];
+
+        /// <summary>
+        /// Returns the collection of tree nodes.
+        /// </summary>
+        public IEnumerable<ControlTreeItem> Nodes => _nodes;
+
         /// <summary>
         /// Returns or sets the layout.
         /// </summary>
@@ -17,104 +27,62 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt die Baumknoten
-        /// </summary>
-        public List<ControlTreeItem> Items { get; private set; } = new List<ControlTreeItem>();
-
-        /// <summary>
-        /// Bestimm, ob es sich um eine sotrierte oder unsortierte Liste handelt
+        /// Returns or sets a value indicating whether the tree is sorted.
         /// </summary>
         public bool Sorted { get; set; }
 
         /// <summary>
-        /// Zeigt einen Rahmen an oder keinen
+        /// Returns or sets a value indicating whether the tree should display a border.
         /// </summary>
         public bool ShowBorder { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlTree(string id = null)
+        /// <param name="items">The tree items to be added to the control.</param>
+        public ControlTree(string id = null, params ControlTreeItem[] items)
             : base(id)
         {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="items">Die Listeneinträge</param>
-        public ControlTree(string id, params ControlTreeItem[] items)
-            : base(id)
-        {
-            Items.AddRange(items);
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="items">Die Listeneinträge</param>
-        public ControlTree(params ControlTreeItem[] items)
-            : this(null, items)
-        {
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="items">Die Listeneinträge</param>
-        public ControlTree(string id, List<ControlTreeItem> items)
-            : base(id)
-        {
-            Items = items;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="items">Die Listeneinträge</param>
-        public ControlTree(List<ControlTreeItem> items)
-            : this(null, items)
-        {
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
+            _nodes.AddRange(items);
             ShowBorder = true;
         }
 
         /// <summary>
-        /// Fügt Listeneinträge hinzu
+        /// Adds the specified tree items to the control.
         /// </summary>
-        /// <param name="items">Die Listeneinträge</param>
+        /// <param name="items">The tree items to be added.</param>
+        public void Add(params ControlTreeItem[] items)
+        {
+            _nodes.AddRange(items);
+        }
+        /// <summary>
+        /// Adds the specified tree items to the control.
+        /// </summary>
+        /// <param name="items">The tree items to be added.</param>
         public void Add(IEnumerable<ControlTreeItem> items)
         {
-            Items.AddRange(items);
+            _nodes.AddRange(items);
         }
 
         /// <summary>
-        /// Fügt Listeneinträge hinzu
+        /// Removes the specified tree item from the control.
         /// </summary>
-        /// <param name="item">Der Listeneintrag</param>
-        public void Add(ControlTreeItem item)
+        /// <param name="item">The tree item to be removed.</param>
+        public void Remove(ControlTreeItem item)
         {
-            Items.Add(item);
+            _nodes.Remove(item);
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var items = (from x in Items select x.Render(context)).ToList();
+            var items = (from x in Nodes select x.Render(renderContext, visualTree)).ToList();
 
             switch (Layout)
             {
@@ -125,7 +93,7 @@ namespace WebExpress.WebUI.WebControl
                     break;
             }
 
-            var html = new HtmlElementTextContentUl(items)
+            var html = new HtmlElementTextContentUl([.. items])
             {
                 Id = Id,
                 Class = Css.Concatenate("", GetClasses()),
@@ -135,13 +103,13 @@ namespace WebExpress.WebUI.WebControl
 
             if (Layout == TypeLayoutTree.TreeView)
             {
-                context.VisualTree.AddScript("treeview", @"var toggler = document.getElementsByClassName(""tree-treeview-angle"");
+                visualTree.AddScript("treeview", @"var toggler = document.getElementsByClassName(""tree-treeview-angle"");
                 for (var i = 0; i < toggler.length; i++)
                 {
                     toggler[i].addEventListener(""click"", function() {
                         this.parentElement.parentElement.querySelector("".tree-treeview-node"").classList.toggle(""tree-node-hide"");
                         this.classList.toggle(""tree-treeview-angle-down"");
-                        
+
                     });
             }
             ");

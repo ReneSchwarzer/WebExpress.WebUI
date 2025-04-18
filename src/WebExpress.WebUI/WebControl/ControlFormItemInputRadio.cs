@@ -1,32 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a radio button input form item control.
+    /// </summary>
+    /// <remarks>
+    /// This class provides the functionality for a radio button input within a form.
+    /// </remarks>
     public class ControlFormItemInputRadio : ControlFormItemInput
     {
         /// <summary>
         /// Returns or sets the value of the optiopn.
         /// </summary>
         public string Option { get; set; }
-
-        ///// <summary>
-        ///// Returns or sets the value of the optiopn.
-        ///// </summary>
-        //public new string Value
-        //{
-        //    get => GetParam(Name);
-        //    set
-        //    {
-        //        var v = GetParam(Name);
-
-        //        if (string.IsNullOrWhiteSpace(v))
-        //        {
-        //            AddParam(Name, value, Formular.Scope);
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// Liefert oder setzt ob die Checkbox in einer neuen Zeile angezeigt werden soll
@@ -49,7 +39,7 @@ namespace WebExpress.WebUI.WebControl
         public bool Checked { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemInputRadio(string id = null)
@@ -59,32 +49,20 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="name">The name.</param>
-        public ControlFormItemInputRadio(string id, string name)
-            : this(id)
-        {
-            Name = name;
-        }
-
-        /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
         {
-            //AddParam(name, Formular.Scope);
-            //Value = GetParam(Name);
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
             if (!string.IsNullOrWhiteSpace(Value))
             {
@@ -138,10 +116,10 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Checks the input element for correctness of the data.
         /// </summary>
-        /// <param name="context">The context in which the inputs are validated.</param>
-        public override void Validate(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the inputs are validated.</param>
+        public override void Validate(IRenderControlFormContext renderContext)
         {
-            base.Validate(context);
+            base.Validate(renderContext);
         }
     }
 }

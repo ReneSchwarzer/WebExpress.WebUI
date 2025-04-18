@@ -1,16 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebIcon;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a dropdown control that can contain multiple items.
+    /// </summary>
     public class ControlDropdown : Control, IControlNavigationItem
     {
+        private readonly List<IControlDropdownItem> _items = [];
+
         /// <summary>
-        /// Returns or sets the content.
+        /// Returns the items in the dropdown.
         /// </summary>
-        public List<IControlDropdownItem> Items { get; private set; } = new List<IControlDropdownItem>();
+        public IEnumerable<IControlDropdownItem> Items => _items;
 
         /// <summary>
         /// Returns or sets the background color. 
@@ -31,7 +38,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Returns or sets the outline property
+        /// Returns or sets the outline property.
         /// </summary>
         public bool Outline { get; set; }
 
@@ -61,7 +68,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the tooltip.
         /// </summary>
-        public string Title { get; set; }
+        public string Tooltip { get; set; }
 
         /// <summary>
         /// Returns or sets the value.
@@ -71,7 +78,7 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
         /// Returns or sets the activation status of the button.
@@ -107,72 +114,38 @@ namespace WebExpress.WebUI.WebControl
         public new int Width { get; set; } = -1;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class with the specified id and items.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlDropdown(string id = null)
+        /// <param name="items">The items to be added to the dropdown.</param>
+        public ControlDropdown(string id = null, params IControlDropdownItem[] items)
             : base(id)
         {
-            Init();
+            _items.AddRange(items);
+
+            Size = TypeSizeButton.Default;
         }
 
         /// <summary>
-        /// Constructor
+        /// Adds one or more items to the dropdown.
         /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlDropdown(string id, params IControlDropdownItem[] content)
-            : base(id)
+        /// <param name="items">The items to add to the dropdown.</param>
+        /// <remarks>
+        /// This method allows adding one or multiple dropdown items to the <see cref="Items"/> collection of 
+        /// the dropdown control. It is useful for dynamically constructing the dropdown menu by appending 
+        /// various items to it.
+        /// Example usage:
+        /// <code>
+        /// var dropdown = new DropdownControl();
+        /// var item1 = new ControlDropdownItemLink { Text = "Option 1" };
+        /// var item2 = new ControlDropdownItemLink { Text = "Option 2" };
+        /// dropdown.Add(item1, item2);
+        /// </code>
+        /// This method accepts any item that implements the <see cref="IControlDropdownItem"/> interface.
+        /// </remarks>
+        public void Add(params IControlDropdownItem[] items)
         {
-            Items.AddRange(content);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlDropdown(params IControlDropdownItem[] content)
-            : base(null)
-        {
-            Items.AddRange(content);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlDropdown(string id, IEnumerable<IControlDropdownItem> content)
-            : base(id)
-        {
-            Items.AddRange(content);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlDropdown(IEnumerable<IControlDropdownItem> content)
-            : base(null)
-        {
-            Items.AddRange(content);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Adds a new item.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        public void Add(IControlDropdownItem item)
-        {
-            Items.Add(item);
+            _items.AddRange(items);
         }
 
         /// <summary>
@@ -180,7 +153,7 @@ namespace WebExpress.WebUI.WebControl
         /// </summary>
         public void AddSeperator()
         {
-            Items.Add(null);
+            _items.Add(null);
         }
 
         /// <summary>
@@ -189,32 +162,28 @@ namespace WebExpress.WebUI.WebControl
         /// <param name="text">The headline text.</param>
         public void AddHeader(string text)
         {
-            Items.Add(new ControlDropdownItemHeader() { Text = text });
+            _items.Add(new ControlDropdownItemHeader() { Text = text });
         }
 
         /// <summary>
-        /// Initialization
+        /// Converts the control to an HTML representation.
         /// </summary>
-        private void Init()
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Size = TypeSizeButton.Default;
+            return Render(renderContext, visualTree, Items);
         }
 
         /// <summary>
-        /// Adds items.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="item">The items which should be added.</param>
-        public void Add(params IControlDropdownItem[] item)
-        {
-            Items.AddRange(item);
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <param name="items">The items to be included in the dropdown.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public virtual IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree, IEnumerable<IControlDropdownItem> items)
         {
             var html = new HtmlElementTextContentDiv()
             {
@@ -230,14 +199,14 @@ namespace WebExpress.WebUI.WebControl
                     Id = string.IsNullOrWhiteSpace(Id) ? "" : Id + "_btn",
                     Class = Css.Concatenate("btn", Css.Remove(GetClasses(), Margin.ToClass())),
                     Style = GetStyles(),
-                    Title = Title
+                    Title = I18N.Translate(Tooltip)
                 };
                 button.AddUserAttribute("data-bs-toggle", "dropdown");
                 button.AddUserAttribute("aria-expanded", "false");
 
-                if (Icon != null && Icon.HasIcon)
+                if (Icon != null)
                 {
-                    button.Elements.Add(new ControlIcon()
+                    button.Add(new ControlIcon()
                     {
                         Icon = Icon,
                         Margin = !string.IsNullOrWhiteSpace(Text) ? new PropertySpacingMargin
@@ -247,16 +216,16 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None,
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None),
-                        VerticalAlignment = Icon.IsUserIcon ? TypeVerticalAlignment.TextBottom : TypeVerticalAlignment.Default
-                    }.Render(context));
+                        VerticalAlignment = TypeVerticalAlignment.Default
+                    }.Render(renderContext, visualTree));
                 }
 
                 if (!string.IsNullOrWhiteSpace(Text))
                 {
-                    button.Elements.Add(new HtmlText(Text));
+                    button.Add(new HtmlText(I18N.Translate(renderContext.Request.Culture, Text)));
                 }
 
-                html.Elements.Add(button);
+                html.Add(button);
             }
             else
             {
@@ -280,22 +249,22 @@ namespace WebExpress.WebUI.WebControl
                     button.Width = Width;
                 }
 
-                html.Elements.Add(button);
+                html.Add(button);
             }
 
-            html.Elements.Add
+            html.Add
             (
                 new HtmlElementTextContentUl
                 (
-                    Items.Select
+                    items.Select
                     (
                         x =>
                         x == null || x is ControlDropdownItemDivider || x is ControlLine ?
                         new HtmlElementTextContentLi() { Class = "dropdown-divider", Inline = true } :
                         x is ControlDropdownItemHeader ?
-                        x.Render(context) :
-                        new HtmlElementTextContentLi(x.Render(context)) { Class = "dropdown-item " + ((x as ControlDropdownItemLink).Active == TypeActive.Disabled ? "disabled" : "") }
-                    )
+                        x.Render(renderContext, visualTree) :
+                        new HtmlElementTextContentLi(x.Render(renderContext, visualTree)) { Class = "dropdown-item " + ((x as ControlDropdownItemLink).Active == TypeActive.Disabled ? "disabled" : "") }
+                    ).ToArray()
                 )
                 {
                     Class = Css.Concatenate
@@ -310,9 +279,11 @@ namespace WebExpress.WebUI.WebControl
                 .Select(x => x as ControlDropdownItemLink)
                 .Select(x => x.Modal)
                 .Where(x => x.Type == TypeModal.Modal)
-                .Select(x => x.Modal.Render(context));
+                .Select(x => x.Modal.Render(renderContext, visualTree));
 
-            return new HtmlList(html, modals);
+            html.Add(modals);
+
+            return html;
         }
     }
 }

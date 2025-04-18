@@ -1,27 +1,32 @@
 ﻿using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a navigation item dropdown control.
+    /// </summary>
     public class ControlNavigationItemDropdown : ControlDropdown, IControlNavigationItem
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlNavigationItemDropdown(string id = null)
-            : base(id)
+        /// <param name="items">The items to be added to the dropdown.</param>
+        public ControlNavigationItemDropdown(string id = null, params IControlDropdownItem[] items)
+            : base(id, items)
         {
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            return base.Render(context);
+            return base.Render(renderContext, visualTree);
         }
     }
 }

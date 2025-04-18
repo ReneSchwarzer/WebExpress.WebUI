@@ -1,20 +1,20 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Kennzeichnet ein Element als Eigenschaft
+    /// Interface for defining properties that can be converted to CSS classes or styles.
     /// </summary>
     public interface IProperty
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the property to a CSS class.
         /// </summary>
-        /// <returns>Die zur Eigenschaft gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class corresponding to the property.</returns>
         string ToClass();
 
         /// <summary>
-        /// Umwandlung in einen CSS-Style
+        /// Converts the property to a CSS style.
         /// </summary>
-        /// <returns>Der zur Eigenschaft gehörende CSS-Style</returns>
+        /// <returns>The CSS style corresponding to the property.</returns>
         public abstract string ToStyle();
     }
 }

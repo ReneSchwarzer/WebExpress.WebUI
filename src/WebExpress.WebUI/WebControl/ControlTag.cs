@@ -1,16 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a control tag.
+    /// </summary>
     public class ControlTag : Control
     {
+        private readonly List<IControl> _items = [];
+
+        /// <summary>
+        /// Returns the collection of items contained in the control.
+        /// </summary>
+        public IEnumerable<IControl> Items => _items;
+
         /// <summary>
         /// Returns or sets the layout.
         /// </summary>
-        public TypeColorBackgroundBadge Layout { get; set; }
+        public PropertyColorBackgroundBadge Layout
+        {
+            get => (PropertyColorBackgroundBadge)GetPropertyObject();
+            set => SetProperty(value, () => value?.ToClass(), () => value?.ToStyle());
+        }
 
         /// <summary>
         /// Return or specifies whether rounded corners should be used.
@@ -23,101 +38,71 @@ namespace WebExpress.WebUI.WebControl
         public string Text { get; set; }
 
         /// <summary>
-        /// Returns or sets the content.
-        /// </summary>
-        protected List<Control> Items { get; private set; }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlTag(string id = null)
+        /// <param name="content">The content of the html element.</param>
+        public ControlTag(string id = null, params IControl[] content)
             : base(id)
         {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlTag(string id, params Control[] content)
-            : this(id)
-        {
-            Items.AddRange(content);
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlTag(string id, IEnumerable<Control> content)
-            : this(id)
-        {
-            Items.AddRange(content);
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
             Pill = true;
-            Items = new List<Control>();
+            _items.AddRange(content);
         }
 
         /// <summary>
-        /// Fügt ein neues Item hinzu
+        /// Adds the specified items to the control.
         /// </summary>
-        /// <param name="item"></param>
-        public void Add(Control item)
+        /// <param name="items">The items to add.</param>
+        public void Add(params IControl[] items)
         {
-            Items.Add(item);
-        }
-
+            _items.AddRange(items);
+        }
         /// <summary>
-        /// Fügt ein neuen Seterator hinzu
+        /// Adds a divider to the control.
         /// </summary>
-        public void AddSeperator()
+        public void AddDivider()
         {
-            Items.Add(null);
+            _items.AddRange(null);
         }
 
         /// <summary>
-        /// Fügt ein neuen Kopf hinzu
+        /// Removes the specified item from the control.
         /// </summary>
-        /// <param name="text">Der Überschriftstext</param>
+        /// <param name="item">The item to remove.</param>
+        public void Remove(IControl item)
+        {
+            _items.Remove(item);
+        }
+
+        /// <summary>
+        /// Adds a header to the control.   
+        /// </summary>
+        /// <param name="text">The header text.</param>
         public void AddHeader(string text)
         {
-            Items.Add(new ControlDropdownItemHeader() { Text = text });
+            _items.AddRange(new ControlDropdownItemHeader() { Text = text });
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
+            var pillClass = Pill ? "badge-pill" : "";
 
-            if (Pill)
+            if (_items.Count == 0)
             {
-                Classes.Add("badge-pill");
-            }
-
-            if (Items.Count == 0)
-            {
-                return new HtmlElementTextSemanticsSpan(new HtmlText(Text))
+                return new HtmlElementTextSemanticsSpan(new HtmlText(I18N.Translate(renderContext.Request?.Culture, Text)))
                 {
-                    Class = Css.Concatenate("badge", GetClasses()),
+                    Id = Id,
+                    Class = Css.Concatenate("badge", pillClass, GetClasses()),
                     Style = GetStyles(),
                     Role = Role
                 };
             }
-
-            Classes.Add("btn");
 
             var html = new HtmlElementTextSemanticsSpan()
             {
@@ -133,14 +118,14 @@ namespace WebExpress.WebUI.WebControl
                 }
             )
             {
-                Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                Class = Css.Concatenate("btn", pillClass, GetClasses()),
                 Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
                 Role = Role,
                 DataToggle = "dropdown"
             };
 
-            html.Elements.Add(tag);
-            html.Elements.Add
+            html.Add(tag);
+            html.Add
             (
                 new HtmlElementTextContentUl
                 (
@@ -150,9 +135,9 @@ namespace WebExpress.WebUI.WebControl
                         x == null ?
                         new HtmlElementTextContentLi() { Class = "dropdown-divider", Inline = true } :
                         x is ControlDropdownItemHeader ?
-                        x.Render(context) :
-                        new HtmlElementTextContentLi(x.Render(context).AddClass("dropdown-item")) { }
-                    )
+                        x.Render(renderContext, visualTree) :
+                        new HtmlElementTextContentLi(x.Render(renderContext, visualTree).AddClass("dropdown-item")) { }
+                    ).ToArray()
                 )
                 {
                     Class = HorizontalAlignment == TypeHorizontalAlignment.Right ? "dropdown-menu dropdown-menu-right" : "dropdown-menu"

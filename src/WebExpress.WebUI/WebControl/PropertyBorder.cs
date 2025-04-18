@@ -2,30 +2,33 @@
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents the border properties of a web control.
+    /// </summary>
     public class PropertyBorder : IProperty
     {
         /// <summary>
-        /// Der obere Abstand
+        /// Returns the top border.
         /// </summary>
         public bool Top { get; private set; }
 
         /// <summary>
-        /// Der untere Abstand
+        /// Returns te bottom border.
         /// </summary>
         public bool Bottom { get; private set; }
 
         /// <summary>
-        /// Der linke Abstand
+        /// Returns the left border.
         /// </summary>
         public bool Left { get; private set; }
 
         /// <summary>
-        /// Der rechte Abstand
+        /// Returns the right border.
         /// </summary>
         public bool Right { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class with no borders.
         /// </summary>
         public PropertyBorder()
         {
@@ -33,19 +36,19 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class with uniform borders.
         /// </summary>
-        /// <param name="showBorder">Bestimmt, ob ein einheitlicher Rahmen angezeigt werden soll</param>
+        /// <param name="showBorder">Determines whether to show a uniform border.</param>
         public PropertyBorder(bool showBorder = true)
         {
             Top = Bottom = Left = Right = showBorder;
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="PropertyBorder"/> class with specified horizontal and vertical borders.
         /// </summary>
-        /// <param name="horizontal">Der horzontale Rahmen</param>
-        /// <param name="vertical">Der vertikale Rahmen</param>
+        /// <param name="horizontal">The horizontal border.</param>
+        /// <param name="vertical">The vertical border.</param>
         public PropertyBorder(bool horizontal, bool vertical)
         {
             Left = Right = horizontal;
@@ -53,12 +56,12 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="PropertyBorder"/> class with specified borders for each side.
         /// </summary>
-        /// <param name="left">Der linke Rahmen</param>
-        /// <param name="right">Der rechte Rahmen</param>
-        /// <param name="top">Der obere Rahmen</param>
-        /// <param name="bottom">Der untere Rahmen</param>
+        /// <param name="left">The left border.</param>
+        /// <param name="right">The right border.</param>
+        /// <param name="top">The top border.</param>
+        /// <param name="bottom">The bottom border.</param>
         public PropertyBorder(bool left, bool right, bool top, bool bottom)
         {
             Left = left;
@@ -68,9 +71,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the border properties to a CSS class.
         /// </summary>
-        /// <returns>Die zum Rahmen gehörende CSS-KLasse</returns>
+        /// <returns>The CSS class corresponding to the border properties.</returns>
         public string ToClass()
         {
             if (Top == Bottom && Top == Left && Top == Right && Top == false)
@@ -124,9 +127,9 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Umwandlung in einen CSS-Style
+        /// Converts the border properties to a CSS style.
         /// </summary>
-        /// <returns>Der zur Farbe gehörende CSS-Style</returns>
+        /// <returns>The CSS style corresponding to the border properties.</returns>
         public virtual string ToStyle()
         {
             return null;

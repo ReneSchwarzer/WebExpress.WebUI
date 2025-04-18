@@ -1,9 +1,11 @@
-﻿using WebExpress.WebCore.WebComponent;
-using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebUri;
+﻿using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a date picker input form item control.
+    /// </summary>
     public class ControlFormItemInputDatepicker : ControlFormItemInput
     {
         /// <summary>
@@ -42,7 +44,7 @@ namespace WebExpress.WebUI.WebControl
         //public string InitializeCode => "$('#" + Id + " input').datepicker({ startDate: -3 });";
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemInputDatepicker(string id = null)
@@ -53,33 +55,30 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
         {
             AutoInitialize = true;
 
-            Value = context?.Request.GetParameter(Name)?.Value;
+            var contextPath = renderContext.PageContext?.ApplicationContext?.ContextPath;
 
-            var module = ComponentManager.ModuleManager.GetModule(context.ApplicationContext, typeof(Module));
-            if (module != null)
-            {
-                context.VisualTree.HeaderScriptLinks.Add(UriResource.Combine(module.ContextPath, "/assets/js/bootstrap-datepicker.min.js"));
-                context.VisualTree.HeaderScriptLinks.Add(UriResource.Combine(module.ContextPath, "/assets/js/locales_datepicker/bootstrap-datepicker." + context.Culture.TwoLetterISOLanguageName.ToLower() + ".min.js"));
-                context.VisualTree.CssLinks.Add(UriResource.Combine(module.ContextPath, "/assets/css/bootstrap-datepicker3.min.css"));
-            }
+            Value = renderContext?.Request.GetParameter(Name)?.Value;
 
-            context.AddScript(Id, @"$('#" + Id + @"').datepicker({format: ""dd.mm.yyyy"", todayBtn: true, language: ""de"", zIndexOffset: 999});");
+            //renderContext.AddHeaderScriptLinks(UriResource.Combine(contextPath, "/assets/js/bootstrap-datepicker.min.js"));
+            //renderContext.AddHeaderScriptLinks(UriResource.Combine(contextPath, "/assets/js/locales_datepicker/bootstrap-datepicker." + context.Culture.TwoLetterISOLanguageName.ToLower() + ".min.js"));
+            //renderContext.AddCssLinks(UriResource.Combine(contextPath, "/assets/css/bootstrap-datepicker3.min.css"));
+
+            //renderContext.AddScript(Id, @"$('#" + Id + @"').datepicker({format: ""dd.mm.yyyy"", todayBtn: true, language: ""de"", zIndexOffset: 999});");
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
-
-
             //if (Disabled)
             //{
             //    Classes.Add("disabled");
@@ -123,10 +122,10 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Checks the input element for correctness of the data.
         /// </summary>
-        /// <param name="context">The context in which the inputs are validated.</param>
-        public override void Validate(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the inputs are validated.</param>
+        public override void Validate(IRenderControlFormContext renderContext)
         {
-            base.Validate(context);
+            base.Validate(renderContext);
         }
     }
 }

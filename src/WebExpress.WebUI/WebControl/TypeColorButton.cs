@@ -1,18 +1,59 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Enumeration of button color types.
+    /// </summary>
     public enum TypeColorButton
     {
+        /// <summary>
+        /// Default button color.
+        /// </summary>
         Default = 0,
+
+        /// <summary>
+        /// Primary button color.
+        /// </summary>
         Primary = 1,
+
+        /// <summary>
+        /// Secondary button color.
+        /// </summary>
         Secondary = 2,
+
+        /// <summary>
+        /// Success button color.
+        /// </summary>
         Success = 3,
+
+        /// <summary>
+        /// Info button color.
+        /// </summary>
         Info = 4,
+
+        /// <summary>
+        /// Warning button color.
+        /// </summary>
         Warning = 5,
+
+        /// <summary>
+        /// Danger button color.
+        /// </summary>
         Danger = 6,
+
+        /// <summary>
+        /// Dark button color.
+        /// </summary>
         Dark = 7,
+
+        /// <summary>
+        /// Light button color.
+        /// </summary>
         Light = 8
     }
 
+    /// <summary>
+    /// Provides extension methods for the <see cref="TypeColorButton"/> enumeration.
+    /// </summary>
     public static class TypeColorButtonExtensions
     {
         /// <summary>

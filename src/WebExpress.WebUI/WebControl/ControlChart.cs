@@ -2,15 +2,29 @@
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using WebExpress.WebCore.WebComponent;
+using WebExpress.WebCore.WebEndpoint;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
-using WebExpress.WebCore.WebUri;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a chart control that can be used to display various types of charts.
+    /// </summary>
     public class ControlChart : Control
     {
+        private readonly List<ControlChartDataset> _datasets = [];
+
+        /// <summary>
+        /// Returns the datasets.
+        /// </summary>
+        public IEnumerable<ControlChartDataset> Data => _datasets;
+
+        /// <summary>
+        /// Returns or sets the labels.
+        /// </summary>
+        public ICollection<string> Labels { get; set; } = new List<string>();
+
         /// <summary>
         /// Returns or sets the type.
         /// </summary>
@@ -30,11 +44,6 @@ namespace WebExpress.WebUI.WebControl
         /// Returns or sets the title of the y-axis.
         /// </summary>
         public string TitleY { get; set; }
-
-        /// <summary>
-        /// Returns or sets the data.
-        /// </summary>
-        public ICollection<string> Labels { get; set; } = new List<string>();
 
         /// <summary>
         /// Returns or sets the width.
@@ -57,31 +66,24 @@ namespace WebExpress.WebUI.WebControl
         public float Maximum { get; set; } = float.MaxValue;
 
         /// <summary>
-        /// Returns or sets the data.
-        /// </summary>
-        public ICollection<ControlChartDataset> Data { get; set; } = new List<ControlChartDataset>();
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlChart(string id = null)
+        /// <param name="datasets">The datasets to be used in the chart.</param>
+        public ControlChart(string id = null, params ControlChartDataset[] datasets)
             : base(id)
         {
-        }
-
+            _datasets.AddRange(datasets);
+        }
         /// <summary>
         /// Initializes the control.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public void Initialize(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        protected void Initialize(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var module = ComponentManager.ModuleManager.GetModule(context.ApplicationContext, typeof(Module));
-            if (module != null)
-            {
-                context.VisualTree.HeaderScriptLinks.Add(UriResource.Combine(module.ContextPath, "/assets/js/Chart.min.js"));
-                context.VisualTree.CssLinks.Add(UriResource.Combine(module.ContextPath, "/assets/css/Chart.min.css"));
-            }
+            visualTree.AddHeaderScriptLink(RouteEndpoint.Combine(renderContext.PageContext?.ApplicationContext?.ContextPath, "/assets/js/Chart.min.js"));
+            visualTree.AddCssLink(RouteEndpoint.Combine(renderContext.PageContext?.ApplicationContext?.ContextPath, "/assets/css/Chart.min.css"));
 
             var builder = new StringBuilder();
             var data = new List<StringBuilder>();
@@ -132,17 +134,18 @@ namespace WebExpress.WebUI.WebControl
 
             builder.AppendLine($"var chart_{Id} = new Chart(document.getElementById('{Id}').getContext('2d'), config_{Id});");
 
-            context.VisualTree.AddScript($"chart_{Id}", builder.ToString());
+            visualTree.AddScript($"chart_{Id}", builder.ToString());
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Initialize(context);
+            Initialize(renderContext, visualTree);
 
             var html = new HtmlElementScriptingCanvas()
             {

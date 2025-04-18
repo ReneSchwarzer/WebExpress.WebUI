@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using WebExpress.WebCore.WebComponent;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebUri;
-using static WebExpress.WebCore.Internationalization.InternationalizationManager;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a text box input form item control.
+    /// </summary>
     public class ControlFormItemInputTextBox : ControlFormItemInput
     {
         /// <summary>
@@ -32,12 +35,12 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the minimum length.
         /// </summary>
-        public int? MinLength { get; set; }
+        public uint? MinLength { get; set; }
 
         /// <summary>
         /// Returns or sets the maximum length.
         /// </summary>
-        public int? MaxLength { get; set; }
+        public uint? MaxLength { get; set; }
 
         /// <summary>
         /// Returns or sets whether inputs are enforced.
@@ -50,12 +53,12 @@ namespace WebExpress.WebUI.WebControl
         public string Pattern { get; set; }
 
         /// <summary>
-        /// Returns or sets the height of the text fiel (for Multiline and WYSIWYG)
+        /// Returns or sets the height of the text field (for Multiline and WYSIWYG).
         /// </summary>
-        public int Rows { get; set; }
+        public uint? Rows { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlFormItemInputTextBox(string id = null)
@@ -66,63 +69,52 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="name">The name of the text box.</param>
-        public ControlFormItemInputTextBox(string id, string name)
-            : base(id)
-        {
-            Name = name;
-        }
-
-        /// <summary>
         /// Initializes the form element.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        public override void Initialize(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        public override void Initialize(IRenderControlFormContext renderContext)
         {
-            base.Initialize(context);
+            base.Initialize(renderContext);
 
             Rows = 8;
             AutoInitialize = true;
 
-            Value = context?.Request.GetParameter(Name)?.Value;
+            Value = renderContext?.Request.GetParameter(Name)?.Value;
 
             if (Format == TypesEditTextFormat.Wysiwyg)
             {
-                var module = ComponentManager.ModuleManager.GetModule(context.ApplicationContext, typeof(Module));
-                if (module != null)
-                {
-                    context.VisualTree.CssLinks.Add(UriResource.Combine(module.ContextPath, "/assets/css/summernote-bs5.min.css"));
-                    context.VisualTree.HeaderScriptLinks.Add(UriResource.Combine(module.ContextPath, "/assets/js/summernote-bs5.min.js"));
-                }
+                var contextPath = renderContext?.PageContext?.ApplicationContext?.ContextPath;
+                //renderContext.AddCssLinks(UriResource.Combine(contextPath, "/assets/css/summernote-bs5.min.css"));
+                //renderContext.AddHeaderScriptLinks(UriResource.Combine(contextPath, "/assets/js/summernote-bs5.min.js"));
             }
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlFormContext renderContext, IVisualTreeControl visualTree)
         {
             var id = Id ?? Guid.NewGuid().ToString();
 
-            Classes.Add("form-control");
+            var classes = new List<string>(Classes);
+
+            classes.Add("form-control");
 
             if (Disabled)
             {
-                Classes.Add("disabled");
+                classes.Add("disabled");
             }
 
             switch (ValidationResult)
             {
                 case TypesInputValidity.Warning:
-                    Classes.Add("input-warning");
+                    classes.Add("input-warning");
                     break;
                 case TypesInputValidity.Error:
-                    Classes.Add("input-error");
+                    classes.Add("input-error");
                     break;
             }
 
@@ -130,7 +122,7 @@ namespace WebExpress.WebUI.WebControl
             {
                 var initializeCode = $"$(document).ready(function() {{ $('#{id}').summernote({{ tabsize: 2, height: '{Rows}rem', lang: 'de-DE' }}); }});";
 
-                context.AddScript(id, initializeCode);
+                visualTree.AddScript(id, initializeCode);
 
                 AutoInitialize = false;
             }
@@ -142,10 +134,10 @@ namespace WebExpress.WebUI.WebControl
                     Id = Id,
                     Value = Value,
                     Name = Name,
-                    Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                    Class = string.Join(" ", classes.Where(x => !string.IsNullOrWhiteSpace(x))),
                     Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
                     Role = Role,
-                    Placeholder = I18N(context.Culture, Placeholder),
+                    Placeholder = I18N.Translate(renderContext.Request?.Culture, Placeholder),
                     Rows = Rows.ToString()
                 },
                 TypesEditTextFormat.Wysiwyg => new HtmlElementFormTextarea()
@@ -153,10 +145,10 @@ namespace WebExpress.WebUI.WebControl
                     Id = id,
                     Value = Value,
                     Name = Name,
-                    Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                    Class = string.Join(" ", classes.Where(x => !string.IsNullOrWhiteSpace(x))),
                     Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
                     Role = Role,
-                    Placeholder = I18N(context.Culture, Placeholder),
+                    Placeholder = I18N.Translate(renderContext.Request?.Culture, Placeholder),
                     Rows = Rows.ToString()
                 },
                 _ => new HtmlElementFieldInput()
@@ -170,10 +162,10 @@ namespace WebExpress.WebUI.WebControl
                     Pattern = Pattern,
                     Type = "text",
                     Disabled = Disabled,
-                    Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                    Class = string.Join(" ", classes.Where(x => !string.IsNullOrWhiteSpace(x))),
                     Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
                     Role = Role,
-                    Placeholder = I18N(context.Culture, Placeholder)
+                    Placeholder = I18N.Translate(renderContext.Request?.Culture, Placeholder)
                 },
             };
         }
@@ -181,10 +173,10 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Checks the input element for correctness of the data.
         /// </summary>
-        /// <param name="context">The context in which the inputs are validated.</param>
-        public override void Validate(RenderContextFormular context)
+        /// <param name="renderContext">The context in which the inputs are validated.</param>
+        public override void Validate(IRenderControlFormContext renderContext)
         {
-            base.Validate(context);
+            base.Validate(renderContext);
 
             if (Disabled)
             {
@@ -193,19 +185,19 @@ namespace WebExpress.WebUI.WebControl
 
             if (Required && string.IsNullOrWhiteSpace(base.Value))
             {
-                ValidationResults.Add(new ValidationResult(TypesInputValidity.Error, "webexpress.webui:form.inputtextbox.validation.required"));
+                AddValidationResult(new ValidationResult(TypesInputValidity.Error, "webexpress.webui:form.inputtextbox.validation.required"));
 
                 return;
             }
 
             if (!string.IsNullOrWhiteSpace(MinLength?.ToString()) && Convert.ToInt32(MinLength) > base.Value.Length)
             {
-                ValidationResults.Add(new ValidationResult(TypesInputValidity.Error, string.Format(I18N(context.Culture, "webexpress.webui:form.inputtextbox.validation.min"), MinLength)));
+                AddValidationResult(new ValidationResult(TypesInputValidity.Error, string.Format(I18N.Translate(renderContext.Request?.Culture, "webexpress.webui:form.inputtextbox.validation.min"), MinLength)));
             }
 
             if (!string.IsNullOrWhiteSpace(MaxLength?.ToString()) && Convert.ToInt32(MaxLength) < base.Value.Length)
             {
-                ValidationResults.Add(new ValidationResult(TypesInputValidity.Error, string.Format(I18N(context.Culture, "webexpress.webui:form.inputtextbox.validation.max"), MaxLength)));
+                AddValidationResult(new ValidationResult(TypesInputValidity.Error, string.Format(I18N.Translate(renderContext.Request?.Culture, "webexpress.webui:form.inputtextbox.validation.max"), MaxLength)));
             }
         }
     }

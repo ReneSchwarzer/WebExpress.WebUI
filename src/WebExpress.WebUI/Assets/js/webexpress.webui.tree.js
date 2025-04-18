@@ -4,7 +4,7 @@
  * - webexpress.webui.change.visibility 
  */
 webexpress.webui.treeCtrl = class extends webexpress.webui.events {
-    _container = $("<ul class='tree'/>");
+    _container = $("<ul class='wx-tree'/>");
     _nodes = [];
 
     /**
@@ -16,13 +16,13 @@ webexpress.webui.treeCtrl = class extends webexpress.webui.events {
     constructor(settings) {
         super();
 
-        let id = settings.id ?? "";
-        let css = settings.css;
+        const id = settings.id ?? "";
+        const css = settings.css;
 
         this._container.attr("id", id);
         this._container.addClass(css);
     }
-    
+
     /**
      * Update of the control.
      * This function works recursively.
@@ -30,39 +30,40 @@ webexpress.webui.treeCtrl = class extends webexpress.webui.events {
      * @param nodes The nodes to be inserted.
      */
     update(container, nodes) {
+        // Clear existing children
         container.children().remove();
         
-        nodes.forEach(function (node) {
-            let children = node.children;
-            let color = node.color ?? "";
-            let li = $("<li class='tree-node'></li>");
-            let expand = $("<span class='" + color + "'/>");
-            let icon = $("<i class='" + (node.icon ?? "") + "'/>");
+        nodes.forEach((node) => {
+            const children = node.children;
+            const color = node.color ?? "";
+            const li = $("<li class='wx-tree-node'></li>");
+            const expand = $("<span class='" + color + "'/>");
+            const icon = $("<i class='" + (node.icon ?? "") + "'/>");
             li.append(expand);
                         
             if (children != null) {
-                let ul = $("<ul/>");
-                let indicator = $("<a class='tree-indicator-angle' href='#'/>");
+                const ul = $("<ul/>");
+                const indicator = $("<a class='wx-tree-indicator-angle' href='#'/>");
                 if (node.expand) {
                     this.update(ul, children);
-                    indicator.addClass("tree-expand");
+                    indicator.addClass("wx-tree-expand");
                 }
                 expand.append(indicator);
                 li.append(ul);
                 
-                expand.click(function () {
+                expand.click(() => {
                     this.trigger('webexpress.webui.change.visibility', li, node);      
                     if (!node.expand) {
-                        indicator.addClass("tree-expand");
+                        indicator.addClass("wx-tree-expand");
                         this.update(ul, children);
                     } else {
-                        indicator.removeClass("tree-expand");
+                        indicator.removeClass("wx-tree-expand");
                         ul.children().remove();
                     }
                     node.expand = !node.expand;
-                }.bind(this));
+                });
             } else {
-                let indicator = $("<a class='tree-indicator-dot' href='#'/>");
+                const indicator = $("<a class='wx-tree-indicator-dot' href='#'/>");
                 expand.append(indicator);
             }
             
@@ -70,36 +71,33 @@ webexpress.webui.treeCtrl = class extends webexpress.webui.events {
                 expand.append(icon);
             }
             
-            if (node.render != null && (typeof node.render === 'string' || node.render instanceof String)) {
-                let render = Function("node", node.render);
-                let renderResult = render(node);
-                if (renderResult != null && renderResult != null) {
+            if (typeof node.render === 'string' || node.render instanceof String) {
+                const render = new Function("node", node.render);
+                const renderResult = render(node);
+                if (renderResult != null) {
                     expand.append(renderResult);
                 }
             } else {
-                
                 expand.append($("<span>" + node.label + "</span>"));
             }
             
             container.append(li);
-            
-        }.bind(this));
+        });
     }
-    
+
     /**
      * Returns the tree nodes.
      */
     get nodes() {
         return this._nodes;
     }
-    
+
     /**
      * Set the nodes of the tree.
      * @param nodes An array with object ids {id, label, description, image, color, expand}.
      */
     set nodes(nodes) {
         this._nodes = nodes;
-          
         this.update(this._container, this._nodes);
     }
 

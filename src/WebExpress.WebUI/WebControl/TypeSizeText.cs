@@ -1,34 +1,56 @@
 ﻿namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Die Größenmöglichkeiten
+    /// The size options for text.
     /// </summary>
     public enum TypeSizeText
     {
+        /// <summary>
+        /// Default size.
+        /// </summary>
         Default = 0,
+
+        /// <summary>
+        /// Extra small size.
+        /// </summary>
         ExtraSmall = 1,
+
+        /// <summary>
+        /// Small size.
+        /// </summary>
         Small = 2,
+
+        /// <summary>
+        /// Large size.
+        /// </summary>
         Large = 3,
+
+        /// <summary>
+        /// Extra large size.
+        /// </summary>
         ExtraLarge = 4
     }
 
+    /// <summary>
+    /// Provides extension methods for the <see cref="TypeSizeText"/> enum.
+    /// </summary>
     public static class TypesSizeTextExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the <see cref="TypeSizeText"/> size to a CSS class.
         /// </summary>
-        /// <param name="size">Die Größe, welches umgewandelt werden soll</param>
-        /// <returns>The CSS class belonging to the layout</returns>
+        /// <param name="size">The size to be converted.</param>
+        /// <returns>The CSS class corresponding to the size.</returns>
         public static string ToClass(this TypeSizeText size)
         {
             return string.Empty;
         }
 
         /// <summary>
-        /// Umwandlung in einen CSS-Style
+        /// Converts the <see cref="TypeSizeText"/> size to a CSS style.
         /// </summary>
-        /// <param name="size">Die Größe, welches umgewandelt werden soll</param>
-        /// <returns>Der zur Größe gehörende CSS-Style</returns>
+        /// <param name="size">The size to be converted.</param>
+        /// <returns>The CSS style corresponding to the size.</returns>
         public static string ToStyle(this TypeSizeText size)
         {
             return size switch

@@ -1,8 +1,12 @@
-﻿using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+﻿using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a header item in a split button control.
+    /// </summary>
     public class ControlSplitButtonItemHeader : Control, IControlSplitButtonItem
     {
         /// <summary>
@@ -11,43 +15,23 @@ namespace WebExpress.WebUI.WebControl
         public string Text { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlSplitButtonItemHeader(string id = null)
             : base(id)
         {
-            Init();
         }
 
         /// <summary>
-        /// Constructor
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="text">The text.</param>
-        public ControlSplitButtonItemHeader(string id, string text)
-            : base(id)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Text = text;
-
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            return new HtmlElementTextContentLi(new HtmlText(Text))
+            return new HtmlElementTextContentLi(new HtmlText(I18N.Translate(renderContext?.Request?.Culture, Text)))
             {
                 Id = Id,
                 Class = Css.Concatenate("dropdown-header", GetClasses()),

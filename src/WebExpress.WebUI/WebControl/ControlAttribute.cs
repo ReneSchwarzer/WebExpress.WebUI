@@ -2,24 +2,25 @@
 using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebIcon;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
     /// <summary>
-    /// Display of a name-value pair.
+    /// Represents a control attribute with a name-value pair.
     /// </summary>
     public class ControlAttribute : Control
     {
         /// <summary>
-        /// Returns or sets the text.farbe des Namens
+        /// Returns or sets the text color of the name.
         /// </summary>
         public PropertyColorText NameColor { get; set; }
 
         /// <summary>
         /// Returns or sets the icon.
         /// </summary>
-        public PropertyIcon Icon { get; set; }
+        public IIcon Icon { get; set; }
 
         /// <summary>
         /// Returns or sets the name.
@@ -37,7 +38,7 @@ namespace WebExpress.WebUI.WebControl
         public Uri Uri { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         public ControlAttribute(string id = null)
@@ -46,29 +47,27 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             if (!Enable)
             {
                 return null;
             }
 
-            var icon = new HtmlElementTextSemanticsSpan()
-            {
-                Class = Icon?.ToClass()
-            };
+            var icon = Icon?.Render(renderContext, visualTree);
 
-            var name = new HtmlElementTextSemanticsSpan(new HtmlText(context.I18N(Name)))
+            var name = new HtmlElementTextSemanticsSpan(new HtmlText(I18N.Translate(renderContext.Request?.Culture, Name)))
             {
                 Id = string.IsNullOrWhiteSpace(Id) ? string.Empty : $"{Id}_name",
                 Class = NameColor?.ToClass()
             };
 
-            var value = new HtmlElementTextSemanticsSpan(new HtmlText(context.I18N(Value)))
+            var value = new HtmlElementTextSemanticsSpan(new HtmlText(I18N.Translate(renderContext.Request?.Culture, Value)))
             {
                 Id = string.IsNullOrWhiteSpace(Id) ? string.Empty : $"{Id}_value",
                 Class = NameColor?.ToClass()
@@ -76,7 +75,7 @@ namespace WebExpress.WebUI.WebControl
 
             var html = new HtmlElementTextContentDiv
             (
-                Icon != null && Icon.HasIcon ? icon : null,
+                Icon != null ? icon : null,
                 name,
                 Uri != null ? new HtmlElementTextSemanticsA(value) { Href = Uri.ToString() } : value
             )

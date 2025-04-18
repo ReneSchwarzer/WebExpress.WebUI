@@ -1,11 +1,21 @@
 ﻿using System.Collections.Generic;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a navigation control.
+    /// </summary>
     public class ControlNavigation : Control
     {
+        private List<IControlNavigationItem> _items = [];
+
+        /// <summary>
+        /// Returns the navigation items.
+        /// </summary>
+        public IEnumerable<IControlNavigationItem> Items => _items;
+
         /// <summary>
         /// Returns or sets the layout.
         /// </summary>
@@ -58,78 +68,87 @@ namespace WebExpress.WebUI.WebControl
         public PropertyColorText LinkColor { get; set; } = new PropertyColorText();
 
         /// <summary>
-        /// Returns or sets the navigation items.
-        /// </summary>
-        public List<IControlNavigationItem> Items { get; private set; } = new List<IControlNavigationItem>();
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlNavigation(string id = null)
-            : base(id)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
         /// <param name="items">The navigation items.</param>
-        public ControlNavigation(params IControlNavigationItem[] items)
-            : base(null)
-        {
-            Items.AddRange(items);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlNavigation(string id, IEnumerable<IControlNavigationItem> content)
+        public ControlNavigation(string id = null, params IControlNavigationItem[] items)
             : base(id)
         {
-            Items.AddRange(content);
+            _items.AddRange(items);
 
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlNavigation(IEnumerable<IControlNavigationItem> content)
-            : base(null)
-        {
-            Items.AddRange(content);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
             //ActiveColor = LayoutSchema.NavigationActiveBackground;
             //ActiveTextColor = LayoutSchema.NavigationActive;
             //LinkColor = LayoutSchema.NavigationLink;
         }
 
+        /// <summary> 
+        /// Adds one or more items to the content of the control.
+        /// </summary> 
+        /// <param name="items">The items to add to the control.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple items to the <see cref="Items"/> collection of 
+        /// the control.
+        /// Example usage: 
+        /// <code> 
+        /// var control = new ControlNavigation(); 
+        /// var text1 = new ControlNavigationItemLink { Text = "A" };
+        /// var text2 = new ControlNavigationItemLink { Text = "B" };
+        /// control.Add(text1, text2);
+        /// </code> 
+        /// This method accepts any items that implements the <see cref="IControlNavigationItem"/> interface.
+        /// </remarks>
+        public virtual void Add(params IControlNavigationItem[] items)
+        {
+            _items.AddRange(items);
+        }
+
+        /// <summary> 
+        /// Adds one or more items to the content of the control.
+        /// </summary> 
+        /// <param name="items">The items to add to the control.</param> 
+        /// <remarks> 
+        /// This method allows adding one or multiple items to the <see cref="Items"/> collection of 
+        /// the control.
+        /// Example usage: 
+        /// <code> 
+        /// var control = new ControlNavigation(); 
+        /// var text1 = new ControlNavigationItemLink { Text = "A" };
+        /// var text2 = new ControlNavigationItemLink { Text = "B" };
+        /// control.Add(new List<IControl>([text1, text2]));
+        /// </code> 
+        /// This method accepts any items that implements the <see cref="IControlNavigationItem"/> interface.
+        /// </remarks>
+        public virtual void Add(IEnumerable<IControlNavigationItem> controls)
+        {
+            _items.AddRange(controls);
+        }
+
         /// <summary>
-        /// Convert to html.
+        /// Removes a item from the content of the control.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="item">The item to remove from the content.</param>
+        /// <remarks>
+        /// This method allows removing a specific item from the <see cref="Items"/> collection of 
+        /// the control.
+        /// </remarks>
+        public virtual void Remove(IControlNavigationItem item)
+        {
+            _items.Remove(item);
+        }
+
+        /// <summary>
+        /// Converts the control to an HTML representation.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var items = new List<HtmlElement>();
             foreach (var item in Items)
             {
-                var i = item.Render(context) as HtmlElement;
+                var i = item.Render(renderContext, visualTree) as HtmlElement;
 
                 if (item is ControlNavigationItemLink link)
                 {
@@ -191,7 +210,7 @@ namespace WebExpress.WebUI.WebControl
                 });
             }
 
-            var html = new HtmlElementTextContentUl(items)
+            var html = new HtmlElementTextContentUl(items.ToArray())
             {
                 Id = Id,
                 Class = Css.Concatenate("nav", GetClasses()),

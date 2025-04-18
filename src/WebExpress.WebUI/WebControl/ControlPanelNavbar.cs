@@ -1,67 +1,41 @@
 ﻿using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a navigation bar control panel that can contain multiple child controls.
+    /// </summary>
     public class ControlPanelNavbar : ControlPanel
     {
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlPanelNavbar(string id = null)
-            : base(id)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="items">The navbar items.</param>
-        public ControlPanelNavbar(string id, params Control[] items)
+        public ControlPanelNavbar(string id = null, params IControl[] items)
             : base(id, items)
         {
-            Init();
         }
 
         /// <summary>
-        /// Constructor
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="items">The navbar items.</param>
-        public ControlPanelNavbar(params Control[] items)
-            : base(items)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            Init();
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            var html = new HtmlElementSectionNav()
+            return new HtmlElementSectionNav(Content
+                .Select(x => x.Render(renderContext, visualTree))
+                .ToArray())
             {
                 Id = Id,
                 Class = Css.Concatenate("navbar", GetClasses()),
                 Style = GetStyles(),
                 Role = Role
             };
-
-            html.Elements.AddRange(from x in Content select x?.Render(context));
-
-            return html;
         }
     }
 }

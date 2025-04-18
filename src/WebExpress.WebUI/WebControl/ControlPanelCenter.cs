@@ -1,65 +1,41 @@
 ﻿using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a control panel that centers its child controls within its layout.
+    /// </summary>
     public class ControlPanelCenter : ControlPanel
     {
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlPanelCenter(string id = null)
-            : base(id)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlPanelCenter(params Control[] content)
-            : this()
-        {
-            Content.AddRange(content);
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The content of the html element.</param>
-        public ControlPanelCenter(string id, params Control[] content)
-            : this(id)
-        {
-            Content.AddRange(content);
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
+        public ControlPanelCenter(string id = null, params IControl[] content)
+            : base(id, content)
         {
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var html = new HtmlElementTextContentDiv(from x in Content select x.Render(context))
+            return new HtmlElementTextContentDiv(Content
+                .Select(x => x.Render(renderContext, visualTree))
+                .ToArray())
             {
                 Id = Id,
-                Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                Class = GetClasses(),
                 Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
                 Role = Role
             };
-
-            return html;
         }
     }
 }

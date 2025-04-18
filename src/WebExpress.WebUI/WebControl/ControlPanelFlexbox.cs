@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a control panel that uses a flexbox layout to arrange its child controls.
+    /// </summary>
     public class ControlPanelFlexbox : ControlPanel
     {
         /// <summary>
@@ -26,7 +28,7 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Bestimmt, ob Specifies or sets the vertical orientation of the items.
+        /// Returns or sets the vertical orientation of the items.
         /// </summary>
         public virtual TypeAlignFlexbox Align
         {
@@ -44,70 +46,32 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        public ControlPanelFlexbox(string id = null)
-            : base(id)
-        {
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
         /// <param name="content">The flexbox items.</param>
-        public ControlPanelFlexbox(string id, params IControl[] content)
+        public ControlPanelFlexbox(string id = null, params IControl[] content)
             : base(id, content)
         {
         }
 
         /// <summary>
-        /// Constructor
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="content">The flexbox items.</param>
-        public ControlPanelFlexbox(params IControl[] content)
-            : base(null, content)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="items">The flexbox items.</param>
-        public ControlPanelFlexbox(string id, IEnumerable<IControl> content)
-            : base(id, content)
-        {
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="items">The flexbox items.</param>
-        public ControlPanelFlexbox(IEnumerable<IControl> content)
-            : base(null, content)
-        {
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
-        {
-            var html = new HtmlElementTextContentDiv()
+            return new HtmlElementTextContentDiv(Content
+                .Select(x => x.Render(renderContext, visualTree))
+                .ToArray())
             {
                 Id = Id,
                 Class = Css.Concatenate("", GetClasses()),
                 Style = GetStyles(),
                 Role = Role
             };
-
-            html.Elements.AddRange(Content.Select(x => x.Render(context)));
-
-            return html;
         }
     }
 }

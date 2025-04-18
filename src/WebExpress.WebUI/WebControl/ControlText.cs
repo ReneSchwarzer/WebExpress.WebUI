@@ -1,9 +1,12 @@
-﻿using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
-using static WebExpress.WebCore.Internationalization.InternationalizationManager;
+﻿using WebExpress.WebCore.Internationalization;
+using WebExpress.WebCore.WebHtml;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a text control with various formatting options.
+    /// </summary>
     public class ControlText : Control
     {
         /// <summary>
@@ -16,8 +19,12 @@ namespace WebExpress.WebUI.WebControl
         }
 
         /// <summary>
-        /// Liefert oder setzt das Format des Textes
+        /// Returns or sets the format of the text.
         /// </summary>
+        /// <value>The format of the text.</value>
+        /// <remarks>
+        /// This property allows you to specify the format of the text, such as paragraph, italic, bold, underline, etc.
+        /// </remarks>
         public TypeFormatText Format { get; set; }
 
         /// <summary>
@@ -40,31 +47,24 @@ namespace WebExpress.WebUI.WebControl
         public string Title { get; set; }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public ControlText()
-            : base(null)
-        {
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlText(string id)
+        public ControlText(string id = null)
             : base(id)
         {
         }
 
         /// <summary>
-        /// Convert to html.
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var text = I18N(context.Culture, Text);
-            HtmlElement html;
+            var text = I18N.Translate(renderContext?.Request.Culture, Text);
+            var html = default(HtmlElement);
 
             switch (Format)
             {

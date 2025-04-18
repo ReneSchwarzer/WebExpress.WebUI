@@ -1,57 +1,45 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a control that displays multiple progress bars.
+    /// </summary>
     public class ControlMultipleProgressBar : Control
     {
+        private readonly List<ControlMultipleProgressBarItem> _items = [];
+
+        /// <summary>
+        /// Returns the items of the multiple progress bar.
+        /// </summary>
+        public IEnumerable<ControlMultipleProgressBarItem> Items => _items;
+
         /// <summary>
         /// Returns or sets the format of the progress bar.
         /// </summary>
         public TypeFormatProgress Format { get; set; }
 
         /// <summary>
-        /// Returns or sets the value.
-        /// </summary>
-        public List<ControlMultipleProgressBarItem> Items { get; private set; }
-
-        /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class with the specified id and items.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlMultipleProgressBar(string id = null)
+        /// <param name="items">The items to be added to the multiple progress bar.</param>
+        public ControlMultipleProgressBar(string id = null, params ControlMultipleProgressBarItem[] items)
             : base(id)
         {
-            Init();
-        }
-
+            _items.AddRange(items);
+        }
         /// <summary>
-        /// Constructor
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="value">The value.</param>
-        public ControlMultipleProgressBar(string id, params ControlMultipleProgressBarItem[] items)
-            : this(id)
-        {
-            Items.AddRange(items);
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
-        {
-            Items = new List<ControlMultipleProgressBarItem>();
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var barClass = new List<string>();
 
@@ -73,7 +61,7 @@ namespace WebExpress.WebUI.WebControl
                     break;
 
                 default:
-                    return new HtmlElementFormProgress(Items.Select(x => x.Value).Sum() + "%")
+                    return new HtmlElementFormProgress(_items.Select(x => (int)x.Value).Sum() + "%")
                     {
                         Id = Id,
                         Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
@@ -81,21 +69,19 @@ namespace WebExpress.WebUI.WebControl
                         Role = Role,
                         Min = "0",
                         Max = "100",
-                        Value = Items.Select(x => x.Value).Sum().ToString()
+                        Value = _items.Select(x => (int)x.Value).Sum().ToString()
                     };
             }
-
-            Classes.Add("progress");
 
             var html = new HtmlElementTextContentDiv()
             {
                 Id = Id,
-                Class = string.Join(" ", Classes.Where(x => !string.IsNullOrWhiteSpace(x))),
+                Class = Css.Concatenate("progress", GetClasses()),
                 Style = string.Join("; ", Styles.Where(x => !string.IsNullOrWhiteSpace(x))),
                 Role = Role
             };
 
-            foreach (var v in Items)
+            foreach (var v in _items)
             {
                 var styles = new List<string>
                 {
@@ -104,12 +90,11 @@ namespace WebExpress.WebUI.WebControl
 
                 var c = new List<string>(barClass)
                 {
-                    v.BackgroundColor.ToClass()
+                    v.BackgroundColor.ToClass(),
+                    v.Color.ToClass()
                 };
 
-                barClass.Add(v.Color.ToClass());
-
-                var bar = new HtmlElementTextContentDiv(new HtmlText(v.Text))
+                var bar = new HtmlElementTextContentDiv(new HtmlText(I18N.Translate(renderContext.Request?.Culture, v.Text)))
                 {
                     Id = Id,
                     Class = string.Join(" ", c.Where(x => !string.IsNullOrWhiteSpace(x))),
@@ -117,7 +102,7 @@ namespace WebExpress.WebUI.WebControl
                     Role = Role
                 };
 
-                html.Elements.Add(bar);
+                html.Add(bar);
             }
 
             return html;

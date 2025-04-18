@@ -2,20 +2,11 @@
 plugin.name=WebExpress.WebUI
 plugin.description=Stellt Basiskomponenten bereit.
 
-module.name=WebExpress.WebUI
-module.description=Stellt Basiskomponenten bereit.
-
-fragmentmanager.initialization=Der Fragmentmanager wurde initialisiert.
-fragmentmanager.register=Das Fragment '{0}' wurde in der Sektion '{1}' der Anwendung '{2}' registriert.
-fragmentmanager.error.section=Die Angabe der Sektion ist fehlerhaft.
-fragmentmanager.wrongtype=Der Typ '{0}' implementiert die Schnittstelle '{1}' nicht.
-fragmentmanager.moduleless=Das Fragment '{0}' aus dem Plugin '{1}' besitzt keine Angaben zum Modul.
-fragmentmanager.addfragment.duplicate=Das Fragment '{0}' des Moduls '{1}' ist bereits hinzugefügt worden.
-fragmentmanager.titel=Fragmente:
-fragmentmanager.fragment={0}
+notificationmanager.initialization=Der Benachrichtigungsmanager wurde initialisiert.
 
 form.empty.id=Das Formular verfügt über keine Id!
 form.submit.label=Speichern
+form.reset.label=Zurücksetzen
 form.next.label=Speichern und weiter
 form.cancel.label=Abbrechen
 form.selectionmove.available=Verfügbare Optionen

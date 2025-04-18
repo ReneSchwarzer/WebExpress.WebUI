@@ -3,9 +3,9 @@
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
 		<Title>WebExpress.WebUI</Title>
-		<Version>0.0.7.0</Version>
-		<AssemblyVersion>0.0.7.0</AssemblyVersion>
-		<TargetFramework>net8.0</TargetFramework>
+		<Version>0.0.8.0</Version>
+		<AssemblyVersion>0.0.8.0</AssemblyVersion>
+		<TargetFramework>net9.0</TargetFramework>
 		<RuntimeIdentifiers>any</RuntimeIdentifiers>
 		<RepositoryUrl>https://github.com/ReneSchwarzer/WebExpress.WebUI</RepositoryUrl>
 		<Authors>Rene_Schwarzer@hotmail.de</Authors>
@@ -14,7 +14,7 @@
 		<EnableDynamicLoading>true</EnableDynamicLoading>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Description>Provide user interface elements to the WebExpress web server.</Description>
-		<PackageVersion>0.0.7-alpha</PackageVersion>
+		<PackageVersion>0.0.8-alpha</PackageVersion>
 		<PackageProjectUrl>https://github.com/ReneSchwarzer/WebExpress</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -27,8 +27,11 @@
 
 	<ItemGroup>
 		<Compile Remove="Assets\js\locales\**" />
+		<Compile Remove="WebResource\**" />
 		<EmbeddedResource Remove="Assets\js\locales\**" />
+		<EmbeddedResource Remove="WebResource\**" />
 		<None Remove="Assets\js\locales\**" />
+		<None Remove="WebResource\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -47,7 +50,7 @@
 		<None Remove="Assets\css\webexpress.webui.css" />
 		<None Remove="Assets\css\webexpress.webui.expand.css" />
 		<None Remove="Assets\css\webexpress.webui.form.css" />
-		<None Remove="Assets\css\webexpress.webui.modalformular.css" />
+		<None Remove="Assets\css\webexpress.webui.modalform.css" />
 		<None Remove="Assets\css\webexpress.webui.modalpage.css" />
 		<None Remove="Assets\css\webexpress.webui.more.css" />
 		<None Remove="Assets\css\webexpress.webui.move.css" />
@@ -56,10 +59,14 @@
 		<None Remove="Assets\css\webexpress.webui.selection.css" />
 		<None Remove="Assets\css\webexpress.webui.table.css" />
 		<None Remove="Assets\css\webexpress.webui.toolpanel.css" />
-		<None Remove="Assets\fonts\fa-solid-900.eot" />
+		<None Remove="Assets\fonts\fa-brands-400.ttf" />
+		<None Remove="Assets\fonts\fa-brands-400.woff2" />
+		<None Remove="Assets\fonts\fa-regular-400.ttf" />
+		<None Remove="Assets\fonts\fa-regular-400.woff2" />
 		<None Remove="Assets\fonts\fa-solid-900.ttf" />
-		<None Remove="Assets\fonts\fa-solid-900.woff" />
 		<None Remove="Assets\fonts\fa-solid-900.woff2" />
+		<None Remove="Assets\fonts\fa-v4compatibility.ttf" />
+		<None Remove="Assets\fonts\fa-v4compatibility.woff2" />
 		<None Remove="Assets\fonts\summernote.eot" />
 		<None Remove="Assets\fonts\summernote.ttf" />
 		<None Remove="Assets\fonts\summernote.woff" />
@@ -176,10 +183,10 @@
 		<None Remove="Assets\js\summernote-bs5.min.js" />
 		<None Remove="Assets\js\summernote-de-DE.js" />
 		<None Remove="Assets\js\webexpress.webui.form.progress.js" />
+		<None Remove="Assets\js\webexpress.webui.modalform.js" />
 		<None Remove="Assets\js\webexpress.webui.selection.move.js" />
 		<None Remove="Assets\js\webexpress.webui.expand.js" />
 		<None Remove="Assets\js\webexpress.webui.js" />
-		<None Remove="Assets\js\webexpress.webui.modalformular.js" />
 		<None Remove="Assets\js\webexpress.webui.modalpage.js" />
 		<None Remove="Assets\js\webexpress.webui.more.js" />
 		<None Remove="Assets\js\webexpress.webui.move.js" />
@@ -204,7 +211,7 @@
 		<EmbeddedResource Include="Assets\css\Chart.min.css" />
 		<EmbeddedResource Include="Assets\css\webexpress.webui.toolpanel.css" />
 		<EmbeddedResource Include="Assets\css\webexpress.webui.expand.css" />
-		<EmbeddedResource Include="Assets\css\webexpress.webui.modalformular.css" />
+		<EmbeddedResource Include="Assets\css\webexpress.webui.modalform.css" />
 		<EmbeddedResource Include="Assets\css\webexpress.webui.modalpage.css" />
 		<EmbeddedResource Include="Assets\css\webexpress.webui.more.css" />
 		<EmbeddedResource Include="Assets\css\webexpress.webui.move.css" />
@@ -225,10 +232,14 @@
 		</EmbeddedResource>
 		<EmbeddedResource Include="Assets\css\summernote-bs5.min.css" />
 		<EmbeddedResource Include="Assets\css\webexpress.webui.table.css" />
-		<EmbeddedResource Include="Assets\fonts\fa-solid-900.eot" />
+		<EmbeddedResource Include="Assets\fonts\fa-brands-400.ttf" />
+		<EmbeddedResource Include="Assets\fonts\fa-brands-400.woff2" />
+		<EmbeddedResource Include="Assets\fonts\fa-regular-400.ttf" />
+		<EmbeddedResource Include="Assets\fonts\fa-regular-400.woff2" />
 		<EmbeddedResource Include="Assets\fonts\fa-solid-900.ttf" />
-		<EmbeddedResource Include="Assets\fonts\fa-solid-900.woff" />
 		<EmbeddedResource Include="Assets\fonts\fa-solid-900.woff2" />
+		<EmbeddedResource Include="Assets\fonts\fa-v4compatibility.ttf" />
+		<EmbeddedResource Include="Assets\fonts\fa-v4compatibility.woff2" />
 		<EmbeddedResource Include="Assets\fonts\summernote.eot" />
 		<EmbeddedResource Include="Assets\fonts\summernote.ttf" />
 		<EmbeddedResource Include="Assets\fonts\summernote.woff" />
@@ -361,7 +372,7 @@
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</EmbeddedResource>
 		<EmbeddedResource Include="Assets\js\webexpress.webui.form.progress.js" />
-		<EmbeddedResource Include="Assets\js\webexpress.webui.modalformular.js" />
+		<EmbeddedResource Include="Assets\js\webexpress.webui.modalform.js" />
 		<EmbeddedResource Include="Assets\js\webexpress.webui.modalpage.js" />
 		<EmbeddedResource Include="Assets\js\webexpress.webui.move.js" />
 		<EmbeddedResource Include="Assets\js\webexpress.webui.selection.js" />
@@ -387,15 +398,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Markdig" Version="0.37.0" />
+		<PackageReference Include="Markdig" Version="0.41.0" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(SolutionName)' != 'WebExpress.Deploy'">
-		<PackageReference Include="WebExpress.WebCore" Version="0.0.7-alpha" />
+	<ItemGroup>
+		<PackageReference Include="WebExpress.WebCore" Version="0.0.8-alpha" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(SolutionName)' == 'WebExpress.Deploy'">
-	  <ProjectReference Include="..\..\..\WebExpress.WebCore\src\WebExpress.WebCore\WebExpress.WebCore.csproj" />
+	<ItemGroup>
+	  <Folder Include="WebAttribute\" />
+	  <Folder Include="WebComponent\" />
 	</ItemGroup>
 
 </Project>

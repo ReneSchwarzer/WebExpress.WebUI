@@ -5,18 +5,32 @@
     /// </summary>
     public enum TypePanelContainer
     {
+        /// <summary>
+        /// No specific layout.
+        /// </summary>
         None,
+
+        /// <summary>
+        /// Default layout with fixed width.
+        /// </summary>
         Default,
+
+        /// <summary>
+        /// Fluid layout with full width.
+        /// </summary>
         Fluid
     }
 
+    /// <summary>
+    /// Extension methods for the <see cref="TypePanelContainer"/> enum.
+    /// </summary>
     public static class TypePanelFluidExtensions
     {
         /// <summary>
-        /// Conversion to a CSS class.
+        /// Converts the <see cref="TypePanelContainer"/> value to a corresponding CSS class.
         /// </summary>
-        /// <param name="layout">The layout to be converted</param>
-        /// <returns>The CSS class belonging to the layout</returns>
+        /// <param name="layout">The layout to be converted.</param>
+        /// <returns>The CSS class corresponding to the layout.</returns>
         public static string ToClass(this TypePanelContainer layout)
         {
             return layout switch

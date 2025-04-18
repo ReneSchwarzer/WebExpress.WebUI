@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
-using WebExpress.WebCore.WebPage;
+using WebExpress.WebCore.WebUri;
+using WebExpress.WebUI.WebPage;
 
 namespace WebExpress.WebUI.WebControl
 {
+    /// <summary>
+    /// Represents a split button link control that can contain multiple items 
+    /// and navigate to a specified URI.
+    /// </summary>
     public class ControlSplitButtonLink : ControlSplitButton
     {
         /// <summary>
@@ -16,119 +20,27 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Returns or sets the uri.
         /// </summary>
-        public string Uri { get; set; }
+        public IUri Uri { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the class.
         /// </summary>
         /// <param name="id">The id of the control.</param>
-        public ControlSplitButtonLink(string id)
-            : base(id)
-        {
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id of the control.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlSplitButtonLink(string id, params IControlSplitButtonItem[] content)
-            : base(id)
-        {
-            Items.AddRange(content);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="content">The content of the html element.</param>
-        public ControlSplitButtonLink(params IControlSplitButtonItem[] content)
-            : base(id: null)
-        {
-            Items.AddRange(content);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlSplitButtonLink(string id, IEnumerable<IControlSplitButtonItem> content)
-            : base(id)
-        {
-            Items.AddRange(content);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="id">The id.</param>
-        /// <param name="content">The content of the html element.</param>
-        public ControlSplitButtonLink(IEnumerable<IControlSplitButtonItem> content)
-            : base(id: null)
-        {
-            Items.AddRange(content);
-
-            Init();
-        }
-
-        /// <summary>
-        /// Fügt ein neues Item hinzu
-        /// </summary>
-        /// <param name="item"></param>
-        public void Add(IControlSplitButtonItem item)
-        {
-            Items.Add(item);
-        }
-
-        /// <summary>
-        /// Fügt ein neuen Seterator hinzu
-        /// </summary>
-        public void AddSeperator()
-        {
-            Items.Add(null);
-        }
-
-        /// <summary>
-        /// Fügt ein neuen Kopf hinzu
-        /// </summary>
-        /// <param name="text">Der Überschriftstext</param>
-        public void AddHeader(string text)
-        {
-            Items.Add(new ControlSplitButtonItemHeader() { Text = text });
-        }
-
-        /// <summary>
-        /// Initialization
-        /// </summary>
-        private void Init()
+        /// <param name="items">The content of the html element.</param>
+        public ControlSplitButtonLink(string id = null, params IControlSplitButtonItem[] items)
+            : base(id, items)
         {
             Size = TypeSizeButton.Default;
             Role = "button";
         }
 
         /// <summary>
-        /// Fügt Einträge hinzu
+        /// Converts the control to an HTML representation.
         /// </summary>
-        /// <param name="item">The entries. welcher hinzugefügt werden sollen</param>
-        public void Add(params IControlSplitButtonItem[] item)
-        {
-            Items.AddRange(item);
-        }
-
-        /// <summary>
-        /// Convert to html.
-        /// </summary>
-        /// <param name="context">The context in which the control is rendered.</param>
-        /// <returns>The control as html.</returns>
-        public override IHtmlNode Render(RenderContext context)
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
             var button = new HtmlElementTextSemanticsA()
             {
@@ -140,9 +52,9 @@ namespace WebExpress.WebUI.WebControl
                 OnClick = OnClick?.ToString()
             };
 
-            if (Icon != null && Icon.HasIcon)
+            if (Icon != null)
             {
-                button.Elements.Add(new ControlIcon()
+                button.Add(new ControlIcon()
                 {
                     Icon = Icon,
                     Margin = !string.IsNullOrWhiteSpace(Text) ? new PropertySpacingMargin
@@ -152,27 +64,27 @@ namespace WebExpress.WebUI.WebControl
                         PropertySpacing.Space.None,
                         PropertySpacing.Space.None
                     ) : new PropertySpacingMargin(PropertySpacing.Space.None),
-                    VerticalAlignment = Icon.IsUserIcon ? TypeVerticalAlignment.TextBottom : TypeVerticalAlignment.Default
-                }.Render(context));
+                    VerticalAlignment = TypeVerticalAlignment.Default
+                }.Render(renderContext, visualTree));
             }
 
             if (!string.IsNullOrWhiteSpace(Text))
             {
-                button.Elements.Add(new HtmlText(Text));
+                button.Add(new HtmlText(I18N.Translate(renderContext.Request?.Culture, Text)));
             }
 
             if (Modal == null || Modal.Type == TypeModal.None)
             {
 
             }
-            else if (Modal.Type == TypeModal.Formular)
+            else if (Modal.Type == TypeModal.Form)
             {
-                button.OnClick = $"new webexpress.webui.modalFormularCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? button.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                button.OnClick = $"new webexpress.webui.modalFormCtrl({{ close: '{I18N.Translate(renderContext.Request?.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? button.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 button.Href = "#";
             }
             else if (Modal.Type == TypeModal.Brwoser)
             {
-                button.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{InternationalizationManager.I18N(context.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? button.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
+                button.OnClick = $"new webexpress.webui.modalPageCtrl({{ close: '{I18N.Translate(renderContext.Request?.Culture, "webexpress.webui:form.cancel.label")}', uri: '{Modal.Uri?.ToString() ?? button.Href}', size: '{Modal.Size.ToString().ToLower()}', redirect: '{Modal.RedirectUri}'}});";
                 button.Href = "#";
             }
             else if (Modal.Type == TypeModal.Modal)
@@ -192,15 +104,15 @@ namespace WebExpress.WebUI.WebControl
 
             var dropdownElements = new HtmlElementTextContentUl
                 (
-                    Items.Select
+                    [.. Items.Select
                     (
                         x =>
                         x == null || x is ControlDropdownItemDivider || x is ControlLine ?
                         new HtmlElementTextContentLi() { Class = "dropdown-divider", Inline = true } :
                         x is ControlDropdownItemHeader ?
-                        x.Render(context) :
-                        new HtmlElementTextContentLi(x.Render(context)) { Class = "dropdown-item" }
-                    )
+                        x.Render(renderContext, visualTree) :
+                        new HtmlElementTextContentLi(x.Render(renderContext, visualTree)) { Class = "dropdown-item" }
+                    )]
                 )
             {
                 Class = HorizontalAlignment == TypeHorizontalAlignment.Right ? "dropdown-menu dropdown-menu-right" : "dropdown-menu"
@@ -208,11 +120,12 @@ namespace WebExpress.WebUI.WebControl
 
             var html = new HtmlElementTextContentDiv
             (
-                Modal != null && Modal.Type == TypeModal.Modal ? (IHtmlNode)new HtmlList(button, Modal.Modal.Render(context)) : button,
+                Modal != null && Modal.Type == TypeModal.Modal ? (IHtmlNode)new HtmlList(button, Modal.Modal.Render(renderContext, visualTree)) : button,
                 dropdownButton,
                 dropdownElements
             )
             {
+                Id = Id,
                 Class = Css.Concatenate
                 (
                     "btn-group",
