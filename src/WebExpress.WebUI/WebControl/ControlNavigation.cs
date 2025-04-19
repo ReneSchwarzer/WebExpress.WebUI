@@ -145,8 +145,20 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>An HTML node representing the rendered control.</returns>
         public override IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree)
         {
-            var items = new List<HtmlElement>();
-            foreach (var item in Items)
+            return Render(renderContext, visualTree, _items);
+        }
+
+        /// <summary>
+        /// Converts the control to an HTML representation.
+        /// </summary>
+        /// <param name="renderContext">The context in which the control is rendered.</param>
+        /// <param name="visualTree">The visual tree representing the control's structure.</param>
+        /// <param name="items">The navigation entries.</param>
+        /// <returns>An HTML node representing the rendered control.</returns>
+        public virtual IHtmlNode Render(IRenderControlContext renderContext, IVisualTreeControl visualTree, IEnumerable<IControlNavigationItem> items)
+        {
+            var htmlItems = new List<HtmlElement>();
+            foreach (var item in items)
             {
                 var i = item.Render(renderContext, visualTree) as HtmlElement;
 
@@ -204,13 +216,13 @@ namespace WebExpress.WebUI.WebControl
                     //i.AddClass(Css.Concatenate("nav-link"));
                 }
 
-                items.Add(new HtmlElementTextContentLi(i)
+                htmlItems.Add(new HtmlElementTextContentLi(i)
                 {
                     Class = "nav-item"
                 });
             }
 
-            var html = new HtmlElementTextContentUl(items.ToArray())
+            var html = new HtmlElementTextContentUl(htmlItems.ToArray())
             {
                 Id = Id,
                 Class = Css.Concatenate("nav", GetClasses()),
