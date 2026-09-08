@@ -79,7 +79,7 @@ namespace WebExpress.WebUI.WebControl
                 }
             }
 
-            return string.Join("&amp;", dict.Where(x => !string.IsNullOrWhiteSpace(x.Value.Value)).Select(x => x.Value.ToString()));
+            return string.Join("&", dict.Where(x => !string.IsNullOrWhiteSpace(x.Value.Value)).Select(x => x.Value.ToString()));
         }
 
         /// <summary>

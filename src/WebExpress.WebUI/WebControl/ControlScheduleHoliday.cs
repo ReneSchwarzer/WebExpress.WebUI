@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.Net;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
 using WebExpress.WebUI.WebPage;
@@ -80,20 +79,9 @@ namespace WebExpress.WebUI.WebControl
                 Class = "wx-schedule-holiday"
             }
                 .AddUserAttribute("data-date", date?.ToString(DateFormat, CultureInfo.InvariantCulture))
-                .AddUserAttribute("data-name", Encode(I18N.Translate(renderContext, name)))
-                .AddUserAttribute("data-region", Encode(region))
+                .AddUserAttribute("data-name", I18N.Translate(renderContext, name))
+                .AddUserAttribute("data-region", region)
                 .AddUserAttribute("data-type", type != TypeHolidaySchedule.Default ? type.ToValue() : null);
-        }
-
-        /// <summary>
-        /// Encodes a value for an attribute, because attribute values are
-        /// written verbatim by the HTML writer.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The encoded value, or null when there is none.</returns>
-        private static string Encode(string value)
-        {
-            return string.IsNullOrEmpty(value) ? null : WebUtility.HtmlEncode(value);
         }
     }
 }

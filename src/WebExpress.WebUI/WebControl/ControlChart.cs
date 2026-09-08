@@ -281,9 +281,7 @@ namespace WebExpress.WebUI.WebControl
         /// <returns>JSON string.</returns>
         private static string SerializeJson(object obj)
         {
-            return JsonSerializer
-                .Serialize(obj, _options)
-                .Replace("\"", "&quot;");
+            return JsonSerializer.Serialize(obj, _options);
         }
     }
 }

@@ -112,6 +112,98 @@ function activeItem(rt, nested) {
     return parent;
 }
 
+/**
+ * Builds a .wx-sidebar-header element, which starts a new section.
+ * @param {object} rt - The loaded runtime.
+ * @param {string} label - The header label.
+ * @returns {object} The header element.
+ */
+function header(rt, label) {
+    const el = rt.document.createElement("div");
+    el.classList.add("wx-sidebar-header");
+    el.dataset.label = label;
+    return el;
+}
+
+/**
+ * Builds a .wx-sidebar-link that owns the supplied rows as its children, which
+ * turns it into a collapsible group.
+ * @param {object} rt - The loaded runtime.
+ * @param {string} label - The group label.
+ * @param {object[]} rows - The child rows.
+ * @returns {object} The group element.
+ */
+function group(rt, label, rows) {
+    const children = rt.document.createElement("div");
+    children.classList.add("wx-sidebar-children");
+    for (const row of rows) {
+        children.appendChild(row);
+    }
+
+    const parent = link(rt, label, null);
+    parent.appendChild(children);
+    return parent;
+}
+
+test("wx-webui-sidebar leaves a flat menu unmarked", () => {
+    const rt = loadSidebar();
+    const host = rt.document.createElement("div");
+    host.appendChild(link(rt, "one", null));
+    host.appendChild(link(rt, "two", null));
+    rt.document.body.appendChild(host);
+
+    new rt.wx.SidebarCtrl(host);
+
+    assert.equal(host.querySelectorAll(".wx-sidebar-bullet").length, 0, "a section without a group owns no carets to line up with");
+});
+
+test("wx-webui-sidebar marks the root rows of a section that holds a group", () => {
+    const rt = loadSidebar();
+    const host = rt.document.createElement("div");
+    host.appendChild(link(rt, "leaf", null));
+    host.appendChild(group(rt, "branch", [link(rt, "child", null)]));
+    rt.document.body.appendChild(host);
+
+    new rt.wx.SidebarCtrl(host);
+
+    assert.equal(host.querySelectorAll(".wx-sidebar-caret").length, 1, "the group row carries the caret");
+    assert.equal(host.querySelectorAll(".wx-sidebar-bullet").length, 2, "the root leaf and the nested child are both marked");
+});
+
+test("wx-webui-sidebar keeps the marker inside the section that owns the tree", () => {
+    const rt = loadSidebar();
+    const host = rt.document.createElement("div");
+
+    // a flat block of navigation links, then a header, then a tree: the links
+    // above must not grow bullets just because the tree below has branches
+    host.appendChild(link(rt, "nav one", null));
+    host.appendChild(link(rt, "nav two", null));
+    host.appendChild(header(rt, "Documents"));
+    host.appendChild(link(rt, "root leaf", null));
+    host.appendChild(group(rt, "branch", [link(rt, "child", null)]));
+    rt.document.body.appendChild(host);
+
+    new rt.wx.SidebarCtrl(host);
+
+    // the bullet is prepended into its row, and the row carries the label in
+    // its .wx-label child
+    const marked = Array.from(host.querySelectorAll(".wx-sidebar-bullet"))
+        .map(x => x.parentNode.querySelector(".wx-label").textContent);
+
+    assert.deepEqual(marked.sort(), ["child", "root leaf"], "only the rows of the hierarchical section are marked");
+});
+
+test("wx-webui-sidebar marks a nested row whose own level does not branch further", () => {
+    const rt = loadSidebar();
+    const host = rt.document.createElement("div");
+    host.appendChild(group(rt, "branch", [link(rt, "child one", null), link(rt, "child two", null)]));
+    rt.document.body.appendChild(host);
+
+    new rt.wx.SidebarCtrl(host);
+
+    assert.equal(host.querySelectorAll(".wx-sidebar-bullet").length, 2, "every row below a group is inside the tree by construction");
+});
+
 test("wx-webui-sidebar reveals a flyout while reduced and hides it on mouse-leave", () => {
     const rt = loadSidebar();
     const host = rt.document.createElement("div");

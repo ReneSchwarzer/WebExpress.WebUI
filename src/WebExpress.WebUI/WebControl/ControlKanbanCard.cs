@@ -176,7 +176,7 @@ namespace WebExpress.WebUI.WebControl
                 };
             });
 
-            return WebUtility.HtmlEncode(JsonSerializer.Serialize(chips, _jsonOptions));
+            return JsonSerializer.Serialize(chips, _jsonOptions);
         }
     }
 }

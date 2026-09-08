@@ -38,8 +38,9 @@ namespace WebExpress.WebUI.WebControl
         /// <summary>
         /// Gets or sets whether the modal body is scrollable (renders the bootstrap
         /// "modal-dialog-scrollable" variant). Defaults to <c>true</c>. Set to <c>false</c>
-        /// when the modal hosts an overlay (e.g. an autocomplete dropdown) that must not be
-        /// clipped by the scrollable modal body's overflow.
+        /// only when the dialog should grow with its content instead of scrolling; a menu
+        /// opened by a control inside the body is positioned against the viewport and is
+        /// no longer clipped by the scrollable body, so it is not a reason to opt out.
         /// </summary>
         Func<IRenderControlContext, bool> Scrollable { get; }
 

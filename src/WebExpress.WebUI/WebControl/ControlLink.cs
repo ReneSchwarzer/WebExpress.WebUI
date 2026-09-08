@@ -206,7 +206,7 @@ namespace WebExpress.WebUI.WebControl
                 }
             }
 
-            return string.Join("&amp;", from x in dict where !string.IsNullOrWhiteSpace(x.Value.Value) select x.Value.ToString());
+            return string.Join("&", from x in dict where !string.IsNullOrWhiteSpace(x.Value.Value) select x.Value.ToString());
         }
 
         /// <summary>

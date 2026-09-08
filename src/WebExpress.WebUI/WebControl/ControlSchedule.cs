@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net;
 using WebExpress.WebCore.WebHtml;
 using WebExpress.WebUI.WebPage;
 
@@ -235,9 +234,9 @@ namespace WebExpress.WebUI.WebControl
             };
 
             html.AddUserAttribute("data-view", view != TypeViewSchedule.Default ? view.ToValue() : null)
-                .AddUserAttribute("data-views", Encode(Views?.Invoke(renderContext)))
+                .AddUserAttribute("data-views", Views?.Invoke(renderContext))
                 .AddUserAttribute("data-agenda-grouping", grouping != TypeGroupingScheduleAgenda.Default ? grouping.ToValue() : null)
-                .AddUserAttribute("data-culture", Encode(Culture?.Invoke(renderContext)))
+                .AddUserAttribute("data-culture", Culture?.Invoke(renderContext))
                 .AddUserAttribute("data-week-start", weekStart.HasValue ? ((int)weekStart.Value).ToString(CultureInfo.InvariantCulture) : null)
                 .AddUserAttribute("data-iso-week", (IsoWeek?.Invoke(renderContext) ?? false) ? "true" : null)
                 .AddUserAttribute("data-week-numbers", (ShowWeekNumbers?.Invoke(renderContext) ?? false) ? "true" : null)
@@ -255,17 +254,6 @@ namespace WebExpress.WebUI.WebControl
             html.Add(_holidays.Select(x => x.Render(renderContext, visualTree)));
 
             return html;
-        }
-
-        /// <summary>
-        /// Encodes a value for an attribute, because attribute values are
-        /// written verbatim by the HTML writer.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The encoded value, or null when there is none.</returns>
-        private static string Encode(string value)
-        {
-            return string.IsNullOrEmpty(value) ? null : WebUtility.HtmlEncode(value);
         }
     }
 }

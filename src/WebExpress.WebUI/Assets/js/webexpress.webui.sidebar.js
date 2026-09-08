@@ -273,7 +273,12 @@ webexpress.webui.SidebarCtrl = class extends webexpress.webui.PopperCtrl {
      * Builds the main DOM structure for items and panels.
      */
     _buildSidebar() {
-        for (const item of this._items) {
+        // a leaf needs the marker slot only where it has to line up with a
+        // caret, and only against the rows it actually sits among
+        const hierarchical = this._sectionHierarchy(this._items);
+
+        for (let index = 0; index < this._items.length; index++) {
+            const item = this._items[index];
             if (item.type === "toolbar") {
                 continue;
             }
@@ -282,7 +287,7 @@ webexpress.webui.SidebarCtrl = class extends webexpress.webui.PopperCtrl {
             // rebuild through setItems) is materialised here; header and divider
             // elements already parsed from the dom carry their element and stay
             if (item.type === "item" || item.type === "panel" || item.type === "icon" || !item.element) {
-                item.element = this._buildItem(item);
+                item.element = this._buildItem(item, hierarchical[index]);
             }
 
             if (item.element) {
@@ -292,18 +297,70 @@ webexpress.webui.SidebarCtrl = class extends webexpress.webui.PopperCtrl {
     }
 
     /**
+     * Determines whether a run of rows forms a hierarchical structure, which is
+     * the case as soon as a single row of it owns children.
+     * @param {Array<Object>} items - The descriptors of one run.
+     * @returns {boolean} True when the run is a tree rather than a flat list.
+     */
+    _isHierarchical(items) {
+        return (items || []).some(x => x && x.type === "item" && x.children && x.children.length);
+    }
+
+    /**
+     * Decides, for every entry of the top level, whether the structure it
+     * belongs to is hierarchical.
+     * @remarks
+     * The question is asked per <i>section</i> rather than for the sidebar as a
+     * whole, because a section is the structure a row actually belongs to:
+     * headers and dividers separate them, and the block of navigation links
+     * above a document tree must not grow bullets just because the tree below
+     * it has branches. Within a section it is all or nothing - the point of the
+     * marker is that the rows of one structure line up with each other.
+     * @param {Array<Object>} items - The descriptors of the top level.
+     * @returns {Array<boolean>} One flag per entry, in the same order.
+     */
+    _sectionHierarchy(items) {
+        const entries = items || [];
+        const flags = new Array(entries.length).fill(false);
+        let start = 0;
+
+        const close = (end) => {
+            if (this._isHierarchical(entries.slice(start, end))) {
+                for (let i = start; i < end; i++) {
+                    flags[i] = true;
+                }
+            }
+
+            start = end + 1;
+        };
+
+        for (let i = 0; i < entries.length; i++) {
+            const type = entries[i] && entries[i].type;
+
+            if (type === "header" || type === "divider") {
+                close(i);
+            }
+        }
+
+        close(entries.length);
+
+        return flags;
+    }
+
+    /**
      * Builds the DOM element for an item descriptor by dispatching on its type,
      * so the constructor path, the setItems path and the nested-children path
      * all share a single build routine.
      * @param {Object} item - The item descriptor.
-     * @param {boolean} [nested] - Whether the item is a child within a group tree.
+     * @param {boolean} [hierarchical] - Whether the row belongs to a tree and therefore
+     * carries the marker slot that lines it up with the carets of its group siblings.
      * @returns {HTMLElement|null} The built element, or null for an unknown type.
      */
-    _buildItem(item, nested = false) {
+    _buildItem(item, hierarchical = false) {
         switch (item.type) {
             case "header": return this._createHeaderElement(item.label);
             case "divider": return this._createDividerElement();
-            case "item": return this._buildItemElement(item, nested);
+            case "item": return this._buildItemElement(item, hierarchical);
             case "panel": return this._buildPanelElement(item);
             case "icon": return this._buildIconElement(item);
             default: return null;
@@ -334,10 +391,11 @@ webexpress.webui.SidebarCtrl = class extends webexpress.webui.PopperCtrl {
     /**
      * Constructs the DOM for a navigation item (link).
      * @param {Object} item - The item descriptor.
-     * @param {boolean} [nested] - Whether the item is a child within a group tree.
+     * @param {boolean} [hierarchical] - Whether the row belongs to a tree and therefore
+     * carries the marker slot that lines it up with the carets of its group siblings.
      * @returns {HTMLElement} The constructed item element.
      */
-    _buildItemElement(item, nested = false) {
+    _buildItemElement(item, hierarchical = false) {
         const wrapper = document.createElement("div");
         if (item.id) {
             wrapper.id = item.id;
@@ -466,12 +524,15 @@ webexpress.webui.SidebarCtrl = class extends webexpress.webui.PopperCtrl {
             new webexpress.webui.DropdownCtrl(options).items = item.options;
         }
 
-        // a leaf inside a group gets a bullet in the caret's slot so it aligns
-        // with sibling rows and reads as a terminal tree node; a top-level leaf
-        // is a normal flat item and stays unmarked. a group instead nests its
-        // children under the row so the subtree collapses as a unit
+        // a leaf that belongs to a hierarchical structure gets a bullet in the
+        // caret's slot: it aligns the row with the group rows beside it and
+        // reads as a terminal node. That is every row inside a group, and also
+        // a root row of a section that holds one - a tree whose roots sat
+        // further left than its branches read as two lists. A flat section owns
+        // no carets to line up with and stays unmarked. A group instead nests
+        // its children under the row so the subtree collapses as a unit
         if (!item.children || item.children.length === 0) {
-            if (nested) {
+            if (hierarchical) {
                 const bullet = document.createElement("span");
                 bullet.className = "wx-sidebar-bullet";
                 bullet.setAttribute("aria-hidden", "true");
@@ -514,6 +575,8 @@ webexpress.webui.SidebarCtrl = class extends webexpress.webui.PopperCtrl {
         const childrenWrap = document.createElement("div");
         childrenWrap.className = "wx-sidebar-children";
         for (const child of item.children) {
+            // every row below a group is inside the tree by construction, so it
+            // is marked whether or not its own level holds a further group
             const childElement = this._buildItem(child, true);
             if (childElement) {
                 childrenWrap.appendChild(childElement);

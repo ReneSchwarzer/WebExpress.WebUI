@@ -45,6 +45,17 @@
     overflow-y: auto;
 }
 
+/* the item area scrolls, so nothing in it compresses to make room: every row
+   keeps the height its padding and label give it, and rows of every kind end
+   up equally spaced. It has to be said explicitly because .wx-sidebar-link
+   carries overflow:hidden for its ellipsis, and an overflow other than visible
+   switches off the automatic minimum size that would otherwise stop a flex
+   item from shrinking - so plain rows collapsed under a long list while groups,
+   which set no overflow, kept their height, and the two drifted apart */
+.wx-sidebar > div:not(.wx-toolbar) > * {
+    flex-shrink: 0;
+}
+
 /* sidebar header */
 .wx-sidebar .wx-sidebar-header {
     font-weight: bold;

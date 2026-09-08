@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Net;
 using System.Text.Json;
 using WebExpress.WebCore.Internationalization;
 using WebExpress.WebCore.WebHtml;
@@ -125,11 +124,11 @@ namespace WebExpress.WebUI.WebControl
                 Id = Id,
                 Class = "wx-schedule-item"
             }
-                .AddUserAttribute("data-title", Encode(I18N.Translate(renderContext, title)))
+                .AddUserAttribute("data-title", I18N.Translate(renderContext, title))
                 .AddUserAttribute("data-start", Format(start, allDay))
                 .AddUserAttribute("data-end", Format(end, allDay))
                 .AddUserAttribute("data-all-day", allDay ? "true" : null)
-                .AddUserAttribute("data-category", Encode(category))
+                .AddUserAttribute("data-category", category)
                 .AddUserAttribute("data-color-css", color?.ToClass())
                 .AddUserAttribute("data-color-style", color?.ToStyle())
                 .AddUserAttribute("data-icon", (icon as Icon)?.Class)
@@ -169,19 +168,7 @@ namespace WebExpress.WebUI.WebControl
                 return null;
             }
 
-            return Encode(JsonSerializer.Serialize(metadata));
-        }
-
-        /// <summary>
-        /// Encodes a value for an attribute. Attribute values are written
-        /// verbatim by the HTML writer, so a title carrying a quote would end
-        /// the attribute and a JSON payload would never survive at all.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The encoded value, or null when there is none.</returns>
-        private static string Encode(string value)
-        {
-            return string.IsNullOrEmpty(value) ? null : WebUtility.HtmlEncode(value);
+            return JsonSerializer.Serialize(metadata);
         }
     }
 }

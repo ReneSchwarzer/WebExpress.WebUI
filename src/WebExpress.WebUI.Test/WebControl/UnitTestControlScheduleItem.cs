@@ -209,11 +209,12 @@ namespace WebExpress.WebUI.Test.WebControl
         }
 
         /// <summary>
-        /// Tests that a title carrying a quote is encoded rather than ending the
-        /// attribute it sits in.
+        /// Tests that a title carrying a quote does not end the attribute it sits in. The
+        /// escaping is the html writer's (see UnitTestHtmlAttribute), so the apostrophe stays
+        /// as it is - it is legal inside a double-quoted value.
         /// </summary>
         [Fact]
-        public void Title_Encoded()
+        public void Title_Escaped()
         {
             // arrange
             var componentHub = UnitTestControlFixture.CreateAndRegisterComponentHubMock();
@@ -229,7 +230,7 @@ namespace WebExpress.WebUI.Test.WebControl
 
             // validation
             AssertExtensions.EqualWithPlaceholders(
-                @"<div class=""wx-schedule-item"" data-title=""Guybrush&#39;s &quot;quest&quot;""></div>", html);
+                @"<div class=""wx-schedule-item"" data-title=""Guybrush's &quot;quest&quot;""></div>", html);
         }
     }
 }

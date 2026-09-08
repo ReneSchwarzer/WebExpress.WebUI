@@ -2212,9 +2212,15 @@ webexpress.webui.PopperCtrl = class extends webexpress.webui.Ctrl {
         // map to track the visibility state of each menu
         this._menuVisibilityMap = this._menuVisibilityMap || new Map();
 
-        // popper.js instance for positioning
+        // popper.js instance for positioning. the menu is a child of the control, so an
+        // absolutely positioned one is painted inside whatever scroll box the control sits
+        // in and gets clipped by it - a scrollable modal body cuts the menu off at the
+        // dialog edge. a fixed menu is laid out against the viewport instead and escapes
+        // that clip, as long as no ancestor establishes a containing block for it (bootstrap
+        // clears the dialog's transform once the modal is shown, so it does not).
         const popperInstance = Popper.createPopper(container, dropdownmenu, {
             placement: "bottom-start",
+            strategy: "fixed",
             modifiers: [
                 {
                     name: "offset",
