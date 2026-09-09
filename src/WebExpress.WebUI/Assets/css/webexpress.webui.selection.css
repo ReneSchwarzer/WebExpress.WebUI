@@ -55,6 +55,7 @@
 .wx-selection > div:nth-child(2) > ul {
     display: inline-flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.2em;
     padding-left: 0.2em;
     margin-right: auto;

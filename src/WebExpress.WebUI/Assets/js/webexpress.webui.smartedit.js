@@ -439,7 +439,16 @@ webexpress.webui.SmartEditCtrl = class extends webexpress.webui.Ctrl {
 
         const ctrl = webexpress.webui.Controller.getInstanceByElement(this._editor);
 
-        if (this._isCtrl(ctrl, "InputSelectionCtrl")) {
+        if (this._isCtrl(ctrl, "InputDnfCtrl")) {
+            // the raw value is the serialized expression - separators and term ids -
+            // which is the one thing a reader of a filter should not be shown; the
+            // read-only control resolves it into terms joined by the operator words
+            const container = document.createElement("div");
+            const dnf = new webexpress.webui.DnfCtrl(container);
+            dnf.options = ctrl.options;
+            dnf.value = value;
+            return container;
+        } else if (this._isCtrl(ctrl, "InputSelectionCtrl")) {
             const container = document.createElement("div");
             const selection = new webexpress.webui.SelectionCtrl(container);
             const ids = Array.isArray(value) ? value : String(value || "").split(";");

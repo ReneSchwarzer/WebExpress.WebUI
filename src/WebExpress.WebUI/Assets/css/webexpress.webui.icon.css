@@ -2186,6 +2186,11 @@
     mask-image: url("../icons/control-dashboard.svg");
 }
 
+.wx-icon-light-control-dnf {
+    -webkit-mask-image: url("../icons/control-dnf.svg");
+    mask-image: url("../icons/control-dnf.svg");
+}
+
 .wx-icon-light-control-date {
     -webkit-mask-image: url("../icons/control-date.svg");
     mask-image: url("../icons/control-date.svg");

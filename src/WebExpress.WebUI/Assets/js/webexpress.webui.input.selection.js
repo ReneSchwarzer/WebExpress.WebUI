@@ -96,6 +96,11 @@ webexpress.webui.InputSelectionCtrl = class extends webexpress.webui.PopperCtrl 
         dropdown.classList.add("form-control");
 
         const selection = document.createElement("ul");
+        // a list this control built lays out its own entries, so it declares the
+        // role it already has: the prose list indent of .wx-content applies only
+        // to lists that leave their role implicit
+        selection.setAttribute("role", "list");
+
         const expandIcon = document.createElement("a");
         expandIcon.className = this._iconClass("angle-down");
         expandIcon.href = "javascript:void(0);";
@@ -138,6 +143,7 @@ webexpress.webui.InputSelectionCtrl = class extends webexpress.webui.PopperCtrl 
         dropdownMenu.classList.add("dropdown-menu");
 
         const dropdownOptions = document.createElement("ul");
+        dropdownOptions.setAttribute("role", "list");
         this._dropdownoptions = dropdownOptions;
 
         // setup event delegation for options

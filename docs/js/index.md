@@ -21,6 +21,7 @@ This section documents the JavaScript UI controllers and components of `WebExpre
 - [Color](color.md)
 - [Content](content.md)
 - [Date](date.md)
+- [Disjunctive Normal Form](dnf.md)
 - [Dropdown](dropdown.md)
 - [Editor](editor.md)
 - [FileList](filelist.md)

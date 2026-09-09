@@ -26,6 +26,8 @@
   href: content.md
 - name: Date
   href: date.md
+- name: Disjunctive Normal Form
+  href: dnf.md
 - name: Dropdown
   href: dropdown.md
 - name: Editor

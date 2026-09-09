@@ -202,6 +202,86 @@ webexpress.webui.TableTemplates.register("selection", (val, table, row, cell, na
     return container;
 });
 
+// Dnf renderer
+webexpress.webui.TableTemplates.register("dnf", (val, table, row, cell, name, opts) => {
+    opts = opts || {};
+
+    if ((val === null || val === undefined || val === "") && !opts.editable) {
+        return "";
+    }
+
+    const container = document.createElement("div");
+    const editable = opts.editable === true || opts.editable === "true";
+    const options = webexpress.webui.TableTemplates.dnfOptions(opts);
+
+    if (editable) {
+        const editor = document.createElement("div");
+        editor.id = "wx_" + Math.random().toString(36).slice(2, 7);
+        editor.setAttribute("name", name);
+        if (opts.placeholder) {
+            editor.setAttribute("placeholder", opts.placeholder);
+        }
+        if (opts.maxGroups) {
+            editor.dataset.maxGroups = opts.maxGroups;
+        }
+        const inputCtrl = new webexpress.webui.InputDnfCtrl(editor);
+        inputCtrl.options = options;
+        inputCtrl.value = val;
+        editor._wx_controller = inputCtrl;
+        container.appendChild(editor);
+        webexpress.webui.TableTemplates.bindInlineEdit(container, row, name);
+        new webexpress.webui.SmartEditCtrl(container);
+    } else {
+        // a cell is narrower than the expression it may hold, so the read state
+        // clips to one line unless the column asked for the full rendering
+        container.dataset.compact = opts.compact === "false" ? "false" : "true";
+        if (opts.placeholder) {
+            container.dataset.placeholder = opts.placeholder;
+        }
+        const ctrl = new webexpress.webui.DnfCtrl(container);
+        ctrl.options = options;
+        ctrl.value = val;
+    }
+
+    return container;
+});
+
+/**
+ * Reads the selectable terms of a DNF column, which arrive either as the
+ * template's child elements (a server rendered table) or as embedded JSON (a
+ * REST rendered table).
+ *
+ * @param {Object} opts - The renderer options of the column.
+ * @returns {Array} The items.
+ */
+webexpress.webui.TableTemplates.dnfOptions = (opts) => {
+    if (opts.children && opts.children.length > 0) {
+        return opts.children.map((child) => {
+            return {
+                id: child.getAttribute("id") || null,
+                label: child.dataset.label || child.textContent.trim(),
+                color: child.dataset.color || child.dataset.labelColor || null,
+                icon: child.dataset.icon || null,
+                image: child.dataset.image || null,
+                content: child.innerHTML || "",
+                disabled: child.hasAttribute("disabled")
+            };
+        });
+    }
+
+    if (opts.options) {
+        try {
+            return JSON.parse(opts.options);
+        } catch (e) {
+            // a malformed option list costs the labels, not the expression: the
+            // controls fall back to rendering the term ids themselves
+            return [];
+        }
+    }
+
+    return [];
+};
+
 // Combo renderer
 webexpress.webui.TableTemplates.register("combo", (val, table, row, cell, name, opts) => {
     opts = opts || {};

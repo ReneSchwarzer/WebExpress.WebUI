@@ -127,6 +127,12 @@ webexpress.webui.I18N.register("en", "webexpress.webui", {
     "selection.filter": "Filter",
     "selection.filter.clear": "Clear Filter",
 
+    "dnf.and": "and",
+    "dnf.or": "or",
+    "dnf.add": "Add expression",
+    "dnf.remove": "Remove expression",
+    "dnf.clear": "Clear expression",
+
     "quickfilter.add": "Add filter",
     "quickfilter.edit": "Edit filter",
     "quickfilter.options": "Filter options",
