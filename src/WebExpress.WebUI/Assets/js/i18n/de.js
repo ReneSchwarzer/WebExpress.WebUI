@@ -83,6 +83,7 @@ webexpress.webui.I18N.register("de", "webexpress.webui", {
 
     "delete": "Löschen",
     "confirm": "Bestätigen",
+    "confirm.error": "Die Aktion ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
     "apply": "Anwenden",
     "filter": "Filter",
     "properties": "Eigenschaften",

@@ -118,6 +118,12 @@ webexpress.webui.ModalCtrl = class extends webexpress.webui.Ctrl {
         this._dialogDiv.appendChild(modalContentDiv);
         this._element.appendChild(this._dialogDiv);
 
+        // bootstrap can dismiss through Escape without calling the controller's hide method
+        this._element.addEventListener("hidden.bs.modal", () => {
+            this._element.removeAttribute("style");
+            this._dispatch(webexpress.webui.Event.MODAL_HIDE_EVENT, {});
+        });
+
         // auto-show if specified
         if (this._autoShow) {
             this.show();
@@ -213,24 +219,18 @@ webexpress.webui.ModalCtrl = class extends webexpress.webui.Ctrl {
 
         if (isFullscreen) {
             if (icon) {
-                icon.classList.remove("fa-expand");
-                icon.classList.add("fa-compress");
+                icon.className = this._iconClass("compress");
             }
             this._fullscreenButton.setAttribute("aria-pressed", "true");
             this._dialogDiv.classList.remove("modal-sm", "modal-md", "modal-lg", "modal-xl");
-
-            // set backdrop/body state if needed (css-only)
-            document.body.classList.add("modal-open");
         } else {
             if (icon) {
-                icon.classList.remove("fa-compress");
-                icon.classList.add("fa-expand");
+                icon.className = this._iconClass("expand");
             }
             this._fullscreenButton.setAttribute("aria-pressed", "false");
-            this._dialogDiv.classList.add(this._size);
-
-            // restore body state
-            document.body.classList.remove("modal-open");
+            if (this._size) {
+                this._dialogDiv.classList.add(this._size);
+            }
         }
     }
 
@@ -242,24 +242,15 @@ webexpress.webui.ModalCtrl = class extends webexpress.webui.Ctrl {
             this._element.appendChild(this._dialogDiv);
         }
 
-        // bind click event to close the modal when dismiss button is clicked
-        const closeButton = this._dialogDiv.querySelector("[data-wx-dismiss='modal']");
-        if (closeButton) {
-            closeButton.removeEventListener("click", this.hide);
-            closeButton.addEventListener("click", () => {
-                this.hide();
-            });
-        }
-
         // remove all known size classes except fullscreen if it was toggled manually
         this._dialogDiv.classList.remove("modal-sm", "modal-md", "modal-lg", "modal-xl", "modal-fullscreen");
 
         // reset icon state
         const icon = this._fullscreenButton.querySelector("i");
         if (icon) {
-            icon.classList.remove("fa-compress");
-            icon.classList.add("fa-expand");
+            icon.className = this._iconClass("expand");
         }
+        this._fullscreenButton.setAttribute("aria-pressed", "false");
 
         if (this._size) {
             // apply modal size class
@@ -275,7 +266,7 @@ webexpress.webui.ModalCtrl = class extends webexpress.webui.Ctrl {
         // ensure modal content is refreshed
         this.update();
 
-        const modalInstance = new bootstrap.Modal(this._element, {
+        const modalInstance = bootstrap.Modal.getInstance(this._element) || new bootstrap.Modal(this._element, {
             backdrop: "static",
             keyboard: true,
         });
@@ -291,14 +282,6 @@ webexpress.webui.ModalCtrl = class extends webexpress.webui.Ctrl {
      */
     hide() {
         const modalInstance = bootstrap.Modal.getInstance(this._element);
-
-        this._element.addEventListener("hidden.bs.modal", () => {
-            this._element.removeAttribute("style");
-            this._element.removeAttribute("aria-hidden");
-            this._dispatch(webexpress.webui.Event.MODAL_HIDE_EVENT, {});
-        }, { once: true });
-
-        document.body.focus();
 
         if (modalInstance) {
             modalInstance.hide();

@@ -83,6 +83,7 @@ webexpress.webui.I18N.register("en", "webexpress.webui", {
 
     "delete": "Delete",
     "confirm": "Confirm",
+    "confirm.error": "The action failed. Please try again.",
     "apply": "Apply",
     "filter": "Filter",
     "properties": "Properties",

@@ -21,6 +21,11 @@
     margin-bottom: 0.375rem;
 }
 
+/* bordered tabs share their bottom edge with the content frame */
+.wx-tab-container ul.wx-tab-nav.nav-tabs {
+    margin-bottom: 0;
+}
+
 /* styling for the content area to match bootstrap border radiuses */
 .wx-tab-content {
     background-color: var(--wx-body-bg);
@@ -46,16 +51,6 @@
     vertical-align: baseline;
     background-color: var(--wx-secondary-bg);
     color: var(--wx-secondary-color);
-}
-
-/* specific transition for the close button inside the tab header */
-.wx-form-designer-tabs .nav-link span {
-    transition: color 0.2s ease-in-out;
-}
-
-/* hover effect for the close button to indicate destructiveness */
-.wx-form-designer-tabs .nav-link span:hover {
-    color: var(--wx-danger) !important;
 }
 
 /* dark theme adjustments if necessary, mostly handled by standard bootstrap variables */
