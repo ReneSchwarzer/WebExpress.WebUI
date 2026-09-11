@@ -43,8 +43,8 @@ namespace WebExpress.WebUI.WebControl
                 Class = Css.Concatenate("wx-webui-login", GetClasses(renderContext)),
                 Style = GetStyles(renderContext),
             }
-                .AddUserAttribute("dataset-username", username)
-                .AddUserAttribute("dataset-title", I18N.Translate(renderContext, title));
+                .AddUserAttribute("data-username", username)
+                .AddUserAttribute("data-title", I18N.Translate(renderContext, title));
         }
     }
 }

@@ -157,3 +157,9 @@
 .wx-login {
     flex: 1;
 }
+
+/* framed by a dialog the form is the whole body, so the last field ends flush with
+   the body padding instead of adding its own gap above the footer */
+.wx-login-plain form > .mb-3:last-child {
+    margin-bottom: 0;
+}

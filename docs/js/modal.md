@@ -346,6 +346,83 @@ The configuration is declarative. The host element requires a URI from which the
 </div>
 ```
 
+# ModalLoginCtrl
+
+The `ModalLoginCtrl` frames the login control (`LoginCtrl`, `wx-webui-login`) with a dialog, so signing in happens on top of the page the user is on instead of on a page of its own. The dialog lends the login what its card would otherwise supply - the title bar names it, the footer carries its submit button ahead of the close button, which closes the bar - and leaves the login what is its: the fields, the request and what follows success and failure. The C# counterpart is `ControlModalLogin`, which renders a real `ControlLogin` into the content section of the dialog.
+
+```
+   ┌──────────────────────────────────────────────────┐
+   │                                                  │
+   │  ┌────────────────────────────────────────────┐  │
+   │  │ Login                                  [x] │  │
+   │  ├────────────────────────────────────────────┤  │
+   │  │  Username                                  │  │
+   │  │  [                                      ]  │  │
+   │  │  Password                                  │  │
+   │  │  [                                      ]  │  │
+   │  ├────────────────────────────────────────────┤  │
+   │  │                          [Login] [Close]   │  │
+   │  └────────────────────────────────────────────┘  │
+   │                                                  │
+   └──────────────────────────────────────────────────┘
+```
+
+## Configuration
+
+The dialog takes the attributes of `ModalCtrl` (`data-size`, `data-close-label`, `data-auto-show`, `data-scrollable`). The login inside the `.wx-modal-content` section is configured as the login control always is; only `data-username`, the prefilled login name, matters here, because the dialog's title bar replaces the login's own title.
+
+```html
+<div id="signin" class="wx-webui-modal-login" data-close-label="Close">
+    <div class="wx-modal-header">Login</div>
+    <div class="wx-modal-content">
+        <div id="signin_login" class="wx-webui-login" data-username="WebExpress"></div>
+    </div>
+    <div class="wx-modal-footer"></div>
+</div>
+```
+
+## Functionality
+
+- **A plain login**: a login control inside the body of a dialog (`.wx-modal-content` or `.modal-body`) renders its form without the card and the heading it draws on a page, because the dialog is the card and its title bar the heading. The host carries `wx-login-plain` instead of `wx-login`, so the page styling of the login card does not reach into the dialog.
+- **The submit button on the footer**: the dialog takes the login's submit button onto its footer bar, in front of the close button: the cancelling action is rightmost on every dialog, so the submit stands ahead of it. The button stays wired to the form through the `form` attribute, so a click on the bar submits and Enter in a field still triggers it. The group that held the button inside the form leaves with it.
+- **One login instance**: the controller framework mounts children ahead of their parent, so the login the server rendered already stands when the dialog is assembled around it; a dialog created by hand mounts the login itself. Either way the dialog holds the very `LoginCtrl` instance the page can reach through `getInstanceByElement`.
+- **Focus on show**: once the dialog stands (`shown.bs.modal`) the caret is put into the login name, or into the password when the name is prefilled.
+- **What the login does is the login's**: the request, the session cookie, the reload on success and the message on failure are those of `LoginCtrl`. A variant of the login - the REST-backed `webexpress.webapp.LoginCtrl` of the application layer, for instance - is framed unchanged, because the dialog only takes the button the mounted login hands over through `liftSubmitButton(bar)`.
+
+## Programmatic Control
+
+```javascript
+const element = document.getElementById("signin");
+const dialog = webexpress.webui.Controller.getInstanceByElement(element);
+
+// the login the dialog frames, for example to prefill the name
+dialog.login._usernameInput.value = "WebExpress";
+
+dialog.show();
+```
+
+## Events
+
+The dialog dispatches the events of `ModalCtrl` on its host element: `webexpress.webui.Event.MODAL_SHOW_EVENT` and `webexpress.webui.Event.MODAL_HIDE_EVENT`.
+
+## Use Case Example
+
+The C# page declares an activator and the dialog; the dialog opens on the click, or right away when the page cannot be used without signing in:
+
+```csharp
+new ControlButton()
+{
+    Text = _ => "Sign in",
+    Icon = _ => new IconRightToBracket(),
+    PrimaryAction = _ => new ActionModal("signin")
+},
+new ControlModalLogin("signin")
+{
+    Username = _ => "WebExpress",
+    AutoShow = _ => false
+}
+```
+
 # ModalSidebarPanelCtrl
 
 The `ModalSidebarPanelCtrl` component provides a modal dialog with a left-hand navigation tree and a right-hand content area. It extends the `ModalCtrl` base component and builds the modal body into a two-pane layout, using SplitCtrl for a resizable sidebar and TreeCtrl for hierarchical navigation. Pages (panels) can be autoloaded via a registry key or added programmatically. Validation can be scoped to either all pages or only the currently active one. A submit button is managed by the base class and is wired into `ModalSidebarPanelCtrl` via an element ID; on successful validation the modal closes, otherwise an error alert is shown above the split control.

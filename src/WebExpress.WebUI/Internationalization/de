@@ -22,6 +22,8 @@ form.inputpassword.validation.max=Das Passwort ist länger als die maximale Län
 
 modal.close.label=Schließen
 
+login.title=Anmelden
+
 confirm.label=Bestätigung
 confirm.header=Bestätigung einholen
 confirm.description=Sind Sie sicher das Sie das tun möchten?

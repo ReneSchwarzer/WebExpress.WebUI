@@ -22,6 +22,8 @@ form.inputpassword.validation.max=The password exceeds the maximum length of {0}
 
 modal.close.label=Close
 
+login.title=Login
+
 confirm.label=Confirm
 confirm.header=Request Confirmation
 confirm.description=Are you sure you want to do this?
