@@ -840,9 +840,9 @@ class EditorRange {
     }
 
     compareBoundaryPoints(how, sourceRange) {
-        const own = (how === EditorRange.START_TO_START || how === EditorRange.START_TO_END)
+        const own = (how === EditorRange.START_TO_START || how === EditorRange.END_TO_START)
             ? this._start : this._end;
-        const other = (how === EditorRange.START_TO_START || how === EditorRange.END_TO_START)
+        const other = (how === EditorRange.START_TO_START || how === EditorRange.START_TO_END)
             ? sourceRange._start : sourceRange._end;
         return comparePoints(own.node, own.offset, other.node, other.offset) || 0;
     }

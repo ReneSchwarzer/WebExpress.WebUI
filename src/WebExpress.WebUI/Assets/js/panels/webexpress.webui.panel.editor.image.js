@@ -1,5 +1,41 @@
 (function () {
     /**
+     * Shares insertion and in-place replacement across URL, library and upload
+     * entry points, keeping an open dialog independent of the live selection.
+     */
+    function applyImage(modal, src, alt, dimensions = false) {
+        const editor = modal._editor;
+        const state = ensureImageState(modal);
+        const values = { src, alt };
+        if (dimensions) {
+            for (const name of ["width", "height"]) {
+                const input = state[name + "Input"];
+                if (input) {
+                    values[name] = webexpress.webui.EditorImage.dimension(input.value);
+                    if (values[name] === null) {
+                        return false;
+                    }
+                }
+            }
+        }
+        if (modal._imageTarget) {
+            if (!webexpress.webui.EditorImage.update(editor, modal._imageTarget, values)) {
+                return false;
+            }
+        } else {
+            const range = modal._backupRange;
+            const root = editor.getEditorElement();
+            if (range && root.contains(range.startContainer) && root.contains(range.endContainer)) {
+                webexpress.webui.EditorSelection.apply(range);
+                editor._saveCurrentSelection();
+            }
+            webexpress.webui.EditorImage.insert(editor, values);
+        }
+        modal._imageTarget = null;
+        return true;
+    }
+
+    /**
      * Ensures the image state bag on modal.
      * @param {webexpress.webui.ModalSidebarPanelCtrl} modal - Modal instance.
      * @returns {any} The image state object.
@@ -71,6 +107,21 @@
 
             wrapper.appendChild(urlGroup);
             wrapper.appendChild(altGroup);
+            ["width", "height"].forEach(name => {
+                const label = document.createElement("label");
+                label.className = "form-label d-block mb-3";
+                label.textContent = webexpress.webui.I18N.translate("webexpress.webui:editor.image." + name);
+                const input = document.createElement("input");
+                input.type = "text";
+                input.className = "form-control";
+                input.placeholder = webexpress.webui.I18N.translate("webexpress.webui:editor.image.size.placeholder");
+                input.setAttribute("aria-label", label.textContent);
+                label.appendChild(input);
+                wrapper.appendChild(label);
+                state[name + "Input"] = input;
+            });
+            urlInput.setAttribute("aria-label", urlLabel.textContent);
+            altInput.setAttribute("aria-label", altLabel.textContent);
             container.appendChild(wrapper);
 
             state.webUrlInput = urlInput;
@@ -114,13 +165,19 @@
                 }
             }
 
-            state.webUrlInput.focus();
+            ["width", "height"].forEach(name => {
+                if (state[name + "Input"]) {
+                    state[name + "Input"].value = modal._imagePrefill?.[name] || "";
+                }
+            });
+            state.webUrlInput.focus({ preventScroll: true });
             state.webUrlInput.select();
 
             const modalWrapper = state.webUrlInput.closest(".modal") || state.webUrlInput.closest("[data-key]") || document;
             const submitBtn = modalWrapper.querySelector(".submit-btn");
 
             if (submitBtn) {
+                submitBtn.textContent = webexpress.webui.I18N.translate(modal._imageTarget ? "webexpress.webui:save" : "webexpress.webui:insert");
                 if (state.webUrlInput.value.trim() !== "") {
                     submitBtn.disabled = false;
                 } else {
@@ -152,6 +209,10 @@
             }
 
             const urlVal = state.webUrlInput.value.trim();
+            if (["width", "height"].some(name => state[name + "Input"] &&
+                webexpress.webui.EditorImage.dimension(state[name + "Input"].value) === null)) {
+                return { valid: false, message: webexpress.webui.I18N.translate("webexpress.webui:editor.image.error.size") };
+            }
             if (urlVal === "" || urlVal.toLowerCase().startsWith("javascript:")) {
                 return { valid: false, message: webexpress.webui.I18N.translate("webexpress.webui:editor.image.error.url") };
             }
@@ -183,13 +244,9 @@
             const safeUrl = urlVal.replace(/"/g, "%22");
             const alt = String((state.webAltInput && state.webAltInput.value) || "").trim();
 
-            const escapeHtml = function (text) {
-                const div = document.createElement("div");
-                div.textContent = text;
-                return div.innerHTML;
-            };
-
-            editor.insertHtmlAtCursor('<img src="' + safeUrl + '" alt="' + escapeHtml(alt) + '">');
+            if (!applyImage(modal, safeUrl, alt, true)) {
+                return;
+            }
 
             if (typeof modal.hide === "function") {
                 modal.hide();
@@ -282,12 +339,6 @@
                 // ignore init errors
             }
 
-            const escapeHtml = function (text) {
-                const div = document.createElement("div");
-                div.textContent = text;
-                return div.innerHTML;
-            };
-
             const closeModal = function () {
                 if (typeof modal.hide === "function") {
                     modal.hide();
@@ -362,7 +413,9 @@
                 const safeSrc = src.replace(/"/g, "%22");
                 const alt = String((state.siteAltInput && state.siteAltInput.value) || "").trim() || (link.textContent || "");
 
-                editor.insertHtmlAtCursor('<img src="' + safeSrc + '" alt="' + escapeHtml(alt) + '">');
+                if (!applyImage(modal, safeSrc, alt)) {
+                    return;
+                }
                 closeModal();
             });
 
@@ -387,7 +440,9 @@
                         const safeSrc = src.replace(/"/g, "%22");
                         const alt = String((state.siteAltInput && state.siteAltInput.value) || "").trim() || file.name;
 
-                        editor.insertHtmlAtCursor('<img src="' + safeSrc + '" alt="' + escapeHtml(alt) + '">');
+                        if (!applyImage(modal, safeSrc, alt)) {
+                            return;
+                        }
                         closeModal();
                     }
                 };
@@ -422,6 +477,7 @@
             }
 
             if (submitBtn) {
+                submitBtn.textContent = webexpress.webui.I18N.translate(modal._imageTarget ? "webexpress.webui:save" : "webexpress.webui:insert");
                 if (state.selectedSiteImage && state.selectedSiteImage.src) {
                     submitBtn.disabled = false;
                 } else {
@@ -488,13 +544,9 @@
             const safeSrc = srcVal.replace(/"/g, "%22");
             const alt = String((state.siteAltInput && state.siteAltInput.value) || "").trim() || state.selectedSiteImage.alt || "";
 
-            const escapeHtml = function (text) {
-                const div = document.createElement("div");
-                div.textContent = text;
-                return div.innerHTML;
-            };
-
-            editor.insertHtmlAtCursor('<img src="' + safeSrc + '" alt="' + escapeHtml(alt) + '">');
+            if (!applyImage(modal, safeSrc, alt)) {
+                return;
+            }
 
             if (typeof modal.hide === "function") {
                 modal.hide();

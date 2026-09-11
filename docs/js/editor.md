@@ -250,6 +250,46 @@ The editor supports the following keyboard shortcuts:
 
 Backspace/Delete remove typed whitespace first and only remove adjacent non-editable blocks when the caret is truly at the block boundary (word-processor-like behavior).
 
+### Formatting and selection
+
+Inline commands operate on the selected text, including partial selections inside
+nested formatting. Clearing formatting keeps links, list structure, table cells
+and non-editable widgets intact. Editable table cells and add-on bodies remain
+formatable inside their non-editable frames. Block changes preserve the selected
+text; headings in list items leave nested lists in place.
+
+With a collapsed caret, inline commands set the formatting for the next input.
+An active format can be switched off before typing, including by keyboard.
+Typing and the following formatting command are separate undo steps. Undo
+restores the selection used for the command; operations without content changes
+preserve redo.
+
+### Editing images
+
+Click an image to select it and display the same floating popover used for tables
+and add-ons. Its edit button opens the image dialog; the actions menu offers
+left, center, right and inline alignment, 25%, 50%, 100% and original size, and
+removal. Double-clicking an image also opens the dialog.
+
+The dialog supports changing the source, alternative text, width and height.
+Dimensions accept positive pixel or percentage values; a number without a unit
+means pixels. Leave a dimension empty for automatic sizing, for example to
+preserve the aspect ratio while changing only the width.
+
+Changes update the existing image, preserving its position, surrounding link and
+unrelated attributes. Choosing a replacement from the site library also preserves
+its existing dimensions. Cancelling leaves the image unchanged. Image edits,
+alignment, resizing and removal participate in undo/redo.
+
+### Regression checks
+
+Run `node --test` in `src/WebExpress.WebUI.Test/JsTest`. The shared editor and image
+cases are also available in `editor.browser.html` in that directory. Serve the
+repository through a local HTTP server and open that page in Chromium and Firefox.
+It includes controller integration checks and a playground for native keyboard
+input and image popover interaction; the Node DOM stub alone does not verify
+browser layout, focus or composition behavior.
+
 ## Extending the Editor
 
 The editor exposes registry-style extension points. Each registry is a singleton on the `webexpress.webui` namespace and follows the same shape used elsewhere in the framework.

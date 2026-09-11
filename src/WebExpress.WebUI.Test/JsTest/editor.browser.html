@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>WebExpress editor regression tests</title>
+<link rel="stylesheet" href="../../WebExpress.WebUI/Assets/css/webexpress.webui.editor.css">
+<style>
+    body { font: 16px system-ui; margin: 2rem; }
+    .pass { color: #166534; } .fail { color: #b91c1c; white-space: pre-wrap; }
+    #fixture { border: 1px solid #aaa; padding: 1rem; }
+</style>
+<h1>Editor regression tests</h1>
+<p id="summary">Running…</p>
+<ol id="results"></ol>
+<div id="fixture"></div>
+<script>
+    const plugins = [];
+    const imagePanels = new Map();
+    window.webexpress = { webui: {
+        Ctrl: class {
+            constructor(element) { this._element = element; }
+            _dispatch(type, detail) { this._element.dispatchEvent(new CustomEvent(type, { detail })); }
+            destroy() {}
+        },
+        Controller: { registerClass() {} },
+        EditorPlugins: { getAll: () => plugins, register: (name, order, plugin) => plugins.push(plugin) },
+        DialogPanels: { register: (key, panel) => imagePanels.set(panel.id, panel) },
+        ModalSidebarPanelCtrl: class {
+            constructor(element) { this.element = element; }
+            show() { this.shown = true; this.element.style.display = "block"; this.selectPage("image-web"); }
+            selectPage(id) {
+                this.page = id;
+                const panel = imagePanels.get(id);
+                const content = this.element.querySelector(".wx-modal-content");
+                if (!this.rendered) { panel.render(content, this); this.rendered = true; }
+                panel.onShow(this);
+            }
+            hide() { this.element.style.display = "none"; }
+        },
+        Event: { CHANGE_VALUE_EVENT: "wx-change-value" },
+        I18N: { translate: key => key },
+        IconSet: { resolve: icon => icon }
+    } };
+</script>
+<script src="../../WebExpress.WebUI/Assets/js/webexpress.webui.editor.js"></script>
+<script src="../../WebExpress.WebUI/Assets/js/editor/formatting.js"></script>
+<script src="../../WebExpress.WebUI/Assets/js/editor/media.js"></script>
+<script src="../../WebExpress.WebUI/Assets/js/editor/bubble.js"></script>
+<script src="../../WebExpress.WebUI/Assets/js/panels/webexpress.webui.panel.editor.image.js"></script>
+<script type="module">
+    import { editorCases } from "./editor.cases.mjs";
+    import { imageCases } from "./editor.image.cases.mjs";
+    const fixture = document.getElementById("fixture");
+    let passed = 0, failed = 0;
+    const normalize = value => {
+        if (typeof value !== "string" || !value.startsWith("<")) return value;
+        const div = document.createElement("div");
+        div.innerHTML = value;
+        div.querySelectorAll("[style]").forEach(el => { el.style.cssText = el.style.cssText; });
+        return div.innerHTML;
+    };
+    const assert = {
+        equal(actual, expected, message = "Values differ") {
+            if (normalize(actual) !== normalize(expected)) {
+                throw new Error(`${message}\nExpected: ${expected}\nActual: ${actual}`);
+            }
+        },
+        deepEqual(actual, expected, message) {
+            this.equal(JSON.stringify(actual), JSON.stringify(expected), message);
+        }
+    };
+    function loadEditor() {
+        const root = document.createElement("div");
+        root.contentEditable = "true";
+        fixture.appendChild(root);
+        const selection = window.getSelection();
+        return {
+            wx: webexpress.webui, document, root, selection,
+            plugins: new Map([["media", plugins.find(plugin => plugin.imageModal !== undefined)]]),
+            panels: imagePanels,
+            el(tag, ...children) {
+                const element = document.createElement(tag);
+                element.append(...children);
+                return element;
+            },
+            select(start, startOffset, end, endOffset) {
+                const range = document.createRange();
+                range.setStart(start, startOffset);
+                range.setEnd(end, endOffset);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                return range;
+            },
+            editorMock() {
+                return { getEditorElement: () => root, _saveCurrentSelection() {},
+                    _syncValue() {}, _updateUndoRedoStates() {}, _pendingFormat: null, _uiContainer: null };
+            }
+        };
+    }
+    function test(name, action) {
+        const result = document.createElement("li");
+        try {
+            action();
+            passed++;
+            result.className = "pass";
+            result.textContent = `PASS ${name}`;
+        } catch (error) {
+            failed++;
+            result.className = "fail";
+            result.textContent = `FAIL ${name}\n${error.stack}`;
+        }
+        document.getElementById("results").appendChild(result);
+        fixture.replaceChildren();
+    }
+    editorCases(test, assert, loadEditor);
+    imageCases(test, assert, loadEditor);
+    function controller(html) {
+        const host = document.createElement("div");
+        host.innerHTML = html;
+        host.setAttribute("name", "body");
+        fixture.appendChild(host);
+        return new webexpress.webui.EditorCtrl(host);
+    }
+    function selectText(root, start, end = start) {
+        const text = document.createTreeWalker(root, NodeFilter.SHOW_TEXT).nextNode();
+        const range = document.createRange();
+        range.setStart(text, start);
+        range.setEnd(text, end);
+        webexpress.webui.EditorSelection.apply(range);
+        return text;
+    }
+    test("keyboard formatting uses the current selection and updates the form value", () => {
+        const editor = controller("<p>abcdef</p>");
+        const root = editor.getEditorElement();
+        selectText(root, 0, 1);
+        editor._saveCurrentSelection();
+        selectText(root, 2, 4);
+        root.dispatchEvent(new KeyboardEvent("keydown", { key: "b", ctrlKey: true, cancelable: true }));
+        assert.equal(editor.value, "<p>ab<strong>cd</strong>ef</p>");
+        assert.equal(editor._formInput.value, editor.value);
+        editor.execCommand("undo");
+        assert.equal(editor.value, "<p>abcdef</p>");
+        assert.equal(window.getSelection().toString(), "cd");
+        editor.destroy();
+    });
+    test("pending formatting publishes the finished input exactly once", () => {
+        const editor = controller("<p>old</p>");
+        const root = editor.getEditorElement();
+        const text = selectText(root, 3);
+        editor.execCommand("bold");
+        const values = [];
+        editor._uiContainer.addEventListener("wx-change-value", e => values.push(e.detail.value));
+        root.dispatchEvent(new InputEvent("beforeinput", { inputType: "insertText", data: "x", cancelable: true }));
+        text.textContent = "oldx";
+        selectText(root, 4);
+        root.dispatchEvent(new InputEvent("input", { inputType: "insertText", data: "x" }));
+        assert.deepEqual(values, ["<p>old<strong>x</strong></p>"]);
+        assert.equal(editor._formInput.value, editor.value);
+        editor.destroy();
+    });
+    test("text color choices are independent in two editors", () => {
+        const first = controller("<p>one</p>");
+        const second = controller("<p>two</p>");
+        selectText(first.getEditorElement(), 0, 3);
+        first._saveCurrentSelection();
+        first._uiContainer.querySelectorAll(".wx-editor-color-picker button")[1].click();
+        selectText(second.getEditorElement(), 0, 3);
+        second._saveCurrentSelection();
+        assert.equal(window.getSelection().toString(), "two", "selection before color click");
+        second._uiContainer.querySelector('[title="webexpress.webui:editor.textcolor"]').click();
+        assert.equal(second.value, '<p><span style="color: rgb(0, 0, 0);">two</span></p>');
+        assert.equal(first.value, '<p><span style="color: rgb(255, 0, 0);">one</span></p>');
+        first.destroy();
+        second.destroy();
+    });
+    test("inserting a horizontal rule in a paragraph preserves valid sibling blocks", () => {
+        const editor = controller("<p>abcdef</p>");
+        selectText(editor.getEditorElement(), 3);
+        editor.execCommand("insertHorizontalRule");
+        assert.equal(editor.getEditorElement().querySelector("p hr"), null);
+        assert.equal(editor.getEditorElement().querySelector("p p"), null);
+        assert.equal(editor.getEditorElement().firstChild.textContent, "abc", editor.value);
+        assert.equal(editor.getEditorElement().lastChild.textContent, "def");
+        editor.destroy();
+    });
+    test("clicking an image exposes the existing bubble with image edit actions", () => {
+        const editor = controller('<p><img alt="Sample" width="80" height="50" src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2250%22%3E%3Crect width=%2280%22 height=%2250%22 fill=%22steelblue%22/%3E%3C/svg%3E"></p>');
+        const image = editor.getEditorElement().querySelector("img");
+        image.click();
+        const bubble = plugins.find(plugin => plugin._computeState);
+        const state = bubble._computeState(editor);
+        assert.equal(state.target, image);
+        assert.equal(state.hasContext, true);
+        bubble._onSelectionChange(editor);
+        assert.equal(bubble._bubbleEl.querySelector('[aria-label="webexpress.webui:editor.edit.image"]') !== null, true);
+        editor.destroy();
+    });
+    test("bubble buttons reflect formatting without depending on an icon font", () => {
+        const editor = controller("<p><strong>bold</strong></p>");
+        selectText(editor.getEditorElement(), 0, 4);
+        const bubble = plugins.find(plugin => plugin._computeState);
+        bubble._onSelectionChange(editor);
+        assert.equal(bubble._bubbleEl.querySelector('[data-command="bold"]').getAttribute("aria-pressed"), "true");
+        assert.equal(bubble._bubbleEl.querySelector('[data-command="italic"]').getAttribute("aria-pressed"), "false");
+        editor.destroy();
+    });
+    document.getElementById("summary").textContent = `${passed} passed, ${failed} failed`;
+
+    const heading = document.createElement("h2");
+    heading.textContent = "Keyboard playground";
+    document.body.appendChild(heading);
+    const playground = controller('<p>Start</p><p><img alt="Sample" width="160" height="100" src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22160%22 height=%22100%22%3E%3Crect width=%22160%22 height=%22100%22 fill=%22steelblue%22/%3E%3C/svg%3E"></p>');
+    document.body.appendChild(playground._uiContainer);
+    playground.getEditorElement().setAttribute("aria-label", "Editor playground");
+    const output = document.createElement("pre");
+    output.id = "playground-html";
+    playground._uiContainer.addEventListener("wx-change-value", () => { output.textContent = playground.value; });
+    document.body.appendChild(output);
+</script>
+</html>

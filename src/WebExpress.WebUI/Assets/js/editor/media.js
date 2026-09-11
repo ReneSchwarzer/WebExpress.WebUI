@@ -1,4 +1,99 @@
 /**
+ * Keeps image edits at the existing document position and records them as one
+ * undoable change, including images wrapped in links.
+ */
+webexpress.webui.EditorImage = class {
+    /**
+     * Accepts CSS dimensions that can be safely assigned from the image dialog.
+     */
+    static dimension(value) {
+        const text = String(value ?? "").trim();
+        if (!text) {
+            return "";
+        }
+        if (!/^(?:\d+(?:\.\d+)?|\.\d+)(?:px|%)?$/.test(text) || parseFloat(text) <= 0) {
+            return null;
+        }
+        return /(?:px|%)$/.test(text) ? text : text + "px";
+    }
+
+    /**
+     * Makes image clicks and dialog actions use the same node selection.
+     */
+    static select(editor, image) {
+        const root = editor.getEditorElement();
+        if (!root.contains(image) || !webexpress.webui.EditorSelection.isEditable(image, root)) {
+            return false;
+        }
+        const range = document.createRange();
+        range.selectNode(image);
+        webexpress.webui.EditorSelection.apply(range);
+        editor._saveCurrentSelection();
+        return true;
+    }
+
+    /**
+     * Preserves the node, its link and unrelated attributes when an image changes.
+     */
+    static update(editor, image, values) {
+        return this._change(editor, image, () => this._apply(image, values));
+    }
+
+    /**
+     * Builds new images through DOM attributes so alternative text remains text.
+     */
+    static insert(editor, values) {
+        const image = document.createElement("img");
+        this._apply(image, values);
+        const container = document.createElement("div");
+        container.appendChild(image);
+        editor.insertHtmlAtCursor(container.innerHTML);
+    }
+
+    /**
+     * Removes an image with a recoverable caret and an undo checkpoint.
+     */
+    static remove(editor, image) {
+        return this._change(editor, image, () => image.parentNode.removeChild(image));
+    }
+
+    static _change(editor, image, change) {
+        if (!this.select(editor, image)) {
+            return false;
+        }
+        editor._history?.prepare();
+        change();
+        editor._saveCurrentSelection();
+        editor._syncValue();
+        editor._updateUndoRedoStates();
+        return true;
+    }
+
+    static _apply(image, values) {
+        ["src", "alt"].forEach(name => {
+            if (values[name] !== undefined) {
+                image.setAttribute(name, values[name]);
+            }
+        });
+        ["width", "height"].forEach(name => {
+            if (values[name] !== undefined) {
+                const value = this.dimension(values[name]);
+                if (value !== null) {
+                    image.removeAttribute(name);
+                    image.style[name] = value;
+                }
+            }
+        });
+        if (values.align !== undefined) {
+            image.style.float = "";
+            image.style.display = values.align === "inline" ? "" : "block";
+            image.style.marginLeft = values.align === "center" || values.align === "right" ? "auto" : "";
+            image.style.marginRight = values.align === "center" || values.align === "left" ? "auto" : "";
+        }
+    }
+};
+
+/**
  * Plugin for link and image insertion using ModalSidebarPanelCtrl.
  * Provides toolbar buttons to open dedicated modal panels for inserting links and images.
  */
@@ -13,7 +108,28 @@ webexpress.webui.EditorPlugins.register("media", 1000, {
      * @returns {void}
      */
     init: function(editor) {
-        // no initialization required
+        const root = editor.getEditorElement();
+        const click = (event) => {
+            if (event.target.tagName === "IMG" && webexpress.webui.EditorImage.select(editor, event.target)) {
+                event.preventDefault();
+            }
+        };
+        const doubleClick = (event) => {
+            if (event.target.tagName === "IMG" && webexpress.webui.EditorImage.select(editor, event.target)) {
+                event.preventDefault();
+                this._editImage(editor, event.target);
+            }
+        };
+        root.addEventListener("click", click);
+        root.addEventListener("dblclick", doubleClick);
+        return () => {
+            root.removeEventListener("click", click);
+            root.removeEventListener("dblclick", doubleClick);
+            Object.values(editor._mediaModals || {}).forEach(modal => {
+                modal.ctrl.destroy?.();
+                modal.element.parentNode?.removeChild(modal.element);
+            });
+        };
     },
 
     /**
@@ -96,46 +212,31 @@ webexpress.webui.EditorPlugins.register("media", 1000, {
         const items = [];
 
         // check for image element
-        if (target && target.nodeName === "IMG") {
+        if (target && target.tagName === "IMG" &&
+            webexpress.webui.EditorSelection.isEditable(target, editor.getEditorElement())) {
             items.push({
                 label: webexpress.webui.I18N.translate("webexpress.webui:editor.edit.image"),
                 icon: "edit",
-                action: () => {
-                    const sel = window.getSelection();
-                    let activeRange = null;
-
-                    if (sel) {
-                        const range = document.createRange();
-                        range.selectNode(target);
-                        sel.removeAllRanges();
-                        sel.addRange(range);
-                        activeRange = range.cloneRange();
-
-                        if (typeof editor._saveCurrentSelection === "function") {
-                            editor._saveCurrentSelection();
-                        }
-                    }
-
-                    const prefill = {
-                        url: target.getAttribute("src") || "",
-                        alt: target.getAttribute("alt") || ""
-                    };
-                    this._openModal(editor, "imageModal", "editor-image", "webexpress.webui:editor.insert.image.title", prefill, activeRange);
-                }
+                action: () => this._editImage(editor, target)
             });
 
+            ["left", "center", "right", "inline"].forEach(align => items.push({
+                label: webexpress.webui.I18N.translate("webexpress.webui:editor.image.align." + align),
+                icon: align === "inline" ? "image" : "align-" + align,
+                action: () => webexpress.webui.EditorImage.update(editor, target, { align })
+            }));
+            items.push({
+                label: webexpress.webui.I18N.translate("webexpress.webui:editor.image.size"),
+                icon: "expand",
+                submenu: ["25%", "50%", "100%", ""].map(width => ({
+                    label: width || webexpress.webui.I18N.translate("webexpress.webui:editor.image.size.original"),
+                    action: () => webexpress.webui.EditorImage.update(editor, target, { width, height: "" })
+                }))
+            });
             items.push({
                 label: webexpress.webui.I18N.translate("webexpress.webui:editor.remove.image"),
                 icon: "trash",
-                action: () => {
-                    target.remove();
-                    if (typeof editor._syncValue === "function") {
-                        editor._syncValue();
-                    }
-                    if (typeof editor._updateUndoRedoStates === "function") {
-                        editor._updateUndoRedoStates();
-                    }
-                }
+                action: () => webexpress.webui.EditorImage.remove(editor, target)
             });
         }
 
@@ -206,6 +307,24 @@ webexpress.webui.EditorPlugins.register("media", 1000, {
     },
 
     /**
+     * Keeps the edit target separate from the selection while a dialog is open.
+     */
+    _editImage: function(editor, target) {
+        if (!webexpress.webui.EditorImage.select(editor, target)) {
+            return;
+        }
+        const prefill = {
+            target,
+            url: target.getAttribute("src") || "",
+            alt: target.getAttribute("alt") || "",
+            width: target.style.width || target.getAttribute("width") || "",
+            height: target.style.height || target.getAttribute("height") || ""
+        };
+        this._openModal(editor, "imageModal", "editor-image", "webexpress.webui:editor.edit.image",
+            prefill, webexpress.webui.EditorSelection.getRange(editor.getEditorElement()));
+    },
+
+    /**
      * Opens a modal and provides the editor context to the modal controller.
      * Creates the modal on first use to prevent redundant logic.
      * @param {object} editor - The editor instance.
@@ -217,12 +336,20 @@ webexpress.webui.EditorPlugins.register("media", 1000, {
      * @returns {void}
      */
     _openModal: function(editor, modalProperty, key, title, prefill, activeRange) {
-        if (!this[modalProperty]) {
-            this[modalProperty] = this._createModal(key, title);
+        if (!editor._mediaModals) {
+            editor._mediaModals = {};
         }
+        if (!editor._mediaModals[modalProperty]) {
+            editor._mediaModals[modalProperty] = this._createModal(key, title);
+        }
+        this[modalProperty] = editor._mediaModals[modalProperty];
 
         if (this[modalProperty] && this[modalProperty].ctrl) {
             const ctrl = this[modalProperty].ctrl;
+            const heading = this[modalProperty].element.querySelector(".modal-title");
+            if (heading) {
+                heading.textContent = webexpress.webui.I18N.translate(title);
+            }
 
             // provide editor reference to the modal controller
             ctrl._editor = editor;
@@ -233,10 +360,14 @@ webexpress.webui.EditorPlugins.register("media", 1000, {
             // set or clear prefill data to force reset on reuse
             ctrl._linkPrefill = prefill || null;
             ctrl._imagePrefill = prefill || null;
+            ctrl._imageTarget = modalProperty === "imageModal" ? prefill?.target || null : null;
 
             // show modal via controller api if available
             if (typeof ctrl.show === "function") {
                 ctrl.show();
+            }
+            if (modalProperty === "imageModal" && ctrl._imageTarget && typeof ctrl.selectPage === "function") {
+                ctrl.selectPage("image-web");
             }
         }
     },

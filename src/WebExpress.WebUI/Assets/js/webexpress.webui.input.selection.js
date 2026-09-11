@@ -14,6 +14,10 @@ webexpress.webui.InputSelectionCtrl = class extends webexpress.webui.PopperCtrl 
     _multiselect = false;
     _stickySelection = false;
     _placeholder = "";
+    _dependsOn = null;
+    _dependencyValue = null;
+    _dependencyRoot = null;
+    _dependencyListener = null;
 
     /**
      * Constructor for initializing the selection control.
@@ -29,6 +33,7 @@ webexpress.webui.InputSelectionCtrl = class extends webexpress.webui.PopperCtrl 
         this._placeholder = element.getAttribute("placeholder") || this._i18n("webexpress.webui:selection.placeholder", "Select an option");
         this._multiselect = element.dataset.multiselection === "true";
         this._stickySelection = element.dataset.stickySelection === "true";
+        this._dependsOn = element.dataset.dependsOn || null;
         this._values = [];
         this._items = [];
         // default filter logic
@@ -58,6 +63,7 @@ webexpress.webui.InputSelectionCtrl = class extends webexpress.webui.PopperCtrl 
         element.removeAttribute("placeholder");
         element.removeAttribute("data-multiselection");
         element.removeAttribute("data-sticky-selection");
+        element.removeAttribute("data-depends-on");
         element.innerHTML = "";
         element.classList.add("wx-selection");
         element.appendChild(hiddenInput);
@@ -66,6 +72,12 @@ webexpress.webui.InputSelectionCtrl = class extends webexpress.webui.PopperCtrl 
 
         // attach popper.js positioning for the dropdown menu
         this._initializePopper(dropdown, dropdownMenu);
+
+        // follow the field this selection depends on, if it names one. this has to happen
+        // after the value was applied: the initial value may itself be one the dependency
+        // no longer offers, and the reconciliation is what notices
+        this._observeDependency();
+        this._reconcileDependency(true);
 
         this.render();
     }
@@ -247,7 +259,11 @@ webexpress.webui.InputSelectionCtrl = class extends webexpress.webui.PopperCtrl 
                     icon: elem.dataset.icon,
                     image: elem.dataset.image,
                     content: elem.innerHTML || elem.dataset.label,
-                    disabled: elem.hasAttribute("disabled")
+                    disabled: elem.hasAttribute("disabled"),
+                    // an option without the attribute states no condition and is always
+                    // offered; one with it belongs to the listed values of the field this
+                    // selection depends on
+                    requires: this._parseRequires(elem.dataset.requires)
                 });
             }
         });
@@ -255,6 +271,168 @@ webexpress.webui.InputSelectionCtrl = class extends webexpress.webui.PopperCtrl 
         // restore values after parsing (in case setter logic needs validation against items)
         this.value = value;
         this._items = items;
+    }
+
+    /**
+     * Parses the condition of an option into the list of values it belongs to.
+     * @param {string} value - The semicolon-separated condition, or undefined.
+     * @returns {Array|null} The values, or null when the option states no condition.
+     */
+    _parseRequires(value) {
+        if (!value) {
+            return null;
+        }
+
+        const values = String(value).split(";").map((v) => {
+            return v.trim();
+        }).filter((v) => {
+            return v.length > 0;
+        });
+
+        return values.length > 0 ? values : null;
+    }
+
+    /**
+     * Determines whether an option is offered under the value currently answered in the
+     * field this selection depends on.
+     * @param {Object} item - The option to test.
+     * @returns {boolean} True when the option is offered.
+     */
+    _isOffered(item) {
+        if (!this._dependsOn || !item || !item.requires) {
+            return true;
+        }
+
+        // an unanswered field narrows nothing. a form is filled one field at a time - a rest
+        // form even fills them one after another from its service - and hiding every
+        // conditional option until the other field is answered would be a different control
+        if (!this._dependencyValue) {
+            return true;
+        }
+
+        const dependencyValue = String(this._dependencyValue).toLowerCase();
+
+        return item.requires.some((required) => {
+            return String(required).toLowerCase() === dependencyValue;
+        });
+    }
+
+    /**
+     * Reads the value currently answered in the field this selection depends on.
+     * @returns {string|null} The value, or null when the field is absent or unanswered.
+     */
+    _resolveDependencyValue() {
+        if (!this._dependsOn) {
+            return null;
+        }
+
+        const root = this._dependencyRoot || document;
+        const name = window.CSS && CSS.escape ? CSS.escape(this._dependsOn) : this._dependsOn;
+        const field = root.querySelector(`[name="${name}"]`);
+
+        if (!field) {
+            return null;
+        }
+
+        // a selection that has already been initialized carries its value on the hidden input
+        // it built; one that has not still carries it on its host element, and either may be
+        // the state of the field at the moment this is asked
+        const raw = field.matches("input, select, textarea")
+            ? field.value
+            : (field.dataset ? field.dataset.value : null);
+
+        const first = String(raw || "").split(";")[0].trim();
+
+        return first.length > 0 ? first : null;
+    }
+
+    /**
+     * Subscribes to the changes of the field this selection depends on.
+     *
+     * The subscription is made on the form rather than on that field, because the field may
+     * not exist yet - form items are built in document order and the one depended on may
+     * follow this one - and because a value written by a service arrives as a change of a
+     * control that replaced the element the field was parsed from. Every change in the form
+     * is answered by reading the dependency again, which costs a query and is otherwise
+     * silent.
+     */
+    _observeDependency() {
+        if (!this._dependsOn) {
+            return;
+        }
+
+        this._dependencyRoot = this._element.closest("form") || document;
+        this._dependencyListener = () => {
+            this._reconcileDependency(false);
+        };
+
+        this._dependencyRoot.addEventListener(webexpress.webui.Event.CHANGE_VALUE_EVENT, this._dependencyListener);
+        this._dependencyRoot.addEventListener("change", this._dependencyListener);
+    }
+
+    /**
+     * Brings the offered options and the current selection back in line with the field this
+     * selection depends on, dropping a value that is no longer offered.
+     * @param {boolean} force - True to reconcile even when the depended-on value is unchanged,
+     * which is what a change of this control's own value needs.
+     */
+    _reconcileDependency(force) {
+        if (!this._dependsOn) {
+            return;
+        }
+
+        const resolved = this._resolveDependencyValue();
+        const changed = resolved !== this._dependencyValue;
+
+        if (!changed && !force) {
+            return;
+        }
+
+        this._dependencyValue = resolved;
+
+        // a value this control cannot offer must not be submitted either - the form would be
+        // refused for a combination the user was never shown
+        const kept = this._values.filter((id) => {
+            const item = this._items.find((x) => {
+                return x.id === id;
+            });
+
+            return !item || this._isOffered(item);
+        });
+
+        if (kept.length !== this._values.length) {
+            if (kept.length === 0 && !this._multiselect && this._stickySelection) {
+                // a sticky selection may not be emptied, so it takes the first option that is
+                // still offered rather than being left without one
+                const fallback = this._items.find((x) => {
+                    return !x.type && !x.disabled && this._isOffered(x);
+                });
+
+                this.value = fallback ? [fallback.id] : [];
+            } else {
+                this.value = kept;
+            }
+
+            return;
+        }
+
+        if (changed) {
+            this.render();
+        }
+    }
+
+    /**
+     * Releases the subscription on the field this selection depends on.
+     */
+    destroy() {
+        if (this._dependencyRoot && this._dependencyListener) {
+            this._dependencyRoot.removeEventListener(webexpress.webui.Event.CHANGE_VALUE_EVENT, this._dependencyListener);
+            this._dependencyRoot.removeEventListener("change", this._dependencyListener);
+            this._dependencyRoot = null;
+            this._dependencyListener = null;
+        }
+
+        super.destroy();
     }
 
     /**
@@ -269,6 +447,13 @@ webexpress.webui.InputSelectionCtrl = class extends webexpress.webui.PopperCtrl 
         this._items.forEach((item) => {
             // apply filter logic
             if (item.type !== "divider" && item.type !== "header") {
+                 // an option the depended-on field does not offer is left out rather than
+                 // shown disabled: it is not unavailable for now, it does not belong to what
+                 // was chosen there, and a list of struck-through impossibilities is noise
+                 if (!this._isOffered(item)) {
+                     return;
+                 }
+
                  const isVisible = this._optionfilter(item.label, filterText);
                  if (!isVisible) {
                      return;
@@ -516,6 +701,14 @@ webexpress.webui.InputSelectionCtrl = class extends webexpress.webui.PopperCtrl 
                 this._hidden.value = newSerialized;
             }
             this._dispatch(webexpress.webui.Event.CHANGE_VALUE_EVENT, { value: [...this._values] });
+
+            // a value may also be written from the outside - a rest form filling this field
+            // from its service, for example - and the order in which the fields of one form
+            // are filled is not the order the dependency between them runs in. so the value
+            // is checked against the dependency here as well, not only when the depended-on
+            // field changes. the recursion this can start ends at once: the check drops what
+            // is not offered, and the value it writes back has nothing left to drop
+            this._reconcileDependency(true);
         }
     }
 };

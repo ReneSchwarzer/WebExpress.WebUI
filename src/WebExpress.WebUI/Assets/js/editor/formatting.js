@@ -33,7 +33,7 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
     init: function(editor) {
         const update = () => this._updateButtonStates(editor);
 
-        document.addEventListener("selectionchange", () => {
+        const selectionChanged = () => {
             // limit work to the editor that currently owns the selection
             const sel = window.getSelection();
             if (!sel || sel.rangeCount === 0) {
@@ -43,7 +43,8 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
             if (el && el.contains(sel.anchorNode)) {
                 update();
             }
-        });
+        };
+        document.addEventListener("selectionchange", selectionChanged);
 
         const editorEl = editor.getEditorElement();
         if (editorEl) {
@@ -52,6 +53,10 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
             editorEl.addEventListener("focus", update);
             editorEl.addEventListener("input", update);
         }
+        return () => {
+            document.removeEventListener("selectionchange", selectionChanged);
+            ["keyup", "mouseup", "focus", "input"].forEach(type => editorEl?.removeEventListener(type, update));
+        };
     },
 
     /**
@@ -93,21 +98,8 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
     },
 
     /**
-     * Updates the active state of every toolbar button to match the
-     * current selection. For inline commands (bold, italic, …) the
-     * browser-provided <c>queryCommandState</c> is reliable. For the
-     * alignment family <c>queryCommandState("justifyCenter")</c> etc. is
-     * notoriously inconsistent across browsers because modern execCommand
-     * implementations apply <c>style="text-align: …"</c> on the block
-     * ancestor rather than the deprecated <c>align</c> attribute. We
-     * therefore inspect the block ancestor's computed style directly,
-     * which always matches what the user sees.
-     *
-     * The update is also scoped to the editor that owns the current
-     * selection so multiple editors on the same page do not clobber each
-     * other's toolbars.
-     *
-     * @param {object} editor - The editor instance.
+     * Scopes toolbar feedback to its editor and uses the command engine for
+     * mixed inline selections, independent of native browser command state.
      */
     _updateButtonStates: function(editor) {
         const editorEl = editor.getEditorElement();
@@ -119,13 +111,14 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
         const alignment = this._detectAlignment(editor);
         const blockFormat = this._detectBlockFormat(editor);
 
-        const buttons = toolbar
-            ? toolbar.querySelectorAll(".wx-editor-btn")
-            : document.querySelectorAll(".wx-editor-btn");
+        if (!toolbar) {
+            return;
+        }
+        const buttons = toolbar.querySelectorAll("[data-command]");
 
         buttons.forEach((button) => {
             const cmd = button.dataset.command;
-            if (!cmd) {
+            if (!cmd || cmd === "undo" || cmd === "redo") {
                 return;
             }
 
@@ -151,14 +144,13 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
                     }
             }
             button.classList.toggle("active", isActive);
+            button.setAttribute("aria-pressed", String(isActive));
         });
 
         // reflect the current paragraph format in the dropdown label so
         // the user always sees what kind of block the caret sits in -
         // identical to Word's "Styles" indicator.
-        if (toolbar) {
-            this._updateFormatDropdown(toolbar, blockFormat);
-        }
+        this._updateFormatDropdown(toolbar, blockFormat);
     },
 
     /**
@@ -409,9 +401,11 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
                 const b = document.createElement("button");
                 b.type = "button";
                 b.className = "dropdown-item";
+                b.dataset.command = o.cmd;
                 b.innerHTML = `<i class="${webexpress.webui.IconSet.resolve(o.icon)}"></i> ${o.lbl}`;
                 b.addEventListener("click", () => {
                     editor.execCommand(o.cmd);
+                    this._updateButtonStates(editor);
                 });
                 li.appendChild(b);
                 menu.appendChild(li);
@@ -428,6 +422,7 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
      * @returns {HTMLElement} The button group.
      */
     _createTextColorDropdown: function(editor) {
+        let lastColor = this._lastColor;
         const container = document.createElement("div");
         container.className = "wx-editor-btn-group";
         container.style.gap = "0";
@@ -440,11 +435,11 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
 
         const icon = document.createElement("i");
         icon.className = webexpress.webui.IconSet.resolve("font");
-        icon.style.borderBottom = `3px solid ${this._lastColor}`;
+        icon.style.borderBottom = `3px solid ${lastColor}`;
         actionBtn.appendChild(icon);
 
         actionBtn.addEventListener("click", () => {
-            editor.execCommand("foreColor", this._lastColor);
+            editor.execCommand("foreColor", lastColor);
         });
 
         // dropdown toggle button
@@ -465,7 +460,7 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
             b.type = "button";
             b.style.backgroundColor = c;
             b.addEventListener("click", () => {
-                this._lastColor = c;
+                lastColor = c;
                 icon.style.borderBottomColor = c;
                 editor.execCommand("foreColor", c);
             });
@@ -487,6 +482,7 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
      * @returns {HTMLElement} The button group.
      */
     _createHighlightDropdown: function(editor) {
+        let lastHighlight = this._lastHighlight;
         const container = document.createElement("div");
         container.className = "wx-editor-btn-group";
         container.style.gap = "0";
@@ -499,11 +495,11 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
 
         const icon = document.createElement("i");
         icon.className = webexpress.webui.IconSet.resolve("highlighter");
-        icon.style.borderBottom = `3px solid ${this._lastHighlight}`;
+        icon.style.borderBottom = `3px solid ${lastHighlight}`;
         actionBtn.appendChild(icon);
 
         actionBtn.addEventListener("click", () => {
-            editor.execCommand("hiliteColor", this._lastHighlight);
+            editor.execCommand("hiliteColor", lastHighlight);
         });
 
         // 2. dropdown toggle button
@@ -542,7 +538,7 @@ webexpress.webui.EditorPlugins.register("formatting", 0, {
             b.addEventListener("click", () => {
                 // update state if it is a visible color
                 if (c.val !== "transparent") {
-                    this._lastHighlight = c.val;
+                    lastHighlight = c.val;
                     icon.style.borderBottomColor = c.val;
                 }
                 editor.execCommand("hiliteColor", c.val);

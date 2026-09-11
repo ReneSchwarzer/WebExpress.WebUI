@@ -32,11 +32,41 @@ webexpress.webui.EditorSelection = class {
         }
         return null;
     }
+
+    /**
+     * Excludes text merely touched by a range boundary so commands do not
+     * change the next paragraph when the selection ends at its start.
+     */
+    static intersectsText(range, node) {
+        if (range.collapsed) {
+            return node === range.startContainer;
+        }
+        const textRange = document.createRange();
+        textRange.selectNodeContents(node);
+        return range.compareBoundaryPoints(Range.END_TO_START, textRange) < 0 &&
+            range.compareBoundaryPoints(Range.START_TO_END, textRange) > 0;
+    }
  
     /**
-     * Applies a range as the active selection.
-     * @param {Range} range - The range to apply.
-     * @returns {void}
+     * Respects editable table and add-on bodies inside non-editable frames.
+     */
+    static isEditable(node, root) {
+        let el = node?.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+        while (el && el !== root) {
+            const value = el.getAttribute?.("contenteditable");
+            if (value === "false") {
+                return false;
+            }
+            if (value === "true" || value === "") {
+                return true;
+            }
+            el = el.parentElement;
+        }
+        return true;
+    }
+
+    /**
+     * Applies a selection after commands have restored its boundaries.
      */
     static apply(range) {
         const sel = window.getSelection();
@@ -782,11 +812,13 @@ webexpress.webui.EditorFormat = class {
         },
         underline: {
             type: "toggle", tag: "u", selector: "u",
+            decoration: "underline",
             styleProps: ["textDecoration", "textDecorationLine"],
             probe: (s) => ((s.textDecorationLine || s.textDecoration || "").indexOf("underline") !== -1)
         },
         strikethrough: {
             type: "toggle", tag: "s", selector: "s,strike,del",
+            decoration: "line-through",
             styleProps: ["textDecoration", "textDecorationLine"],
             probe: (s) => ((s.textDecorationLine || s.textDecoration || "").indexOf("line-through") !== -1)
         },
@@ -839,6 +871,7 @@ webexpress.webui.EditorFormat = class {
             return true;
         }
 
+        editor._history?.prepare();
         if (range.collapsed) {
             // collapsed caret: remember the format and apply it to the next typed text
             if (editor._pendingFormat) {
@@ -846,8 +879,9 @@ webexpress.webui.EditorFormat = class {
                     editor._pendingFormat.toggle(command);
                 } else if (spec.type === "style") {
                     editor._pendingFormat.setStyle(spec.prop, value);
+                } else if (spec.type === "remove") {
+                    editor._pendingFormat.remove();
                 }
-                // "remove" has nothing to clear at a caret
             } else {
                 try {
                     document.execCommand(command, false, value);
@@ -891,8 +925,14 @@ webexpress.webui.EditorFormat = class {
         if (!range) {
             return false;
         }
-        if (range.collapsed && editor._pendingFormat && editor._pendingFormat.state(command)) {
-            return true;
+        if (!range.collapsed) {
+            return this._isRangeFormatted(root, range, spec);
+        }
+        if (editor._pendingFormat) {
+            const pending = editor._pendingFormat.state(command);
+            if (pending !== undefined) {
+                return pending;
+            }
         }
         let el = range.startContainer;
         el = el.nodeType === Node.TEXT_NODE ? el.parentElement : el;
@@ -927,6 +967,7 @@ webexpress.webui.EditorFormat = class {
         if (!root) {
             return;
         }
+        editor._history?.prepare();
         this._transformRange(root, range, (frag) => {
             this._stripAllInlineInFrag(frag);
             if (!chain || !chain.length) {
@@ -966,100 +1007,13 @@ webexpress.webui.EditorFormat = class {
      * @returns {void}
      */
     static _execToggleRange(root, range, spec) {
-        if (this._isRangeFormatted(root, range, spec)) {
-            // When the whole selection sits inside a single matching format
-            // wrapper (e.g. selecting part of a <strong>), extractContents would
-            // NOT carry the wrapper, so stripping the (wrapper-less) fragment is
-            // a no-op and the bold/italic/... silently survives. Splitting the
-            // wrapper around the selection removes the format reliably.
-            const wrapper = spec.selector ? this._commonFormatAncestor(range, spec.selector, root) : null;
-            if (wrapper) {
-                this._unwrapWithinWrapper(wrapper, range, spec);
-            } else {
-                this._transformRange(root, range, (frag) => this._stripFormatInFrag(frag, spec));
+        const remove = this._isRangeFormatted(root, range, spec);
+        this._transformRange(root, range, (frag) => {
+            this._stripFormatInFrag(frag, spec);
+            if (!remove) {
+                this._wrapBareTextInFrag(frag, spec);
             }
-        } else {
-            this._transformRange(root, range, (frag) => this._wrapBareTextInFrag(frag, spec));
-        }
-    }
-
-    /**
-     * Returns the nearest ancestor matching selector that fully contains the
-     * range (i.e. the range lives entirely inside one format wrapper), or null.
-     * @param {Range} range - The selection range.
-     * @param {string} selector - The format selector.
-     * @param {HTMLElement} root - Search boundary.
-     * @returns {HTMLElement|null}
-     */
-    static _commonFormatAncestor(range, selector, root) {
-        return this._closestWithin(range.commonAncestorContainer, selector, root);
-    }
-
-    /**
-     * Removes a toggle format that wraps the whole selection by splitting the
-     * wrapper into up to three parts: the content before the selection stays
-     * wrapped, the selected content is unwrapped (plain), and the content after
-     * the selection is re-wrapped. The selection is restored on the plain part.
-     * @param {HTMLElement} wrapper - The format element enclosing the selection.
-     * @param {Range} range - The selection range (inside the wrapper).
-     * @param {object} spec - Toggle spec.
-     * @returns {void}
-     */
-    static _unwrapWithinWrapper(wrapper, range, spec) {
-        const parent = wrapper.parentNode;
-        if (!parent) {
-            return;
-        }
-        const tag = wrapper.tagName;
-
-        const startC = range.startContainer;
-        const startO = range.startOffset;
-        const endC = range.endContainer;
-        const endO = range.endOffset;
-
-        // 1) take the content AFTER the selection out of the wrapper
-        const postR = document.createRange();
-        postR.setStart(endC, endO);
-        postR.setEnd(wrapper, wrapper.childNodes.length);
-        const postFrag = postR.extractContents();
-
-        // 2) take the SELECTED content out of the (now shortened) wrapper
-        const midR = document.createRange();
-        midR.setStart(startC, startO);
-        midR.setEnd(wrapper, wrapper.childNodes.length);
-        const midFrag = midR.extractContents();
-
-        // the middle becomes plain text - clear any nested matching format/style
-        this._stripFormatInFrag(midFrag, spec);
-
-        // re-wrap the trailing content, preserving the wrapper's attributes
-        let postWrapper = null;
-        if (postFrag.childNodes.length) {
-            postWrapper = document.createElement(tag);
-            this._copyAttributes(wrapper, postWrapper);
-            postWrapper.appendChild(postFrag);
-        }
-
-        const midFirst = midFrag.firstChild;
-        const midLast = midFrag.lastChild;
-
-        const after = wrapper.nextSibling;
-        if (postWrapper) {
-            parent.insertBefore(postWrapper, after);
-        }
-        parent.insertBefore(midFrag, postWrapper || after);
-
-        // drop the original wrapper when its leading part is now empty
-        if (this._isEffectivelyEmpty(wrapper)) {
-            parent.removeChild(wrapper);
-        }
-
-        if (midFirst && midLast) {
-            const sel = document.createRange();
-            sel.setStartBefore(midFirst);
-            sel.setEndAfter(midLast);
-            webexpress.webui.EditorSelection.apply(sel);
-        }
+        });
     }
 
     /**
@@ -1111,8 +1065,8 @@ webexpress.webui.EditorFormat = class {
      * fragment: reinserting it would nest a copy of the list/table and leave
      * empty shells (e.g. empty <li>s) at the selection boundaries. Each slice
      * lies entirely within one block, so only inline wrappers are ever cloned;
-     * the insertion point of every slice is normalized so leftover empty
-     * wrappers do not re-apply formatting.
+     * inline ancestors are split at both boundaries so the transform can
+     * change their formatting without affecting unselected text.
      * @param {HTMLElement} root - The editor content element.
      * @param {Range} range - The selection range.
      * @param {function(DocumentFragment):void} transform - Fragment rewriter.
@@ -1124,19 +1078,32 @@ webexpress.webui.EditorFormat = class {
         let last = null;
 
         slices.forEach((slice) => {
+            const unit = this._blockOf(slice.startContainer, root);
+            const end = webexpress.webui.EditorSelection.createMarker();
+            const endRange = slice.cloneRange();
+            endRange.collapse(false);
+            endRange.insertNode(end);
+            const start = webexpress.webui.EditorSelection.createMarker();
+            const startRange = slice.cloneRange();
+            startRange.collapse(true);
+            startRange.insertNode(start);
+            this._liftInlineMarker(end, unit);
+            this._liftInlineMarker(start, unit);
+            slice.setStartAfter(start);
+            slice.setEndBefore(end);
             const frag = slice.extractContents();
             transform(frag);
-            this._normalizeInsertionPoint(slice, root);
             const f = frag.firstChild;
-            if (!f) {
-                return; // nothing left to insert in this block
-            }
             const l = frag.lastChild;
             slice.insertNode(frag);
-            if (!first) {
+            start.parentNode.removeChild(start);
+            end.parentNode.removeChild(end);
+            if (!first && f) {
                 first = f;
             }
-            last = l;
+            if (l) {
+                last = l;
+            }
         });
 
         if (first && last) {
@@ -1144,6 +1111,29 @@ webexpress.webui.EditorFormat = class {
             selRange.setStartBefore(first);
             selRange.setEndAfter(last);
             webexpress.webui.EditorSelection.apply(selRange);
+        }
+    }
+
+    /**
+     * Exposes enclosing inline formats to the transform without changing the
+     * formatting outside the selection or splitting its block structure.
+     */
+    static _liftInlineMarker(marker, unit) {
+        while (marker.parentNode && marker.parentNode !== unit) {
+            const wrapper = marker.parentNode;
+            const parent = wrapper.parentNode;
+            const tail = wrapper.cloneNode(false);
+            tail.removeAttribute("id");
+            while (marker.nextSibling) {
+                tail.appendChild(marker.nextSibling);
+            }
+            parent.insertBefore(marker, wrapper.nextSibling);
+            if (!this._isEffectivelyEmpty(tail)) {
+                parent.insertBefore(tail, marker.nextSibling);
+            }
+            if (this._isEffectivelyEmpty(wrapper)) {
+                parent.removeChild(wrapper);
+            }
         }
     }
 
@@ -1183,42 +1173,8 @@ webexpress.webui.EditorFormat = class {
             if (range.compareBoundaryPoints(Range.END_TO_END, r) < 0) {
                 r.setEnd(range.endContainer, range.endOffset);
             }
-            this._widenToBlockEdge(r, run.unit);
             return r;
         });
-    }
-
-    /**
-     * Lifts the slice boundaries to position-equivalent points directly under
-     * the block unit. A boundary sitting at the very edge of an inline
-     * wrapper, e.g. (text, 0) inside <b>text</b>, marks the same position as
-     * the point before the wrapper, but extractContents behaves differently:
-     * with the inner representation it takes the same-text-node shortcut and
-     * never clones the wrapper into the fragment, so a strip transform could
-     * not remove it and the reinserted content would land back inside it.
-     * @param {Range} r - The slice range (mutated in place).
-     * @param {HTMLElement} unit - The block unit the slice belongs to.
-     * @returns {void}
-     */
-    static _widenToBlockEdge(r, unit) {
-        let sn = r.startContainer;
-        let so = r.startOffset;
-        while (sn !== unit && so === 0 && sn.parentNode) {
-            so = Array.prototype.indexOf.call(sn.parentNode.childNodes, sn);
-            sn = sn.parentNode;
-        }
-        r.setStart(sn, so);
-
-        let en = r.endContainer;
-        let eo = r.endOffset;
-        while (en !== unit && en.parentNode &&
-            eo === (en.nodeType === Node.TEXT_NODE
-                ? (en.textContent || "").length
-                : en.childNodes.length)) {
-            eo = Array.prototype.indexOf.call(en.parentNode.childNodes, en) + 1;
-            en = en.parentNode;
-        }
-        r.setEnd(en, eo);
     }
 
     /**
@@ -1237,35 +1193,6 @@ webexpress.webui.EditorFormat = class {
             el = el.parentElement;
         }
         return root;
-    }
-
-    /**
-     * After extraction, lifts the collapsed point out of any empty inline
-     * wrapper and removes it, so reinserting content does not re-enter (and
-     * thus re-apply) a wrapper whose content was just removed.
-     * @param {Range} range - Collapsed range at the extraction point.
-     * @param {HTMLElement} root - The editor content element.
-     * @returns {void}
-     */
-    static _normalizeInsertionPoint(range, root) {
-        let guard = 0;
-        while (guard++ < 50) {
-            const container = range.startContainer;
-            if (container === root || container.nodeType !== Node.ELEMENT_NODE) {
-                break;
-            }
-            if (!this._isInlineFormatEl(container) || !this._isEffectivelyEmpty(container)) {
-                break;
-            }
-            const parent = container.parentNode;
-            if (!parent) {
-                break;
-            }
-            const index = Array.prototype.indexOf.call(parent.childNodes, container);
-            parent.removeChild(container);
-            range.setStart(parent, index);
-            range.collapse(true);
-        }
     }
 
     /**
@@ -1326,21 +1253,34 @@ webexpress.webui.EditorFormat = class {
      * @returns {void}
      */
     static _stripFormatInFrag(frag, spec) {
-        this._unwrapAll(frag, spec.selector);
-        if (spec.styleProps) {
-            frag.querySelectorAll("*").forEach((el) => {
-                if (this._isAtomicEl(el)) {
+        frag.querySelectorAll("*").forEach((el) => {
+            if (this._isAtomicEl(el)) {
+                return;
+            }
+            (spec.styleProps || []).forEach((prop) => {
+                if (!el.style[prop]) {
                     return;
                 }
-                spec.styleProps.forEach((p) => {
-                    try {
-                        el.style[p] = "";
-                    } catch (e) {
-                        /* noop */
-                    }
-                });
+                el.style[prop] = spec.decoration
+                    ? el.style[prop].split(/\s+/).filter(token => token !== spec.decoration).join(" ")
+                    : "";
             });
-        }
+            if (!el.style.cssText) {
+                el.removeAttribute("style");
+            }
+            if (el.matches(spec.selector)) {
+                if (el.attributes.length) {
+                    const span = document.createElement("span");
+                    this._copyAttributes(el, span);
+                    while (el.firstChild) {
+                        span.appendChild(el.firstChild);
+                    }
+                    el.parentNode.replaceChild(span, el);
+                } else {
+                    this._unwrap(el);
+                }
+            }
+        });
     }
 
     /**
@@ -1417,7 +1357,7 @@ webexpress.webui.EditorFormat = class {
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
         let n;
         while ((n = walker.nextNode())) {
-            if (!range.intersectsNode(n)) {
+            if (!webexpress.webui.EditorSelection.intersectsText(range, n)) {
                 continue;
             }
             if (!this._acceptText(n, root, skipWhitespace)) {
@@ -1463,7 +1403,7 @@ webexpress.webui.EditorFormat = class {
         if (skipWhitespace && txt.trim() === "") {
             return false;
         }
-        return !this._closestWithin(n, '[contenteditable="false"]', boundary);
+        return webexpress.webui.EditorSelection.isEditable(n, boundary);
     }
 
     /**
@@ -1553,7 +1493,7 @@ webexpress.webui.EditorFormat = class {
         if (!el || el.nodeType !== Node.ELEMENT_NODE) {
             return false;
         }
-        if (el.getAttribute("contenteditable") === "false") {
+        if (!webexpress.webui.EditorSelection.isEditable(el)) {
             return true;
         }
         return el.tagName === "IMG" || el.tagName === "HR";
@@ -1579,10 +1519,10 @@ webexpress.webui.EditorFormat = class {
      * @returns {boolean}
      */
     static _isEffectivelyEmpty(el) {
-        if ((el.textContent || "").trim() !== "") {
+        if ((el.textContent || "") !== "") {
             return false;
         }
-        return !el.querySelector("img,hr,br,[contenteditable='false']");
+        return !el.querySelector("img,hr,br,[contenteditable='false'],[data-wx-caret]");
     }
 };
 
@@ -1593,7 +1533,7 @@ webexpress.webui.EditorFormat = class {
 webexpress.webui.EditorBlocks = class {
 
     /** Block elements that formatBlock / alignment may target. */
-    static BLOCK_SELECTOR = "p,h1,h2,h3,h4,h5,h6,blockquote,pre,div";
+    static BLOCK_SELECTOR = "p,h1,h2,h3,h4,h5,h6,blockquote,pre,div,li,td,th";
 
     /** Tags allowed as a formatBlock target. */
     static FORMAT_BLOCK_TAGS = new Set([
@@ -1640,6 +1580,7 @@ webexpress.webui.EditorBlocks = class {
             return true;
         }
 
+        editor._history?.prepare();
         if (cmd === "formatblock") {
             this._formatBlock(root, range, value);
         } else if (cmd === "justifyleft") {
@@ -1683,35 +1624,38 @@ webexpress.webui.EditorBlocks = class {
             return;
         }
 
-        const collapsed = range.collapsed;
-        if (collapsed) {
-            range.insertNode(webexpress.webui.EditorSelection.createMarker());
-        }
-
-        const newBlocks = [];
+        const marked = webexpress.webui.EditorSelection.markRange(range);
         blocks.forEach((b) => {
-            const nb = document.createElement(tag);
-            const style = b.getAttribute("style");
-            if (style) {
-                nb.setAttribute("style", style);
+            if (b.tagName.toLowerCase() === tag) {
+                return;
             }
+            if (b.matches("li,td,th")) {
+                let block = null;
+                Array.from(b.childNodes).forEach(node => {
+                    if (node.nodeType === Node.ELEMENT_NODE &&
+                        node.matches(this.BLOCK_SELECTOR + ",ul,ol,table")) {
+                        block = null;
+                        return;
+                    }
+                    if (!block) {
+                        block = document.createElement(tag);
+                        b.insertBefore(block, node);
+                    }
+                    block.appendChild(node);
+                });
+                return;
+            }
+            const nb = document.createElement(tag);
+            webexpress.webui.EditorFormat._copyAttributes(b, nb);
             while (b.firstChild) {
                 nb.appendChild(b.firstChild);
             }
             if (b.parentNode) {
                 b.parentNode.replaceChild(nb, b);
             }
-            newBlocks.push(nb);
         });
-
-        if (collapsed) {
-            webexpress.webui.EditorSelection.placeCaretAtMarker(root);
-        } else if (newBlocks.length) {
-            const r = document.createRange();
-            r.setStart(newBlocks[0], 0);
-            const last = newBlocks[newBlocks.length - 1];
-            r.setEnd(last, last.childNodes.length);
-            webexpress.webui.EditorSelection.apply(r);
+        if (marked) {
+            webexpress.webui.EditorSelection.restoreRange(root);
         }
     }
 
@@ -1745,7 +1689,7 @@ webexpress.webui.EditorBlocks = class {
             if (!el || !el.closest) {
                 return;
             }
-            if (el.closest('[contenteditable="false"]')) {
+            if (!webexpress.webui.EditorSelection.isEditable(el, root)) {
                 return;
             }
             const li = el.closest("li");
@@ -1761,7 +1705,7 @@ webexpress.webui.EditorBlocks = class {
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
         let n;
         while ((n = walker.nextNode())) {
-            if (range.intersectsNode(n)) {
+            if (webexpress.webui.EditorSelection.intersectsText(range, n)) {
                 add(n);
             }
         }
@@ -1787,6 +1731,11 @@ webexpress.webui.EditorBlocks = class {
         }
 
         if (range.collapsed) {
+            const existing = webexpress.webui.EditorFormat._closestWithin(range.startContainer, "a", root);
+            if (existing) {
+                existing.setAttribute("href", url);
+                return;
+            }
             const a = document.createElement("a");
             a.setAttribute("href", url);
             a.textContent = url;
@@ -1798,27 +1747,17 @@ webexpress.webui.EditorBlocks = class {
             return;
         }
 
-        const frag = range.extractContents();
-        frag.querySelectorAll("a").forEach((el) => {
-            const p = el.parentNode;
-            if (!p) {
-                return;
-            }
-            while (el.firstChild) {
-                p.insertBefore(el.firstChild, el);
-            }
-            p.removeChild(el);
+        const Format = webexpress.webui.EditorFormat;
+        Format._transformRange(root, range, (frag) => {
+            Format._unwrapAll(frag, "a");
+            Format._textNodesInScope(frag, false).forEach((text) => {
+                const a = document.createElement("a");
+                a.setAttribute("href", url);
+                text.parentNode.insertBefore(a, text);
+                a.appendChild(text);
+            });
         });
-
-        const a = document.createElement("a");
-        a.setAttribute("href", url);
-        a.appendChild(frag);
-        range.insertNode(a);
-
-        const r = document.createRange();
-        r.setStartBefore(a);
-        r.setEndAfter(a);
-        webexpress.webui.EditorSelection.apply(r);
+        Format._cleanupEmptyWrappers(root);
     }
 
     /**
@@ -1850,7 +1789,7 @@ webexpress.webui.EditorBlocks = class {
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
         let n;
         while ((n = walker.nextNode())) {
-            if (!range.intersectsNode(n)) {
+            if (!webexpress.webui.EditorSelection.intersectsText(range, n)) {
                 continue;
             }
             const b = this._nearestBlock(n, root);
@@ -1868,8 +1807,8 @@ webexpress.webui.EditorBlocks = class {
     }
 
     /**
-     * Returns the nearest block ancestor of node, or null when it is inside a
-     * list item or a non-editable frame (those must not be reformatted).
+     * Resolves a formatting target without modifying non-editable content.
+     * List items and cells retain their structure when their text is formatted.
      * @param {Node} node - Start node.
      * @param {HTMLElement} root - Search boundary.
      * @returns {HTMLElement|null}
@@ -1878,7 +1817,7 @@ webexpress.webui.EditorBlocks = class {
         let el = node && node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
         while (el && el !== root) {
             if (el.nodeType === Node.ELEMENT_NODE && el.matches && el.matches(this.BLOCK_SELECTOR)) {
-                if (el.closest("li") || el.closest('[contenteditable="false"]')) {
+                if (!webexpress.webui.EditorSelection.isEditable(el, root)) {
                     return null;
                 }
                 return el;
@@ -1897,16 +1836,14 @@ webexpress.webui.EditorBlocks = class {
  */
 webexpress.webui.EditorPendingFormat = class {
 
-    /** Characters that pass through unwrapped so other plugins keep working. */
-    static SKIP_CHARS = new Set([" ", "@", "[", "{", "/"]);
-
     /**
      * @param {webexpress.webui.EditorCtrl} editor - The owning editor instance.
      */
     constructor(editor) {
         this._editor = editor;
-        this._toggles = new Set();   // lower-case command names
+        this._toggles = new Map();
         this._styles = new Map();    // CSS property -> value
+        this._removeAll = false;
         this._anchorNode = null;
         this._anchorOffset = 0;
         this._attach();
@@ -1921,8 +1858,8 @@ webexpress.webui.EditorPendingFormat = class {
         if (!el) {
             return;
         }
-        el.addEventListener("input", (e) => this._onInput(e));
-        document.addEventListener("selectionchange", () => this._onSelectionChange());
+        this._selectionHandler = () => this._onSelectionChange();
+        document.addEventListener("selectionchange", this._selectionHandler);
     }
 
     /**
@@ -1930,7 +1867,7 @@ webexpress.webui.EditorPendingFormat = class {
      * @returns {boolean}
      */
     has() {
-        return this._toggles.size > 0 || this._styles.size > 0;
+        return this._removeAll || this._toggles.size > 0 || this._styles.size > 0;
     }
 
     /**
@@ -1940,7 +1877,26 @@ webexpress.webui.EditorPendingFormat = class {
     clear() {
         this._toggles.clear();
         this._styles.clear();
+        this._removeAll = false;
         this._anchorNode = null;
+    }
+
+    /**
+     * Allows clear-format to affect subsequent typing without changing text
+     * that precedes the caret.
+     */
+    remove() {
+        this.clear();
+        this._removeAll = true;
+        this._captureAnchor();
+    }
+
+    /**
+     * Releases the document listener when an editor is removed dynamically.
+     */
+    destroy() {
+        document.removeEventListener("selectionchange", this._selectionHandler);
+        this.clear();
     }
 
     /**
@@ -1950,11 +1906,12 @@ webexpress.webui.EditorPendingFormat = class {
      */
     toggle(command) {
         const cmd = command.toLowerCase();
+        const active = webexpress.webui.EditorFormat.queryState(this._editor, cmd);
         this._captureAnchor();
-        if (this._toggles.has(cmd)) {
-            this._toggles.delete(cmd);
-        } else {
-            this._toggles.add(cmd);
+        this._toggles.set(cmd, !active);
+        const spec = webexpress.webui.EditorFormat._spec(cmd);
+        if (!active && spec.opposite) {
+            this._toggles.set(spec.opposite, false);
         }
     }
 
@@ -1970,13 +1927,14 @@ webexpress.webui.EditorPendingFormat = class {
     }
 
     /**
-     * Returns whether a toggle command is currently pending (used by queryState
-     * for the active button display at a collapsed caret).
+     * Distinguishes an explicit on/off choice from inherited formatting so
+     * the toolbar can show a disabled format before the next character.
      * @param {string} command - Toggle command name.
      * @returns {boolean}
      */
     state(command) {
-        return this._toggles.has(command.toLowerCase());
+        const cmd = command.toLowerCase();
+        return this._toggles.has(cmd) ? this._toggles.get(cmd) : this._removeAll ? false : undefined;
     }
 
     /**
@@ -1998,7 +1956,7 @@ webexpress.webui.EditorPendingFormat = class {
      * @returns {void}
      */
     _onSelectionChange() {
-        if (!this.has()) {
+        if (!this.has() || this._editor._composing) {
             return;
         }
         const root = this._editor.getEditorElement();
@@ -2021,7 +1979,11 @@ webexpress.webui.EditorPendingFormat = class {
         if (!this.has()) {
             return;
         }
-        if (e.inputType !== "insertText") {
+        if (e.isComposing) {
+            return;
+        }
+        if (e.inputType !== "insertText" && e.inputType !== "insertCompositionText" &&
+            e.inputType !== "insertFromComposition") {
             this.clear();
             return;
         }
@@ -2029,9 +1991,6 @@ webexpress.webui.EditorPendingFormat = class {
         if (!data) {
             this.clear();
             return;
-        }
-        if (data.length === 1 && webexpress.webui.EditorPendingFormat.SKIP_CHARS.has(data)) {
-            return; // keep pending; let other plugins handle this character
         }
         this._applyToInserted(data);
     }
@@ -2065,63 +2024,31 @@ webexpress.webui.EditorPendingFormat = class {
         const target = document.createRange();
         target.setStart(node, start);
         target.setEnd(node, end);
-        const frag = target.extractContents();
-        const wrapper = this._buildWrapper(frag);
-        target.insertNode(wrapper);
-
-        const inner = this._innermost(wrapper);
+        const root = this._editor.getEditorElement();
+        const Format = webexpress.webui.EditorFormat;
+        Format._transformRange(root, target, (frag) => {
+            if (this._removeAll) {
+                Format._stripAllInlineInFrag(frag);
+            }
+            this._toggles.forEach((active, command) => {
+                const spec = Format._spec(command);
+                Format._stripFormatInFrag(frag, spec);
+                if (active) {
+                    Format._wrapBareTextInFrag(frag, spec);
+                }
+            });
+            this._styles.forEach((value, prop) => Format._wrapStyleInFrag(frag, { prop }, value));
+        });
+        const selected = webexpress.webui.EditorSelection.getRange(root);
+        const texts = Format._textNodesInRange(selected, root, false);
+        const last = texts[texts.length - 1];
         const cr = document.createRange();
-        cr.selectNodeContents(inner);
+        cr.selectNodeContents(last);
         cr.collapse(false);
         webexpress.webui.EditorSelection.apply(cr);
-
+        Format._cleanupEmptyWrappers(root);
         this._editor._saveCurrentSelection();
-        this._editor._syncValue();
         this.clear();
-    }
-
-    /**
-     * Builds the nested wrapper element chain for the pending formats and puts
-     * the fragment inside the innermost one.
-     * @param {DocumentFragment} frag - The text fragment to wrap.
-     * @returns {HTMLElement} The outermost wrapper.
-     */
-    _buildWrapper(frag) {
-        const els = [];
-        this._toggles.forEach((cmd) => {
-            const spec = webexpress.webui.EditorFormat._spec(cmd);
-            if (spec && spec.tag) {
-                els.push(document.createElement(spec.tag));
-            }
-        });
-        if (this._styles.size) {
-            const span = document.createElement("span");
-            this._styles.forEach((v, p) => {
-                span.style[p] = v;
-            });
-            els.push(span);
-        }
-        if (els.length === 0) {
-            els.push(document.createElement("span"));
-        }
-        for (let i = 1; i < els.length; i++) {
-            els[i - 1].appendChild(els[i]);
-        }
-        els[els.length - 1].appendChild(frag);
-        return els[0];
-    }
-
-    /**
-     * Returns the innermost element of a wrapper chain.
-     * @param {HTMLElement} el - The outermost wrapper.
-     * @returns {HTMLElement}
-     */
-    _innermost(el) {
-        let cur = el;
-        while (cur.firstElementChild) {
-            cur = cur.firstElementChild;
-        }
-        return cur;
     }
 };
 
@@ -2738,7 +2665,7 @@ webexpress.webui.EditorList = class {
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
         let n;
         while ((n = walker.nextNode())) {
-            if (!range.intersectsNode(n)) {
+            if (!webexpress.webui.EditorSelection.intersectsText(range, n)) {
                 continue;
             }
             const u = this._unitOf(n, root);
@@ -2767,7 +2694,7 @@ webexpress.webui.EditorList = class {
         if (!el) {
             return null;
         }
-        if (el.closest && el.closest('[contenteditable="false"]')) {
+        if (!webexpress.webui.EditorSelection.isEditable(el, root)) {
             return null;
         }
         const li = el.closest ? el.closest("li") : null;
@@ -2931,6 +2858,7 @@ webexpress.webui.EditorHistory = class {
     _onBeforeInput(e) {
         const t = e.inputType;
         if (t !== "historyUndo" && t !== "historyRedo") {
+            this.prepare(t === "insertText" || e.isComposing === true);
             return;
         }
         e.preventDefault();
@@ -2964,6 +2892,25 @@ webexpress.webui.EditorHistory = class {
         this._typingOpen = false;
         this._entries = [this._snapshot()];
         this._index = 0;
+    }
+
+    /**
+     * Captures the state before a mutation so typing and the next command are
+     * independently undoable and undo restores the selection used by it.
+     */
+    prepare(isTyping = false) {
+        if (this._restoring || (isTyping && this._typingOpen)) {
+            return;
+        }
+        this._flushTyping();
+        this._commit();
+    }
+
+    /**
+     * Prevents a delayed typing commit after the owning editor is destroyed.
+     */
+    destroy() {
+        this._clearTimer();
     }
 
     /**
@@ -3016,6 +2963,7 @@ webexpress.webui.EditorHistory = class {
      * @returns {void}
      */
     redo() {
+        this._flushTyping();
         if (this._index >= this._entries.length - 1) {
             return;
         }
@@ -3042,13 +2990,13 @@ webexpress.webui.EditorHistory = class {
      */
     _commit() {
         const snap = this._snapshot();
-        if (this._index < this._entries.length - 1) {
-            this._entries.length = this._index + 1;
-        }
         const top = this._entries[this._index];
         if (top && top.html === snap.html) {
             top.bookmark = snap.bookmark;
             return;
+        }
+        if (this._index < this._entries.length - 1) {
+            this._entries.length = this._index + 1;
         }
         this._entries.push(snap);
         this._index++;
@@ -3085,6 +3033,7 @@ webexpress.webui.EditorHistory = class {
         }
         this._restoring = true;
         try {
+            this._editor._pendingFormat?.clear();
             el.innerHTML = entry.html;
             el.focus({ preventScroll: true });
             // structure matches the snapshot, so the selection resolves exactly;
@@ -3093,6 +3042,7 @@ webexpress.webui.EditorHistory = class {
             if (typeof this._editor._notifyPluginsContentChanged === "function") {
                 this._editor._notifyPluginsContentChanged();
             }
+            this._editor._saveCurrentSelection();
             this._editor._syncValue();
         } finally {
             this._restoring = false;
@@ -3496,7 +3446,7 @@ webexpress.webui.EditorCtrl = class extends webexpress.webui.Ctrl {
         if (toolbar) {
             toolbar.addEventListener("mousedown", (e) => {
                 e.stopPropagation();
-                this._saveRangeOnFocusLost();
+                this._saveCurrentSelection();
                 // keep the caret alive in the editor when a command button is
                 // pressed. Without this the editor blurs and the (collapsed)
                 // selection is lost, which is why inline formatting only worked
@@ -3513,28 +3463,79 @@ webexpress.webui.EditorCtrl = class extends webexpress.webui.Ctrl {
 
         // save current range when editor loses focus
         this._editorElement.addEventListener("blur", () => {
-            this._saveRangeOnFocusLost();
-        });
-
-        // restore current range when editor gets focus back
-        this._editorElement.addEventListener("focus", () => {
-            this._restoreRangeOnFocusReceived();
+            this._saveCurrentSelection();
         });
 
         this._editorElement.addEventListener("mouseup", () => {
-            this._saveRangeOnFocusLost();
+            this._saveCurrentSelection();
         });
 
         this._editorElement.addEventListener("keyup", () => {
-            this._saveRangeOnFocusLost();
+            this._saveCurrentSelection();
         });
 
-        this._editorElement.addEventListener("input", () => {
-            this._historyTyping = true;
-            this._syncValue();
-            this._historyTyping = false;
-            this._updateUndoRedoStates();
+        this._editorElement.addEventListener("keydown", (e) => this._onKeyDown(e));
+        this._editorElement.addEventListener("beforeinput", (e) => {
+            const commands = { formatBold: "bold", formatItalic: "italic", formatUnderline: "underline",
+                formatStrikeThrough: "strikethrough", formatSuperscript: "superscript", formatSubscript: "subscript" };
+            if (e.cancelable && commands[e.inputType]) {
+                e.preventDefault();
+                this.execCommand(commands[e.inputType]);
+            }
         });
+        this._editorElement.addEventListener("compositionstart", () => { this._composing = true; });
+        this._editorElement.addEventListener("compositionend", (e) => {
+            this._composing = false;
+            if (this._pendingFormat?.has()) {
+                this._onInput({ inputType: "insertText", data: e.data });
+            }
+        });
+
+        this._editorElement.addEventListener("input", (e) => {
+            this._onInput(e);
+        });
+    }
+
+    /**
+     * Keeps keyboard commands on the same formatting path as toolbar actions.
+     */
+    _onKeyDown(e) {
+        if (e.defaultPrevented || e.isComposing || e.altKey) {
+            return;
+        }
+        const key = (e.key || "").toLowerCase();
+        let command = null;
+        if ((e.ctrlKey || e.metaKey) && !e.shiftKey) {
+            command = { b: "bold", i: "italic", u: "underline" }[key];
+        } else if (key === "tab" && !e.ctrlKey && !e.metaKey) {
+            const root = this._editorElement;
+            const range = webexpress.webui.EditorSelection.getRange(root);
+            const item = range && webexpress.webui.EditorFormat._closestWithin(range.startContainer, "li", root);
+            if (item) {
+                command = e.shiftKey ? "outdent" : "indent";
+            }
+        }
+        if (command) {
+            e.preventDefault();
+            this.execCommand(command);
+        }
+    }
+
+    /**
+     * Applies pending formatting before publishing the value so observers and
+     * history receive the same completed edit.
+     */
+    _onInput(e) {
+        this._pendingFormat?._onInput(e);
+        this._saveCurrentSelection();
+        this._historyTyping = e.isComposing === true ||
+            ["insertText", "insertCompositionText", "insertFromComposition", "deleteContentBackward", "deleteContentForward"].includes(e.inputType);
+        try {
+            this._syncValue();
+        } finally {
+            this._historyTyping = false;
+        }
+        this._updateUndoRedoStates();
     }
 
     /**
@@ -3581,31 +3582,17 @@ webexpress.webui.EditorCtrl = class extends webexpress.webui.Ctrl {
     }
  
     /**
-     * Saves the current selection on focus loss. Kept as a backward-compatible
-     * delegation so _attachEventHandlers and the toolbar handler stay unchanged.
-     * @returns {void}
-     */
-    _saveRangeOnFocusLost() {
-        this._saveCurrentSelection();
-    }
-
-    /**
-     * Restores the saved selection when focus is received. Kept as a
-     * backward-compatible delegation.
-     * @returns {void}
-     */
-    _restoreRangeOnFocusReceived() {
-        this.restoreSavedRange();
-    }
-
-    /**
      * Initializes all registered plugins.
      */
     _initializePlugins() {
+        this._pluginCleanups = [];
         const plugins = webexpress.webui.EditorPlugins.getAll();
         plugins.forEach((plugin) => {
             if (typeof plugin.init === "function") {
-                plugin.init(this);
+                const cleanup = plugin.init(this);
+                if (typeof cleanup === "function") {
+                    this._pluginCleanups.push(cleanup);
+                }
             }
         });
     }
@@ -3844,6 +3831,7 @@ webexpress.webui.EditorCtrl = class extends webexpress.webui.Ctrl {
 
         // preventScroll keeps the document/editor at its current scroll position
         // instead of jumping to the caret when a toolbar action is triggered.
+        this._saveCurrentSelection();
         this._editorElement.focus({ preventScroll: true });
         this.restoreSavedRange();
 
@@ -3853,6 +3841,7 @@ webexpress.webui.EditorCtrl = class extends webexpress.webui.Ctrl {
             }
             return;
         }
+        this._history?.prepare();
         if (webexpress.webui.EditorFormat.handles(command)) {
             webexpress.webui.EditorFormat.exec(this, command, value);
             return;
@@ -3908,8 +3897,10 @@ webexpress.webui.EditorCtrl = class extends webexpress.webui.Ctrl {
             return;
         }
 
+        this._saveCurrentSelection();
         editor.focus({ preventScroll: true });
         this.restoreSavedRange();
+        this._history?.prepare();
 
         let range = Sel.getRange(editor);
         if (!range) {
@@ -3929,6 +3920,17 @@ webexpress.webui.EditorCtrl = class extends webexpress.webui.Ctrl {
         let lastNode = null;
         while (tmp.firstChild) {
             lastNode = fragment.appendChild(tmp.firstChild);
+        }
+
+        const containsBlocks = Array.from(fragment.childNodes).some(node =>
+            node.nodeType === Node.ELEMENT_NODE && node.matches("p,h1,h2,h3,h4,h5,h6,div,ul,ol,table,hr,blockquote,pre,figure"));
+        const block = webexpress.webui.EditorFormat._blockOf(range.startContainer, editor);
+        if (containsBlocks && block !== editor && block.matches("p,h1,h2,h3,h4,h5,h6,pre")) {
+            const split = Sel.insertMarker(range, null);
+            webexpress.webui.EditorFormat._liftInlineMarker(split, block.parentNode);
+            range.setStartAfter(split);
+            range.collapse(true);
+            split.parentNode.removeChild(split);
         }
  
         range.insertNode(fragment);
@@ -3969,6 +3971,8 @@ webexpress.webui.EditorCtrl = class extends webexpress.webui.Ctrl {
             return;
         }
         const clean = this._sanitizeHtml(v || "");
+        this._pendingFormat?.clear();
+        this._savedRange = null;
         this._editorElement.innerHTML = clean;
         // normalize the same way the constructor does so programmatic content
         // gets framed tables, block structure and typing space too
@@ -3994,6 +3998,9 @@ webexpress.webui.EditorCtrl = class extends webexpress.webui.Ctrl {
      * Cleans up resources when the control is destroyed.
      */
     destroy() {
+        this._pluginCleanups?.forEach(cleanup => cleanup());
+        this._pendingFormat?.destroy();
+        this._history?.destroy();
         if (this._painter) {
             this._painter.cancel();
         }

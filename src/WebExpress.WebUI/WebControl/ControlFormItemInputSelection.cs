@@ -42,6 +42,14 @@ namespace WebExpress.WebUI.WebControl
         public Func<IRenderControlContext, bool> StickySelection { get; set; }
 
         /// <summary>
+        /// Gets or sets the name of the form field this selection follows. Left unset, the
+        /// selection offers all of its options; named, an option is offered only where
+        /// <see cref="ControlFormItemInputSelectionItem.Requires"/> names the value currently
+        /// chosen in that field.
+        /// </summary>
+        public Func<IRenderControlContext, string> DependsOn { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the class with an automatically assigned ID.
         /// </summary>
         public ControlFormItemInputSelection()
@@ -126,6 +134,7 @@ namespace WebExpress.WebUI.WebControl
                 .AddUserAttribute("placeholder", I18N.Translate(renderContext, Placeholder?.Invoke(renderContext)))
                 .AddUserAttribute("data-multiselection", MultiSelect?.Invoke(renderContext) == true ? "true" : null)
                 .AddUserAttribute("data-sticky-selection", StickySelection?.Invoke(renderContext) == true ? "true" : null)
+                .AddUserAttribute("data-depends-on", DependsOn?.Invoke(renderContext))
                 .AddUserAttribute("data-value", value)
                 .Add(_options.Select(x => x.Render(renderContext, visualTree)));
 

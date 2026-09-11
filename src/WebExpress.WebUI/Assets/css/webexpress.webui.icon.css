@@ -7781,11 +7781,6 @@
     mask-image: url("../icons/child.svg");
 }
 
-.wx-icon-light-child-combatant {
-    -webkit-mask-image: url("../icons/child-combatant.svg");
-    mask-image: url("../icons/child-combatant.svg");
-}
-
 .wx-icon-light-child-dress {
     -webkit-mask-image: url("../icons/child-dress.svg");
     mask-image: url("../icons/child-dress.svg");

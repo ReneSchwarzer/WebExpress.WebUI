@@ -272,6 +272,12 @@ webexpress.webui.EditorPlugins.register("bubble", 5000, {
             if (state.hasSelection) {
                 bubble.appendChild(this._makeSep());
             }
+            if (state.target?.tagName === "IMG") {
+                const edit = this._collectContextItems(editor, state.target).find(item => typeof item.action === "function");
+                if (edit) {
+                    bubble.appendChild(this._makeBtn(edit.icon, edit.label, () => this._runAction(editor, edit.action)));
+                }
+            }
             const ctxBtn = this._makeBtn("more",
                 this._i18n("webexpress.webui:editor.actions", "Actions"),
                 () => this._toggleFlyout(editor, state.target));
@@ -293,6 +299,10 @@ webexpress.webui.EditorPlugins.register("bubble", 5000, {
         b.className = "wx-editor-bubble-btn";
         b.title = title;
         b.setAttribute("aria-label", title);
+        if (webexpress.webui.EditorFormat.handles(icon)) {
+            b.dataset.command = icon;
+            b.setAttribute("aria-pressed", "false");
+        }
         b.innerHTML = `<i class="${webexpress.webui.IconSet.resolve(icon)}"></i>`;
         // keep the editor selection alive and up to date for execCommand
         b.addEventListener("mousedown", (e) => {
@@ -507,6 +517,7 @@ webexpress.webui.EditorPlugins.register("bubble", 5000, {
      * @param {Function} action - The action callback.
      */
     _runAction: function(editor, action) {
+        editor?._history?.prepare();
         if (typeof action === "function") {
             try {
                 action();
@@ -641,19 +652,10 @@ webexpress.webui.EditorPlugins.register("bubble", 5000, {
         if (!this._bubbleEl || !this._currentEditor) {
             return;
         }
-        this._bubbleEl.querySelectorAll(".wx-editor-bubble-btn").forEach((btn) => {
-            const icon = btn.querySelector("i");
-            if (!icon) return;
-            let cmd = null;
-            if (icon.classList.contains("fa-bold")) cmd = "bold";
-            else if (icon.classList.contains("fa-italic")) cmd = "italic";
-            else if (icon.classList.contains("fa-underline")) cmd = "underline";
-            else if (icon.classList.contains("fa-strikethrough")) cmd = "strikeThrough";
-            if (cmd) {
-                try {
-                    btn.classList.toggle("active", this._currentEditor.queryCommandState(cmd));
-                } catch (_) { /* noop */ }
-            }
+        this._bubbleEl.querySelectorAll("[data-command]").forEach((btn) => {
+            const active = this._currentEditor.queryCommandState(btn.dataset.command);
+            btn.classList.toggle("active", active);
+            btn.setAttribute("aria-pressed", String(active));
         });
     }
 });
