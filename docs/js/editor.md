@@ -264,6 +264,20 @@ Typing and the following formatting command are separate undo steps. Undo
 restores the selection used for the command; operations without content changes
 preserve redo.
 
+### Editing tables
+
+Drag from one cell into another, or Shift-click another cell, to select a rectangle.
+Dragging within a single cell still selects text. The rectangle remains selected
+when opening the actions menu. Existing row and column spans expand the selection
+to include each affected cell completely.
+
+Merge combines the selected rectangle in reading order, including vertical spans;
+it requires at least two cells within the same row group. Split restores every
+covered row and column position. Lists and indentation stay inside the affected
+cells, and cell background colors apply to the entire rectangle. Structural edits
+and colors update the form value and undo history. Selection highlighting is never
+stored in the value or history.
+
 ### Editing images
 
 Click an image to select it and display the same floating popover used for tables
@@ -283,11 +297,12 @@ alignment, resizing and removal participate in undo/redo.
 
 ### Regression checks
 
-Run `node --test` in `src/WebExpress.WebUI.Test/JsTest`. The shared editor and image
+Run `node --test` in `src/WebExpress.WebUI.Test/JsTest`. The shared editor, table and image
 cases are also available in `editor.browser.html` in that directory. Serve the
-repository through a local HTTP server and open that page in Chromium and Firefox.
+repository through a local HTTP server that serves `.mjs` as JavaScript and open
+that page in Chromium and Firefox.
 It includes controller integration checks and a playground for native keyboard
-input and image popover interaction; the Node DOM stub alone does not verify
+input, cell selection and image popover interaction; the Node DOM stub alone does not verify
 browser layout, focus or composition behavior.
 
 ## Extending the Editor

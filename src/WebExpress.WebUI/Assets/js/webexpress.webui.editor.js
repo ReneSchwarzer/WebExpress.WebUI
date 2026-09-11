@@ -12,6 +12,20 @@
 webexpress.webui.EditorSelection = class {
  
     static MARKER_ATTR = "data-wx-caret";
+
+    /**
+     * Keeps transient cell highlighting out of form values and undo snapshots.
+     */
+    static contentHtml(root) {
+        if (!root.querySelector("[data-wx-table-selected]")) {
+            return root.innerHTML;
+        }
+        const copy = root.cloneNode(true);
+        copy.querySelectorAll("[data-wx-table-selected]").forEach(cell => {
+            cell.removeAttribute("data-wx-table-selected");
+        });
+        return copy.innerHTML;
+    }
  
     /**
      * Returns the current selection range, provided it lies entirely within root.
@@ -2321,7 +2335,8 @@ webexpress.webui.EditorList = class {
             return false;
         }
         const li = el.closest("li");
-        if (!li || !root.contains(li)) {
+        const boundary = el.closest("td,th") || root;
+        if (!li || !boundary.contains(li)) {
             return false;
         }
         const list = li.parentElement;
@@ -2342,7 +2357,7 @@ webexpress.webui.EditorList = class {
             return;
         }
 
-        const marked = webexpress.webui.EditorSelection.markRange(range);
+        const marked = webexpress.webui.EditorSelection.markRange(webexpress.webui.EditorSelection.getRange(root));
 
         const allLi = units.every((u) => u.tagName === "LI");
         if (allLi) {
@@ -2541,7 +2556,7 @@ webexpress.webui.EditorList = class {
         if (!units.length) {
             return;
         }
-        const marked = webexpress.webui.EditorSelection.markRange(range);
+        const marked = webexpress.webui.EditorSelection.markRange(webexpress.webui.EditorSelection.getRange(root));
 
         const items = units.filter((u) => u.tagName === "LI");
         const blocks = units.filter((u) => u.tagName !== "LI");
@@ -2565,7 +2580,7 @@ webexpress.webui.EditorList = class {
         if (!units.length) {
             return;
         }
-        const marked = webexpress.webui.EditorSelection.markRange(range);
+        const marked = webexpress.webui.EditorSelection.markRange(webexpress.webui.EditorSelection.getRange(root));
 
         const items = units.filter((u) => u.tagName === "LI");
         const blocks = units.filter((u) => u.tagName !== "LI");
@@ -2662,9 +2677,13 @@ webexpress.webui.EditorList = class {
      */
     static _collectUnits(root, range) {
         const set = new Set();
+        const selectedCells = Array.from(root.querySelectorAll("[data-wx-table-selected]"));
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
         let n;
         while ((n = walker.nextNode())) {
+            if (selectedCells.length && !selectedCells.includes(n.parentElement.closest("td,th"))) {
+                continue;
+            }
             if (!webexpress.webui.EditorSelection.intersectsText(range, n)) {
                 continue;
             }
@@ -2673,13 +2692,56 @@ webexpress.webui.EditorList = class {
                 set.add(u);
             }
         }
+        selectedCells.forEach(cell => {
+            if (!Array.from(set).some(unit => cell.contains(unit))) {
+                const unit = this._unitOf(cell.querySelector("li,p,h1,h2,h3,h4,h5,h6,blockquote,pre") || cell, root);
+                if (unit) set.add(unit);
+            }
+        });
         if (set.size === 0) {
-            const u = this._unitOf(range.startContainer, root);
+            const container = range.startContainer;
+            const node = container.nodeType === Node.ELEMENT_NODE
+                ? container.childNodes[range.startOffset] || container : container;
+            const u = this._unitOf(node, root);
             if (u) {
                 set.add(u);
             }
         }
+        const cells = Array.from(set).filter(u => u.matches("td,th"));
+        if (cells.length) {
+            const marked = webexpress.webui.EditorSelection.markRange(range);
+            cells.forEach(cell => this._wrapCellContent(cell));
+            if (marked) {
+                webexpress.webui.EditorSelection.restoreRange(root);
+            }
+            return this._collectUnits(root, webexpress.webui.EditorSelection.getRange(root));
+        }
         return this._inDocOrder(Array.from(set));
+    }
+
+    /**
+     * Gives bare cell text its own blocks so list commands cannot lift the table frame.
+     */
+    static _wrapCellContent(cell) {
+        if (Array.from(cell.childNodes).every(node => node.matches?.(".wx-col-resizer"))) {
+            const paragraph = document.createElement("p");
+            paragraph.appendChild(document.createElement("br"));
+            cell.insertBefore(paragraph, cell.firstChild);
+            return;
+        }
+        let paragraph = null;
+        Array.from(cell.childNodes).forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE &&
+                node.matches(this.BLOCK_SELECTOR + ",ul,ol,table,.wx-col-resizer")) {
+                paragraph = null;
+                return;
+            }
+            if (!paragraph) {
+                paragraph = document.createElement("p");
+                cell.insertBefore(paragraph, node);
+            }
+            paragraph.appendChild(node);
+        });
     }
 
     /**
@@ -2697,12 +2759,19 @@ webexpress.webui.EditorList = class {
         if (!webexpress.webui.EditorSelection.isEditable(el, root)) {
             return null;
         }
+        const boundary = el.closest?.("td,th") || root;
         const li = el.closest ? el.closest("li") : null;
-        if (li && root.contains(li)) {
+        if (li && boundary.contains(li)) {
             return li;
         }
         let cur = el;
         while (cur && cur !== root) {
+            if (cur.matches?.("td,th")) {
+                return cur;
+            }
+            if (cur.getAttribute?.("contenteditable") === "false") {
+                return null;
+            }
             if (cur.nodeType === Node.ELEMENT_NODE && cur.matches && cur.matches(this.BLOCK_SELECTOR)) {
                 return cur;
             }
@@ -3016,7 +3085,7 @@ webexpress.webui.EditorHistory = class {
     _snapshot() {
         const el = this._el();
         return {
-            html: el ? el.innerHTML : "",
+            html: el ? webexpress.webui.EditorSelection.contentHtml(el) : "",
             bookmark: this._serializeSelection()
         };
     }
@@ -3788,10 +3857,11 @@ webexpress.webui.EditorCtrl = class extends webexpress.webui.Ctrl {
      * Synchronizes the editor content with the hidden form input.
      */
     _syncValue() {
+        const value = this.value;
         if (this._formInput) {
-            this._formInput.value = this._editorElement.innerHTML;
+            this._formInput.value = value;
         }
-        this._dispatch(webexpress.webui.Event.CHANGE_VALUE_EVENT, { value: this._editorElement.innerHTML });
+        this._dispatch(webexpress.webui.Event.CHANGE_VALUE_EVENT, { value });
         if (this._history) {
             this._history.notify(this._historyTyping === true);
         }
@@ -3959,7 +4029,7 @@ webexpress.webui.EditorCtrl = class extends webexpress.webui.Ctrl {
         if (!this._editorElement) {
             return "";
         }
-        return this._editorElement.innerHTML;
+        return webexpress.webui.EditorSelection.contentHtml(this._editorElement);
     }
 
     /**

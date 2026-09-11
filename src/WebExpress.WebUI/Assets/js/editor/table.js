@@ -5,8 +5,7 @@
  * Only table cells are editable to prevent structural damage.
  */
 webexpress.webui.EditorPlugins.register("table", 3000, {
-    _tableToolbar: null,
-    _tableToolbarShownOnce: false,
+    _selections: new WeakMap(),
     _lastCellColor: "#FFFF00",
     _colors: [
         "#000000", "#FF0000", "#008000", "#0000FF", "#FFFF00",
@@ -21,29 +20,16 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
     ],
 
     /**
-     * Plugin initialization hook.
-     * Registers table navigation and monitors selection changes to toggle context toolbar.
+     * Keeps navigation and selection listeners tied to the owning editor's lifetime.
      * @param {object} editor - Editor instance.
      */
     init: function(editor) {
-        this._enableTabNav(editor);
-        document.addEventListener("selectionchange", () => {
-            const inTable = this._detectTableSelection(editor);
-            if (this._tableToolbar) {
-                if (inTable) {
-                    this._tableToolbar.style.display = "block";
-                    this._tableToolbarShownOnce = true;
-                } else {
-                    if (!this._tableToolbarShownOnce) {
-                        this._tableToolbar.style.display = "none";
-                    }
-                }
-                if (!editor.getEditorElement().querySelector("table")) {
-                    this._tableToolbar.style.display = "none";
-                    this._tableToolbarShownOnce = false;
-                }
-            }
-        });
+        const stopNavigation = this._enableTabNav(editor);
+        const stopSelection = this._enableCellSelection(editor);
+        return () => {
+            stopNavigation();
+            stopSelection();
+        };
     },
 
     /**
@@ -52,7 +38,211 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
      * @param {object} editor - Editor instance.
      */
     onContentChange: function(editor) {
+        this._clearCellSelection(editor);
         this._upgradeRawTables(editor);
+    },
+
+    /**
+     * Tracks rectangular cell selections independently of browser text-selection quirks.
+     */
+    _enableCellSelection: function(editor) {
+        const root = editor.getEditorElement();
+        let anchor = null;
+        let dragging = false;
+        const down = e => {
+            if (e.button !== 0 || e.target.closest?.(".wx-col-resizer")) {
+                return;
+            }
+            const cell = e.target.closest?.("td,th");
+            const previous = this._getSelectedCells(editor)[0];
+            this._clearCellSelection(editor);
+            anchor = cell && root.contains(cell) ? cell : null;
+            dragging = false;
+            if (e.shiftKey && anchor && previous?.closest("table") === anchor.closest("table")) {
+                this._selectCellRectangle(editor, previous, anchor);
+                anchor = previous;
+                dragging = true;
+                e.preventDefault();
+            }
+        };
+        const move = e => {
+            if (!anchor || !(e.buttons & 1)) {
+                return;
+            }
+            const cell = e.target.closest?.("td,th");
+            if (!cell || cell.closest("table") !== anchor.closest("table") || (!dragging && cell === anchor)) {
+                return;
+            }
+            dragging = true;
+            e.preventDefault();
+            this._selectCellRectangle(editor, anchor, cell);
+        };
+        const up = () => {
+            anchor = null;
+            dragging = false;
+        };
+        const change = () => {
+            if (anchor) {
+                return;
+            }
+            const range = webexpress.webui.EditorSelection.getRange(root);
+            if (range) {
+                const cells = this._nativeSelectedCells(editor);
+                this._highlightCells(editor, cells.length > 1 ? cells : []);
+            }
+        };
+        const key = e => {
+            if (e.key === "Escape") {
+                const cell = this._getSelectedCells(editor)[0];
+                this._clearCellSelection(editor);
+                this._focusCell(cell);
+            }
+        };
+        const outside = e => {
+            if (!root.contains(e.target) && !editor._uiContainer?.contains(e.target) &&
+                !e.target.closest?.(".wx-editor-bubble,.wx-editor-bubble-menu")) {
+                this._clearCellSelection(editor);
+            }
+        };
+        root.addEventListener("mousedown", down);
+        root.addEventListener("keydown", key);
+        document.addEventListener("mousemove", move);
+        document.addEventListener("mouseup", up);
+        document.addEventListener("mousedown", outside);
+        document.addEventListener("selectionchange", change);
+        return () => {
+            root.removeEventListener("mousedown", down);
+            root.removeEventListener("keydown", key);
+            document.removeEventListener("mousemove", move);
+            document.removeEventListener("mouseup", up);
+            document.removeEventListener("mousedown", outside);
+            document.removeEventListener("selectionchange", change);
+            this._clearCellSelection(editor);
+        };
+    },
+
+    /**
+     * Maps logical coordinates to cells so row and column spans do not shift the selection.
+     */
+    _tableGrid: function(table) {
+        const rows = Array.from(table.rows);
+        const grid = [];
+        const positions = new Map();
+        rows.forEach((row, r) => {
+            grid[r] ||= [];
+            let c = 0;
+            const groupEnd = rows.findIndex((next, i) => i > r && next.parentElement !== row.parentElement);
+            const remaining = (groupEnd < 0 ? rows.length : groupEnd) - r;
+            Array.from(row.cells).forEach(cell => {
+                while (grid[r][c]) c++;
+                const rowSpan = Math.min(cell.rowSpan || remaining, remaining);
+                const colSpan = cell.colSpan;
+                positions.set(cell, { top: r, left: c, bottom: r + rowSpan - 1, right: c + colSpan - 1 });
+                for (let y = r; y < r + rowSpan; y++) {
+                    grid[y] ||= [];
+                    for (let x = c; x < c + colSpan; x++) grid[y][x] = cell;
+                }
+                c += colSpan;
+            });
+        });
+        return { rows, grid, positions };
+    },
+
+    /**
+     * Expands a rectangle until every intersected spanning cell fits completely inside it.
+     */
+    _cellRectangle: function(first, last) {
+        const table = first?.closest("table");
+        if (!table || table !== last?.closest("table")) return [];
+        const { positions } = this._tableGrid(table);
+        const a = positions.get(first), b = positions.get(last);
+        if (!a || !b) return [];
+        const bounds = { top: Math.min(a.top, b.top), left: Math.min(a.left, b.left),
+            bottom: Math.max(a.bottom, b.bottom), right: Math.max(a.right, b.right) };
+        let changed;
+        do {
+            changed = false;
+            positions.forEach(p => {
+                if (p.top > bounds.bottom || p.bottom < bounds.top || p.left > bounds.right || p.right < bounds.left) return;
+                const expanded = { top: Math.min(bounds.top, p.top), left: Math.min(bounds.left, p.left),
+                    bottom: Math.max(bounds.bottom, p.bottom), right: Math.max(bounds.right, p.right) };
+                if (Object.keys(bounds).some(key => bounds[key] !== expanded[key])) {
+                    Object.assign(bounds, expanded);
+                    changed = true;
+                }
+            });
+        } while (changed);
+        return Array.from(positions).filter(([, p]) => p.top >= bounds.top && p.bottom <= bounds.bottom &&
+            p.left >= bounds.left && p.right <= bounds.right).map(([cell]) => cell);
+    },
+
+    /**
+     * Accepts both text endpoints and native Firefox cell ranges.
+     */
+    _boundaryCell: function(node, offset, end = false) {
+        const element = node?.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+        const cell = element?.closest?.("td,th");
+        if (cell) return cell;
+        const child = node?.childNodes[end ? offset - 1 : offset];
+        if (child?.matches?.("td,th")) return child;
+        const cells = child?.querySelectorAll?.("td,th");
+        return cells?.length ? cells[end ? cells.length - 1 : 0] : null;
+    },
+
+    /**
+     * Converts keyboard and native table selections to the same rectangle as mouse dragging.
+     */
+    _nativeSelectedCells: function(editor) {
+        const sel = window.getSelection();
+        const root = editor.getEditorElement();
+        if (!sel?.rangeCount) return [];
+        const start = sel.getRangeAt(0), end = sel.getRangeAt(sel.rangeCount - 1);
+        const first = this._boundaryCell(start.startContainer, start.startOffset);
+        const last = this._boundaryCell(end.endContainer, end.endOffset, true);
+        if (!first || !last || !root.contains(first) || !root.contains(last)) return [];
+        return this._cellRectangle(first, last);
+    },
+
+    /**
+     * Retains cell identity while toolbar focus temporarily removes the native selection.
+     */
+    _getSelectedCells: function(editor) {
+        const cells = this._selections.get(editor);
+        if (cells?.length && cells.every(cell => editor.getEditorElement().contains(cell))) return cells;
+        return this._nativeSelectedCells(editor);
+    },
+
+    /**
+     * Keeps the visible rectangle and command selection in agreement.
+     */
+    _selectCellRectangle: function(editor, first, last) {
+        const cells = this._cellRectangle(first, last);
+        if (!cells.length) return;
+        this._highlightCells(editor, cells);
+        const range = document.createRange();
+        range.setStart(cells[0], 0);
+        range.setEnd(cells[cells.length - 1], cells[cells.length - 1].childNodes.length);
+        webexpress.webui.EditorSelection.apply(range);
+        editor._saveCurrentSelection();
+    },
+
+    /**
+     * Stores presentation state per editor to prevent selections leaking between instances.
+     */
+    _highlightCells: function(editor, cells) {
+        this._clearCellSelection(editor);
+        cells.forEach(cell => cell.setAttribute("data-wx-table-selected", ""));
+        this._selections.set(editor, cells);
+    },
+
+    /**
+     * Removes selection presentation before content replacement or editor teardown.
+     */
+    _clearCellSelection: function(editor) {
+        editor.getEditorElement().querySelectorAll("[data-wx-table-selected]").forEach(cell => {
+            cell.removeAttribute("data-wx-table-selected");
+        });
+        this._selections.delete(editor);
     },
 
     /**
@@ -128,7 +318,7 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
      * @param {object} editor - Editor instance.
      */
     _enableTabNav: function(editor) {
-        editor.getEditorElement().addEventListener("keydown", (e) => {
+        const handler = (e) => {
             if (e.key !== "Tab") {
                 return;
             }
@@ -202,6 +392,7 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
                 const firstCellIsHeader = row.cells.length > 0 && row.cells[0].tagName === "TH";
                 const cols = row.cells.length;
                 const targetTbody = table.tBodies.length > 0 ? table.tBodies[0] : table.createTBody();
+                editor._history?.prepare();
                 const newRow = targetTbody.insertRow();
 
                 for (let i = 0; i < cols; i++) {
@@ -212,9 +403,11 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
                     newCell.innerHTML = "<br>";
                     newRow.appendChild(newCell);
                 }
-                this._focusCell(newRow.cells[0]);
+                this._finishTableChange(editor, table, newRow.cells[0]);
             }
-        });
+        };
+        editor.getEditorElement().addEventListener("keydown", handler);
+        return () => editor.getEditorElement().removeEventListener("keydown", handler);
     },
 
     /**
@@ -241,18 +434,7 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
      * @returns {number} Maximum column count.
      */
     _getMaxColumns: function(table) {
-        let max = 0;
-        for (let i = 0; i < table.rows.length; i++) {
-            let cols = 0;
-            const row = table.rows[i];
-            for (let j = 0; j < row.cells.length; j++) {
-                cols += parseInt(row.cells[j].getAttribute("colspan") || 1, 10);
-            }
-            if (cols > max) {
-                max = cols;
-            }
-        }
-        return max;
+        return Math.max(0, ...this._tableGrid(table).grid.map(row => row.length));
     },
 
     /**
@@ -271,7 +453,7 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
         }
 
         const headerRow = thead.rows[0];
-        const cols = headerRow.cells.length;
+        const cols = this._getMaxColumns(table);
         if (cols < 2) {
             return;
         }
@@ -300,11 +482,9 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
             oldResizers[i].remove();
         }
 
-        for (let i = 0; i < cols; i++) {
-            const th = headerRow.cells[i];
-            if (!th) {
-                continue;
-            }
+        const positions = this._tableGrid(table).positions;
+        for (const th of Array.from(headerRow.cells)) {
+            const i = positions.get(th).right;
 
             th.style.position = th.style.position || "relative";
 
@@ -413,12 +593,14 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
             return [];
         }
 
-        const range = document.createRange();
-        range.selectNodeContents(cell);
-        range.collapse(true);
-        const sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
+        const cells = this._getSelectedCells(editor);
+        if (!cells.includes(cell)) {
+            this._clearCellSelection(editor);
+            this._focusCell(cell);
+        } else if (cells.length > 1) {
+            this._highlightCells(editor, cells);
+        }
+        editor._saveCurrentSelection();
 
         const colorItems = this._colors.map(c => ({
             type: "color",
@@ -459,27 +641,27 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
         });
 
         return [
-            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.insert.row.above"), action: () => this._modifyTable(editor, "insertRowAbove"), icon: "wx-icon add-row-above" },
-            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.insert.row.below"), action: () => this._modifyTable(editor, "insertRowBelow"), icon: "wx-icon add-row-below" },
-            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.insert.col.left"), action: () => this._modifyTable(editor, "insertColumnLeft"), icon: "wx-icon add-col-above" },
-            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.insert.col.right"), action: () => this._modifyTable(editor, "insertColumnRight"), icon: "wx-icon add-col-below" },
+            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.insert.row.above"), action: () => this._modifyTable(editor, "insertRowAbove"), icon: "add-row-above" },
+            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.insert.row.below"), action: () => this._modifyTable(editor, "insertRowBelow"), icon: "add-row-below" },
+            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.insert.col.left"), action: () => this._modifyTable(editor, "insertColumnLeft"), icon: "add-column-above" },
+            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.insert.col.right"), action: () => this._modifyTable(editor, "insertColumnRight"), icon: "add-column-below" },
             { separator: true },
-            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.add.intermediate.header"), action: () => this._modifyTable(editor, "insertIntermediateHeader"), icon: "wx-icon add-row-below" },
-            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.toggle.left.header"), action: () => this._modifyTable(editor, "toggleLeftHeader"), icon: "wx-icon cell-background" },
+            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.add.intermediate.header"), action: () => this._modifyTable(editor, "insertIntermediateHeader"), icon: "add-row-below" },
+            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.toggle.left.header"), action: () => this._modifyTable(editor, "toggleLeftHeader"), icon: "table-columns" },
             { separator: true },
-            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.merge.cells"), action: () => this._modifyTable(editor, "mergeCells"), icon: "wx-icon merge-cells" },
-            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.split.cell"), action: () => this._modifyTable(editor, "splitCell"), icon: "wx-icon split-cell" },
+            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.merge.cells"), action: () => this._modifyTable(editor, "mergeCells"), icon: "table-merge-cells" },
+            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.split.cell"), action: () => this._modifyTable(editor, "splitCell"), icon: "split-cell" },
             { separator: true },
             {
                 label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.cell.background"),
-                icon: "wx-icon cell-background",
+                icon: "fill-drip",
                 submenu: colorItems,
                 submenuClass: "wx-editor-color-picker"
             },
             { separator: true },
-            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.delete.row"), action: () => this._modifyTable(editor, "deleteRow"), icon: "wx-icon delete-row" },
-            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.delete.col"), action: () => this._modifyTable(editor, "deleteColumn"), icon: "wx-icon delete-col" },
-            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.delete.table"), action: () => this._modifyTable(editor, "deleteTable"), icon: "wx-icon delete-table" }
+            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.delete.row"), action: () => this._modifyTable(editor, "deleteRow"), icon: "del-row" },
+            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.delete.col"), action: () => this._modifyTable(editor, "deleteColumn"), icon: "del-column" },
+            { label: webexpress.webui.I18N.translate("webexpress.webui:editor.table.delete.table"), action: () => this._modifyTable(editor, "deleteTable"), icon: "del-table" }
         ];
     },
 
@@ -664,42 +846,23 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
     },
 
     /**
-     * Detects whether the current selection is inside a table.
-     * @param {object} editor - Editor instance.
-     * @returns {boolean} True if selection is inside a table.
-     */
-    _detectTableSelection: function(editor) {
-        const sel = window.getSelection();
-        if (!sel.rangeCount) {
-            return false;
-        }
-        let node = sel.getRangeAt(0).startContainer;
-        if (node.nodeType === Node.TEXT_NODE) {
-            node = node.parentElement;
-        }
-        return editor.getEditorElement().contains(node) && node.closest("table") !== null;
-    },
-
-    /**
      * Sets the background color of the current cell selection.
      * Uses editor.restoreSavedRange to ensure the selection is available.
      * @param {object} editor - Editor instance.
      * @param {string} color - CSS color string.
      */
     _setCellBackground: function(editor, color) {
-        editor.restoreSavedRange();
-        const sel = window.getSelection();
-        if (!sel.rangeCount) {
-            return;
+        let cells = this._getSelectedCells(editor);
+        if (!cells.length) {
+            editor.restoreSavedRange();
+            cells = this._getSelectedCells(editor);
         }
-        let cell = sel.getRangeAt(0).startContainer;
-        if (cell.nodeType !== Node.ELEMENT_NODE) {
-            cell = cell.parentElement;
-        }
-        cell = cell.closest("td, th");
-        if (cell) {
-            cell.style.backgroundColor = color;
-        }
+        if (!cells.length) return;
+        editor._history?.prepare();
+        cells.forEach(cell => { cell.style.backgroundColor = color; });
+        editor._saveCurrentSelection();
+        editor._syncValue();
+        editor._updateUndoRedoStates();
     },
 
     /**
@@ -708,18 +871,15 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
      * @param {string} action - Action identifier.
      */
     _modifyTable: function(editor, action) {
-        const sel = window.getSelection();
-        if (!sel.rangeCount) {
-            return;
+        let cells = this._getSelectedCells(editor);
+        if (!cells.length) {
+            editor.restoreSavedRange();
+            cells = this._getSelectedCells(editor);
         }
-        let cell = sel.getRangeAt(0).startContainer;
-        if (cell.nodeType !== Node.ELEMENT_NODE) {
-            cell = cell.parentElement;
-        }
-        cell = cell.closest("td, th");
-        if (!cell) {
-            return;
-        }
+        const cell = cells[0];
+        if (!cell) return;
+        if (action === "mergeCells" && !this._canMergeCells(cells)) return;
+        editor._history?.prepare();
 
         const row = cell.parentElement;
         const table = row.closest("table");
@@ -858,31 +1018,102 @@ webexpress.webui.EditorPlugins.register("table", 3000, {
                 table.remove();
             }
         } else if (action === "mergeCells") {
-            const next = cell.nextElementSibling;
-            if (next) {
-                const content = next.innerHTML;
-                const currentSpan = parseInt(cell.getAttribute("colspan") || 1, 10);
-                const nextSpan = parseInt(next.getAttribute("colspan") || 1, 10);
-
-                if (content !== "<br>") {
-                    cell.innerHTML += " " + content;
-                }
-                cell.setAttribute("colspan", currentSpan + nextSpan);
-                next.remove();
-            }
+            this._mergeCells(cells);
         } else if (action === "splitCell") {
-            const colspan = parseInt(cell.getAttribute("colspan") || 1, 10);
-            if (colspan > 1) {
-                cell.removeAttribute("colspan");
-                for (let i = 1; i < colspan; i++) {
-                    const newCell = document.createElement(cell.tagName);
-                    if (cell.tagName === "TH" && cell.scope) {
-                        newCell.scope = cell.scope;
-                    }
-                    newCell.innerHTML = "<br>";
-                    row.insertBefore(newCell, cell.nextElementSibling);
-                }
+            this._splitCell(cell);
+        }
+        this._finishTableChange(editor, table, cell);
+    },
+
+    /**
+     * Rejects incomplete rectangles and row-group crossings that HTML cannot represent with spans.
+     */
+    _canMergeCells: function(cells) {
+        if (cells.length < 2) return false;
+        const table = cells[0].closest("table");
+        const section = cells[0].parentElement.parentElement;
+        if (cells.some(cell => cell.closest("table") !== table || cell.parentElement.parentElement !== section)) return false;
+        const rectangle = this._cellRectangle(cells[0], cells[cells.length - 1]);
+        if (rectangle.length !== cells.length || rectangle.some(cell => !cells.includes(cell))) return false;
+        const { positions } = this._tableGrid(table);
+        const bounds = this._selectionBounds(cells, positions);
+        const area = cells.reduce((total, cell) => {
+            const p = positions.get(cell);
+            return total + (p.bottom - p.top + 1) * (p.right - p.left + 1);
+        }, 0);
+        return area === (bounds.bottom - bounds.top + 1) * (bounds.right - bounds.left + 1);
+    },
+
+    /**
+     * Finds the logical extent of selected cells including their existing spans.
+     */
+    _selectionBounds: function(cells, positions) {
+        const selected = cells.map(cell => positions.get(cell));
+        return { top: Math.min(...selected.map(p => p.top)), left: Math.min(...selected.map(p => p.left)),
+            bottom: Math.max(...selected.map(p => p.bottom)), right: Math.max(...selected.map(p => p.right)) };
+    },
+
+    /**
+     * Moves content in reading order without rebuilding live descendants from HTML strings.
+     */
+    _mergeCells: function(cells) {
+        const first = cells[0];
+        const bounds = this._selectionBounds(cells, this._tableGrid(first.closest("table")).positions);
+        const content = document.createDocumentFragment();
+        cells.forEach(cell => {
+            cell.querySelectorAll(".wx-col-resizer").forEach(handle => handle.remove());
+            const meaningful = cell.textContent.trim() || cell.querySelector("img,table,ul,ol,[contenteditable='false']");
+            if (meaningful) {
+                if (content.childNodes.length) content.appendChild(document.createElement("br"));
+                while (cell.firstChild) content.appendChild(cell.firstChild);
+            }
+            if (cell !== first) cell.remove();
+        });
+        while (first.firstChild) first.removeChild(first.firstChild);
+        if (!content.childNodes.length) content.appendChild(document.createElement("br"));
+        first.appendChild(content);
+        first.setAttribute("colspan", bounds.right - bounds.left + 1);
+        first.setAttribute("rowspan", bounds.bottom - bounds.top + 1);
+    },
+
+    /**
+     * Restores every covered grid position when splitting horizontal or vertical merges.
+     */
+    _splitCell: function(cell) {
+        const { rows, positions } = this._tableGrid(cell.closest("table"));
+        const bounds = positions.get(cell);
+        cell.removeAttribute("colspan");
+        cell.removeAttribute("rowspan");
+        for (let r = bounds.top; r <= bounds.bottom; r++) {
+            const row = rows[r];
+            const reference = Array.from(row.cells).find(other => positions.get(other)?.left > bounds.right) || null;
+            for (let c = bounds.left; c <= bounds.right; c++) {
+                if (r === bounds.top && c === bounds.left) continue;
+                const newCell = document.createElement(cell.tagName.toLowerCase());
+                if (cell.hasAttribute("scope")) newCell.setAttribute("scope", cell.getAttribute("scope"));
+                newCell.appendChild(document.createElement("br"));
+                row.insertBefore(newCell, reference);
             }
         }
+    },
+
+    /**
+     * Publishes completed structural edits and leaves the caret in a surviving cell.
+     */
+    _finishTableChange: function(editor, table, cell) {
+        this._clearCellSelection(editor);
+        const root = editor.getEditorElement();
+        if (root.contains(table)) {
+            this._attachColumnResizersToTable(table);
+            this._focusCell(root.contains(cell) ? cell : table.querySelector("td,th"));
+        } else {
+            const range = document.createRange();
+            range.selectNodeContents(root);
+            range.collapse(false);
+            webexpress.webui.EditorSelection.apply(range);
+        }
+        editor._saveCurrentSelection();
+        editor._syncValue();
+        editor._updateUndoRedoStates();
     }
 });

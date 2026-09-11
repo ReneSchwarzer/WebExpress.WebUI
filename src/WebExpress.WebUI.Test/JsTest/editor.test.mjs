@@ -21,6 +21,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { editorCases } from "./editor.cases.mjs";
 import { imageCases } from "./editor.image.cases.mjs";
+import { tableCases } from "./editor.table.cases.mjs";
 import { createEditorDocument } from "./dom-stub.editor.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -60,7 +61,7 @@ function loadEditor() {
         show() { this.shown = true; }
         selectPage(id) { this.page = id; }
     };
-    for (const asset of ["editor/media.js", "panels/webexpress.webui.panel.editor.image.js"]) {
+    for (const asset of ["editor/media.js", "editor/table.js", "panels/webexpress.webui.panel.editor.image.js"]) {
         const filename = path.join(path.dirname(editorJs), asset);
         vm.runInContext(fs.readFileSync(filename, "utf8"), sandbox, { filename });
     }
@@ -108,3 +109,16 @@ function loadEditor() {
 
 editorCases(test, assert, loadEditor);
 imageCases(test, assert, loadEditor);
+tableCases(test, assert, loadEditor);
+
+test("table context icons have shipped drawings and mask rules", () => {
+    const { root, plugins, editorMock } = loadEditor();
+    root.innerHTML = "<table><tbody><tr><td>cell</td></tr></tbody></table>";
+    const editor = editorMock();
+    const css = fs.readFileSync(path.join(path.dirname(editorJs), "../css/webexpress.webui.icon.css"), "utf8");
+    const items = plugins.get("table").getContextMenuItems(editor, root.querySelector("td"));
+    for (const { icon } of items.filter(item => item.icon)) {
+        assert.ok(fs.existsSync(path.join(path.dirname(editorJs), "../icons", icon + ".svg")), icon);
+        assert.ok(css.includes(`.wx-icon-light-${icon} {`), icon);
+    }
+});

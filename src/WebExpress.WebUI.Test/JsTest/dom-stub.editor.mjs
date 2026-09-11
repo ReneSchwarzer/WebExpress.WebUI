@@ -315,6 +315,21 @@ class EditorElement extends EditorNode {
     }
 
     get className() { return Array.from(this._classes).join(" "); }
+    get rows() {
+        if (this.tagName !== "TABLE") return this.children.filter(el => el.tagName === "TR");
+        const rows = this.querySelectorAll("tr").filter(row => row.closest("table") === this);
+        return rows.filter(row => row.parentElement.tagName === "THEAD")
+            .concat(rows.filter(row => !["THEAD", "TFOOT"].includes(row.parentElement.tagName)),
+                rows.filter(row => row.parentElement.tagName === "TFOOT"));
+    }
+    get cells() { return this.children.filter(el => el.matches("td,th")); }
+    get colSpan() { return Math.max(1, Math.min(1000, parseInt(this.getAttribute("colspan"), 10) || 1)); }
+    get rowSpan() {
+        const span = parseInt(this.getAttribute("rowspan"), 10);
+        return Number.isFinite(span) && span >= 0 ? Math.min(65534, span) : 1;
+    }
+    get tHead() { return this.children.find(el => el.tagName === "THEAD") || null; }
+    get tBodies() { return this.children.filter(el => el.tagName === "TBODY"); }
     set className(value) {
         this._classes = new Set(String(value || "").split(/\s+/).filter(Boolean));
     }
@@ -447,6 +462,11 @@ class EditorElement extends EditorNode {
         if (this._listeners[type]) {
             this._listeners[type].delete(handler);
         }
+    }
+
+    dispatchEvent(event) {
+        this._listeners[event.type]?.forEach(handler => handler(event));
+        return !event.defaultPrevented;
     }
 
     focus() { }
@@ -1095,6 +1115,10 @@ export function createEditorDocument() {
         },
         removeEventListener(type, handler) {
             if (listeners[type]) { listeners[type].delete(handler); }
+        },
+        dispatchEvent(event) {
+            listeners[event.type]?.forEach(handler => handler(event));
+            return !event.defaultPrevented;
         },
         execCommand() { return false; },
         queryCommandState() { return false; }
