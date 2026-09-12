@@ -66,6 +66,15 @@ shorthands from a descendant selector, the stylesheet writes the selected state 
 selector that outranks it; a single-class rule would be overridden and the frame would
 silently disappear.
 
+A required single-select picker answers a question that has only one answer by itself:
+when the bound filter leaves exactly one tile to choose from and nothing is chosen yet,
+that tile is selected, so a step whose only card is the "none of these" entry does not
+wait for a click that can only land on it. The selection is remembered as automatic and
+is taken back the moment the filter reopens the choice; a choice the user made stays.
+Neither a picker that is not required ("nothing" is a legitimate answer there) nor the
+search box (a term narrowing the list to one card is the user looking, not the form
+deciding) takes part.
+
 ### Bound values
 
 A tile of the picker may carry `data-wx-bind-{name}` attributes. When the tile is

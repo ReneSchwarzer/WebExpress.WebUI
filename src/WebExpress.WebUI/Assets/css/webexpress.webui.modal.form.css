@@ -30,8 +30,22 @@
    form-control is named in the selector rather than left out, because taking a mark back has to
    out-rank putting it there: the dark theme fills every form-control with black from a selector
    of the same weight, in a stylesheet that loads later, and would otherwise win the tie and
-   paint the box back in. */
-.modal-header > .modal-title .wx-modal-title-input.form-control {
+   paint the box back in.
+
+   The mark may also sit on a composite control - one whose client controller builds the input
+   inside a host, with a status beside it (a uniqueness check, say). The host then carries the
+   mark, the input it builds is the one styled, and the host lays its parts out as one row so
+   the status stands at the trailing end of the title rather than under it. */
+.modal-header > .modal-title .wx-modal-title-input:not(.form-control) {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.modal-header > .modal-title .wx-modal-title-input.form-control,
+.modal-header > .modal-title .wx-modal-title-input:not(.form-control) > .form-control {
     flex: 1 1 auto;
     width: 100%;
     min-width: 0;
@@ -49,7 +63,8 @@
 }
 
 /* Offered by the pointer... */
-.modal-header > .modal-title .wx-modal-title-input.form-control:hover {
+.modal-header > .modal-title .wx-modal-title-input.form-control:hover,
+.modal-header > .modal-title .wx-modal-title-input:not(.form-control) > .form-control:hover {
     border-color: var(--wx-border-color);
     background: var(--wx-body-bg);
     cursor: text;
@@ -58,16 +73,51 @@
 /* ...and taken by the caret. The ring is drawn here rather than left to the framework, because
    the rule above turns the framework's own off - and a field being edited has to say so to a
    keyboard user too, for whom the pointer affordance never happens. */
-.modal-header > .modal-title .wx-modal-title-input.form-control:focus {
+.modal-header > .modal-title .wx-modal-title-input.form-control:focus,
+.modal-header > .modal-title .wx-modal-title-input:not(.form-control) > .form-control:focus {
     border-color: var(--wx-primary);
     background: var(--wx-body-bg);
     box-shadow: 0 0 0 0.2rem rgba(var(--wx-primary-rgb, 13, 110, 253), 0.25);
 }
 
 /* An unnamed record still reads as a title rather than as a placeholder in a box. */
-.modal-header > .modal-title .wx-modal-title-input.form-control::placeholder {
+.modal-header > .modal-title .wx-modal-title-input.form-control::placeholder,
+.modal-header > .modal-title .wx-modal-title-input:not(.form-control) > .form-control::placeholder {
     color: inherit;
     opacity: 0.5;
+}
+
+/* What a composite control puts beside its input - the verdict of a check, a spinner - keeps
+   out of the title's way: it neither grows nor wraps, and it is written in the body's type
+   rather than the title's, so a sentence about the name does not read as a second title. The
+   input keeps a floor, because a long verdict must not squeeze the name to nothing. */
+.modal-header > .modal-title .wx-modal-title-input:not(.form-control) > :not(.form-control) {
+    flex: 0 0 auto;
+    margin: 0 0 0 0.5rem;
+    font-size: var(--bs-body-font-size, 1rem);
+    font-weight: var(--bs-body-font-weight, 400);
+    line-height: var(--bs-body-line-height, 1.5);
+    white-space: nowrap;
+}
+
+.modal-header > .modal-title .wx-modal-title-input:not(.form-control) > .form-control {
+    min-width: 8rem;
+}
+
+/* A verdict a composite control writes onto its input - the name is taken, the name is free -
+   is still shown on the title bar. The transparent frame above outranks the framework's own
+   validity colours, so they are restated here for the title case; the glyph the framework
+   paints into the padding is left out, because the control already says it beside the input. */
+.modal-header > .modal-title .wx-modal-title-input:not(.form-control) > .form-control.is-invalid {
+    border-color: var(--wx-form-invalid-border-color, var(--bs-form-invalid-border-color, #dc3545));
+    background-image: none;
+    padding-right: 0.5rem;
+}
+
+.modal-header > .modal-title .wx-modal-title-input:not(.form-control) > .form-control.is-valid {
+    border-color: var(--wx-form-valid-border-color, var(--bs-form-valid-border-color, #198754));
+    background-image: none;
+    padding-right: 0.5rem;
 }
 
 /* The footer the form declared is a bar of its own inside the dialog's bar: it takes the free

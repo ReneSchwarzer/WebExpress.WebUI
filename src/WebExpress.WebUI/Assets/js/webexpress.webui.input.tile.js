@@ -22,6 +22,8 @@ webexpress.webui.InputTileCtrl = class extends webexpress.webui.Ctrl {
     _filterValue = null;
     _emptyText = "";
     _emptyElement = null;
+    _required = false;
+    _autoSelected = false;
 
     /**
      * Constructs the tile picker input field.
@@ -54,7 +56,8 @@ webexpress.webui.InputTileCtrl = class extends webexpress.webui.Ctrl {
         }
         // a hidden input is barred from native constraint validation, so a required
         // picker declares itself to the form controller instead
-        if (element.dataset.required === "true") {
+        this._required = element.dataset.required === "true";
+        if (this._required) {
             this._hidden.dataset.wxRequired = "true";
         }
 
@@ -107,6 +110,7 @@ webexpress.webui.InputTileCtrl = class extends webexpress.webui.Ctrl {
         }
 
         this._attachFilterSource();
+        this._selectSoleChoice();
         this.render();
     }
 
@@ -337,6 +341,7 @@ webexpress.webui.InputTileCtrl = class extends webexpress.webui.Ctrl {
             const exist = this._tiles.find(t => t.id === id);
             if (exist) {
                 this._value = id;
+                this._autoSelected = false;
                 if (this._hidden) {
                     this._hidden.value = id;
                 }
@@ -464,6 +469,7 @@ webexpress.webui.InputTileCtrl = class extends webexpress.webui.Ctrl {
 
             this._filterValue = next;
             this._dropSelectionOutsideFilter();
+            this._selectSoleChoice();
             this.render();
         };
 
@@ -495,6 +501,48 @@ webexpress.webui.InputTileCtrl = class extends webexpress.webui.Ctrl {
 
         const selected = this._tiles.find(t => t.id === this._value);
         if (this._value && (!selected || !this._matchesFilter(selected))) {
+            this._value = null;
+            if (this._hidden) {
+                this._hidden.value = "";
+            }
+            this._applyBindings(null);
+            this._dispatch(webexpress.webui.Event.CHANGE_VALUE_EVENT, { value: "" });
+        }
+    }
+
+    /**
+     * Answers a required single choice that has only one answer left. A picker that
+     * demands a selection and offers a single tile after the bound filter has done its
+     * work is not asking a question, so the tile is selected instead of waiting for a
+     * click that can only land on it. The selection is remembered as automatic and is
+     * taken back the moment the filter reopens the choice, so a decision the user never
+     * made is not carried into a step where there is something to decide. A choice the
+     * user made stays, whatever the filter does around it - and so does a picker that
+     * is not required, because "nothing" is a legitimate answer there. The search box
+     * does not take part: a term narrowing the list to one card is the user looking,
+     * not the form deciding.
+     */
+    _selectSoleChoice() {
+        if (this._multiselect || !this._required) {
+            return;
+        }
+
+        const offered = this._tiles.filter(t => this._matchesFilter(t));
+
+        if (offered.length === 1 && !this._value) {
+            const sole = offered[0];
+            this._value = sole.id;
+            this._autoSelected = true;
+            if (this._hidden) {
+                this._hidden.value = sole.id;
+            }
+            this._applyBindings(sole);
+            this._dispatch(webexpress.webui.Event.CHANGE_VALUE_EVENT, { value: sole.id });
+            return;
+        }
+
+        if (offered.length > 1 && this._autoSelected) {
+            this._autoSelected = false;
             this._value = null;
             if (this._hidden) {
                 this._hidden.value = "";
@@ -707,6 +755,9 @@ webexpress.webui.InputTileCtrl = class extends webexpress.webui.Ctrl {
                 this.value = arr;
                 this._dispatch(webexpress.webui.Event.CLICK_EVENT, { item: tile, selected: arr.includes(tile.id) });
             } else {
+                // a click on the tile the picker chose by itself turns it into the user's
+                // own choice, which the filter no longer takes back
+                this._autoSelected = false;
                 if (this._value !== tile.id) {
                     this.value = tile.id;
                     this._dispatch(webexpress.webui.Event.CLICK_EVENT, { item: tile });
@@ -726,6 +777,7 @@ webexpress.webui.InputTileCtrl = class extends webexpress.webui.Ctrl {
                     this.value = arr;
                     this._dispatch(webexpress.webui.Event.CLICK_EVENT, { item: tile, selected: arr.includes(tile.id) });
                 } else {
+                    this._autoSelected = false;
                     if (this._value !== tile.id) {
                         this.value = tile.id;
                         this._dispatch(webexpress.webui.Event.CLICK_EVENT, { item: tile });
