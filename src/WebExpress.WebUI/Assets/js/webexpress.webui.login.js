@@ -202,19 +202,9 @@ webexpress.webui.LoginCtrl = class extends webexpress.webui.Ctrl {
                 }
             }).then((response) => {
                 if (response.ok) {
-                    // parse the response to extract the session data
-                    response.json().then((data) => {
-                        // set the session cookie if provided by the server
-                        if (data && data.sessionId) {
-                            document.cookie = "session=" + encodeURIComponent(data.sessionId) + "; path=/";
-                        }
-
-                        // perform the refresh to reload the page with the new cookie
-                        window.location.reload();
-                    }).catch(() => {
-                        // fallback to reload if parsing fails or no json is returned
-                        window.location.reload();
-                    });
+                    // the session cookie arrived with this response, http-only and set by
+                    // the server; the reload carries it
+                    window.location.reload();
                 } else {
                     // notify user about failed login
                     alert(this._i18n("webexpress.webui:login.failed", "Login failed. Please check your credentials."));
